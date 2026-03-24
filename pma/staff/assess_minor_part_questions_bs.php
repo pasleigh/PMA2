@@ -1,4 +1,5 @@
 <?php
+ob_start(); // Buffer all output — required so mPDF can set Content-Type headers even if something echoes earlier
 // Turn off all error reporting
 //error_reporting(0);
 (@include_once("./set_dir_staff.php")) OR die("Cannot find this file to include: set_dir_staff.php<BR>");
@@ -11,6 +12,7 @@
 (@include_once($STAFF_DIR_VAL . "/show_mark_questions_bs.php")) OR die("Cannot include show_mark_questions2<BR>");
 (@include_once($STAFF_DIR_VAL . "/pdo_query_functions.php")) OR die("Cannot include pdo_query_functions<BR>");
 
+echo __BASE_DIR__ . "<BR>";
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 
 //if (array_key_exists('module1', $_GET)==false){ $_GET['module1']=null; }
@@ -126,8 +128,8 @@ try {
 } catch (PDOException $ex) {
     $this_function = __FUNCTION__;
     echo "An Error occured accessing the database in function: $this_function <BR>\n";
-    echo(" Query = $query<BR> \n");
-    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+    error_log($ex->getMessage());
+    echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
     exit();
 }
@@ -157,8 +159,8 @@ try {
 } catch (PDOException $ex) {
     $this_function = __FUNCTION__;
     echo "An Error occured accessing the database in function: $this_function <BR>\n";
-    echo(" Query = $query<BR> \n");
-    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+    error_log($ex->getMessage());
+    echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
     exit();
 }
@@ -192,8 +194,8 @@ try {
 } catch (PDOException $ex) {
     $this_function = __FUNCTION__;
     echo "An Error occured accessing the database in function: $this_function <BR>\n";
-    echo(" Query = $query<BR> \n");
-    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+    error_log($ex->getMessage());
+    echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
     exit();
 }
@@ -212,8 +214,8 @@ try {
 } catch (PDOException $ex) {
     $this_function = __FUNCTION__;
     echo "An Error occured accessing the database in function: $this_function <BR>\n";
-    echo(" Query = $query<BR> \n");
-    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+    error_log($ex->getMessage());
+    echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
     exit();
 }
@@ -246,8 +248,8 @@ if ($POST_OP == "commit") {
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo "An Error occured accessing the database in function: $this_function <BR>\n";
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
             exit();
         }
@@ -329,8 +331,8 @@ if ($POST_OP == "commit") {
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo "An Error occured accessing the database in function: $this_function <BR>\n";
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
             exit();
         }
@@ -416,8 +418,8 @@ if ($POST_OP == "commit") {
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo "An Error occured accessing the database in function: $this_function <BR>\n";
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
             exit();
         }
@@ -433,8 +435,8 @@ if ($POST_OP == "commit") {
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
                 exit();
             }
@@ -454,8 +456,8 @@ if ($POST_OP == "commit") {
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
                 exit();
             }
@@ -477,8 +479,8 @@ if ($POST_OP == "commit") {
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo "An Error occured accessing the database in function: $this_function <BR>\n";
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
             exit();
         }
@@ -537,11 +539,8 @@ if ($POST_OP == "commit") {
         //echo("about to start the pdf producing. topdf =$topdf<BR>");
         //$display_block = "<p>This is a test</p>";
         if ($topdf > 0 || $force_pdf == 1) {
-            //include("MPDF54/mpdf.php");
-            error_reporting(0);
-            //$mpdf = new mPDF();
-            $system_temp_dir = sys_get_temp_dir();
-$mpdf = new \Mpdf\Mpdf(['tempDir'=>$system_temp_dir]);
+            ob_end_clean(); // Discard any buffered HTML so mPDF can send PDF headers cleanly
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => __DIR__ . '/../tmp']);
             $mpdf->use_kwt = true;    // DEFAULT=false. Try to keep tables from crossing pages
             // Set a simple Footer including the date and page number
             $mpdf->setFooter("$student_name. Printed: {DATE j M Y}.   page {PAGENO} of {nb}");
@@ -550,10 +549,10 @@ $mpdf = new \Mpdf\Mpdf(['tempDir'=>$system_temp_dir]);
             $mpdf->WriteHTML($display_block);
 
             //echo("about to show pdf. topdf =$topdf force_pdf =$force_pdf<BR>");
-            if ($topdf == 1) {  // Show on screen
-                $mpdf->Output($student_name . ".pdf", 'I');
-            } else if ($topdf == 2) {  // Save pdf file
-                $mpdf->Output($student_name . ".pdf", 'F');
+            if ($topdf == 1 || $topdf == 2) {
+                $safe_filename = preg_replace('/[^A-Za-z0-9_\- ]/', '_', $student_name) . '.pdf';
+                $mpdf->Output($safe_filename, 'D');
+                exit();
             } else if ($topdf == 3) {
                 // Email to student
                 // Done in file projectmarking_civl_email_feedback.php
@@ -642,8 +641,8 @@ $mpdf = new \Mpdf\Mpdf(['tempDir'=>$system_temp_dir]);
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo "An Error occured accessing the database in function: $this_function <BR>\n";
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
             exit();
         }
@@ -671,8 +670,8 @@ $mpdf = new \Mpdf\Mpdf(['tempDir'=>$system_temp_dir]);
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
                 exit();
             }
@@ -694,8 +693,8 @@ $mpdf = new \Mpdf\Mpdf(['tempDir'=>$system_temp_dir]);
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
                 exit();
             }
@@ -711,8 +710,8 @@ $mpdf = new \Mpdf\Mpdf(['tempDir'=>$system_temp_dir]);
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                    echo(" Query = $query<BR> \n");
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
                     exit();
                 }

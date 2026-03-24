@@ -1,0 +1,2 @@
+# Set a custom environment variable
+SetEnv LOCAL_USER cenpas

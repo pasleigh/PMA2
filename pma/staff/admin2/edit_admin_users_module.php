@@ -20,6 +20,8 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access
 
 if($access) {
 
+    require_valid_csrf();
+
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
     }
@@ -56,8 +58,8 @@ if($access) {
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -116,7 +118,8 @@ if($access) {
     // Display the dropdowns to select the module and year
     $display_block .= "<h2>Select the module/year you want to view/edit Module Level Admin Users for...</H1>\n";
 
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
+    $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "\">\n";
+    $display_block .= csrf_token_field();
     $display_block .= "<P>Project/Module descriptions in the database: ";
     $display_block .= "<select name='pm_id_selected' id='module_select'>\n";
     $display_block .= $project_list_options;
@@ -127,15 +130,15 @@ if($access) {
 
     if ($POST_OP == "selected_new_staff") {
         // write a query to get the username of the id selected
-        $query = "SELECT * FROM $staff_names WHERE staffid='$new_admin_staff_id'";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare("SELECT * FROM $staff_names WHERE staffid=?");
+            $results->execute([$new_admin_staff_id]);
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo("An Error occured accessing the database in function: $this_function <BR>\n");
             echo("Unable to update data to the table $staff_names<BR>\n");
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         if($results->rowCount() > 0) {
@@ -164,14 +167,14 @@ if($access) {
                 $short_code = $pm_id_selected;
                 //$pm_id_selected = -6;
             }else{
-                $query = "SELECT * FROM $projects_setup WHERE id='$pm_id_selected'";
                 try {
-                    $results = $db->query($query);
+                    $results = $db->prepare("SELECT * FROM $projects_setup WHERE id=?");
+                    $results->execute([$pm_id_selected]);
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                    echo(" Query = $query<BR> \n");
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
                     exit();
                 }
 
@@ -186,30 +189,26 @@ if($access) {
 
             // Insert the data into the admin_users_module table
             // Need to check that it does not already exist
-            $query = "SELECT * FROM $admin_users_module_table WHERE username='$username' AND project_id='$pm_id_selected' ";
             try {
-                $results = $db->query($query);
+                $results = $db->prepare("SELECT * FROM $admin_users_module_table WHERE username=? AND project_id=?");
+                $results->execute([$username, $pm_id_selected]);
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
             if ($results->rowCount() == 0) {
-                $query = "INSERT INTO $admin_users_module_table SET 
-                      project_id='$pm_id_selected',username='$username',
-                      staffid='$staffid',fullname='$fullname',
-                      year_begin='$year_begin',short_code='$short_code',
-                      admin_level='1'";
                 try {
-                    $results = $db->query($query);
+                    $results = $db->prepare("INSERT INTO $admin_users_module_table SET project_id=?,username=?,staffid=?,fullname=?,year_begin=?,short_code=?,admin_level='1'");
+                    $results->execute([$pm_id_selected, $username, $staffid, $fullname, $year_begin, $short_code]);
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo("An Error occured accessing the database in function: $this_function <BR>\n");
                     echo("Unable to update data to the table $admin_users_module_table<BR>\n");
-                    echo(" Query = $query<BR> \n");
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
                     exit();
                 }
 
@@ -230,14 +229,14 @@ if($access) {
             if(substr($key,0,3)=="ai_"){
                 $staff_admin_index = substr($key,3);
                 //echo "$staff_admin_index<BR>";
-                $query = "DELETE FROM $admin_users_module_table WHERE `index`='$staff_admin_index'";
                 try {
-                    $results = $db->query($query);
+                    $results = $db->prepare("DELETE FROM $admin_users_module_table WHERE `index`=?");
+                    $results->execute([$staff_admin_index]);
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                    echo(" Query = $query<BR> \n");
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
                     exit();
                 }
             }
@@ -251,22 +250,23 @@ if($access) {
 
         $display_block .= "<H2>The current Admin users for this Module</H2> ";
 
-        $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]'>\n";
+        $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
+        $display_block .= csrf_token_field();
 
         // Get the list of staff from
-        $query = "SELECT * FROM $admin_users_module_table WHERE project_id='$pm_id_selected'";
-        if($pm_id_selected == 'all'){
-            // Show all users on every module withe module level access
-            $query = "SELECT * FROM $admin_users_module_table WHERE 1";
-        }
-
         try {
-            $results = $db->query($query);
+            if($pm_id_selected == 'all'){
+                $results = $db->prepare("SELECT * FROM $admin_users_module_table WHERE 1");
+                $results->execute([]);
+            } else {
+                $results = $db->prepare("SELECT * FROM $admin_users_module_table WHERE project_id=?");
+                $results->execute([$pm_id_selected]);
+            }
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo("An Error occured accessing the database in function: $this_function <BR>\n");
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
 
@@ -326,7 +326,8 @@ if($access) {
         //---------------------------------------------------------------------------------
         if($pm_id_selected != 'all') {
             $display_block .= "<hr><h2>Add a new admin person to the above selected module / year ...</H2>\n";
-            $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
+            $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "\">\n";
+            $display_block .= csrf_token_field();
             $NameKey = 'new_admin_staff_id';
             $MatchID = null;
             $display_block .= GetStaffSelectID($db, $staff_names, $NameKey, $MatchID);

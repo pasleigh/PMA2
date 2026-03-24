@@ -47,58 +47,47 @@ if ($access) {
     create_header_images_table_structure($db);
 
     if (isset($_FILES['image'])) {
+        require_valid_csrf();
         $errors = array();
-        $file_name = $_FILES['image']['name'];
+        $file_tmp  = $_FILES['image']['tmp_name'];
         $file_size = $_FILES['image']['size'];
-        $file_tmp = $_FILES['image']['tmp_name'];
-        $file_type = $_FILES['image']['type'];
-        $file = $files = $_FILES['image']['name'];
-        $ext = explode('.', $file);
-        $ext = end($ext);
-        $file_ext = strtolower($ext);
+        // Use finfo to verify actual MIME type — do not trust client-supplied type
+        $finfo     = new finfo(FILEINFO_MIME_TYPE);
+        $mime_type = $finfo->file($file_tmp);
+        $allowed_mimes = ['image/jpeg' => 'jpg', 'image/png' => 'png'];
 
-        $extensions = array("jpeg", "jpg", "png");
+        $image_info   = getimagesize($file_tmp);
+        $image_width  = $image_info ? $image_info[0] : 0;
+        $image_height = $image_info ? $image_info[1] : 0;
 
-        $image_info = getimagesize($_FILES["image"]["tmp_name"]);
-        $image_width = $image_info[0];
-        $image_height = $image_info[1];
-
-        //echo("Image size $image_width x $image_height<BR><BR>");
-
-        if (in_array($file_ext, $extensions) === false) {
-            $errors[] = "extension not allowed, please choose a JPEG or PNG file of dimensions <= 320x90.";
+        if (!array_key_exists($mime_type, $allowed_mimes)) {
+            $errors[] = "File type not allowed. Please upload a JPEG or PNG image.";
         }
 
         if ($image_width > 320 || $image_height > 87) {
-            $errors[] = "Image is too big ($image_width x $image_height), please choose a JPEG or PNG file of dimensions <= 320x87.";
+            $errors[] = "Image is too big ({$image_width} x {$image_height}). Maximum size is 320x87 px.";
         }
 
         if ($file_size > 2097152) {
-            $errors[] = 'File size must be < 2 MB';
-            //exit();
+            $errors[] = 'File size must be under 2 MB.';
         }
 
-        if (empty($errors) == true) {
-            //move_uploaded_file($file_tmp,"uploads/".$file_name);
-            //$csv_file_string = file_get_contents($file_tmp);
-            //echo $csv_file_string;
-            //echo "<BR>Success";
-            //echo("Temp Filename: $file_tmp<BR>");
-            $fp = fopen($file_tmp, 'r');
-            $content = fread($fp, filesize($file_tmp));
-            //$content = addslashes($content);
+        if (empty($errors)) {
+            // Generate a safe random filename — never use the original user-supplied name for storage
+            $safe_ext      = $allowed_mimes[$mime_type];
+            $safe_filename = bin2hex(random_bytes(16)) . '.' . $safe_ext;
+
+            $fp             = fopen($file_tmp, 'r');
+            $content        = fread($fp, filesize($file_tmp));
             $img_file_base64 = base64_encode($content);
             fclose($fp);
 
-            $query = "INSERT INTO header_images (header_image, filename) VALUES ('$img_file_base64', '$file_name')";
-
-            // mysql_query($query) or die("Error, query failed\n $query");
             try {
-                $result = $db->query($query);
+                $result = $db->prepare("INSERT INTO header_images (header_image, filename) VALUES (?, ?)");
+                $result->execute([$img_file_base64, $safe_filename]);
             } catch (PDOException $ex) {
                 echo "An Error occured!<BR>";
-                $err_msg = $ex->getMessage();
-                echo("$err_msg <BR>");
+                echo htmlspecialchars($ex->getMessage(), ENT_QUOTES, 'UTF-8');
                 exit();
             }
             $id = $db->lastInsertId();
@@ -141,17 +130,22 @@ if ($access) {
 
     <div>
         <BR>
-    <form action="<?php echo("$_SERVER[PHP_SELF]"); ?>" method="POST" enctype="multipart/form-data">
+    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8'); ?>" method="POST" enctype="multipart/form-data">
+        <?php echo csrf_token_field(); ?>
         <input type="file" name="image" />
         <input type="submit" value="Upload this file"/>
 
+        <?php if (!empty($_FILES['image']['name'])): ?>
         <ul>
-            <li>Sent file: <?php echo $_FILES['image']['name'];  ?></li>
-            <li>File size: <?php echo $_FILES['image']['size'];  ?> bytes, (<?php echo("$image_width x $image_height px")  ?>)</li>
-            <li>File type: <?php echo $_FILES['image']['type'] ?></li>
-
-            <li><img src="data:image/png;base64,<?php echo($img_file_base64); ?>" style="border-style: solid;" /></li>
+            <li>Sent file: <?php echo htmlspecialchars($_FILES['image']['name'], ENT_QUOTES, 'UTF-8'); ?></li>
+            <li>File size: <?php echo (int)$_FILES['image']['size']; ?> bytes
+                <?php if (!empty($image_width)): ?>(<?php echo (int)$image_width; ?> x <?php echo (int)$image_height; ?> px)<?php endif; ?>
+            </li>
+            <?php if (!empty($img_file_base64)): ?>
+            <li><img src="data:image/png;base64,<?php echo $img_file_base64; ?>" style="border-style: solid;" /></li>
+            <?php endif; ?>
         </ul>
+        <?php endif; ?>
 
     </form>
     </div>

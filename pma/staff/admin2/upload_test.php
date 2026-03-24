@@ -31,11 +31,7 @@
        }
 
        if(empty($errors)==true){
-           //move_uploaded_file($file_tmp,"uploads/".$file_name);
-           //$csv_file_string = file_get_contents($file_tmp);
-           //echo $csv_file_string;
-           //echo "<BR>Success";
-           echo("File: $file_tmp<BR>");
+           echo("File: " . htmlspecialchars($file_tmp, ENT_QUOTES, 'UTF-8') . "<BR>");
            $importer = new CSVparse();
            $CSV_DATA = $importer->parse_file($file_tmp);
            print_r3("CSV_DATA",$CSV_DATA);
@@ -48,16 +44,17 @@
 <html>
 <body>
 
-<form action="<?php echo("$_SERVER[PHP_SELF]?pm_id=$pm_id"); ?>" method="POST" enctype="multipart/form-data">
+<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8'); ?>?pm_id=<?php echo htmlspecialchars($pm_id ?? '', ENT_QUOTES, 'UTF-8'); ?>" method="POST" enctype="multipart/form-data">
     <input type="file" name="image" />
     <input type="submit"/>
 
+    <?php if (!empty($_FILES['image']['name'])): ?>
     <ul>
-        <li>Sent file: <?php echo $_FILES['image']['name'];  ?>
-        <li>File size: <?php echo $_FILES['image']['size'];  ?>
-        <li>File type: <?php echo $_FILES['image']['type'] ?>
-        <li>File tmp name: <?php echo $_FILES['image']['tmp_name'] ?>
+        <li>Sent file: <?php echo htmlspecialchars($_FILES['image']['name'], ENT_QUOTES, 'UTF-8'); ?></li>
+        <li>File size: <?php echo (int)$_FILES['image']['size']; ?></li>
+        <li>File type: <?php echo htmlspecialchars($_FILES['image']['type'], ENT_QUOTES, 'UTF-8'); ?></li>
     </ul>
+    <?php endif; ?>
 
 </form>
 

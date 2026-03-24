@@ -38,9 +38,9 @@ function copy_module_project_setup_row($db, $projects_setup_table, $projects_set
         $rec = $results->fetch();
     } catch (PDOException $ex) {
         echo "An Error occured getting the list from projects_setup<BR>\n";
-        echo(" Query = $query<BR>\n");
         $err_msg = $ex->getMessage();
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -241,7 +241,6 @@ SQL;
     try{
         $db->query($query);
     }catch (PDOException $ex) {
-        echo("Unable to copy project data for project id: $pm_id_old.<BR> Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -253,9 +252,9 @@ SQL;
         $rec = $result->fetch();
     } catch (PDOException $ex) {
         echo "An Error occured getting the list from projects_setup for last update<BR>\n";
-        echo(" Query = $query<BR>\n");
         $err_msg = $ex->getMessage();
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -270,9 +269,9 @@ SQL;
         $rec = $results->fetch();
     } catch (PDOException $ex) {
         echo "An Error occured getting the list from projects_setup<BR>\n";
-        echo(" Query = $query<BR>\n");
         $err_msg = $ex->getMessage();
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $prog_short_names = $rec['prog_short_names'];
@@ -285,7 +284,6 @@ SQL;
         $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured adding the new project setup proposals<BR>\n";
-        echo(" Query = $query<BR> \n");
         $err_msg = $ex->getMessage();
         echo("Error message: $err_msg<BR>\n");
         exit();
@@ -339,9 +337,9 @@ function copy_module_tables($db, $short_code_old, $short_code_new, $year_begin_o
         $result = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured creating the table $new_table <BR>\n";
-        echo(" Query = $query<BR>\n");
         $err_msg = $ex->getMessage();
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -352,9 +350,9 @@ function copy_module_tables($db, $short_code_old, $short_code_new, $year_begin_o
         $result = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured creating the table $new_table <BR>\n";
-        echo(" Query = $query<BR>\n");
         $err_msg = $ex->getMessage();
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -396,9 +394,9 @@ function CopyTable($db, $old_table, $new_table, $copy_data = true){
         $result = $db->query($query1);
     } catch (PDOException $ex) {
         echo "An Error occured creating the table $new_table <BR>\n";
-        echo(" Query = $query1<BR>\n");
         $err_msg = $ex->getMessage();
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -407,9 +405,9 @@ function CopyTable($db, $old_table, $new_table, $copy_data = true){
             $result = $db->query($query2);
         } catch (PDOException $ex) {
             echo "An Error occured copying data from the table $old_table to $new_table<BR>\n";
-            echo(" Query = $query2<BR>\n");
             $err_msg = $ex->getMessage();
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
     }

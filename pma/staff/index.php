@@ -1,4 +1,5 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 (@include_once("./set_dir_staff.php")) or die("Cannot find this file to include: set_dir_staff.php<BR>");
 /**
  * Created by PhpStorm.
@@ -11,31 +12,28 @@ if (array_key_exists('debug', $_GET)) {
     $debug = true;
 }
 
-$dev_mode = false;
-$dev_user = null;
-if (array_key_exists('devmode', $_GET)) {
-    $devmode_value = $_GET['devmode'];
-    if ($devmode_value == 'cenpas24') {
-        $dev_user = 'cenpas';
-        $dev_mode = true;
-    }elseif ($devmode_value == 'cenpas24_noadmin') {
-        $dev_user = 'cenpas_noadmin';
-        $dev_mode = true;
-    }
-}
-if ($dev_mode) {
-    //echo("dev_user = $dev_user.<BR>");
-}
 $num_cookie_days = 30;
 if (isset($_SERVER['REMOTE_USER'])) {
     $user = $_SERVER['REMOTE_USER'];
     $user = get_server_username();
-    setcookie('USERNAME', $user, time() + $num_cookie_days*24 * 3600, "/");
-}
-if ($dev_mode and $dev_user) {
-    $GLOBALS['USERNAME'] = $dev_user;
-    $MY_REMOTE_USER = $dev_user;
-    setcookie('USERNAME', $dev_user, time() + $num_cookie_days*24 * 3600, "/");
+    setcookie('USERNAME', $user, [
+        'expires'  => time() + $num_cookie_days * 24 * 3600,
+        'path'     => '/',
+        'secure'   => true,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    $_SESSION['USERNAME'] = $user;
+}elseif(isset($_SERVER['LOCAL_USER'])){
+    $user = $_SERVER['LOCAL_USER'];
+    setcookie('USERNAME', $user, [
+        'expires'  => time() + $num_cookie_days * 24 * 3600,
+        'path'     => '/',
+        'secure'   => true,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    $_SESSION['USERNAME'] = $user;
 }
 (@include_once("./config.php")) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
 (@include_once("./setup_titles.php")) or die("Cannot find this file to include: setup_titles.php<BR>");
@@ -59,8 +57,8 @@ $staff_username = "unknown";
 if(array_key_exists('REMOTE_USER',$_SERVER)){
     $staff_username = $_SERVER['REMOTE_USER'];
 }else{
-    if(array_key_exists('USERNAME',$_COOKIE)){
-        $staff_username = $_COOKIE['USERNAME'];
+    if(isset($_SESSION['USERNAME'])){
+        $staff_username = $_SESSION['USERNAME'];
     }
 }
 $staff_full_name = GetStaffNameFromUsername($db, $staff_username, $staff_names_default, false);
@@ -70,12 +68,14 @@ $staff_full_name = trim($staff_full_name);
 $access = false;
 $display_block = "";
 if (empty($staff_full_name)) {
-
-    $greeting_block = "<P>Hello $staff_username, you do not seem to have a staff username on this system.</P>";
+    $safe_username  = htmlspecialchars($staff_username, ENT_QUOTES, 'UTF-8');
+    $greeting_block = "<P>Hello {$safe_username}, you do not seem to have a staff username on this system.</P>";
     $greeting_block .= "<P>Please contact the manager of this system if you think there is a mistake.</P>";
     $greeting_block .= "<p><A target='self' href='..'>Return to the home page</a>.</P>";
 } else {
-    $greeting_block = "<h4>Hello $staff_full_name ($staff_username)</h4>";
+    $safe_fullname  = htmlspecialchars($staff_full_name, ENT_QUOTES, 'UTF-8');
+    $safe_username  = htmlspecialchars($staff_username,  ENT_QUOTES, 'UTF-8');
+    $greeting_block = "<h4>Hello {$safe_fullname} ({$safe_username})</h4>";
     $access = true;
 }
 
@@ -101,7 +101,8 @@ if ($access) {
         $results = $setup->fetchAll();
     } catch (PDOException $ex) {
         echo "An Error occured accessing the $projects_setup table<BR>\n";
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -119,7 +120,8 @@ if ($access) {
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured accessing the $dash_projects_setup table<BR>\n";
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $recs = $results->fetchAll();

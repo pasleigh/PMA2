@@ -12,7 +12,6 @@ function GetQsTemplatesSelect($db, $NameKey, $MatchID){
         $setup = $db->query($query);
         $results = $setup->fetchAll();
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the templates tables<BR> Query = $query<BR>\n";
         $err_msg = $ex->getMessage();
         exit();
     }
@@ -45,7 +44,6 @@ function GetStaffNameTemplatesSelect($db, $NameKey, $MatchID){
         $setup = $db->query($query);
         $results = $setup->fetchAll();
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the staff name templates tables<BR> Query = $query<BR>\n";
         $err_msg = $ex->getMessage();
         exit();
     }

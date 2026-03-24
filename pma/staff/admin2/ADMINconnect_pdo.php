@@ -1,11 +1,10 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 (@include_once("./utility_functions.php")) OR die("Cannot find file utility_functions.php<BR>");
 (@include_once("./adminusers.php")) OR die("Cannot find this file to include: adminusers.php<BR>");
 
-if(isset($_COOKIE['USERNAME'])){
-//if (array_key_exists('REMOTE_USER', $_SERVER)==true){
-//    $this_staff_username = $_SERVER['REMOTE_USER'];
-    $this_staff_username = $_COOKIE['USERNAME'];
+if(isset($_SESSION['USERNAME'])){
+    $this_staff_username = $_SESSION['USERNAME'];
     $admin_level = GetSuperAdminLevel($db,$this_staff_username) ;
 
 
@@ -23,7 +22,8 @@ if(isset($_COOKIE['USERNAME'])){
             echo("An Error occured connecting to the database in file: $this_file (near line $this_line)<BR>\n");
             echo("host name: $hostname<BR>\n");
             echo("database name: $dbName<BR>\n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

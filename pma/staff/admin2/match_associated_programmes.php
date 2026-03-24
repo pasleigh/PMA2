@@ -45,6 +45,8 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if($is_module_admin || $admin_access) {
 
+    require_valid_csrf();
+
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
@@ -68,8 +70,8 @@ if($is_module_admin || $admin_access) {
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo "An Error occured accessing the database in function: $this_function <BR>\n";
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
         }
     }
 
@@ -80,8 +82,8 @@ if($is_module_admin || $admin_access) {
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
         exit();
     }
@@ -93,15 +95,14 @@ if($is_module_admin || $admin_access) {
         $prog_distinct_names[$i] = $recs['programme'];
 
         $prog_full_name = $prog_distinct_names[$i];
-        $query = "SELECT * FROM $students_programmes WHERE prog_full_name='$prog_full_name'";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare("SELECT * FROM $students_programmes WHERE prog_full_name=?");
+            $results->execute([$prog_full_name]);
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo "An Error occured accessing the database in function: $this_function <BR>\n";
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         if($results->rowCount() == 1){
@@ -110,15 +111,14 @@ if($is_module_admin || $admin_access) {
             $prog_short_name_index[$i] = $rec_p['prog_short_name_index'];
         }else{
             // Put the programme full name in the table
-            $query = "INSERT $students_programmes SET prog_full_name='$prog_full_name'";
             try {
-                $results = $db->query($query);
+                $results = $db->prepare("INSERT INTO $students_programmes SET prog_full_name=?");
+                $results->execute([$prog_full_name]);
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
             $prog_short_name_index[$i] = -1;
@@ -144,8 +144,8 @@ if($is_module_admin || $admin_access) {
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo "An Error occured accessing the database in function: $this_function <BR>\n";
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
             exit();
         }
@@ -164,15 +164,14 @@ if($is_module_admin || $admin_access) {
             $p_index = $prog_short_name_index[$i];
 
             // Update the database
-            $query = "UPDATE $students_programmes SET  prog_short_name_index=$p_index WHERE prog_full_name='$prog_full_name'";
             try {
-                $results = $db->query($query);
+                $results = $db->prepare("UPDATE $students_programmes SET prog_short_name_index=? WHERE prog_full_name=?");
+                $results->execute([$p_index, $prog_full_name]);
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
 
@@ -189,7 +188,8 @@ to the <span style='font-face: bold; text-decoration: underline ;'> real</span> 
 
     $display_block .= $changed_message;
 
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "?pm_id=" . htmlspecialchars($pm_id, ENT_QUOTES, 'UTF-8') . "\">\n";
+    $display_block .= csrf_token_field();
 
     $display_block .= "<h1>$module_prefix$module1$module_postfix $module_short_description </h1>
              <div align=\"left\">\n";
@@ -218,7 +218,8 @@ to the <span style='font-face: bold; text-decoration: underline ;'> real</span> 
 
 
     $display_block .= "<hr>";
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "?pm_id=" . htmlspecialchars($pm_id, ENT_QUOTES, 'UTF-8') . "\">\n";
+    $display_block .= csrf_token_field();
 
     $display_block .= "<h1>Delete the list of Distinct Programme Full Names</h1>\n";
     $display_block .= "<div align=\"left\">\n";

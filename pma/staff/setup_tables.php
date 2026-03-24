@@ -8,6 +8,10 @@
 //(@include_once("./setup_titles.php")) OR die("Cannot open setup_titles.php<BR>");
 $STAFF_ROOT = getenv('BASE_DIR') . "/staff";
 $STAFF_ROOT = $STAFF_DIR_VAL;
+(@include_once("$STAFF_ROOT/csrf_functions.php")) OR die("Cannot open csrf_functions.php<BR>");
+// Application-wide CSRF guard: any POST that reaches setup_tables.php must carry a valid token.
+// The token is injected into all forms automatically by the page-level CSRF script in the head files.
+require_valid_csrf();
 (@include_once("$STAFF_ROOT/staff_functions.php")) OR die("Cannot open $STAFF_ROOT/staff_functions.php from setup_tables<BR>");
 (@include_once("$STAFF_ROOT/table_functions.php")) OR die("Cannot open $STAFF_ROOT/table_functions.php from setup_tables<BR>");
 (@include_once("$STAFF_ROOT/markstore_functions.php")) OR die("Cannot open $STAFF_ROOT/markstore_functions.php from setup_tables<BR>");
@@ -60,14 +64,7 @@ $query = "SHOW TABLES LIKE '$assessment_criteria_table'";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    $this_file = __FILE__;
-    $this_line = __LINE__;
-    echo "An Error occured accessing the database in function: $this_function<BR>\n";
-    echo "File: $this_file  near line: $this_line<BR>\n";
-    echo(" Query = $query<BR> \n");
-    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-
+    pma_log_db_error($ex, __FILE__ . ':' . __LINE__);
     exit();
 }
 $num_rows = $results->rowCount();
@@ -90,14 +87,7 @@ if ($pm_id == "") {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        $this_file = __FILE__;
-        $this_line = __LINE__;
-        echo "An Error occured accessing the database in function: $this_function<BR>\n";
-        echo "File: $this_file  near line: $this_line<BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-
+        pma_log_db_error($ex, __FILE__ . ':' . __LINE__);
         exit();
     }
     $result_data = $results->fetch();
@@ -120,14 +110,7 @@ if ($pm_id != "") {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        $this_file = __FILE__;
-        $this_line = __LINE__;
-        echo "An Error occured accessing the database in function: $this_function<BR>\n";
-        echo "File: $this_file  near line: $this_line<BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-
+        pma_log_db_error($ex, __FILE__ . ':' . __LINE__);
         exit();
     }
 
@@ -244,7 +227,7 @@ if ($pm_id != "") {
     echo("</pre>");
     */
     //$this_staff_username = $_SERVER['REMOTE_USER'];
-    $this_staff_username = $_COOKIE['USERNAME'];
+    $this_staff_username = $_SESSION['USERNAME'] ?? '';
     $this_staff_full_name = GetStaffNameFromUsername($db, $this_staff_username, $staff_names2, false);
     $this_staff_id = GetStaffIDFromUsername($db, $this_staff_username, $staff_names2);
 
@@ -258,11 +241,7 @@ if ($pm_id != "") {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-
+        pma_log_db_error($ex, __FILE__ . ':' . __LINE__);
         exit();
     }
     $recs = $results->fetch();
@@ -301,10 +280,7 @@ if ($pm_id != "") {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        pma_log_db_error($ex, __FILE__ . ':' . __LINE__);
         exit();
     }
 
@@ -325,11 +301,7 @@ if ($pm_id != "") {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-
+        pma_log_db_error($ex, __FILE__ . ':' . __LINE__);
         exit();
     }
     $recs = $results->fetch();

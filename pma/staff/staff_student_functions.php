@@ -8,7 +8,6 @@ function IsStaff($db, $username, $staff_names)
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured running query<BR>\n";
-        echo(" Query = $query<BR \n");
         $err_msg = $ex->getMessage();
         echo($err_msg);
     }
@@ -30,7 +29,6 @@ function IsStudent($db, $username, $students)
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured running query<BR>\n";
-        echo(" Query = $query<BR \n");
         $err_msg = $ex->getMessage();
         echo($err_msg);
         return false;
@@ -56,7 +54,6 @@ function GetSuperAdminLevel_staff_student($db, $username)
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured running query<BR>\n";
-        echo(" Query = $query<BR \n");
         $err_msg = $ex->getMessage();
         echo($err_msg);
         return $admin_level;
@@ -98,7 +95,6 @@ function IsStaffActive($db, $this_staff_full_name, $staff_names_table = "staff_n
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured running query<BR>\n";
-        echo(" Query = $query<BR \n");
         $err_msg = $ex->getMessage();
         echo($err_msg);
         return $active;

@@ -147,48 +147,45 @@ if ($_REQUEST['op'] != "add") {
     $date_now = date("Y-m-d H:i:s"); //'2016-03-01 00:00:00';// date_now();
     $date_modified =  date("Y-m-d H:i:s"); //'2016-03-01 00:00:00';// date_now();
 
-    $query = "INSERT INTO $master_name SET date_added='$date_now', date_modified='$date_modified', f_title='$f_title', f_supervisor='$supervisor_name', f_supervisor_id='$f_supervisor_id'";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare("INSERT INTO $master_name SET date_added=?, date_modified=?, f_title=?, f_supervisor=?, f_supervisor_id=?");
+        $results->execute([$date_now, $date_modified, $f_title, $supervisor_name, $f_supervisor_id]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        echo("An Error occured accessing the database <BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $master_id = $db->lastInsertId();
 
     $f_UGprojects = '0';
 
-    $query_options = "";
+    // Build option columns/params — column names are server-side constants, only values are parameterised
+    $option_cols = [];
+    $option_vals = [];
     for ($i = 0; $i < sizeof($option); $i++) {
         $fname = "f" . $option[$i];
         if ($option_flag[$i] == 1) {
-            $value = addslashes($_REQUEST[$fname]);
-            $value = convert_smart_quotes($value);
-        }else{
+            $value = convert_smart_quotes($_REQUEST[$fname] ?? '');
+        } else {
             $value = "";
         }
-        $query_options .= "$fname='$value'";
-        if($i+1 < sizeof($option)){
-            $query_options .= ", ";
-        }
+        $option_cols[] = "$fname=?";
+        $option_vals[] = $value;
     }
-    //`id`, `master_id`, `date_added`, `date_modified`, `f_assocstaff`, `f_assocstaff_id`,
-    // `f_outline`, `f_relmods`, `f_backread`, `f_relsites`,
-    // `f_skills`, `f_software`, `f_softsupport`, `f_labs`, `f_works`, `f_programmes`,
-    // `f_progs`, `f_UGprojects`, `f_PGprojects`, `f_furtherinfo
-    $query = "INSERT INTO $project_details SET master_id='$master_id', f_assocstaff='$second_marker_name',
-                    f_assocstaff_id='$f_assocstaff_id', f_progs='$f_progs',
-                    f_outline='$f_outline', f_UGprojects='$f_UGprojects', f_PGprojects='$f_PGprojects', $query_options ";
+    $options_sql = implode(', ', $option_cols);
+
+    $detail_params = array_merge(
+        [$master_id, $second_marker_name, $f_assocstaff_id, $f_progs, $f_outline, $f_UGprojects, $f_PGprojects],
+        $option_vals
+    );
     try {
-        $results = $db->query($query);
+        $results = $db->prepare("INSERT INTO $project_details SET master_id=?, f_assocstaff=?, f_assocstaff_id=?, f_progs=?, f_outline=?, f_UGprojects=?, f_PGprojects=?, $options_sql");
+        $results->execute($detail_params);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        echo("An Error occured accessing the database <BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 

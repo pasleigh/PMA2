@@ -122,7 +122,6 @@ if($is_module_admin || $admin_access) {
         $setup = $db->query($query);
         $results = $setup->fetchAll();
     } catch (PDOException $ex) {
-        echo "An Error occured listing assessqs_ tables<BR> Query = $query<BR>\n";
         $err_msg = $ex->getMessage();
         exit();
     }
@@ -218,8 +217,8 @@ if($is_module_admin || $admin_access) {
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                    echo(" Query = $query<BR> \n");
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
                     exit();
                 }
@@ -229,8 +228,8 @@ if($is_module_admin || $admin_access) {
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                    echo(" Query = $query<BR> \n");
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
                     exit();
                 }
@@ -242,8 +241,8 @@ if($is_module_admin || $admin_access) {
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                    echo(" Query = $query<BR> \n");
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
                     exit();
                 }
@@ -253,8 +252,8 @@ if($is_module_admin || $admin_access) {
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                    echo(" Query = $query<BR> \n");
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
                     exit();
                 }

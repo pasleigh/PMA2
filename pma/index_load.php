@@ -9,7 +9,6 @@ if(array_key_exists('debug', $_GET)) {
 }
 
 include("./config_main.php");
-//include("./config_main_test.php");
 
 include './index.php';
 

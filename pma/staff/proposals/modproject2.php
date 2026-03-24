@@ -164,48 +164,45 @@ if ($_REQUEST['op'] == "save") {
     $date_now = date("Y-m-d H:i:s"); //'2016-03-01 00:00:00';// date_now();
     $date_modified = date("Y-m-d H:i:s"); //'2016-03-01 00:00:00';// date_now();
 
-    //$f_supervisor_ = GetStaffIDFromID($db, $f_supervisor_id, $staff_names2);
-    $query = "UPDATE $master_name SET f_title='$f_title', f_supervisor='$supervisor_name', f_supervisor_id='$f_supervisor_id' WHERE id='$master_id'";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare("UPDATE $master_name SET f_title=?, f_supervisor=?, f_supervisor_id=? WHERE id=?");
+        $results->execute([$f_title, $supervisor_name, $f_supervisor_id, $master_id]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        echo("An Error occured accessing the database <BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
-    //$master_id = $db->lastInsertId();
 
     $f_UGprojects = '0';
 
-    $query_options = "";
+    // Build option columns/params — column names are server-side constants, only values are parameterised
+    $option_cols = [];
+    $option_vals = [];
     for ($i = 0; $i < sizeof($option); $i++) {
         $fname = "f" . $option[$i];
         if ($option_flag[$i] == 1) {
-            $value = addslashes($_REQUEST[$fname]);
-            $value = convert_smart_quotes($value);
-        }else{
+            $value = convert_smart_quotes(addslashes($_REQUEST[$fname] ?? ''));
+        } else {
             $value = "";
         }
-        $query_options .= "$fname='$value'";
-        if($i+1 < sizeof($option)){
-            $query_options .= ", ";
-        }
+        $option_cols[] = "$fname=?";
+        $option_vals[] = $value;
     }
-    //`id`, `master_id`, `date_added`, `date_modified`, `f_assocstaff`, `f_assocstaff_id`,
-    // `f_outline`, `f_relmods`, `f_backread`, `f_relsites`,
-    // `f_skills`, `f_software`, `f_softsupport`, `f_labs`, `f_works`, `f_programmes`,
-    // `f_progs`, `f_UGprojects`, `f_PGprojects`, `f_furtherinfo
-    $query = "UPDATE $project_details SET f_assocstaff='$second_marker_name', f_assocstaff_id='$f_assocstaff_id', f_progs='$f_progs',
-                   f_outline='$f_outline', f_UGprojects='$f_UGprojects', f_PGprojects='$f_PGprojects', $query_options WHERE master_id='$master_id'";
+    $options_sql = implode(', ', $option_cols);
+
+    $detail_params = array_merge(
+        [$second_marker_name, $f_assocstaff_id, $f_progs, $f_outline, $f_UGprojects, $f_PGprojects],
+        $option_vals,
+        [$master_id]
+    );
     try {
-        $results = $db->query($query);
+        $results = $db->prepare("UPDATE $project_details SET f_assocstaff=?, f_assocstaff_id=?, f_progs=?, f_outline=?, f_UGprojects=?, f_PGprojects=?, $options_sql WHERE master_id=?");
+        $results->execute($detail_params);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        echo("An Error occured accessing the database <BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $display_block .= "<h1>Saved ...</h1>";
@@ -216,14 +213,13 @@ if ($_REQUEST['op'] == "save") {
     $display_block .= "$module_ref_block";
     $display_block .= "<H3>Updates to the project theme database closes at midnight $cldate</H3>\n";
 
-    $query = "select * from $master_name WHERE id='$master_id' ";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare("SELECT * FROM $master_name WHERE id=?");
+        $results->execute([$master_id]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        echo("An Error occured accessing the database <BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $row = $results->fetch();
@@ -231,14 +227,13 @@ if ($_REQUEST['op'] == "save") {
     $f_supervisor_id = $row['f_supervisor_id'];
     $f_title = $row['f_title'];
 
-    $query = "select * from $project_details WHERE master_id='$master_id' ";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare("SELECT * FROM $project_details WHERE master_id=?");
+        $results->execute([$master_id]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        echo("An Error occured accessing the database <BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $row = $results->fetch();

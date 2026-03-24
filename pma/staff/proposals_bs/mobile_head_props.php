@@ -9,6 +9,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <?php if (function_exists('generate_csrf_token')): ?>
+    <meta name="csrf-token" content="<?php echo htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>">
+    <?php endif; ?>
     <link rel="Shortcut Icon" type="image/ico" href="../images/favicon.ico"/>
 
     <link rel="stylesheet" type="text/css" href="../frameworks/Bootstrap-3.3.7/css/bootstrap.min.css"/>
@@ -38,4 +41,24 @@
 
     <script src="../frameworks/showdown.min.js"></script>
     <script src="../frameworks/turndown.js"></script>
+
+    <script>
+    /* CSRF auto-injection */
+    (function () {
+        var meta = document.querySelector('meta[name="csrf-token"]');
+        if (!meta) return;
+        var token = meta.getAttribute('content');
+        function injectForms() {
+            document.querySelectorAll('form').forEach(function (form) {
+                if (!form.querySelector('input[name="csrf_token"]')) {
+                    var inp = document.createElement('input');
+                    inp.type = 'hidden'; inp.name = 'csrf_token'; inp.value = token;
+                    form.appendChild(inp);
+                }
+            });
+            if (typeof jQuery !== 'undefined') { jQuery.ajaxSetup({ headers: { 'X-CSRF-Token': token } }); }
+        }
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', injectForms); } else { injectForms(); }
+    })();
+    </script>
 

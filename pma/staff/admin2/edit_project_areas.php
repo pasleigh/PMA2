@@ -33,11 +33,11 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 if($is_module_admin || $admin_access) {
 
     $admin_users_table = "admin_users";
+    require_valid_csrf();
+
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
     }
-// if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
@@ -79,14 +79,14 @@ if($is_module_admin || $admin_access) {
                 $key2 = "description$area_count";
                 $area_description = $_POST[$key2];
 
-                $query = "UPDATE $projects_areas SET area='$area', description='$area_description' WHERE `id`='$area_id'";
                 try {
-                    $results = $db->query($query);
+                    $results = $db->prepare("UPDATE $projects_areas SET area=?, description=? WHERE `id`=?");
+                    $results->execute([$area, $area_description, $area_id]);
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                    echo(" Query = $query<BR> \n");
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
                     exit();
                 }
             }
@@ -101,14 +101,14 @@ if($is_module_admin || $admin_access) {
             if(substr($key,0,3)=="ai_"){
                 $area_index = substr($key,3);
 
-                $query = "DELETE FROM $projects_areas WHERE `id`='$area_index'";
                 try {
-                    $results = $db->query($query);
+                    $results = $db->prepare("DELETE FROM $projects_areas WHERE `id`=?");
+                    $results->execute([$area_index]);
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                    echo(" Query = $query<BR> \n");
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
                     exit();
                 }
             }
@@ -120,15 +120,15 @@ if($is_module_admin || $admin_access) {
         $description_new = $_REQUEST['description_new'];
         //echo("$area_new : $description_new");
 
-        $query = "INSERT INTO $projects_areas SET area='$area_new',description='$description_new'";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare("INSERT INTO $projects_areas SET area=?,description=?");
+            $results->execute([$area_new, $description_new]);
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo("An Error occured accessing the database in function: $this_function <BR>\n");
             echo("Unable to update data to the table $projects_areas<BR>\n");
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
 
@@ -148,8 +148,8 @@ if($is_module_admin || $admin_access) {
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
         exit();
     }
@@ -175,7 +175,8 @@ if($is_module_admin || $admin_access) {
     $display_block .= "<h1><span style='color: black'>The editable list of Project Areas</span> </h1>";
 
 
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "?pm_id=" . htmlspecialchars($pm_id, ENT_QUOTES, 'UTF-8') . "\">\n";
+    $display_block .= csrf_token_field();
 
 // Get the list of staff from the staff_names2 table
     $query = "SELECT * FROM $projects_areas";
@@ -184,8 +185,8 @@ if($is_module_admin || $admin_access) {
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -231,7 +232,8 @@ if($is_module_admin || $admin_access) {
 
 //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Add a new area to the list...</H2>\n";
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "?pm_id=" . htmlspecialchars($pm_id, ENT_QUOTES, 'UTF-8') . "\">\n";
+    $display_block .= csrf_token_field();
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"new\">";
     $display_block .= "New Area: <input type=\"text\" name=\"area_new\" value=\"\"  size=30 maxlength=50 ></TD>\n";
     $display_block .= " Description: <input type=\"text\" name=\"description_new\" value=\"\"  size=60 maxlength=150 ></TD>\n";

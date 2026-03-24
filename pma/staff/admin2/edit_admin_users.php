@@ -19,11 +19,11 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access
 if($access) {
 
     $admin_users_table = "admin_users";
+    require_valid_csrf();
+
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
     }
-// if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
@@ -42,7 +42,8 @@ if($access) {
     if ($POST_OP == "new") {
 
         $display_block = "<h2>Select names from this default staff list to become admin users</h2>";
-        $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
+        $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "\">\n";
+    $display_block .= csrf_token_field();
 
 // Get the list of staff from the staff_names2 table
         $query = "select * from $staff_names_default order by familyname";
@@ -52,8 +53,8 @@ if($access) {
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo("An Error occured accessing the database in function: $this_function <BR>\n");
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
 
@@ -126,16 +127,15 @@ if($access) {
             $mod_admin_level = $_POST[$postid];
 
             //$display_block .= "$staffid, $fullname, $firstname, $familyname, $initials, $title, $email, $username, $room, $inactive_chk .... <BR>\n";
-            $query = "INSERT INTO $admin_users_table set firstname='$firstname',familyname='$familyname',fullname='$fullname',email='$email',username='$username',admin_level='$mod_admin_level' ";
-            //$display_block .= $query;
             try {
-                $results = $db->query($query);
+                $results = $db->prepare("INSERT INTO $admin_users_table SET firstname=?,familyname=?,fullname=?,email=?,username=?,admin_level=?");
+                $results->execute([$firstname, $familyname, $fullname, $email, $username, $mod_admin_level]);
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo("An Error occured accessing the database in function: $this_function <BR>\n");
                 echo("Unable to update data to the table $admin_users_table<BR>\n");
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
         }
@@ -160,16 +160,15 @@ if($access) {
                     $mod_admin_level = 3;
                 }
             }
-            $query = "UPDATE $admin_users_table set admin_level='$mod_admin_level' WHERE username='$username'";
-            //$display_block .= $query;
             try {
-                $results = $db->query($query);
+                $results = $db->prepare("UPDATE $admin_users_table SET admin_level=? WHERE username=?");
+                $results->execute([$mod_admin_level, $username]);
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo("An Error occured accessing the database in function: $this_function <BR>\n");
                 echo("Unable to update data to the table $admin_users_table<BR>\n");
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
 
@@ -186,7 +185,8 @@ if($access) {
     $display_block .= "<H2>The current Admin users table</H2>";
     $display_block .= "<p>Change the admin level if you like</p>";
 
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
+    $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "\">\n";
+    $display_block .= csrf_token_field();
 
 // Get the list of staff from the staff_names2 table
     $query = "select * from $admin_users_table order by familyname";
@@ -196,8 +196,8 @@ if($access) {
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 

@@ -8,11 +8,18 @@ $dbusername = DB_ADMIN_USER;
 $password = DB_ADMIN_PASS;
 
 $num_cookie_days = 30;
-setcookie('BASE_DIR',__BASE_DIR__,time() + (86400 * $num_cookie_days), "/");
-setcookie('ADMIN_DIR',__ADMIN_DIR__,time() + (86400 * $num_cookie_days), "/");
-setcookie('STAFF_DIR',__STAFF_DIR__,time() + (86400 * $num_cookie_days), "/");
-setcookie('STUDENT_DIR',__STUDENT_DIR__,time() + (86400 * $num_cookie_days), "/");
-setcookie('PROPS_DIR',__PROPS_DIR__,time() + (86400 * $num_cookie_days), "/");
+$_cookie_opts = [
+    'expires'  => time() + (86400 * $num_cookie_days),
+    'path'     => '/',
+    'secure'   => true,   // Requires HTTPS in production
+    'httponly' => true,
+    'samesite' => 'Lax',
+];
+setcookie('BASE_DIR',    __BASE_DIR__,    $_cookie_opts);
+setcookie('ADMIN_DIR',   __ADMIN_DIR__,   $_cookie_opts);
+setcookie('STAFF_DIR',   __STAFF_DIR__,   $_cookie_opts);
+setcookie('STUDENT_DIR', __STUDENT_DIR__, $_cookie_opts);
+setcookie('PROPS_DIR',   __PROPS_DIR__,   $_cookie_opts);
 
 if($debug){
     echo '<pre>';
@@ -60,6 +67,9 @@ try {
     $school_module_prefix = $result['default_module_prefix'];
     $running_title = $result['running_title'];
     $running_subtitle = "";//$result['running_subtitle'];
+    // HTML-safe variants for direct output into page titles / head content
+    $school_title_h  = htmlspecialchars($school_title  ?? '', ENT_QUOTES, 'UTF-8');
+    $running_title_h = htmlspecialchars($running_title ?? '', ENT_QUOTES, 'UTF-8');
     //echo("School: $school<BR>\n");
     //echo("Header: $header_image<BR>\n");
     //echo("School title: $school_title<BR>\n");

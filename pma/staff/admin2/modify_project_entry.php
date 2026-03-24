@@ -54,8 +54,8 @@ if ($POST_OP == "modify") {
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
         exit();
     }
@@ -90,8 +90,8 @@ if ($POST_OP == "modify") {
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo "An Error occured accessing the database in function: $this_function <BR>\n";
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
             exit();
         }
@@ -104,8 +104,8 @@ if ($POST_OP == "modify") {
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
         exit();
     }

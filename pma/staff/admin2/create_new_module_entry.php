@@ -72,7 +72,8 @@ if ($POST_OP == "create"){
             echo "An Error occured adding the new project data<BR>\n";
             echo(" Query = $action<BR>\n");
             $err_msg = $ex->getMessage();
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
     }
@@ -88,7 +89,8 @@ if ($POST_OP == "create"){
         echo "An Error occured getting the list from projects_setup<BR>\n";
         echo(" Query = $get_list<BR>\n");
         $err_msg = $ex->getMessage();
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -104,7 +106,6 @@ if ($POST_OP == "create"){
         $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured adding the new project setup proposals<BR>\n";
-        echo(" Query = $query<BR> \n");
         $err_msg = $ex->getMessage();
         echo("Error message: $err_msg<BR>\n");
         exit();
@@ -120,7 +121,8 @@ if ($POST_OP == "create"){
         echo "An Error occured updating projects_setup<BR>\n";
         echo(" Query = $action<BR>\n");
         $err_msg = $ex->getMessage();
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     //echo $action . "<BR>";
@@ -141,7 +143,8 @@ if ($POST_OP == "create"){
         echo "An Error occured updating projects_setup<BR>\n";
         echo(" Query = $action<BR>\n");
         $err_msg = $ex->getMessage();
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     //mysql_query($action) or die(" Unable to update  project entry to the table $projects_setup. <BR>/> Query = $action");
@@ -172,7 +175,8 @@ if ($POST_OP == "create"){
             echo "An Error occured updating projects_setup<BR>\n";
             echo(" Query = $action<BR>\n");
             $err_msg = $ex->getMessage();
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
     }
@@ -190,7 +194,8 @@ if ($POST_OP == "create"){
         echo "An Error occured updating dates in projects_setup<BR>\n";
         echo(" Query = $action<BR>\n");
         $err_msg = $ex->getMessage();
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $display_block .= "<h2>creating the new database tables...</H2>";
@@ -209,9 +214,9 @@ if ($POST_OP == "create"){
             $db->query($query);
         } catch (PDOException $ex) {
             echo "An Error occured creating table<BR>\n";
-            echo(" Query = $query<BR>\n");
             $err_msg = $ex->getMessage();
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $display_block .= " ... created ...<BR>";
@@ -230,9 +235,9 @@ if ($POST_OP == "create"){
             $db->query($query);
         } catch (PDOException $ex) {
             echo "An Error occured creating table<BR>\n";
-            echo(" Query = $query<BR>\n");
             $err_msg = $ex->getMessage();
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $display_block .= " ... created ...<BR>";
@@ -258,9 +263,9 @@ if ($POST_OP == "create"){
                     $db->query($query);
                 } catch (PDOException $ex) {
                     echo "An Error occured creating table<BR>\n";
-                    echo(" Query = $query<BR>\n");
                     $err_msg = $ex->getMessage();
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
                     exit();
                 }
                 $display_block .= " ... created ...<BR>";
@@ -286,9 +291,9 @@ if ($POST_OP == "create"){
             $db->query($query);
         } catch (PDOException $ex) {
             echo "An Error occured creating table<BR>\n";
-            echo(" Query = $query<BR>\n");
             $err_msg = $ex->getMessage();
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $display_block .= " ... created ...<BR>";
@@ -311,9 +316,9 @@ if ($POST_OP == "create"){
             $db->query($query);
         } catch (PDOException $ex) {
             echo "An Error occured creating table<BR>\n";
-            echo(" Query = $query<BR>\n");
             $err_msg = $ex->getMessage();
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $display_block .= " ... created ...<BR>";
@@ -334,9 +339,9 @@ if ($POST_OP == "create"){
             $db->query($query);
         } catch (PDOException $ex) {
             echo "An Error occured creating table<BR>\n";
-            echo(" Query = $query<BR>\n");
             $err_msg = $ex->getMessage();
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $display_block .= " ... created ...<BR>";
@@ -357,9 +362,9 @@ if ($POST_OP == "create"){
             $db->query($query);
         } catch (PDOException $ex) {
             echo "An Error occured creating table<BR>\n";
-            echo(" Query = $query<BR>\n");
             $err_msg = $ex->getMessage();
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $display_block .= " ... created ...<BR>";
@@ -381,7 +386,6 @@ if ($POST_OP == "create"){
             $db->query($query);
         } catch (PDOException $ex) {
             echo "An Error occured creating table<BR>\n";
-            echo(" Query = $query<BR>\n");
             $err_msg = $ex->getMessage();
             echo("Error message: $err_msg<BR>\n");
             exit();
@@ -405,7 +409,6 @@ if ($POST_OP == "create"){
             $db->query($query);
         } catch (PDOException $ex) {
             echo "An Error occured creating table<BR>\n";
-            echo(" Query = $query<BR>\n");
             $err_msg = $ex->getMessage();
             echo("Error message: $err_msg<BR>\n");
             exit();
@@ -433,9 +436,9 @@ if ($POST_OP == "create"){
                 $result = $db->query($query);
             } catch (PDOException $ex) {
                 echo "An Error occured check if table exists<BR>\n";
-                echo(" Query = $query<BR>\n");
                 $err_msg = $ex->getMessage();
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
             //$display_block .="$query<BR>";
@@ -447,9 +450,9 @@ if ($POST_OP == "create"){
                 $result = $db->query($query);
             } catch (PDOException $ex) {
                 echo "An Error occured copying data from table $table_template to $table<BR>\n";
-                echo(" Query = $query<BR>\n");
                 $err_msg = $ex->getMessage();
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
         } else {
@@ -486,9 +489,9 @@ if ($POST_OP == "create"){
                 $result = $db->query($query);
             } catch (PDOException $ex) {
                 echo "An Error occured creating table<BR>\n";
-                echo(" Query = $query<BR>\n");
                 $err_msg = $ex->getMessage();
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
             $display_block .= "$table ... created<BR>";
@@ -498,7 +501,6 @@ if ($POST_OP == "create"){
                 $result = $db->query($query);
             } catch (PDOException $ex) {
                 echo "An Error occured copying data from table $table_template to $table<BR>\n";
-                echo(" Query = $query<BR>\n");
                 $err_msg = $ex->getMessage();
                 exit();
             }
@@ -521,9 +523,9 @@ if ($POST_OP == "create"){
             $result = $db->query($query);
         } catch (PDOException $ex) {
             echo "An Error occured creating table<BR>\n";
-            echo(" Query = $query<BR>\n");
             $err_msg = $ex->getMessage();
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $display_block .= "$table ... created<BR>";
@@ -534,9 +536,9 @@ if ($POST_OP == "create"){
             $result = $db->query($query);
         } catch (PDOException $ex) {
             echo "An Error occured copying data from the table $table_template to $table<BR>\n";
-            echo(" Query = $query<BR>\n");
             $err_msg = $ex->getMessage();
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $display_block .= "$table ... copied data<BR>";

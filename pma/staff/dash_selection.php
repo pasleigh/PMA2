@@ -31,7 +31,8 @@ if($access) {
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured accessing the $dash_projects_setup table<BR>\n";
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $recs = $results->fetchAll();

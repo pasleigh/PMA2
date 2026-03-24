@@ -1,10 +1,11 @@
 <?php
 
-    $BASE_DIR_VAL = $_COOKIE['BASE_DIR'];
-    $STAFF_DIR_VAL = $_COOKIE['STAFF_DIR'];
-    $STUDENT_DIR_VAL = $_COOKIE['STUDENT_DIR'];
-    $ADMIN_DIR_VAL = $_COOKIE['ADMIN_DIR'];
-    $PROPS_DIR_VAL = $_COOKIE['PROPS_DIR'];
+    if (session_status() === PHP_SESSION_NONE) { session_start(); }
+    $STAFF_DIR_VAL   = __DIR__;
+    $BASE_DIR_VAL    = dirname(__DIR__);
+    $STUDENT_DIR_VAL = dirname(__DIR__) . '/student';
+    $ADMIN_DIR_VAL   = __DIR__ . '/admin2';
+    $PROPS_DIR_VAL   = __DIR__ . '/proposals';
 
 if (!function_exists('base_url')) {
     function base_url($atRoot=FALSE, $atCore=FALSE, $parse=FALSE){

@@ -86,8 +86,8 @@ if ($POST_OP == "create"){
             $results = $db->query($query);
         } catch (PDOException $ex) {
             echo "An Error occured accessing the $projects_setup table<BR>\n";
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $rec = $results->fetch();
@@ -127,8 +127,8 @@ if ($POST_OP == "create"){
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured accessing the $projects_setup table<BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $res = $results->fetchAll();

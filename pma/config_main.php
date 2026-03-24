@@ -5,84 +5,76 @@ $password = "";
 
 $hostname = "localhost";
 $base_dir = "/var/www/html/pma";
-$base_dir = "C:\\xampp\\htdocs\\PMA2\\pma";
+//$base_dir = "C:\\xampp\\htdocs\\PMA2\\pma";
 // mac
-//$base_dir = "/Applications/XAMPP/xamppfiles/htdocs/ProjectMarkingApp/pma";
+$base_dir = "/Applications/XAMPP/xamppfiles/htdocs/PMA2/pma";
 // own server
 //$base_dir = "/var/www/vhosts/sleigh-munoz.co.uk/httpdocs/pma/ProjectMarkingApp-main/pma";
 
+$_creds_file = __DIR__ . '/../db_credentials.php';
+if (!file_exists($_creds_file)) {
+    die("Database credentials file not found. Copy db_credentials.example.php to db_credentials.php and fill in values.");
+}
+$_creds = require $_creds_file;
+
+
 switch ($school) {
   case "mech":
-    //echo("$school");
-    $dbName = "projects_mech";
-    $dbName = "mechprojTCAO";
-    $dbusername = "projects_mech";
-    $password = "G=M1aNN78&5e";
+    $dbName = $_creds['mech']['db'];
+    $dbusername = $_creds['mech']['user'];
+    $password   = $_creds['mech']['pass'];
     break;
   case "chem":
-    //echo("$school");
-    $dbName = "projects_chem";
-    $dbusername = "projects_chem";
-    $password = "7C.9zt46X,[s";
+    $dbName = $_creds['chem']['db'];
+    $dbusername = $_creds['chem']['user'];
+    $password   = $_creds['chem']['pass'];
     break;
   case "civil":
-    //echo("$school");
-    $dbName = "projects_civil";
-    //$dbName = "civilproyRoM";
-    $dbusername = "projects_civil";
-    $password = "E3<-0XRzh;,6";
+    $dbName = $_creds['civil']['db'];
+    $dbusername = $_creds['civil']['user'];
+    $password   = $_creds['civil']['pass'];
     break;
   case "elec":
-    //echo("$school");
-    $dbName = "projects_elec";
-    $dbusername = "projects_elec";
-    $password = '0FJ9"0mxuq\(h';
-    $password = 'vR7#kP9z!Lm2';
+    $dbName = $_creds['elec']['db'];
+    $dbusername = $_creds['elec']['user'];
+    $password   = $_creds['elec']['pass'];
     break;
   case "scape":
-    //echo("$school");
-    $dbName = "projects_scape";
-    $dbusername = "projects_scape";
-    $password = "57F.O95NOUn5";
+    $dbName = $_creds['scape']['db'];
+    $dbusername = $_creds['scape']['user'];
+    $password   = $_creds['scape']['pass'];
     break;
   case "swjtu_civil":
-    //echo("$school");
-    $dbName = "projects_swjtcivil";
-    $dbusername = "projects_swjtcivil";
-    $password = '~Y4"#>70Ky£&';
+    $dbName = $_creds['swjtu_civil']['db'];
+    $dbusername = $_creds['swjtu_civil']['user'];
+    $password   = $_creds['swjtu_civil']['pass'];
     break;
   case "swjtu_mech":
-    //echo("$school");
-    $dbName = "projects_swjtmech";
-    $dbusername = "projects_swjtmech";
-    $password = "L+3eW11B2i9U";
+    $dbName = $_creds['swjtu_mech']['db'];
+    $dbusername = $_creds['swjtu_mech']['user'];
+    $password   = $_creds['swjtu_mech']['pass'];
     break;
   case "swjtu_elec":
-    //echo("$school not yet setup");
-      $dbName = "projects_swjtelec";
-      $dbusername = "projects_swjtelec";
-      $password = 'gT4mX9bQ2vL1';
+    $dbName = $_creds['swjtu_elec']['db'];
+    $dbusername = $_creds['swjtu_elec']['user'];
+    $password   = $_creds['swjtu_elec']['pass'];
     break;
   case "its":
-    //echo("$school");
-    $dbName = "projects_its";
-    $dbusername = "projects_its";
-    $password = "),72/fQWLo9S";
+    $dbName = $_creds['its']['db'];
+    $dbusername = $_creds['its']['user'];
+    $password   = $_creds['its']['pass'];
     break;
   case "env":
-    //echo("$school");
-    $dbName = "projects_env";
-    $dbusername = "projects_env";
-    $password = "2f`d7GSC@6vV";
+    $dbName = $_creds['env']['db'];
+    $dbusername = $_creds['env']['user'];
+    $password   = $_creds['env']['pass'];
     break;
   case "kmap2":
-    //echo("$school");
-    $dbName = "eps_curriculum";
-    $dbusername = "eps_curriculum";
-    $password = "Z6w6bmG8X8@N";
+    $dbName = $_creds['kmap2']['db'];
+    $dbusername = $_creds['kmap2']['user'];
+    $password   = $_creds['kmap2']['pass'];
     break;
   default:
-    // School not defined
     echo("School not defined. <BR>Go to the <A href='../index_pma.html'>index</A>");
     exit();
 }
@@ -109,7 +101,16 @@ if(defined("DB_SERVER")){
 
 if($dbName){
    $num_days = 30;
-   setcookie('PMA_SCHOOL',$school,time() + (86400 * $num_days), "/");
+   setcookie('PMA_SCHOOL', $school, [
+       'expires'  => time() + (86400 * $num_days),
+       'path'     => '/',
+       'secure'   => true,
+       'httponly' => true,
+       'samesite' => 'Lax',
+   ]);
+   if (session_status() !== PHP_SESSION_NONE) {
+       $_SESSION['PMA_SCHOOL'] = $school;
+   }
 }
 
 if($debug){

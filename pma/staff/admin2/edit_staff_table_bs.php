@@ -41,8 +41,8 @@ if ($access) {
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo("An Error occured accessing the database in function: $this_function <BR>\n");
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
     }
@@ -82,8 +82,8 @@ if ($access) {
                 $this_function = __FUNCTION__;
                 echo("An Error occured accessing the database in function: $this_function <BR>\n");
                 echo("Unable to update data to the table $staff_names2<BR>\n");
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 $msg = "<h3>The database was <em>NOT</em> updated</h3>";
             }
 
@@ -142,8 +142,8 @@ if ($access) {
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
                 $msg = "<h3>The database was <em>NOT</em> updated with the new staff details</h3>";
             }
@@ -257,8 +257,8 @@ if ($access) {
                     } catch (PDOException $ex) {
                         $this_function = __FUNCTION__;
                         echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                        echo(" Query = $query<BR> \n");
-                        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                        error_log($ex->getMessage());
+                        echo "A database error occurred. Please contact the system administrator.<BR>\n";
                         exit();
                     }
 
@@ -295,8 +295,8 @@ if ($access) {
             $this_function = __FUNCTION__;
             echo("An Error occured accessing the database in function: $this_function <BR>\n");
             echo("Unable to update data to the table $students<BR>\n");
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $num = $results->rowCount();
@@ -394,8 +394,8 @@ if ($access) {
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $staff_count = 0;

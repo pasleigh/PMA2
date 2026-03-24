@@ -34,8 +34,8 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $rows = $results->fetchAll();
@@ -72,8 +72,8 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
             $recs = $results->fetch();
@@ -93,8 +93,8 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
             $num_rows = $results->rowCount();
@@ -141,8 +141,8 @@ function RecordFeedbackSent($db, $sid, $part, $feedback_records_table){
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $num_rows = $results->rowCount();
@@ -160,8 +160,8 @@ function RecordFeedbackSent($db, $sid, $part, $feedback_records_table){
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 }
@@ -181,7 +181,6 @@ SQL;
     try{
         $db->query($query);
     }catch (PDOException $ex) {
-        echo("Unable to create header_images table. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -306,7 +305,6 @@ SQL;
     try{
         $db->query($query);
     }catch (PDOException $ex) {
-        echo("Unable to create projects_setup table. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -335,7 +333,6 @@ SQL;
         $db->query($query);
         //echo("$query<BR>\n");
     }catch (PDOException $ex) {
-        echo("Unable to create admin_users table. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -366,7 +363,6 @@ SQL;
     try{
         $db->query($query);
     }catch (PDOException $ex) {
-        echo("Unable to create admin_users_module table. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -399,7 +395,6 @@ SQL;
     try{
         $db->query($query);
     }catch (PDOException $ex) {
-        echo("Unable to create staff_names table. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -575,7 +570,6 @@ SQL;
         $db->query($query);
         //echo("Created assesqs template tables. <BR>\n");
     }catch (PDOException $ex) {
-        echo("Unable to create assesqs template tables. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -999,7 +993,6 @@ SQL;
         $db->query($query);
         //echo("Created assesqs cats template tables. <BR>\n");
     }catch (PDOException $ex) {
-        echo("Unable to create assesqs category template tables. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -1031,7 +1024,6 @@ SQL;
         $db->query($query);
         //echo("Created $dash_projects_setup tables. <BR>\n");
     } catch (PDOException $ex) {
-        echo("Unable to create dash projects setup tables. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -1049,8 +1041,8 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
         exit();
     }
@@ -1074,7 +1066,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
             $db->query($query);
             //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
-            echo("Unable to populate dash setup  table. Query: $query <BR>\n");
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
         }
@@ -1089,8 +1080,8 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
         exit();
     }
@@ -1113,7 +1104,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
             $db->query($query);
             //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
-            echo("Unable to populate dash setup  table. Query: $query <BR>\n");
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
         }
@@ -1128,8 +1118,8 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
         exit();
     }
@@ -1152,7 +1142,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
             $db->query($query);
             //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
-            echo("Unable to populate dash setup  table. Query: $query <BR>\n");
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
         }
@@ -1167,8 +1156,8 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
         exit();
     }
@@ -1191,7 +1180,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
             $db->query($query);
             //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
-            echo("Unable to populate dash setup table. Query: $query <BR>\n");
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
         }
@@ -1206,8 +1194,8 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
         exit();
     }
@@ -1230,7 +1218,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
             $db->query($query);
             //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
-            echo("Unable to populate dash setup table. Query: $query <BR>\n");
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
         }
@@ -1245,8 +1232,8 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
         exit();
     }
@@ -1269,7 +1256,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
             $db->query($query);
             //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
-            echo("Unable to populate dash setup table. Query: $query <BR>\n");
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
         }
@@ -1284,8 +1270,8 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
         exit();
     }
@@ -1308,7 +1294,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
             $db->query($query);
             //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
-            echo("Unable to populate dash setup table. Query: $query <BR>\n");
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
         }
@@ -1349,7 +1334,6 @@ SQL;
         $db->query($query);
         //echo("Created assesqs cats template tables. <BR>\n");
     } catch (PDOException $ex) {
-        echo("Unable to create assessment criteria tables. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -1360,7 +1344,6 @@ SQL;
         $db->query($query);
         //echo("Created assesqs cats template tables. <BR>\n");
     } catch (PDOException $ex) {
-        echo("Unable to truncate assessment criteria table. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -1369,7 +1352,6 @@ SQL;
         $db->query($query);
         //echo("Created assesqs cats template tables. <BR>\n");
     } catch (PDOException $ex) {
-        echo("Unable to truncate assessment criteria flags table. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -1389,7 +1371,6 @@ SQL1;
         $db->query($query);
         //echo("Created assesqs cats template tables. <BR>\n");
     } catch (PDOException $ex) {
-        echo("Unable to populate assessment criteria flags table. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -1506,7 +1487,6 @@ SQL2;
         $db->query($query);
         //echo("Created assesqs cats template tables. <BR>\n");
     } catch (PDOException $ex) {
-        echo("Unable to populate assessment criteria table. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -1535,7 +1515,6 @@ SQL;
         $db->query($query);
         //echo("$query<BR>\n");
     }catch (PDOException $ex) {
-        echo("Unable to create feedback records table. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -1560,7 +1539,6 @@ SQL;
     try{
         $db->query($query);
     }catch (PDOException $ex) {
-        echo("Unable to create project areas table. Query: $query <BR>\n");
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }

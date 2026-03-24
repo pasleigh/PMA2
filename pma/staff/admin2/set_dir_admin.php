@@ -1,11 +1,12 @@
 <?php
 //directory to the staff directory
 //if (array_key_exists('BASE_DIR', $_COOKIE)) {
-    $BASE_DIR_VAL = $_COOKIE['BASE_DIR'];
-    $STAFF_DIR_VAL = $_COOKIE['STAFF_DIR'];
-    $STUDENT_DIR_VAL = $_COOKIE['STUDENT_DIR'];
-    $ADMIN_DIR_VAL = $_COOKIE['ADMIN_DIR'];
-    $PROPS_DIR_VAL = $_COOKIE['PROPS_DIR'];
+    if (session_status() === PHP_SESSION_NONE) { session_start(); }
+    $ADMIN_DIR_VAL   = __DIR__;
+    $STAFF_DIR_VAL   = dirname(__DIR__);
+    $BASE_DIR_VAL    = dirname(dirname(__DIR__));
+    $STUDENT_DIR_VAL = dirname(dirname(__DIR__)) . '/student';
+    $PROPS_DIR_VAL   = dirname(__DIR__) . '/proposals';
     //echo("COOKIE BASE_DIR_VAL: " . $BASE_DIR_VAL . "<BR>\n");
     //echo("COOKIE STAFF_DIR_VAL: " . $STAFF_DIR_VAL . "<BR>\n");
 /*

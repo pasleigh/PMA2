@@ -11,7 +11,10 @@ $gear_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title><?php echo("$school_title - $running_title") ?></title>
+    <title><?php echo(($school_title_h ?? '') . ' - ' . ($running_title_h ?? '')); ?></title>
+    <?php if (function_exists('generate_csrf_token')): ?>
+    <meta name="csrf-token" content="<?php echo htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>">
+    <?php endif; ?>
 <!--
     <link rel="Shortcut Icon" type="image/ico" href="<?php echo("$protocol://$BASE_URL_VALUE") ?>/staff/images/favicon.ico"/>
     <link href="<?php echo("$protocol://$BASE_URL_VALUE") ?>/staff/css/pagedesc.css" type="text/css" rel="stylesheet"/>
@@ -105,5 +108,33 @@ $gear_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
     <script type="text/javascript" charset="utf8" src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
 -->
     <link rel="stylesheet" href="./css/site-bootstrap.css">
+
+    <script>
+    /* CSRF auto-injection: add the session token to every form and to jQuery AJAX headers */
+    (function () {
+        var meta = document.querySelector('meta[name="csrf-token"]');
+        if (!meta) return;
+        var token = meta.getAttribute('content');
+        function injectForms() {
+            document.querySelectorAll('form').forEach(function (form) {
+                if (!form.querySelector('input[name="csrf_token"]')) {
+                    var inp = document.createElement('input');
+                    inp.type  = 'hidden';
+                    inp.name  = 'csrf_token';
+                    inp.value = token;
+                    form.appendChild(inp);
+                }
+            });
+            if (typeof jQuery !== 'undefined') {
+                jQuery.ajaxSetup({ headers: { 'X-CSRF-Token': token } });
+            }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', injectForms);
+        } else {
+            injectForms();
+        }
+    })();
+    </script>
 
 </head>

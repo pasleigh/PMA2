@@ -29,7 +29,6 @@ function GetSuperAdminLevel($db, $username)
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured running query<BR>\n";
-        echo(" Query = $query<BR \n");
         $err_msg = $ex->getMessage();
         echo($err_msg);
         return $admin_level;
@@ -55,7 +54,6 @@ function GetProjectAdminLevel($db, $username, $staff_names)
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured running query<BR>\n";
-        echo(" Query = $query<BR \n");
         $err_msg = $ex->getMessage();
         echo($err_msg);
         return $admin_level;
@@ -250,7 +248,6 @@ function GetModuleAdminLevelFromPID($db, $username, $pm_id)
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured running query<BR>\n";
-        echo(" Query = $query<BR \n");
         $err_msg = $ex->getMessage();
         echo($err_msg);
         return $admin_level_module;
@@ -282,7 +279,6 @@ function GetModuleAdminLevelFromShortCode($db, $username, $short_code, $year_beg
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured running query<BR>\n";
-        echo(" Query = $query<BR \n");
         $err_msg = $ex->getMessage();
         echo($err_msg);
         return $admin_level_module;

@@ -6,11 +6,10 @@
  * Date: 22/05/2017
  * Time: 16:19
  */
-$base_url = $_COOKIE["BASE_URL"];
-//echo("Base url is: $base_url<BR>");
-//header("Location: http://logout@$base_url");
+$base_url = $_COOKIE["BASE_URL"] ?? '';
+$base_url_safe = htmlspecialchars($base_url, ENT_QUOTES, 'UTF-8');
 $random = rand();
-$logout_url = "<a href='http://$random@$base_url'>Switch User / Logout</a>";
+$logout_url = "<a href='http://" . $random . "@" . $base_url_safe . "'>Switch User / Logout</a>";
 echo($logout_url);
 ?>
 <script>

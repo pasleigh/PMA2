@@ -78,8 +78,8 @@ try{
     $this_line = __LINE__;
     echo "An Error occured accessing the database in function: $this_function<BR>\n";
     echo "File: $this_file  near line: $this_line<BR>\n";
-    echo(" Query = $query<BR> \n");
-    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+    error_log($ex->getMessage());
+    echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();
 }
 // Does the definition table exist?
@@ -120,8 +120,8 @@ try{
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -250,8 +250,8 @@ if ($POST_OP == "") {
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database table  $definition_table_name in function: $this_function <BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -358,7 +358,8 @@ if ($POST_OP == "") {
         echo "An Error occured accessing the database in function: $this_function<BR>\n";
         echo "File: $this_file  near line: $this_line<BR>\n";
         echo(" Query = $initial_data_query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -390,7 +391,6 @@ if ($POST_OP == "") {
         $display_block .= "Inactive flag: $inactive  <BR>\n";
     } catch (PDOException $ex) {
         echo "An Error occured!<BR>\n";
-        echo(" Unable to insert data to the table $staff_names_table . <BR>Query: $query");
         $err_msg = $ex->getMessage();
         echo("$err_msg <BR>\n");
     }
@@ -402,7 +402,6 @@ if ($POST_OP == "") {
         $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured!<BR>\n";
-        echo(" Unable to insert data to the table $admin_users_table . <BR>Query: $query");
         $err_msg = $ex->getMessage();
         echo("$err_msg <BR>\n");
     }

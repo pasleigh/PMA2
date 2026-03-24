@@ -18,7 +18,6 @@ function IsStaffActive($db, $this_staff_full_name, $staff_names_table = "staff_n
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured running query<BR>\n";
-        echo(" Query = $query<BR \n");
         $err_msg = $ex->getMessage();
         echo($err_msg);
         return $active;
@@ -97,8 +96,8 @@ function GetChoiceTable($db,$choices,$master_name,$choice_count = 5, $ranked_cho
                 $results = $db->query($query);
             } catch (PDOException $ex) {
                 echo "An Error occured accessing the $master_name table<BR>\n";
-                echo(" Query = $query<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
 
@@ -179,8 +178,8 @@ function GetSelectionTable($db,$selection,$choices,$master_name,$project_details
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured accessing the $master_name table<BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -321,8 +320,8 @@ function GetSelectionTableUnRanked($db,$selection,$choices,$master_name,$project
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured accessing the $master_name table<BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -409,8 +408,8 @@ function GetNumProjectsOffered($db, $project_details_table, $pid){
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured accessing the $project_details_table table<BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -430,8 +429,8 @@ function GetProjectSelectionCount($db, $selection_table, $pid){
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured accessing the $selection_table table<BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $num_choice1 = $results->rowCount();
@@ -441,8 +440,8 @@ function GetProjectSelectionCount($db, $selection_table, $pid){
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured accessing the $selection_table table<BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $num_choice2 = $results->rowCount();
@@ -452,8 +451,8 @@ function GetProjectSelectionCount($db, $selection_table, $pid){
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured accessing the $selection_table table<BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $num_choice3 = $results->rowCount();
@@ -463,8 +462,8 @@ function GetProjectSelectionCount($db, $selection_table, $pid){
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured accessing the $selection_table table<BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $num_choice4 = $results->rowCount();
@@ -474,8 +473,8 @@ function GetProjectSelectionCount($db, $selection_table, $pid){
         $results = $db->query($query);
     } catch (PDOException $ex) {
         echo "An Error occured accessing the $selection_table table<BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $num_choice5 = $results->rowCount();

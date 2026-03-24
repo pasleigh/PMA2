@@ -46,8 +46,8 @@ try {
     $this_function = __FUNCTION__;
     echo("An Error occured accessing the database in function: $this_function <BR>\n");
     echo("Unable to update data to the table $project_allocated<BR>\n");
-    echo(" Query = $query<BR> \n");
-    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+    error_log($ex->getMessage());
+    echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();
 }
 $num = $results->rowCount();
@@ -143,8 +143,8 @@ if ($num < 1) {
             $this_function = __FUNCTION__;
             echo("An Error occured accessing the database in function: $this_function <BR>\n");
             echo("Unable to update data to the table $students<BR>\n");
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $student_recs = $results->fetch();
@@ -190,8 +190,8 @@ if ($num < 1) {
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                    echo(" Query = $query<BR> \n");
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
                     exit();
                 }
                 $marks_recs = $results->fetch();
@@ -222,8 +222,8 @@ if ($num < 1) {
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
             echo("An Error occured accessing the database in function: $this_function <BR>\n");
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
         $marks_recs = $results->fetch();

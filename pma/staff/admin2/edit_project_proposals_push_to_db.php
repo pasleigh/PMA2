@@ -80,40 +80,23 @@
 
 
             //$display_block .= "$master_id, $supervisor_id, $second_supervisor_name, $second_supervisor_id, $second_supervisor_name, $number_of_projects, $prog_variant_str, $delete_chk .... <BR>\n";
-            if($delete_chk == 0) {
-                $query_details = "UPDATE $project_details_table SET f_assocstaff='$second_supervisor_name', f_assocstaff_id='$second_supervisor_id',f_PGprojects='$number_of_projects', f_progs='$prog_variant_str' WHERE master_id=$master_id";
-                $query_master = "UPDATE $master_name_table SET f_title='$title', f_supervisor='$supervisor_name',f_supervisor_id='$supervisor_id' WHERE id=$master_id";
-            }else{
-                // Delete entry from bother tables
-                $query_details = "DELETE FROM $project_details_table WHERE master_id=$master_id";
-                $query_master = "DELETE FROM $master_name_table WHERE id=$master_id";
-            }
-
-            //echo("project details query: $query_details <BR>\n");
-            //echo("project details query: $query_details <BR>");
-
             try {
-                //echo($query_details);
-                $results = $db->query($query_details);
-                //var_dump($results);
+                if($delete_chk == 0) {
+                    $stmt_details = $db->prepare("UPDATE $project_details_table SET f_assocstaff=?, f_assocstaff_id=?, f_PGprojects=?, f_progs=? WHERE master_id=?");
+                    $stmt_details->execute([$second_supervisor_name, $second_supervisor_id, $number_of_projects, $prog_variant_str, $master_id]);
+                    $stmt_master = $db->prepare("UPDATE $master_name_table SET f_title=?, f_supervisor=?, f_supervisor_id=? WHERE id=?");
+                    $stmt_master->execute([$title, $supervisor_name, $supervisor_id, $master_id]);
+                } else {
+                    $stmt_details = $db->prepare("DELETE FROM $project_details_table WHERE master_id=?");
+                    $stmt_details->execute([$master_id]);
+                    $stmt_master = $db->prepare("DELETE FROM $master_name_table WHERE id=?");
+                    $stmt_master->execute([$master_id]);
+                }
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                echo("Unable to update data to the table $project_details<BR>\n");
-                echo(" Query = $query_details<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-                exit();
-            }
-
-            //$display_block .= "master query: $query_master <BR>";
-            try {
-                $results = $db->query($query_master);
-            } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                echo("Unable to update data to the table $master_name<BR>\n");
-                echo(" Query = $query_master<BR> \n");
-                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
 
