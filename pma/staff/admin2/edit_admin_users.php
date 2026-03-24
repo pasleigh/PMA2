@@ -1,0 +1,334 @@
+<?php
+(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
+(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
+(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
+(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
+(@include_once("../staff_functions.php")) OR die("Cannot open staff_functions.php<BR>");
+(@include_once("../markstore_functions.php")) OR die("Cannot open staff_functions.php<BR>");
+
+$display_block = "";
+$display_block .= $connect_msg;
+
+// Check the admin level
+$access = false;
+$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
+$display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access_phrase</h2>\n";
+
+if($access) {
+
+    $admin_users_table = "admin_users";
+    if (array_key_exists('op', $_POST) == false) {
+        $_POST['op'] = null;
+    }
+// if the form was submitted then enter it all into the database
+//echo("OP=$_POST['op'] . <BR>\n");
+    if (array_key_exists('op', $_POST)) {
+        $POST_OP = $_POST['op'];
+    } else {
+        $POST_OP = "";
+    }
+//echo("POST_OP=$POST_OP <BR>\n");
+
+// see all the POST values
+//foreach ($_POST as $key => $value){
+//  echo "{$key} = {$value}<BR>\r\n";
+//}
+
+
+    $display_block .= "<h1>Edit System Level Admin users </h1>";
+
+    if ($POST_OP == "new") {
+
+        $display_block = "<h2>Select names from this default staff list to become admin users</h2>";
+        $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
+
+// Get the list of staff from the staff_names2 table
+        $query = "select * from $staff_names_default order by familyname";
+//$get_list_res = mysql_query($get_list) or die(" Unable to create staff name list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
+        try {
+            $results = $db->query($query);
+        } catch (PDOException $ex) {
+            $this_function = __FUNCTION__;
+            echo("An Error occured accessing the database in function: $this_function <BR>\n");
+            echo(" Query = $query<BR> \n");
+            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+            exit();
+        }
+
+        $display_block .= "<TABLE id=\"staffinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
+        $display_block .= "
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>First name</th>
+        <th>Family name</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Admin level</th>
+        <th>Copy to admin users</th>
+      </tr>
+    </thead>";
+        $display_block .= "<tbody>\n";
+        $staff_count = 0;
+        $rows = $results->fetchAll();
+        foreach ($rows as $recs) {
+
+            $staffid = $recs['staffid'];
+            $firstname = stripslashes($recs['firstname']);
+            $familyname = stripslashes($recs['familyname']);
+            $email = stripslashes($recs['email']);
+            $username = stripslashes($recs['username']);
+            $mod_admin_level = stripslashes($recs['admin_level']);
+            $staff_count++;
+            $display_block .= "<TR>\n";
+            $display_block .= "<TD><input type=\"hidden\" name=\"staffid$staff_count\" value=\"$staffid\"> $staffid</TD>";
+            $display_block .= "<TD><input type=\"text\" name=\"firstname$staff_count\" value=\"$firstname\"  size=10 maxlength=30></TD>";
+            $display_block .= "<TD><input type=\"text\" name=\"familyname$staff_count\" value=\"$familyname\"  size=30 maxlength=40></TD>";
+            $display_block .= "<TD><input type=\"text\" name=\"email$staff_count\" value=\"$email\"  size=30 maxlength=40></TD>";
+            $display_block .= "<TD><input type=\"text\" name=\"username$staff_count\" value=\"$username\"  size=8 maxlength=20></TD>";
+            $display_block .= "<TD>" . GetAdminLevelSelect("admin_level$staff_count", $mod_admin_level) . "</TD>";
+            $display_block .= "<TD><input type=\"checkbox\" name=\"copy_to_admin_chk\" value=\"0\" >(checked = move to admin)</TD>\n";
+            $display_block .= "</TR>\n";
+
+        }
+        $display_block .= "</tbody>\n";
+        $display_block .= "</TABLE>\n";
+
+        $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_selected\">";
+        $display_block .= "\n<input type=\"hidden\" name=\"staff_count\" value=\"$staff_count\">";
+
+        $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit changes to staff details.\"></p>";
+
+        $display_block .= "</form>";
+
+        $display_block .= "<hr>\n";
+    } elseif ($POST_OP == "submit_selected") {
+        $staff_count = $_POST['staff_count'];
+        for ($i = 1; $i <= $staff_count; $i++) {
+
+            //$display_block .= "Submitting: <BR>\n";
+            $postid = "staffid$i";
+            $staffid = $_POST[$postid];
+            $postid = "firstname$i";
+            $firstname = $_POST[$postid];
+            $postid = "familyname$i";
+            $familyname = $_POST[$postid];
+            $fullname = "$firstname $familyname";
+
+            $postid = "email$i";
+            $email = $_POST[$postid];
+            $postid = "username$i";
+            $username = $_POST[$postid];
+
+            $postid = "admin_level$i";
+            $mod_admin_level = $_POST[$postid];
+
+            //$display_block .= "$staffid, $fullname, $firstname, $familyname, $initials, $title, $email, $username, $room, $inactive_chk .... <BR>\n";
+            $query = "INSERT INTO $admin_users_table set firstname='$firstname',familyname='$familyname',fullname='$fullname',email='$email',username='$username',admin_level='$mod_admin_level' ";
+            //$display_block .= $query;
+            try {
+                $results = $db->query($query);
+            } catch (PDOException $ex) {
+                $this_function = __FUNCTION__;
+                echo("An Error occured accessing the database in function: $this_function <BR>\n");
+                echo("Unable to update data to the table $admin_users_table<BR>\n");
+                echo(" Query = $query<BR> \n");
+                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                exit();
+            }
+        }
+        $display_block .= "<B>Admin users added</B><BR><hr>\n";
+    } elseif ($POST_OP == "submit_modified") {
+        $display_block .= "Submitting: <BR>\n";
+
+        $admin_staff_count = $_POST['admin_staff_count'];
+        for ($i = 1; $i <= $admin_staff_count; $i++) {
+
+
+            $postid = "username$i";
+            $username = $_POST[$postid];
+
+            $postid = "admin_level$i";
+            $mod_admin_level = $_POST[$postid];
+
+            // Should not make yourself less than 3 - as you would be ejected from the admin section
+            if ($username == $this_staff_username) {
+                $display_block .= "You cannont make youself a lesser level admin user<BR>";
+                if ($mod_admin_level < 3) {
+                    $mod_admin_level = 3;
+                }
+            }
+            $query = "UPDATE $admin_users_table set admin_level='$mod_admin_level' WHERE username='$username'";
+            //$display_block .= $query;
+            try {
+                $results = $db->query($query);
+            } catch (PDOException $ex) {
+                $this_function = __FUNCTION__;
+                echo("An Error occured accessing the database in function: $this_function <BR>\n");
+                echo("Unable to update data to the table $admin_users_table<BR>\n");
+                echo(" Query = $query<BR> \n");
+                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                exit();
+            }
+
+        }
+        $display_block .= "<B>Done</B><BR><hr>\n";
+    }
+
+
+
+//---------------------------------------------------------------------------------
+// Display the admin users table
+
+    $display_block .= "<HR>";
+    $display_block .= "<H2>The current Admin users table</H2>";
+    $display_block .= "<p>Change the admin level if you like</p>";
+
+    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
+
+// Get the list of staff from the staff_names2 table
+    $query = "select * from $admin_users_table order by familyname";
+//$get_list_res = mysql_query($get_list) or die(" Unable to create staff name list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
+    try {
+        $results = $db->query($query);
+    } catch (PDOException $ex) {
+        $this_function = __FUNCTION__;
+        echo("An Error occured accessing the database in function: $this_function <BR>\n");
+        echo(" Query = $query<BR> \n");
+        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        exit();
+    }
+
+    $display_block .= "<TABLE id=\"adminstaffinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
+    $display_block .= "
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Full name</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Admin level</th>
+      </tr>
+    </thead>";
+    $display_block .= "<tbody>\n";
+    $admin_staff_count = 0;
+    $rows = $results->fetchAll();
+    foreach ($rows as $recs) {
+
+        $staffid = $recs['id'];
+        $firstname = stripslashes($recs['firstname']);
+        $familyname = stripslashes($recs['familyname']);
+        $email = stripslashes($recs['email']);
+        $username = stripslashes($recs['username']);
+        $mod_admin_level = stripslashes($recs['admin_level']);
+        $admin_staff_count++;
+        $display_block .= "<TR>\n";
+        $display_block .= "<TD><input type=\"hidden\" name=\"staffid$admin_staff_count\" value=\"$staffid\"> $staffid</TD>\n";
+        $display_block .= "<TD><input type=\"text\" name=\"fullname$admin_staff_count\" value=\"$firstname $familyname\"  size=10 maxlength=30 readonly></TD>\n";
+        $display_block .= "<TD><input type=\"text\" name=\"email$admin_staff_count\" value=\"$email\"  size=30 maxlength=40 readonly></TD>\n";
+        $display_block .= "<TD><input type=\"text\" name=\"username$admin_staff_count\" value=\"$username\"  size=8 maxlength=20 readonly></TD>\n";
+        $display_block .= "<TD>" . GetAdminLevelSelect("admin_level$admin_staff_count", $mod_admin_level) . "</TD>\n";
+        $display_block .= "</TR>\n";
+
+    }
+    $display_block .= "</tbody>\n";
+    $display_block .= "</TABLE>\n";
+
+    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_modified\">";
+    $display_block .= "\n<input type=\"hidden\" name=\"admin_staff_count\" value=\"$admin_staff_count\">";
+
+    $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit changes to admin users details.\"></p>";
+
+    $display_block .= "</form>";
+
+    $display_block .= "<hr>\n";
+
+
+//---------------------------------------------------------------------------------
+    $display_block .= "<hr><h2>Add a new admin user from the default staff list...</H2>\n";
+    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
+    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"new\">";
+
+    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Add a NEW admin user.\"></p>";
+
+    $display_block .= "</form>";
+
+//---------------------------------------------------------------------------------
+
+}
+    function GetAdminLevelSelect($NameKey, $MatchLevel)
+    {
+        $levels[1] = "0";
+        $levels[2] = "1";
+        $levels[3] = "2";
+        $levels[4] = "3";
+
+        $select_block = "\n<select name=\"$NameKey\">\n";
+
+        for ($i = 1; $i <= 4; $i++) {
+            $Level = $levels[$i];
+
+            if ($MatchLevel == $Level) {
+                $selected = "selected";
+            } else {
+                $selected = "";
+            }
+
+            $select_block .= "<option value=\"$Level\" $selected>$Level</option>\n";
+        }
+        $select_block .= "</select>\n";
+
+        return $select_block;
+    }
+
+?>
+<HTML>
+<?php
+(@include_once("admin_desktop_head.php")) OR die("Cannot find this file to include: admin_desktop_head.php<BR>");
+?>
+<script>
+    $(function () {
+        $("#adminstaffinfo").dataTable(
+            {
+                //"bSort":    false,
+                "paging": false,
+                //"ordering": false,
+                //"info":     false,
+                "searching": false
+            }
+        );
+        $("#staffinfo").dataTable(
+            {
+                //"bSort":    false,
+                "paging": false,
+                //"ordering": false,
+                //"info":     false,
+                "searching": false
+            }
+        );
+    })
+</script>
+<BODY>
+<div id="wrapper">
+    <div id="header">
+        <span
+            class="header">Edit Staff details - <?php echo("$module_short_description ($short_code) $module_prefix$module1 $year_begin ") ?></span>
+    </div><!-- /header -->
+
+    <div id="content">
+        <?php echo $display_block; ?>
+    </div><!-- /content -->
+
+    <div class="footer_link" id="footer">
+        <P>
+            <a href="./index.php">Admin index page</a>.
+            or go to the
+            <a href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>">Year index page</a>.
+        </P>
+    </div><!-- /footer -->
+
+</div><!-- /wrapper -->
+</BODY>
+</HTML>

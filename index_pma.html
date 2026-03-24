@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EPS-APPS Main menu</title>
+    <style>
+        body {
+            font-family: Sans-Serif;
+            background-color: ivory;
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+
+        ol {
+            counter-reset: li;
+            list-style: none;
+            padding: 0;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, .1);
+        }
+
+        ol a {
+            position: relative;
+            display: block;
+            padding: .4em .4em .4em .8em;
+            margin: .5em 0 .5em 2.5em;
+            background: #D3D4DA;
+            color: #444;
+            text-decoration: none;
+            transition: all .3s ease-out;
+        }
+
+        ol a:hover {
+            background: #DCDDE1;
+        }
+
+        ol a:before {
+            content: counter(li);
+            counter-increment: li;
+            position: absolute;
+            left: -2.5em;
+            top: 50%;
+            margin-top: -1em;
+            background: #f9dd94;
+            height: 2em;
+            width: 2em;
+            line-height: 2em;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        ol a:after {
+            position: absolute;
+            content: "";
+            border: .5em solid transparent;
+            left: -1em;
+            top: 50%;
+            margin-top: -.5em;
+            transition: all .3s ease-out;
+        }
+
+
+        ol a:hover:after {
+            left: -.5em;
+            border-left-color: #f9dd94;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+        }
+
+        ul li {
+            margin-bottom: 5px;
+            line-height: 1;
+        }
+
+
+        ul a {
+            position: relative;
+            display: block;
+            padding: .4em .4em .4em .8em;
+            margin: .5em 0 .5em 2.5em;
+            background: #D3D4DA;
+            color: #444;
+            text-decoration: none;
+            transition: all .3s ease-out;
+        }
+
+        ul a:hover {
+            background: #DCDDE1;
+        }
+
+        ul a:before {
+            content: "";
+            position: absolute;
+            left: -2.5em;
+            top: 50%;
+            margin-top: -1em;
+            background: #f9dd94;
+            height: 2em;
+            width: 2em;
+            line-height: 2em;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        ul a:after {
+            position: absolute;
+            content: "";
+            border: .5em solid transparent;
+            left: -1em;
+            top: 50%;
+            margin-top: -.5em;
+            transition: all .3s ease-out;
+        }
+
+        ul a:hover:after {
+            left: -.5em;
+            border-left-color: #f9dd94;
+        }
+
+        li.space_above2 {
+            margin-top: 2em;
+        }
+
+        .kai_colours {
+            background: #7bb800;
+            color: whitesmoke;
+
+        }
+        .kai_colours:hover {
+            background: #28b800;
+        }
+    </style>
+</head>
+<body>
+<H2>EPS Applications List</H2>
+<h3>Select the application you require</h3>
+<H2>Key Assessment Information</H2>
+<ul>
+    <li class=""><a class="kai_colours" href="./pma/index_load.php?school=kmap2">Key Assessment Information - KAI</a></li>
+    <li class=""><a class="kai_colours" href="./kai/index.php">NEW Key Assessment Information - KAI</a></li>
+</uL>
+<H2>TaPTS</H2>
+<ul>
+    <li class=""><a href="./tapts/mech">TaPTS (All schools)</a></li>
+</uL>
+
+<H2>Project Marking App</H2>
+<ol>
+    <li class=""><a href="./pma/index_load.php?school=mech">Mechanical Engineering</a></li>
+    <li class=""><a href="./pma/index_load.php?school=chem">Chemistry</a></li>
+    <li class=""><a href="./pma/index_load.php?school=civil">Civil Engineering</a></li>
+    <li class=""><a href="./pma/index_load.php?school=elec">Electronic and Electrical Engineering</a></li>
+    <li class=""><a href="./pma/index_load.php?school=scape">SCAPE</a></li>
+    <li class="space_above2"><a href="./pma/index_load.php?school=swjtu_civil">SWJTU Civil Engineering</a></li>
+    <li class=""><a href="./pma/index_load.php?school=swjtu_mech">SWJTU Mechanical Engineering</a></li>
+    <li class=""><a href="./pma/index_load.php?school=swjtu_elec">SWJTU Electronic and Electrical Engineering</a></li>
+    <li class="space_above2"><a href="./pma/index_load.php?school=its">Institute for Transport Studies</a></li>
+    <li class=""><a href="./pma/index_load.php?school=env">Environment</a></li>
+</ol>
+</body>
+</html>
+
