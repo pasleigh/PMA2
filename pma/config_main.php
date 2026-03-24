@@ -5,7 +5,7 @@ $password = "";
 
 $hostname = "localhost";
 $base_dir = "/var/www/html/pma";
-$base_dir = "C:\\xampp\\htdocs\\ProjectMarkingApp\\pma";
+$base_dir = "C:\\xampp\\htdocs\\PMA2\\pma";
 // mac
 //$base_dir = "/Applications/XAMPP/xamppfiles/htdocs/ProjectMarkingApp/pma";
 // own server
