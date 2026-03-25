@@ -3,41 +3,26 @@
 (@include_once("./config.php")) OR die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
 (@include_once("./setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
 (@include_once("./connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-
-//if (array_key_exists('pm_id', $_REQUEST)==false){ $_REQUEST['pm_id']=null; }
-//$pm_id=$_REQUEST['pm_id'];
-
 (@include_once("./setup_tables.php")) OR die("Cannot setup database tables<BR>");
 (@include_once("./staff_functions.php")) OR die("Cannot include staff_function.php<BR>");
 (@include_once("./show_minor_part_feedback_form.php")) OR die("Cannot include show_minor_part_feedback<BR>");
-(@include_once("./show_mark_questions.php")) OR die("Cannot include show_mark_questions<BR>");
+//(@include_once("./show_mark_questions.php")) OR die("Cannot include show_mark_questions<BR>");
 (@include_once("./markstore_functions.php")) OR die("Cannot include markstore_functions<BR>");
 
 set_include_path( get_include_path().PATH_SEPARATOR."..");
 
-if (PHP_VERSION_ID <= 50637) {
-    (@include_once("./xlsxwriter.class.php")) OR die("Cannot include xlsxwriter.class<BR>");
-}else{
-    require_once 'vendor/autoload.php';
-}
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
+require_once 'vendor/autoload.php';
 
 
 $xlsx_filename = "project_marks_" . $module_prefix . $module1 . $module_postfix . "_" . $short_code . "_" . $year_begin . "-" . $year_end . ".xlsx";
 $xlsx_sheet_name = $module_prefix . $module1 . $module_postfix . "_" . $year_begin . "-" . $year_end;
 
-//$tmpxlsxfile = tempnam("dummy", "");
 $tmpxlsxfile = tempnam(PMA_TMP_DIR, "");
 $path = dirname($tmpxlsxfile);
-//echo "$tmpxlsxfile $path <br />";
-//$xlsx_filename = $tmpxlsxfile;
-//unlink($tmpxlsxfile);
 
 $display_block = "<h1>Excel file format (.xlsx) list of Projects Marks for $module_prefix$module1 $short_code $year_begin/$year_end</h1>\n";
 
 $query = "select * from $project_allocated order by projectid";
-//$get_student_list_res = mysql_query($get_student_list) or die(" Unable to create student list from $project_alloc table");
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
@@ -55,9 +40,6 @@ if ($num < 1) {
 } else {
     //has records
     // So create the xls writer
-    if (PHP_VERSION_ID <= 50637) {
-        $writer = new XLSXWriter();
-    }else{
         $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
         // delete the default active sheet
         $spreadsheet->removeSheetByIndex(0);
@@ -79,7 +61,6 @@ if ($num < 1) {
             $sheetIndex++;
         }
 
-    }
     //-------------------------------------------------------------
     // The module summary sheet
     $all_rows_for_output = array();
@@ -178,30 +159,17 @@ if ($num < 1) {
         $row[0] = "";
         $row[1] = "";
         $all_rows_for_output[] = $row;
-        //echo("<BR>part$i<BR>Submission date: $p_submission_date[$i]<BR>");
-        //echo("Marking date: $p_marking_date[$i]<BR>");
-        //echo("Num markers: $p_num_markers[$i]<BR>");
-        //echo("Use: $p_use[$i]<BR>");
-        //echo("Percent: $p_percent[$i]<BR>");
-        //echo("Max: $p_max[$i]<BR>");
-        //echo("Description: $p_description[$i]<BR>");
-        //echo("Numeric Qs: $p_numeric[$i]<BR>");
+
     }
 
-    // Write the summary sheet to the xlsxwriter
 
-    //$writer->writeSheetHeader($xlsx_sheet_name, $header);
     $rowIndex = 1;
     $colIndex = 1;
     foreach ($all_rows_for_output as $row_text){
-        if (PHP_VERSION_ID <= 50637) {
-            $writer->writeSheetRow("Module Summary", $row_text);
-        }else{
             for($colIndex = 1; $colIndex <= count($row_text); $colIndex++) {
                 $summary_worksheet->setCellValue([$colIndex, $rowIndex], $row_text[$colIndex-1]);
             }
             $rowIndex++;
-        }
     }
     //================================================================================================
 
@@ -241,7 +209,6 @@ if ($num < 1) {
 
     // add the row
     $all_rows_for_output[] = $row;
-    //$ret = fputcsv($fp, $row);
 
     // Title row
     $row[0] = "Student name";
@@ -352,7 +319,6 @@ if ($num < 1) {
             if ($num_markers > 1) {
                 $total = GetTotalForPart($db, $sid, $i, $markstore_totals);
                 $row[$count] = $total;
-                //echo("Count: $count. Total=$total<BR>");
                 $count++;
             }
         }
@@ -383,14 +349,10 @@ if ($num < 1) {
     // Write the module marks to the xlsxwriter
     $rowIndex = 1;
     foreach ($all_rows_for_output as $row_text){
-        if (PHP_VERSION_ID <= 50637) {
-            $writer->writeSheetRow("Final_Marks_", $row_text);
-        }else{
             for($colIndex = 1; $colIndex <= count($row_text); $colIndex++) {
                 $final_marks_worksheet->setCellValue([$colIndex, $rowIndex], $row_text[$colIndex-1]);
             }
             $rowIndex++;
-        }
     }
     //==================================================================================================
 
@@ -403,7 +365,6 @@ if ($num < 1) {
     for ($i = 0; $i < $row_len; $i++)
     {
         // one of these
-        //array_push($row, $some_data);
         $row[] = $some_data;
     }
 
@@ -547,7 +508,6 @@ if ($num < 1) {
                         $row[7+($j-1)*2+1] = $mark;
                     }
                     $all_rows_for_output[] = $row;
-                    //print_r3('all_rows_for_output',$all_rows_for_output);
                 }
             }
         }
@@ -555,14 +515,10 @@ if ($num < 1) {
         // Write this part questions to the xlsxwriter
         $rowIndex = 1;
         foreach ($all_rows_for_output as $row_text){
-            if (PHP_VERSION_ID <= 50637) {
-                $writer->writeSheetRow($xlsx_part_sheet_name, $row_text);
-            }else{
                 for($colIndex = 1; $colIndex <= count($row_text); $colIndex++) {
                     $part_Qs_worksheets[$i-1]->setCellValue([$colIndex, $rowIndex], $row_text[$colIndex-1]);
                 }
                 $rowIndex++;
-            }
         }
 
     }
@@ -703,10 +659,8 @@ if ($num < 1) {
         foreach ($rows as $recs) {
             $project_id = $recs['projectid'];
             $sid = $recs['sid'];
-            //$title = stripslashes($recs['title']);
-
+            
             $query = "select * from $students where sid=$sid";
-            //$get_list_res = mysql_query($get_list) or die("Unable to get student details from database. Query: $get_list");
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
@@ -767,8 +721,6 @@ if ($num < 1) {
                         if ($n != $cat_q_count[$cat]) {
                             continue;
                             // The real mark for any question is factored and weighted
-                            //$real_mark = $mark * $cat_weights[$k][$cat] * $cat_factors[$k][$cat] / 100.0;
-                            //$real_mark = $mark ." : " . $cat_weights[$k][$cat] ." : " . $cat_factors[$k][$cat];
                         }
                         $row[$count] = $real_mark;
                         $count++;
@@ -783,38 +735,20 @@ if ($num < 1) {
         // Write the module marks to the xlsxwriter
         $rowIndex = 1;
         foreach ($all_rows_for_output as $row_text){
-            if (PHP_VERSION_ID <= 50637) {
-                $writer->writeSheetRow($xlsx_part_sheet_name, $row_text);
-            }else{
                 for($colIndex = 1; $colIndex <= count($row_text); $colIndex++) {
                     $part_Marks_worksheets[$k-1]->setCellValue([$colIndex, $rowIndex], $row_text[$colIndex-1]);
                 }
                 $rowIndex++;
-            }
         }
     }
     //==================================================================================================
 
-    if (PHP_VERSION_ID <= 50637) {
-        // ======================
-        // Output to the browser
-        // ======================
-        header('Content-disposition: attachment; filename="'.XLSXWriter::sanitize_filename($xlsx_filename).'"');
-        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        header('Content-Transfer-Encoding: binary');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-
-        $writer->writeToStdOut();
-    }else{
-        $spreadsheet_writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        //$spreadsheet_writer->save($xlsx_filename);
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="'. urlencode($xlsx_filename).'"');
-        ob_clean();
-        flush();
-        $spreadsheet_writer->save('php://output');
-    }
+    $spreadsheet_writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="'. urlencode($xlsx_filename).'"');
+    ob_clean();
+    flush();
+    $spreadsheet_writer->save('php://output');
     $display_block = "<h2> Project marks saved as Excel (.xlsx) file to: $xlsx_filename</h2>";
 }
 ?>

@@ -8,10 +8,8 @@
 (@include_once($STAFF_DIR_VAL . "/setup_tables.php")) OR die("Cannot setup database tables<BR>");
 (@include_once($STAFF_DIR_VAL . "/staff_functions.php")) OR die("Cannot include staff_function.php<BR>");
 (@include_once($STAFF_DIR_VAL . "/show_minor_part_feedback_form.php")) OR die("Cannot include show_minor_part_feedback<BR>");
-(@include_once($STAFF_DIR_VAL . "/show_mark_questions.php")) OR die("Cannot include show_mark_questions2<BR>");
+//(@include_once($STAFF_DIR_VAL . "/show_mark_questions.php")) OR die("Cannot include show_mark_questions2<BR>");
 (@include_once($STAFF_DIR_VAL . "/markstore_functions.php")) OR die("Cannot include markstore_function.php<BR>");
-//if (array_key_exists('module1', $_GET)==false){ $_GET['module1']=null; }
-//if (array_key_exists('year_begin', $_GET)==false){ $_GET['year_begin']=null; }
 if (array_key_exists('sid', $_GET) == false) {
     $_GET['sid'] = null;
 }
@@ -166,17 +164,17 @@ if($num_marks_in_list > 0){
         if($p_num_markers[$assesspart] == 1) {
             $who = 1;
             $num_markers = 1;
-            $link = "<a href='assess_minor_part_questions.php?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$p_is_numeric'>feedback pdf</A> ($num_markers marker)\n";
+            $link = "<a href='assess_minor_part_questions_bs.php?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$p_is_numeric'>feedback pdf</A> ($num_markers marker)\n";
         }else if($p_num_markers[$assesspart] == 2){
             $num_markers = 2;
             if(IsThirdMarkerRequired($db, $sid, $assesspart, $markstore_totals)){
                 $num_markers++;
-                $link = "<a href='assess_minor_part_questions_3_side_by_side.php?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$p_is_numeric'>feedback pdf</A> ($num_markers markers)\n";
+                $link = "<a href='assess_minor_part_questions_3_side_by_side_bs.php?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$p_is_numeric'>feedback pdf</A> ($num_markers markers)\n";
             }
-            $link = "<a href='assess_minor_part_questions_3_side_by_side.php?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$p_is_numeric'>feedback pdf</A> ($num_markers markers)\n";
+            $link = "<a href='assess_minor_part_questions_3_side_by_side_bs.php?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$p_is_numeric'>feedback pdf</A> ($num_markers markers)\n";
         }else{
             $num_markers = 3;
-            $link = "<a href='assess_minor_part_questions_3_side_by_side.php?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$p_is_numeric'>feedback pdf</A> ($num_markers markers)\n";
+            $link = "<a href='assess_minor_part_questions_3_side_by_side_bs.php?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$p_is_numeric'>feedback pdf</A> ($num_markers markers)\n";
         }
 
         $overview_table .= "<tr>\n<td><B>Part $assesspart</B></td> <td>$part_desc</td><td>$pc_for_part%</td><td>$part_mark_s</td>\n<td>$link</td></tr>\n";

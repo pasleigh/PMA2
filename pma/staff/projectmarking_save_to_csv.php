@@ -10,7 +10,7 @@
 (@include_once("./setup_tables.php")) OR die("Cannot setup database tables<BR>");
 (@include_once("./staff_functions.php")) OR die("Cannot include staff_function.php<BR>");
 (@include_once("./show_minor_part_feedback_form.php")) OR die("Cannot include show_minor_part_feedback<BR>");
-(@include_once("./show_mark_questions.php")) OR die("Cannot include show_mark_questions<BR>");
+//(@include_once("./show_mark_questions.php")) OR die("Cannot include show_mark_questions<BR>");
 (@include_once("./markstore_functions.php")) OR die("Cannot include markstore_functions<BR>");
 
 $csv_filename = "project_marks_" . $module_prefix . $module1 . $module_postfix . "_" . $short_code . "_" . $year_begin . "-" . $year_end . ".csv";
