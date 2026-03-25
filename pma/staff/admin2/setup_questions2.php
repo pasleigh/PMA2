@@ -1,6 +1,5 @@
 <?php
 // Turn off all error reporting
-//error_reporting(0);
 // Turn on all error reporting
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -58,7 +57,6 @@ if($is_module_admin || $admin_access) {
     if (array_key_exists('d', $_GET) == true || array_key_exists('debug', $_GET) == true ) {
         $debug = true;
     }
-    //echo("debug =$debug.<BR>");
 
     // double debug - shows all ofthe _REQUEST array and new table dump
     $ddebug = false;
@@ -68,12 +66,8 @@ if($is_module_admin || $admin_access) {
     }
 
     if($debug){
-        //echo("<pre> \n _Request \n");
-        //var_dump($_REQUEST);
-        //echo("</pre>");
         echo("Assessment part = $assesspart<BR>\n");
     }
-
 
 // if the form was submitted then enter it all into the database
 
@@ -114,7 +108,6 @@ if($is_module_admin || $admin_access) {
         $num_qs = $num_questions - 1;
         $display_block .= "\n<tr><td>Number of questions in this section <input type=\"number\" id=\"new_numqs$cat\" name=\"new_numqs$cat\" value=\"$num_qs\" min=\"1\" max=\"10\" size=6 maxlength=5> (note that questions will be deleted if this number is less than already exists.)</td></tr>\n";
         $display_block .= "<tr>\n<td>";
-        //print_r($questions);
         for ($q_count = 1; $q_count <= $max_num_questions; $q_count++) {
             $question = $questions[$q_count];
 
@@ -216,7 +209,6 @@ if($is_module_admin || $admin_access) {
         return $display_block;
     }// end of show_section_questions2()
 
-
     // definitions for each part
     // Questions table
     $assessqs_year = $assessqs[$assesspart];
@@ -250,7 +242,6 @@ if($is_module_admin || $admin_access) {
         exit();
     }
     $num_categories = $results->rowCount();
-
 
     if ($POST_OP == "commit") {
         $display_block .= "<h2>Submitting the changes to the database ...</H2>";
@@ -317,8 +308,6 @@ if($is_module_admin || $admin_access) {
             // Show feedback
             $show_feedback_flag = 1;
             $show_feedback_id = "show_cat_feedback$cat";
-            //print_r3('$show_feedback_id',$show_feedback_id);
-            //print_r3('$_POST[$show_feedback_id]',$_POST[$show_feedback_id]);
             if (array_key_exists($show_feedback_id, $_POST) == false) {
                 // then it is not checked so feedback is NOT wanted
                 $show_feedback_flag = 0;
@@ -370,7 +359,6 @@ if($is_module_admin || $admin_access) {
             if(!DoesColumnExistInTable($db,$assess_cats,'get_feedback')) {
                 $db->query($query);
             } else {
-                //echo("\nWarning $assess_cats 'get_feedback' already exists\n");
             }
             $query = "INSERT $assess_cats SET
                          cat='$cat',
@@ -465,7 +453,6 @@ if($is_module_admin || $admin_access) {
     }// end of if ($POST_OP == "commit")
 
 // No need to have an else as the rest is always done.
-
 
     $display_block .= "<h1>This form allows you to view and edit questions, marks and section weightings.</h1>";
     $display_block .= "<h2>$assesstype_text section of $module_short_description  $module_prefix$module1$module_postfix ($short_code) $year_begin/$year_end</h2>";
@@ -585,7 +572,6 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
 
         $num_questions = $results->rowCount();
 
-
         for ($q_count = 1; $q_count <= $g_max_num_questions_per_cat; $q_count++) {
             if($q_count < $num_questions) {
                 $query = "select * from $assessqs_year where cat=$cat and qid=$q_count";
@@ -609,13 +595,10 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
                 }
 
                 $q_weight = $qs_list['weight'];
-                //echo("q weight $qweight<BR>");
                 if(!is_numeric($q_weight)){
                     $q_weight = 100;
                 }
-                //echo("q weight $qweight<BR>");
                 $q_weights[$q_count] = $q_weight;
-
 
                 for ($r_count = 1; $r_count <= $num_entries[$q_count]; $r_count++) {
                     $r_text = "text" . $r_count;
@@ -652,15 +635,11 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
             }
 
         }
-        //echo("<pre>");
-        //print_r($response_texts);
-        //echo("</pre>");
         //$show_cat_feedback = 1;
         if($num_questions < 1){$num_questions = 2;}
         $display_block .= show_section_questions2($cat, $description, $weight_pc, $factor, $num_questions, $questions, $num_entries, $q_weights, $response_texts, $response_marks, $g_max_num_questions_per_cat,$g_max_num_responses_per_questionXX, $is_numeric, $show_cat_feedback);
         $display_block .= "<BR>\n";
     }
-
 
     $display_block .= "\n<div class=\"feedbackSection\">Total marks = <span class=\"feedbackTotalMark\" id=totalmarks> </span></div>";
     //$display_block .= "<BR>\n<input type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all selected\" >";
@@ -669,9 +648,7 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
     $display_block .= "<p><input type='submit' id='submitbutton' name=\"submit\" value=\"Commit the question changes to database table\"></p>
 </form>";
 
-
 // End of main
-
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";

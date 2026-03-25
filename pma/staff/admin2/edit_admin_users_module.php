@@ -16,8 +16,6 @@ $access = false;
 $access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access_phrase</h2>\n";
 
-//print_r2($_POST);
-
 if($access) {
 
     require_valid_csrf();
@@ -79,7 +77,6 @@ if($access) {
             $pm_id_first = $pm_id_s;
         }
 
-        //echo( "$module <BR>");
         if ($pm_id_s == $pm_id_selected) {
             $selected = "selected";
         } else {
@@ -223,12 +220,10 @@ if($access) {
     if ($POST_OP == "submit_modified") {
 
         // loop through all _POST find the "ai" keys
-        //echo("<PRE>");
         foreach ($_POST as $key => $value)
         {
             if(substr($key,0,3)=="ai_"){
                 $staff_admin_index = substr($key,3);
-                //echo "$staff_admin_index<BR>";
                 try {
                     $results = $db->prepare("DELETE FROM $admin_users_module_table WHERE `index`=?");
                     $results->execute([$staff_admin_index]);
@@ -240,9 +235,7 @@ if($access) {
                     exit();
                 }
             }
-            //echo "$key = $value<BR>";
         }
-        //echo("</PRE>");
     }
     //if ($POST_OP == "select"  || $new_admin_staff_id != null) {
     {
@@ -339,19 +332,13 @@ if($access) {
             $display_block .= "</form>";
         }
 
-
     }
 
-
 //---------------------------------------------------------------------------------
-
-
-
 
 //---------------------------------------------------------------------------------
 
 }
-
 
 ?>
 <HTML>

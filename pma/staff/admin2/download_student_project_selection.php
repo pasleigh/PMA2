@@ -53,7 +53,6 @@ if($is_module_admin || $admin_access) {
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
 
     if ($POST_OP == "download_selection_csv") {
@@ -63,10 +62,6 @@ if($is_module_admin || $admin_access) {
         $tmpcsvfile = tempnam(PMA_TMP_DIR, '');
         $path = dirname($tmpcsvfile);
         //$sys_temp_dir = sys_get_temp_dir();
-        //echo("temp filename $tmpcsvfile<BR>\n");
-        //echo("path to temp file: $path<BR>\n");
-        //echo("path to sys temp dir: $sys_temp_dir<BR>\n");
-        //echo  is_writable($sys_temp_dir) ? "Temp dir is writable" : "Temp dir is not writable";
         //exit();
 
         $query = "SELECT * FROM $selection WHERE 1";
@@ -101,7 +96,6 @@ if($is_module_admin || $admin_access) {
             $row[7] = "Choice 5";
 
             $ret = fputcsv($fp, $row);
-            //echo " fputcsv return = $ret .<BR />";
             //fclose($fp);
 
             $rows = $results->fetchAll();
@@ -119,7 +113,6 @@ if($is_module_admin || $admin_access) {
 
                 //$fp = fopen('file.csv', 'w');
                 $ret = fputcsv($fp, $row);
-                //echo "$ret <br />";
 
             }
 
@@ -128,7 +121,6 @@ if($is_module_admin || $admin_access) {
             header('Content-type: application/excel');
             header("Content-Disposition: attachment; filename=$csv_filename");
             readfile("$tmpcsvfile");
-
 
             exit();
             $display_block = "<h2> Student selections saved as CSV file to: $csv_filename</h2>";
@@ -169,7 +161,6 @@ if($is_module_admin || $admin_access) {
             $row[5] = "username";
 
             $ret = fputcsv($fp, $row);
-            //echo " fputcsv return = $ret .<BR />";
             //fclose($fp);
 
             $rows = $results->fetchAll();
@@ -190,7 +181,6 @@ if($is_module_admin || $admin_access) {
 
                 //$fp = fopen('file.csv', 'w');
                 $ret = fputcsv($fp, $row);
-                //echo "$ret <br />";
             }
 
             fclose($fp);
@@ -205,7 +195,6 @@ if($is_module_admin || $admin_access) {
     }elseif($POST_OP == "download_projects_csv") {
 
     }
-
 
     $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
 
@@ -222,8 +211,6 @@ if($is_module_admin || $admin_access) {
         exit();
     }
     $rows = $results->fetchAll();
-    //echo("query = $query<BR>\n");
-    //echo("num = " .$results->rowCount() . "<BR>\n");
 //$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
     $display_block .= "<TABLE id=\"selection\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
     $display_block .= "
@@ -242,9 +229,6 @@ if($is_module_admin || $admin_access) {
     $display_block .= "<tbody>\n";
     $proposal_count = 0;
 
-//echo("$query<BR>\n");
-//print_r2($results);
-//print_r2($rows);
 //if ($results->fetch(PDO::FETCH_NUM) > 0 ) {
     foreach ($rows as $recs) {
 

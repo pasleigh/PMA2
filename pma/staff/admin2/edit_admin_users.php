@@ -29,13 +29,10 @@ if($access) {
     } else {
         $POST_OP = "";
     }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
-
 
     $display_block .= "<h1>Edit System Level Admin users </h1>";
 
@@ -146,7 +143,6 @@ if($access) {
         $admin_staff_count = $_POST['admin_staff_count'];
         for ($i = 1; $i <= $admin_staff_count; $i++) {
 
-
             $postid = "username$i";
             $username = $_POST[$postid];
 
@@ -175,8 +171,6 @@ if($access) {
         }
         $display_block .= "<B>Done</B><BR><hr>\n";
     }
-
-
 
 //---------------------------------------------------------------------------------
 // Display the admin users table
@@ -244,7 +238,6 @@ if($access) {
     $display_block .= "</form>";
 
     $display_block .= "<hr>\n";
-
 
 //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Add a new admin user from the default staff list...</H2>\n";

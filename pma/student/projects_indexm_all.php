@@ -11,7 +11,7 @@ $display_block = "";
 $display_block .= "<div style='font-size: x-large; font-weight: bold; text-align: center'>Project Selection</div>";
 $display_block .= "<div style='font-size: large; font-weight: bold; text-align: center'>$module_short_description - $module_prefix$module1$module_postfix - $short_code, $year_begin/$year_end_short</div>";
 
-$student_username = $_SERVER['REMOTE_USER'];
+$student_username = get_server_username();
 $is_staff = isStaff($db, $student_username);
 $is_student_current = false;
 
@@ -95,8 +95,6 @@ if($is_student_current == false and $is_staff == false){
     <div data-role="content">
 
         <?php echo("$display_block") ?>
-
-
 
     </div> <!-- content -->
 

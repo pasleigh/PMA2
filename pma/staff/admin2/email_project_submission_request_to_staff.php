@@ -82,10 +82,8 @@ if($is_module_admin || $admin_access) {
     $pm_id = $_REQUEST['pm_id'];
     $POST_OP = $_REQUEST['op'];
     $activestaff = $_REQUEST['activestaff'];
-//echo("Module1=$module1 Year begin=$year_begin<BR>");
 
 //foreach ($_REQUEST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
 //
 // Check the date for editiing has not passed
@@ -119,7 +117,6 @@ if($is_module_admin || $admin_access) {
     $year_begin = $setup_data['year_begin'];
     $module_short_code = $setup_data['short_code'];
 
-
     $display_block .= "<h1>Emailing Staff about CIVE$module1 ($module_short_code) Projects Starting year $year_begin</h1>";
 
     if ($nowarray[0] > $close) {
@@ -128,10 +125,8 @@ if($is_module_admin || $admin_access) {
         $display_block .= "<b>Updates to the project area database closes at $cldate</b>";
     }
 
-
 //if($module1 == "" || $year_begin == "")
 //{
-//	echo("Year_begin ($year_begin) must be specified.<BR>)");
 //	exit;
 //}
 //
@@ -144,7 +139,6 @@ if($is_module_admin || $admin_access) {
 //}else{
 //	$POST_OP = "";
 //}
-//echo("POST_OP=$POST_OP <BR>\n");
 
 // see all the POST values
     /*
@@ -162,12 +156,10 @@ if($is_module_admin || $admin_access) {
     $email_body .= "This year - to help you get started - I have  populated the list with last year's projects.$lb";
     $email_body .= "You should look at this list and add to, edit or delete projects as you require.$lb$lb";
 
-
     if ($POST_OP == "select") {
         $display_block .= "<P>In the box below type the text you want to send out. Put in HTML code if necessary.<BR>";
 
         $display_block .= "<P>You can mail a <B>list of thier own projects</b> to staff by clicking the box below. <BR>The text you type  will then be followed by a list of the projects by each member of staff and instruction on how to access the data.</P>";
-
 
         $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">
                       <P><textarea rows=\"20\" cols=\"100\" name=\"email_body_text\" placeholder=\"Type the text you want to send to all staff...\">$email_body</textarea></P>\n";
@@ -295,7 +287,6 @@ if($is_module_admin || $admin_access) {
                     // Not participating in projects this year.
                     $display_block .= "$firstname $familyname. $lb Not offering projects this year.$lb$lb<HR>$lb";
                 }
-
 
             }
         }

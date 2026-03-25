@@ -31,7 +31,6 @@ if($is_module_admin) {
 
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
-
 /*
 if (IsAdmin($db, $this_staff_username) ){
     $access_phrase = "You, $this_staff_full_name ($this_staff_username), have <em>database level</em> admin access. Be very carefull.";

@@ -460,7 +460,6 @@ abstract class JpGraphRendererBase implements IRenderer
                     $dataValuesY[$k] = $k;
                 }
             }
-            //var_dump($dataValuesY, $dataValuesX, $bubbleSize);
 
             $seriesPlot = new ScatterPlot($dataValuesX, $dataValuesY);
             if ($scatterStyle == 'lineMarker') {

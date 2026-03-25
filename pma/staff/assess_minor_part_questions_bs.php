@@ -151,7 +151,6 @@ $supervisor = GetStaffNameFromID($db, $supervisor_id, $staff2, NULL);
 $marker_name = GetStaffNameFromID($db, $marker_id, $staff2, NULL);//. " ($marker_entry, $marker_id)";
 $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff2, NULL);
 
-
 // Get the student name from SID
 $query = "select * from $students where sid = $sid";
 try {
@@ -379,7 +378,6 @@ if ($POST_OP == "commit") {
             }
         }
 
-
     }
 
     $overall_feedback_id = "overall_feedback";
@@ -466,8 +464,6 @@ if ($POST_OP == "commit") {
         }
         $display_block .= "<a href=\"$_SERVER[PHP_SELF]?sid=$sid&pid=$project_id&pm_id=$pm_id&part=$assesspart&who=$who&marker_id=$marker_id&topdf=1&force_pdf=1&isnumeric=$is_numeric&o_f=$show_overall_feedback_flag\">Save to PDF</A><BR />";
 
-
-
     } else {// end of if locked
 
         // No need to have an else as the rest is always done.
@@ -505,7 +501,6 @@ if ($POST_OP == "commit") {
 
         $display_block .= "<div style='z-index: 100;' id='sticker'>0.0</div>";
 
- 
         $display_block .= "<form method=\"post\" onsubmit=\"return validate_form();\" action=\"$_SERVER[PHP_SELF]?sid=$sid&pid=$project_id&pm_id=$pm_id&part=$assesspart&who=$who&marker_id=$marker_id&isnumeric=$is_numeric&o_f=$show_overall_feedback_flag\">\n";
         // Get number of categories by counting the rows in $assess_cats
         $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
@@ -725,7 +720,6 @@ if ($POST_OP == "commit") {
             SumSections();
         });
 
-
         function SumSections() {
             var markmax = Number($("#markmax").val());
 
@@ -804,7 +798,6 @@ if ($POST_OP == "commit") {
             var num_not_enough_feedback = Number(CountAllFeedback());
         });
 
-
         function SubmitChangesToDatabase() {
 
             return true;
@@ -826,7 +819,6 @@ if ($POST_OP == "commit") {
         $(":radio").each(function () {
             groups[this.name] = true;
         });
-
 
         var num_not_selected = 0;
 
@@ -912,8 +904,6 @@ if ($POST_OP == "commit") {
             <?php echo("$display_block"); ?>
         </div>
     </div><!-- /content -->
-
-
 
     <footer class="py-3 my-4 bg-dark text-white">
         <ul class="nav justify-content-center">

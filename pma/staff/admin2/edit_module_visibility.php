@@ -8,27 +8,22 @@
 (@include_once("../markstore_functions.php")) OR die("Cannot read markstore_functions file<BR>");
 (@include_once("../staff_functions.php")) OR die("Cannot read markstore_functions file<BR>");
 
-
 if (array_key_exists('op', $_POST) == false) {
     $_POST['op'] = null;
 }
 // if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
     $POST_OP = "";
 }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
 $display_block = "";
 $display_block .= $connect_msg;
 $display_block .= "<h1>Edit which projects are visible to staff users</h1>";
-
 
 $display_block .= "<h2>Projects in the database</h2>";
 
@@ -74,7 +69,6 @@ try {
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();
 }
-
 
 //$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
 $display_block .= "<TABLE id=\"projectinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";

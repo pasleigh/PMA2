@@ -51,7 +51,6 @@ if($is_module_admin || $admin_access) {
     if (array_key_exists('d', $_GET) == true || array_key_exists('debug', $_GET) == true ) {
         $debug = true;
     }
-    //echo("debug =$debug.<BR>");
 
     // double debug - shows all of the _REQUEST array
     $ddebug = false;
@@ -61,9 +60,6 @@ if($is_module_admin || $admin_access) {
     }
 
     if($debug){
-        //echo("<pre> \n _Request \n");
-        //var_dump($_REQUEST);
-        //echo("</pre>");
         echo("Assessment part = $assesspart<BR>\n");
     }
 
@@ -153,11 +149,6 @@ if($is_module_admin || $admin_access) {
     }
     $select_block .= "\n</select>\n";
 
-    //echo("<PRE>");
-    //var_dump($assessqs_cats_tables);
-    //var_dump($assessqs_tables);
-    //echo("</PRE>");
-
     if ($POST_OP == "delete_project") {
         $display_block .= "<BR>Table that will replace existing question data: <b>" . $assessqs_tables[$MatchID] . "</b><BR><BR>";
         $display_block .= "<H1>Delete / Replace confirmation credentials</H1>\n";
@@ -180,7 +171,6 @@ if($is_module_admin || $admin_access) {
         $display_block .= "\n<input type='hidden' name='assessqs_cats_new' value='$assessqs_cats_new_table'>\n";
         $display_block .= "\n<input type='hidden' name='op' value='delete_confirmed'>\n";
 
-
         $display_block .= "Tick to confirm: ";
         $display_block .= "<input type='checkbox' name='confirm_delete'><br>\n";
         $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"delete_confirmed\">\n";
@@ -190,10 +180,8 @@ if($is_module_admin || $admin_access) {
 
     }elseif($POST_OP == "delete_confirmed"){
 
-
         $confirm_delete = false;
         if (array_key_exists('confirm_delete', $_POST) == true ){ $confirm_delete = true; }
-
 
             if( $confirm_delete)
             {
@@ -283,7 +271,6 @@ if($is_module_admin || $admin_access) {
         $display_block .= "<a href='./edit_module_settings.php?pm_id=$pm_id'>Or got back to module admin page</a>";
 
     }
-
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";

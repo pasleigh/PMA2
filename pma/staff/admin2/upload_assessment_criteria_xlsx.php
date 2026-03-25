@@ -14,7 +14,6 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-//error_reporting(E_ALL & ~E_NOTICE);
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 
 $display_block = "";
@@ -32,13 +31,11 @@ if (array_key_exists('op', $_POST) == false) {
     $_POST['op'] = null;
 }
 // if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
     $POST_OP = "";
 }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 if ($access) {
 
@@ -115,7 +112,6 @@ if ($access) {
                         $query .= "'" . addslashes($gpa) . "', ";
                         $query .= "'" . addslashes($university) . "', ";
                         $query .= "'" . addslashes($school) . "') ";
-                        //echo("$query<BR>");
                         //mysql_query($query) or die(" Unable to insert data to the table $assessment_criteria_table . <BR>Query: $query");
                         try {
                             $results = $db->query($query);
@@ -134,7 +130,6 @@ if ($access) {
                         $query .= "gpa='" . addslashes($gpa) . "', ";
                         $query .= "descriptor_university='" . addslashes($university) . "', ";
                         $query .= "descriptor_school='" . addslashes($school) . "' WHERE mark=$mark ";
-                        //echo("$query<BR>");
                         //mysql_query($query) or die(" Unable to insert data to the table $assessment_criteria_table . <BR>Query: $query");
                         try {
                             $results = $db->query($query);
@@ -152,7 +147,6 @@ if ($access) {
         }
 
     }// end of if ($POST_OP == "submint_new")
-
 
 // Get the list of allcoations from the students table
     $query = "SELECT * FROM $assessment_criteria_table ORDER BY mark DESC";

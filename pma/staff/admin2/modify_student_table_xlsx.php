@@ -12,7 +12,6 @@
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-//error_reporting(E_ALL & ~E_NOTICE);
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 
 $display_block = "";
@@ -41,7 +40,6 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if ($is_module_admin || $admin_access) {
 
-
     $display_block .= "<h1>Modify student details</h1>";
     $display_block .= "<h2>Database table $students</h2>";
 
@@ -49,19 +47,15 @@ if ($is_module_admin || $admin_access) {
         $_POST['op'] = null;
     }
 // if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
         $POST_OP = "";
     }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
-
 
     if ($POST_OP == "new") {
         $display_block .= "<P>A New student.</P>";
@@ -102,7 +96,6 @@ if ($is_module_admin || $admin_access) {
         $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Submit details of this new student.\"></p>";
 
         $display_block .= "</form>";
-
 
         $display_block .= "<hr>\n";
     } elseif ($POST_OP == "submit_edited") {
@@ -340,7 +333,6 @@ if ($is_module_admin || $admin_access) {
         }
     }// end of if ($POST_OP == "submint_new")
 
-
     $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
 
 // Get the list of students from the students table
@@ -372,9 +364,6 @@ if ($is_module_admin || $admin_access) {
     $display_block .= "<tbody>\n";
     $student_count = 0;
     $rows = $results->fetchAll();
-//echo("$query<BR>\n");
-//print_r2($results);
-//print_r2($rows);
 //if ($results->fetch(PDO::FETCH_NUM) > 0 ) {
     foreach ($rows as $recs) {
 

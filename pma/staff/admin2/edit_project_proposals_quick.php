@@ -25,7 +25,6 @@ $display_block .= $connect_msg ;
 //$access = false;
 //----------------------------------------------------------------------------------------------------
 
-
 // Check the admin level
 $admin_access = false;
 $admin_access = access_check_response($db,$this_staff_username, $this_staff_full_name, $staff_names,$access_phrase);
@@ -53,7 +52,6 @@ if($is_module_admin || $admin_access) {
     if (array_key_exists('project_count', $_POST) == false) {
         $_POST['project_count'] = null;
     }
-
 
 // Get the list of proposals from the $master_name table
     $query = "SELECT * FROM $master_name ORDER BY id";
@@ -93,7 +91,6 @@ if($is_module_admin || $admin_access) {
         $supervisor_name = $recs['f_supervisor'];
         $supervisor_id = GetStaffIDFromName($db, $supervisor_name, $staff_names);
         //$supervisor_name .= " ($supervisor_id)";
-
 
         $query = "SELECT * FROM $project_details WHERE master_id=$master_id";
         try {
@@ -195,7 +192,6 @@ if($is_module_admin || $admin_access) {
 
                 var progs_id = "pr_" + project_index;
 
-
                 var title = $('#' + title_id ).val();
                 var sup = $('#' + super_id + ' option:selected').html();
                 var sup_id = $('#' + super_id).val();
@@ -285,9 +281,7 @@ if($is_module_admin || $admin_access) {
             });
         });
 
-
     });
-
 
 </script>
 <BODY>

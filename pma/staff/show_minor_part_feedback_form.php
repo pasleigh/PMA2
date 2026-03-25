@@ -1,7 +1,6 @@
 <?php
 function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $student_name, $username, $title, $supervisor_name, $second_marker_name, $marker_name, $project_id, $assesstype, $assess_cats, $max_mark, $mark_pc, $programme, $assesspart, $assesstype_desc, $module_desc, $is_numeric)
 {
-    //echo "assess category db = $assess_cats </BR>";
     //$display_block = "<h1>Part $assesspart: Assessment of $assesstype_desc by $student_name</h1>";
     $display_block = "<h1>Assessment of $module_desc : $assesstype_desc, by $student_name</h1>";
 
@@ -33,7 +32,6 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
               ";
     $display_block .= "</div><BR>\n";
     // get the returned mark
-    //echo("markstore = $markstore<BR>");
     $query = "select * from $markstore where SID=$sid";
     //$get_list_marks = mysql_query($get_marks) or die(" Unable to create list from database table $markstore. Query: $get_marks");
     //$get_marks_res = mysql_fetch_array($get_list_marks);
@@ -139,7 +137,6 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
             $display_block .= "<tr><td class=\"tablehead\" width=\"50%\">$title1</td><td class=\"tablehead\" width=\"50%\">$title2</td></tr>\n";
         }
 
-
         $query = "select * from $assessqs where cat=$cat";
         //$get_list_qstot = mysql_query($get_qstot) or die(" Unable to create list from database $assessqs. Query: $get_qstot");
         try {
@@ -179,13 +176,10 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
                 $entries = $qs_list['entries'];
 
                 $q_weight = $qs_list['weight'];
-                //echo("q weight $qweight<BR>");
                 if(!is_numeric($q_weight)){
                     $q_weight = 100;
                 }
                 $q_weight *= 0.01;
-                //echo("q weight $qweight<BR>");
-
 
                 $choice = $cat . "-" . $count;
                 $pchoice = "q" . $choice;
@@ -343,7 +337,6 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
                     //$display_block .= $checked1[$i] . "<BR>";
                 }
 
-
                 // Display the question
                 $display_block .= "<tr>";
 
@@ -390,7 +383,6 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
 
     } // $cat
 
-
     //$display_block .= "<a href=\"javascript:window.print()\">Print this page</a>";
 
     return $display_block;
@@ -405,7 +397,6 @@ function show_minor_part_overall_feedback_form($db, $part_label, $markstore, $si
     if(!DoesColumnExistInTable($db,$markstore,'OverallFeedback')) {
         $db->query($query);
     }else{
-        //echo("\nWarning $markstore1 OverallFeedback already exists\n");
     }
 
     $query = "SELECT OverallFeedback FROM $markstore WHERE SID=$sid";

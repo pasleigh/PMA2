@@ -11,7 +11,6 @@ if (array_key_exists('op', $_POST) == false) {
     $_POST['op'] = null;
 }
 // if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
@@ -23,15 +22,12 @@ if(array_key_exists('table_name',$_POST)){
     $table_name = "";
     $table_name = "definition";
 }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 // see all the POST values
 foreach ($_POST as $key => $value){
-  //echo "{$key} = {$value}<BR>\r\n";
 }
 
 $display_block = "";
-
 
 $display_block .= "<h1>This page lists the contents of a table</h1>";
 
@@ -51,9 +47,7 @@ $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_new\">";
 $display_block .= "<p><input type=\"submit\" id=\"submit_list\" name=\"submit_list\" value=\"List table\"></p>";
 $display_block .= "<p><input type=\"submit\" id=\"submit_list_all\" name=\"submit_list_all\" value=\"List all tables\"></p>";
 
-
 $display_block .= "</form>";
-
 
 $display_block .= "<hr>\n";
 
@@ -63,7 +57,6 @@ if(array_key_exists('submit_list',$_POST)) {
         $res = $db->query($query);
         // my_table exists
         $display_block .= "<h1>The table \"$table_name\" exists in the database</h1>";
-        //var_dump($res);
         $display_block .= "<TABLE>";
         $display_block .= "<TR>";
         foreach ($res as $rec){
@@ -71,7 +64,6 @@ if(array_key_exists('submit_list',$_POST)) {
             $col_names[] = $col_name;
             $display_block .= "<TD>$col_name</TD>";
             //$display_block .= "<p>$col_name</P>";
-            //var_dump($rec);
         }
         $display_block .= "</TR>";
         // get the data

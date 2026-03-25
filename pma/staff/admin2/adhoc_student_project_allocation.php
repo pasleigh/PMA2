@@ -18,19 +18,9 @@ if (array_key_exists('op', $_REQUEST) == false) {
 $sid = $_REQUEST['sid_s'];
 $POST_OP = $_REQUEST['op'];
 
-
-//echo("Module = $module1<BR>");
-//echo("Year begin = $year_begin<BR>");
-//echo("sid_s = $sid<BR>");
-//echo("POST_OP = $POST_OP<BR>");
-//echo("New title: $txtNewTitle <BR>\n");
 //if ( $chkLocked_status == null ){
-//  echo("Change locked status is not ticked<br>\n");
 //}else{
-//  echo("Locked chekbox status: $chkLocked_status<br>\n");
 //}
-
-//echo("module = $module1  year_begin = $year_begin<BR>");
 
 $display_block = "";
 $display_block .= $connect_msg;
@@ -66,7 +56,6 @@ if($is_module_admin || $admin_access) {
              <tr>
              <td><b>SID:</b>&nbsp; ";
 
-
     $sid_select = "<select name=\"sid_s\">\n";
 
     $query = "select * from $students order by name";
@@ -92,7 +81,6 @@ if($is_module_admin || $admin_access) {
         }
     }
     $sid_select .= "</select>";
-
 
     $display_block .= $sid_select;
     $display_block .= "&nbsp;&nbsp;</td></tr>";

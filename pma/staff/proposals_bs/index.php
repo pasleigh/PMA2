@@ -23,7 +23,6 @@ if ($is_staff) {
     }
     $pm_id = $_REQUEST['pm_id'];
 
-
     $query = "select * from $projects_setup where id=$pm_id";
     try {
         $results = $db->query($query);
@@ -163,9 +162,6 @@ $running_title = $result['running_title'];
 $running_subtitle = "";//$result['running_subtitle'];
 */
 
-
-
-
 $text_area_placement_text = "placeholder='Type yout project description here...'";
 
 // If editing existing entry then this should have the text from the database
@@ -255,7 +251,6 @@ END;
         </div>
         <!-- dropdown -->
 
-
     </div>
 </nav>
 
@@ -299,7 +294,6 @@ END;
             The deadline for entering project proposals has passed.</H4>
         <H4 style='color: #6bc43d; font-weight: bold; display: <?php echo("$date_passed_display_admin")?>'>
             As module level administrator you have access to modifying projects past the deadline date. <span style='color: red;'>Do this sparingly.</span></H4>
-
 
     </div>
 

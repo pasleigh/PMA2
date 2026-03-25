@@ -33,22 +33,16 @@ class CSVparse
     function parse_file($filename)
     {
         $id = fopen($filename, "r"); //open the file
-        //echo("Opening $filename ($id)<BR>");
         $data = fgetcsv($id, filesize($filename)); /*This will get us the */
         /*main column names */
-        //print_r3("csv data",$data);
-        //echo("read $filename<BR>");
 
         if(!$this->mappings){
             $this->mappings = $data;
         }
-        //echo("CSV filename : $filename<BR>\n");
         while($data = fgetcsv($id, filesize($filename)))
         {
-            //print_r3("csv data",$data);
             if($data[0])
             {
-                //echo("About to do data foreach<BR>\n");
                 foreach($data as $key => $value) {
                     $converted_data[$this->mappings[$key]] = addslashes($value);
                 }
@@ -108,7 +102,6 @@ if (!function_exists('json_encode'))
     }
 }
 
-
 /**
  * Include a file only if a sentinel file `must_have.php` exists in the CWD.
  *
@@ -126,7 +119,6 @@ function require_safe($filename) {
         echo "could not include $filename...<BR>\n";
     }
 }
-
 
 /**
  * Return the decimal difference between two dates in the requested interval unit.

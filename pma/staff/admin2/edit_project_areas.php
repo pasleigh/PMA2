@@ -43,11 +43,9 @@ if($is_module_admin || $admin_access) {
     } else {
         $POST_OP = "";
     }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
 // Get the project
     if (!isset($_REQUEST['pm_id'])) {
@@ -90,12 +88,9 @@ if($is_module_admin || $admin_access) {
                     exit();
                 }
             }
-            //echo "$key = $value<BR>";
         }
 
-
         // loop through all _POST find the "ai" keys
-        //echo("<PRE>");
         foreach ($_POST as $key => $value)
         {
             if(substr($key,0,3)=="ai_"){
@@ -112,13 +107,11 @@ if($is_module_admin || $admin_access) {
                     exit();
                 }
             }
-            //echo "$key = $value<BR>";
         }
         $display_block .= "<B>Done</B><BR><hr>\n";
     }elseif($POST_OP == "new"){
         $area_new = $_REQUEST['area_new'];
         $description_new = $_REQUEST['description_new'];
-        //echo("$area_new : $description_new");
 
         try {
             $results = $db->prepare("INSERT INTO $projects_areas SET area=?,description=?");
@@ -139,7 +132,6 @@ if($is_module_admin || $admin_access) {
     $display_block .= "<HR>";
     $display_block .= "<H2>Project Areas table: $projects_areas</H2>";
     $display_block .= "<h1><span style='color: black'>The sortable list of Project Areas - as the students see it (drag to reorder)</span> </h1>";
-
 
 // Display the sortable
     $query = "SELECT * FROM $projects_areas";
@@ -173,7 +165,6 @@ if($is_module_admin || $admin_access) {
 
     $display_block .= "<HR>";
     $display_block .= "<h1><span style='color: black'>The editable list of Project Areas</span> </h1>";
-
 
     $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "?pm_id=" . htmlspecialchars($pm_id, ENT_QUOTES, 'UTF-8') . "\">\n";
     $display_block .= csrf_token_field();
@@ -228,7 +219,6 @@ if($is_module_admin || $admin_access) {
     $display_block .= "</form>";
 
     $display_block .= "<hr>\n";
-
 
 //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Add a new area to the list...</H2>\n";

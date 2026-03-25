@@ -74,7 +74,6 @@
 
 <!--home page -->
 
-
 <H1>Privacy and cookies</H1>
 
 <h2>Privacy notice for apps.engineering.leeds.ac.uk/projects/[civil|mech|scape|its] and other future sub-sites</H2>
@@ -94,7 +93,6 @@ Note that additional information will be provided where you are requested to ent
 It is important that you read this Notice together with any other privacy notice we provide on
     specific occasions when we are collecting or processing personal data about you so that you are fully aware of how and why we are using your data.
     This Notice supplements the other notices and is not intended to override them.
-
 
 <li>Changes to this Notice</li>
 We keep the information provided in this Notice under review. This Notice may be updated from time to time.
@@ -120,11 +118,9 @@ When you access our web pages certain information your browser provides, includi
     <li>Third-party access</li>
 Your personal data that you have provided will not routinely be sent to third parties (unless notified - see 4. above).
 
-
     <li>Data retention</li>
 The University's policies on retaining data for prospective and current students, staff and job applicants are detailed in our data retention policy. http://www.leeds.ac.uk/secretariat/documents/retention_policies.pdf
 In other cases, for example, if you subscribe to news or events, any retention of data will be made clear at the point of collection.
-
 
     <li>Cookies</LI>
 Manage your cookies
@@ -217,8 +213,6 @@ The UK's regulator for the DPA and GDPR is the Information Commissioner's Office
     In the case of the UK this is the Information Commissioner's Office and details can be found at <A href="https://ico.org.uk"> https://ico.org.uk</A>.
 
 </OL>       </div>
-
-
 
 </body>
 </html>

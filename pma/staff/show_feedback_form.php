@@ -35,7 +35,6 @@
 function show_feedback_form1($db,$sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs,$student_name,$username,$title,$supervisor_name,$second_marker_name,$marker_name, $project_id,$assesstype, $assess_cats, $max_mark, $mark_pc,$programme, $assesspart,$assesstype_desc, $module_desc, $is_numeric)
 {
 //function show_feedback_form($sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs,$student_name,$username,$title,$supervisor_name,$second_marker_name,$marker_name, $project_id,$assesstype, $assess_cats, $max_mark, $mark_pc,$programme, $assesspart,$assesstype_desc, $module_desc, $is_numeric)
-    //echo "assess category db = $assess_cats </BR>";
 
     $display_block = "<div><h1>$module_desc, $assesstype_desc Feedback </h1></div>";
     $display_block .= "
@@ -67,9 +66,6 @@ function show_feedback_form1($db,$sid,$markstore1,$markstore2,$markstore3,$marks
 
     // get the returned mark
     $markstore = $markstore_totals;
-    //echo("show_feedback_form1<BR>");
-    //echo("$markstore $sid<BR>");
-    //echo("$assesspart <BR>");
     $query = "select * from $markstore where SID=$sid";
     //$get_list_marks = mysql_query($get_marks) or die(" Unable to create list from database table $markstore. <BR>Query: $get_marks");
     //$get_marks_res = mysql_fetch_array($get_list_marks);
@@ -89,11 +85,7 @@ function show_feedback_form1($db,$sid,$markstore1,$markstore2,$markstore3,$marks
     $final_total_s = sprintf("%5.1f",$final_total);
     $rettotal = $get_marks_res["retmark$assesspart"];
     $rettotal_s = sprintf("%5.1f",$rettotal);
-    //echo $get_marks_res[rettotal];
     $locked = $get_marks_res['locked'];
-    //echo("finale total = $final_total_s<BR>");
-    //echo("retmark$assesspart = $rettotal_s<BR>");
-    //echo("locked = $locked<BR>");
     $display_block .= "
              <tr>
              <td><b>$assesstype mark:</b>&nbsp;<span class=\"grade\"> $rettotal_s/$max_mark</span></td>
@@ -150,11 +142,9 @@ function show_feedback_form1($db,$sid,$markstore1,$markstore2,$markstore3,$marks
     }
 
     $cat_count=$results->rowCount();
-    //echo("Cat count = $cat_count<BR>");
     if ($cat_count == null){
         $cat_count = 3;
     }
-
 
     for ($cat=1;$cat<=$cat_count;$cat++) {
         //$display_block .= "<tr>";
@@ -232,12 +222,10 @@ function show_feedback_form1($db,$sid,$markstore1,$markstore2,$markstore3,$marks
                 $entries =$qs_list['entries'];
 
                 $q_weight = $qs_list['weight'];
-                //echo("q weight $qweight<BR>");
                 if(!is_numeric($q_weight)){
                     $q_weight = 100;
                 }
                 $q_weight *= 0.01;
-                //echo("q weight $qweight<BR>");
 
                 $choice  = $cat . "-" . $count;
                 $pchoice = "q" . $choice;
@@ -345,7 +333,6 @@ function show_feedback_form1($db,$sid,$markstore1,$markstore2,$markstore3,$marks
                 $checked10 = "";
                 $checked11 = "";
                 */
-                //echo("Checked changed<BR>");
                 $checked1 = array();
                 $checked2 = array();
 
@@ -366,7 +353,6 @@ function show_feedback_form1($db,$sid,$markstore1,$markstore2,$markstore3,$marks
                     }
                     //$display_block .= $checked1[$i] . "<BR>";
                 }
-
 
                 // Display the question
                 $display_block .= "<tr>";
@@ -422,17 +408,13 @@ function show_feedback_form1($db,$sid,$markstore1,$markstore2,$markstore3,$marks
 
     } // $cat
 
-
     //$display_block .= "<a href=\"javascript:window.print()\">Print this page</a>";
-    //echo($display_block);
-    //echo("Done <BR>");
     return $display_block;
 }// end of show_feedback_form1()
 
 function show_feedback_form2($db,$sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs,$student_name,$username,$title,$supervisor_name,$second_marker_name,$marker_name, $project_id,$assesstype, $assess_cats, $max_mark, $mark_pc,$programme, $assesspart,$assesstype_desc, $module_desc, $is_numeric)
 {
 //function show_feedback_form($sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs,$student_name,$username,$title,$supervisor_name,$second_marker_name,$marker_name, $project_id,$assesstype, $assess_cats, $max_mark, $mark_pc,$programme, $assesspart,$assesstype_desc, $module_desc, $is_numeric)
-	//echo "assess category db = $assess_cats </BR>";
 	$display_block = "<div><h1>$module_desc, $assesstype_desc Feedback </h1></div>";
   $display_block .= "
              <div align=\"left\">
@@ -467,9 +449,6 @@ function show_feedback_form2($db,$sid,$markstore1,$markstore2,$markstore3,$marks
              
   // get the returned mark
    $markstore = $markstore_totals;
-   // echo("show_feedback_form2<BR>");
-   //echo("$markstore $sid<BR>");
-   //echo("$assesspart <BR>");
    $query = "select * from $markstore where SID=$sid";
    //$get_list_marks = mysql_query($get_marks) or die(" Unable to create list from database table $markstore. <BR>Query: $get_marks");
    //$get_marks_res = mysql_fetch_array($get_list_marks);
@@ -489,11 +468,7 @@ function show_feedback_form2($db,$sid,$markstore1,$markstore2,$markstore3,$marks
    $final_total_s = sprintf("%5.1f",$final_total);
    $rettotal = $get_marks_res["retmark$assesspart"];
    $rettotal_s = sprintf("%5.1f",$rettotal);
-   //echo $get_marks_res[rettotal];
    $locked = $get_marks_res['locked'];
-   //echo("finale total = $final_total_s<BR>");
-   //echo("retmark$assesspart = $rettotal_s<BR>");
-   //echo("locked = $locked<BR>");
    $display_block .= "
              <tr>
              <td><b>$assesstype mark:</b>&nbsp;<span class=\"grade\"> $rettotal_s/$max_mark</span></td>
@@ -520,7 +495,6 @@ function show_feedback_form2($db,$sid,$markstore1,$markstore2,$markstore3,$marks
         exit();
     }
     $marks_stored1 = $results->fetch();
-    //print_r3("marker 1 marks", $marks_stored1);
   //Get the marks from the markstore
   $query = "select * from $markstore2 where SID='$sid'";
   //$marks_res = mysql_query($marks_sql);
@@ -537,7 +511,6 @@ function show_feedback_form2($db,$sid,$markstore1,$markstore2,$markstore3,$marks
     }
     $marks_stored2 = $results->fetch();
 
-    //print_r3("marker 2 marks", $marks_stored2);
   $query = "select * from $assess_cats where 1";
   //$get_cat_details_list = mysql_query($get_cat_details) or die(" Unable to get database $assess_cats. query: $get_cat_details");
     try {
@@ -552,11 +525,9 @@ function show_feedback_form2($db,$sid,$markstore1,$markstore2,$markstore3,$marks
     }
 
     $cat_count=$results->rowCount();
-  //echo("Cat count = $cat_count<BR>");
 	if ($cat_count == null){
 		$cat_count = 3;
 	}
-	
 	
   for ($cat=1;$cat<=$cat_count;$cat++) {
     //$display_block .= "<tr>";
@@ -634,17 +605,14 @@ function show_feedback_form2($db,$sid,$markstore1,$markstore2,$markstore3,$marks
                exit();
            }
            $qs_list = $results->fetch();
-            //print_r3("Qs list ",$qs_list);
           $question=$qs_list['question'];
           $entries =$qs_list['entries'];
 
            $q_weight = $qs_list['weight'];
-           //echo("q weight $qweight<BR>");
            if(!is_numeric($q_weight)){
                $q_weight = 100;
            }
            $q_weight *= 0.01;
-           //echo("q weight $qweight<BR>");
 
           $choice  = $cat . "-" . $count;
           $pchoice = "q" . $choice;
@@ -772,7 +740,6 @@ function show_feedback_form2($db,$sid,$markstore1,$markstore2,$markstore3,$marks
               //$display_block .= $checked1[$i] . "<BR>";
           }
 
-          
           // Display the question
            if (($entries == 0) and (!$show_cat_feedback)){
                 continue;
@@ -844,17 +811,13 @@ function show_feedback_form2($db,$sid,$markstore1,$markstore2,$markstore3,$marks
     
   } // $cat
   
-  
   //$display_block .= "<a href=\"javascript:window.print()\">Print this page</a>";
-  //echo($display_block);
-  //echo("Done <BR>");
   return $display_block;
 }// end of show_feedback_form2()
 
 function show_feedback_form3($db, $sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs,$student_name,$username,$title,$supervisor_name,$second_marker_name,$third_marker_name, $project_id,$assesstype, $assess_cats, $max_mark, $mark_pc,$programme, $assesspart,$assesstype_desc, $module_desc, $is_numeric)
 {
 //function show_feedback_form($sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs,$student_name,$username,$title,$supervisor_name,$second_marker_name,$marker_name, $project_id,$assesstype, $assess_cats, $max_mark, $mark_pc,$programme, $assesspart,$assesstype_desc, $module_desc, $is_numeric)
-    //echo "assess category db = $assess_cats </BR>";
     $display_block = "<div><h1>$module_desc, $assesstype_desc Feedback </h1></div>";
     $display_block .= "
              <div align=\"left\">
@@ -889,9 +852,6 @@ function show_feedback_form3($db, $sid,$markstore1,$markstore2,$markstore3,$mark
 
     // get the returned mark
     $markstore = $markstore_totals;
-    //echo("show_feedback_form3<BR>");
-    //echo("$markstore $sid<BR>");
-    //echo("$assesspart <BR>");
     $query = "select * from $markstore where SID=$sid";
     //$get_list_marks = mysql_query($get_marks) or die(" Unable to create list from database table $markstore. <BR>Query: $get_marks");
     //$get_marks_res = mysql_fetch_array($get_list_marks);
@@ -911,11 +871,7 @@ function show_feedback_form3($db, $sid,$markstore1,$markstore2,$markstore3,$mark
     $final_total_s = sprintf("%5.1f",$final_total);
     $rettotal = $get_marks_res["retmark$assesspart"];
     $rettotal_s = sprintf("%5.1f",$rettotal);
-    //echo $get_marks_res[rettotal];
     $locked = $get_marks_res['locked'];
-    //echo("finale total = $final_total_s<BR>");
-    //echo("retmark$assesspart = $rettotal_s<BR>");
-    //echo("locked = $locked<BR>");
     $display_block .= "
              <tr>
              <td><b>$assesstype mark:</b>&nbsp;<span class=\"grade\"> $rettotal_s/$max_mark</span></td>
@@ -988,11 +944,9 @@ function show_feedback_form3($db, $sid,$markstore1,$markstore2,$markstore3,$mark
         exit();
     }
     $cat_count=$results->rowCount();
-    //echo("Cat count = $cat_count<BR>");
     if ($cat_count == null){
         $cat_count = 3;
     }
-
 
     for ($cat=1;$cat<=$cat_count;$cat++) {
         //$display_block .= "<tr>";
@@ -1075,12 +1029,10 @@ function show_feedback_form3($db, $sid,$markstore1,$markstore2,$markstore3,$mark
                 $entries =$qs_list['entries'];
 
                 $q_weight = $qs_list['weight'];
-                //echo("q weight $qweight<BR>");
                 if(!is_numeric($q_weight)){
                     $q_weight = 100;
                 }
                 $q_weight *= 0.01;
-                //echo("q weight $qweight<BR>");
 
                 $choice  = $cat . "-" . $count;
                 $pchoice = "q" . $choice;
@@ -1217,7 +1169,6 @@ function show_feedback_form3($db, $sid,$markstore1,$markstore2,$markstore3,$mark
                     //$display_block .= $checked1[$i] . "<BR>";
                 }
 
-
                 // Display the question
                 //$display_block .= "<tr>";
                 //$display_block .= "<td width=\"30%\">$question</td>";
@@ -1314,12 +1265,8 @@ function show_feedback_form3($db, $sid,$markstore1,$markstore2,$markstore3,$mark
 
     } // $cat
 
-
     //$display_block .= "<a href=\"javascript:window.print()\">Print this page</a>";
-    //echo($display_block);
-    //echo("Done <BR>");
 
-    //echo($display_block);
     //exit;
     return $display_block;
 }// end of show_feedback_form3()
@@ -1335,13 +1282,11 @@ function show_overall_feedback_form2($db, $sid, $markstore1, $markstore2, $marks
     if(!DoesColumnExistInTable($db,$markstore1,'OverallFeedback')) {
         $db->query($query);
     }else{
-        //echo("\nWarning $markstore1 OverallFeedback already exists\n");
     }
     $query = "ALTER TABLE $markstore2 ADD `OverallFeedback` text DEFAULT null";
     if(!DoesColumnExistInTable($db,$markstore2,'OverallFeedback')) {
         $db->query($query);
     } else {
-        //echo("\nWarning $markstore2 OverallFeedback already exists\n");
     }
 
     $query = "SELECT OverallFeedback FROM $markstore1 WHERE SID=$sid";
@@ -1406,13 +1351,11 @@ function show_overall_feedback_form3($db, $sid, $markstore1, $markstore2, $marks
     if(!DoesColumnExistInTable($db,$markstore1,'OverallFeedback')) {
         $db->query($query);
     }else{
-        //echo("\nWarning $markstore1 OverallFeedback already exists\n");
     }
     $query = "ALTER TABLE $markstore2 ADD `OverallFeedback` text DEFAULT null";
     if(!DoesColumnExistInTable($db,$markstore2,'OverallFeedback')) {
         $db->query($query);
     } else {
-        //echo("\nWarning $markstore2 OverallFeedback already exists\n");
     }
     $query = "SELECT OverallFeedback FROM $markstore1 WHERE SID=$sid";
     try {

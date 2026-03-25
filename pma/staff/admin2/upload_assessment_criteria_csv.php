@@ -11,7 +11,6 @@
 
 (@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
 
-
 $display_block = "";
 $display_block .= $connect_msg;
 
@@ -27,40 +26,28 @@ if (array_key_exists('op', $_POST) == false) {
     $_POST['op'] = null;
 }
 // if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
     $POST_OP = "";
 }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 if ($access) {
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
     if ($POST_OP == "upload_csv") {
 
-        //print_r3("_REQUEST",$_REQUEST);
-        //print_r3("_FILES",$_FILES[csv]);
         $csv_file_name = $_FILES['csv']['name'];
         $csv_file_size = $_FILES['csv']['size'];
         $csv_file_tmp = $_FILES['csv']['tmp_name'];
         $csv_file_type = $_FILES['csv']['type'];
-        //echo("File name: $csv_file_name<BR>");
-        //echo("File size: $csv_file_size<BR>");
-        //echo("File tmp: $csv_file_tmp<BR>");
-        //echo("File type: $csv_file_type<BR>");
 
         $importer = new CSVparse();
         $CSV_DATA = $importer->parse_file($csv_file_tmp);
-        //echo("File tmp: $csv_file_tmp<BR>");
-        //print_r2($CSV_DATA);
 
         foreach ($CSV_DATA as $each_alloc_entry) {
             $csv_keys = array_keys($each_alloc_entry);
-            //print_r2($csv_keys);
             $mark = $each_alloc_entry[$csv_keys[0]];
             $class = $each_alloc_entry[$csv_keys[1]];
             $grade = $each_alloc_entry[$csv_keys[2]];
@@ -91,7 +78,6 @@ if ($access) {
                 $query .= "'" . addslashes($gpa) . "', ";
                 $query .= "'" . addslashes($university) . "', ";
                 $query .= "'" . addslashes($school) . "') ";
-                //echo("$query<BR>");
                 //mysql_query($query) or die(" Unable to insert data to the table $assessment_criteria_table . <BR>Query: $query");
                 try {
                     $results = $db->query($query);
@@ -110,7 +96,6 @@ if ($access) {
                 $query .= "gpa='" . addslashes($gpa) . "', ";
                 $query .= "descriptor_university='" . addslashes($university) . "', ";
                 $query .= "descriptor_school='" . addslashes($school) . "' WHERE mark=$mark ";
-                //echo("$query<BR>");
                 //mysql_query($query) or die(" Unable to insert data to the table $assessment_criteria_table . <BR>Query: $query");
                 try {
                     $results = $db->query($query);
@@ -126,7 +111,6 @@ if ($access) {
         }
 
     }// end of if ($POST_OP == "submint_new")
-
 
 // Get the list of allcoations from the students table
         $query = "SELECT * FROM $assessment_criteria_table ORDER BY mark DESC";

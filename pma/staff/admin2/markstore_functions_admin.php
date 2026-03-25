@@ -1,6 +1,4 @@
 <?PHP
-//error_reporting(E_ALL);
-//ini_set('display_errors', '1');
 
 function SetLockedStatusForMarker($db, $sid, $is_part_locked, $part_index, $marker_index, $markstores)
 {
@@ -8,7 +6,6 @@ function SetLockedStatusForMarker($db, $sid, $is_part_locked, $part_index, $mark
     // Check exists
     $query = "select * from $this_markstore where sid='$sid'";
     //$get_list_res = mysql_query($my_query) or die(" Unable to get the locked value from $this_markstore table. <BR>Query: $my_query");
-    //echo("SetLockedStatus part $part_index, marker $marker_index, markstore $this_markstore<BR>");
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
@@ -22,7 +19,6 @@ function SetLockedStatusForMarker($db, $sid, $is_part_locked, $part_index, $mark
     $num = $results->rowCount();
     if($num > 0 ){
         $query = "update $this_markstore set locked='$is_part_locked' where sid = $sid";
-        //echo("Query: $query <BR>");
         //mysql_query($mod_details) or die(" Unable to modify the locked in the $this_markstore table. <BR>Query: $mod_details");
         try {
             $results = $db->query($query);
@@ -34,9 +30,7 @@ function SetLockedStatusForMarker($db, $sid, $is_part_locked, $part_index, $mark
 
             exit();
         }
-        //echo("Set = $is_part_locked<BR>\n");
     }else{
-        //echo("NOT Set = $is_part_locked<BR>\n");
     }
 }
 
@@ -86,7 +80,6 @@ function SetLockedStatusOverall($db, $sid, $is_part_locked, $markstore_totals)
             exit();
         }        //echo("Set = $is_part_locked<BR>\n");
     }else{
-        //echo("Not Set = $is_part_locked<BR>\n");
     }
 }
 
@@ -110,7 +103,6 @@ function SetThirdMarkerStatusForPart($db, $sid, $is_third_marker_required, $part
         $field = "third_marker_req$part_index";
         $query = "update $this_markstore set $field='$is_third_marker_required' where sid = $sid";
         //mysql_query($mod_details) or die(" Unable to modify the $field in the $this_markstore table. <BR>Query: $mod_details");
-        //echo("Set = $is_third_marker_required<BR>\n");
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
@@ -122,7 +114,6 @@ function SetThirdMarkerStatusForPart($db, $sid, $is_third_marker_required, $part
             exit();
         }
     }else{
-        //echo("Not Set = $is_third_marker_required<BR>\n");
     }
 }
 
@@ -170,7 +161,6 @@ function GetLockedStatusOverall($db, $sid,  $markstore_totals)
     if($num > 0 ){
         //$recs = mysql_fetch_array($get_list_res);
         $recs = $results->fetch();
-        //print_r3("recs",$recs);
         $entry = "locked";
         $is_locked = $recs[$entry];
     }

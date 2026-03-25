@@ -7,12 +7,10 @@
 
 (@include_once("./admin2/adminusers.php")) OR die("Cannot setup admin users");
 
-
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
 $pm_id = $_REQUEST['pm_id'];
-
 
 $query = "select * from $projects_setup where id=$pm_id";
 try {
@@ -34,8 +32,6 @@ $module_prefix = $res['module_prefix'];
 $module_postfix = $res['module_postfix'];
 $module_short_description = $res['module_short_desc'];
 $short_code = $res['short_code'];
-
-
 
 $display_block = "<P>$this_staff_full_name ($this_staff_username) select the action on this module:</P>";
 

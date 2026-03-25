@@ -126,7 +126,6 @@ if(IsStaff($db,$this_staff_username,$staff_names)) {
     $display_block .= "<P>Please contact the manager of this system if you think this is wrong</P>";
 }
 
-
 ?>
 <HTML>
 <?php
@@ -142,7 +141,6 @@ if(IsStaff($db,$this_staff_username,$staff_names)) {
 <script src="../frameworks/highcharts/highcharts.js"></script>
 <script src="../frameworks/highcharts/exporting.js"></script>
 <script src="../js/staff_load_projects_chart.js"></script>
-
 
 <script>
 //$(document).ready(function() {
@@ -241,7 +239,6 @@ function redraw_chart_and_table()
 
     var num_modules = mydata.ids.length;
 
-
     var rows_de = [];
     var count = 1;
     for (var key in staffdata) {
@@ -297,13 +294,10 @@ function redraw_chart_and_table()
 
                 my_row_data[2+2*mydata.ids.length+2] = sum_all.toFixed(1);
 
-
                 rows_de.push(my_row_data);
             }
         }
     }
-
-
 
     $('#data-entry').dataTable({
         //"bSort":    false,
@@ -430,7 +424,6 @@ function draw_staff_load_chart(){
     $('#ContainerProjectsChart').highcharts(my_projects_count_chart);
 }
 
-
 $(document).ready(function() {
     $("#module_list_table").dataTable(
         {
@@ -451,7 +444,6 @@ $(document).ready(function() {
 });
 //});
 </script>
-
 
 <BODY>
 <div id="wrapper">

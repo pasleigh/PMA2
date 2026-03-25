@@ -33,7 +33,6 @@ if($access) {
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
 
     $display_block = "";
@@ -111,7 +110,6 @@ SQL;
     $display_block .= "<p align='right'>Careful, this resets all \"use\" data =><input type=\"submit\" id=\"update_table\" name=\"submit\" value=\"Update table.\"> </p>";
 
     $display_block .= "</form>";
-
 
     if ($POST_OP == "update_table") {
 
@@ -229,7 +227,6 @@ SQL;
 
     }// Recaculate table
 
-
 #######################################################################
 # Draw the table and prep the chart date_add()
 #######################################################################
@@ -320,7 +317,6 @@ SQL;
             }
             $display_block .= "<TD><input type=\"checkbox\" name=\"use$staff_count\" value=\"1\" $checked></TD>\n";
 
-
             $display_block .= "</TR>\n";
 
             if ($use == 1) {
@@ -376,7 +372,6 @@ SQL;
     if ($POST_OP == "savecsv") {
         $tmpcsvfile = tempnam("dummy", "");
         $path = dirname($tmpcsvfile);
-        //echo "$tmpcsvfile $path <br />";
         //$csv_filename = $tmpcsvfile;
         //unlink($tmpcsvfile);
 
@@ -394,7 +389,6 @@ SQL;
         }
 
         $fp = fopen($tmpcsvfile, 'w');
-        //echo " fopen return = $fp .<BR />";
 
         $row[0] = "";
         $row[1] = "";
@@ -447,7 +441,6 @@ SQL;
     }
 
 }
-
 
 ?>
 <HTML>
@@ -507,7 +500,6 @@ SQL;
             my_chart2_url.innerHTML = '<a href=' + my_chart2.getImageURI() + '>download image</A>';
         });
         my_chart2.draw(data, options2);
-
 
     }
 </script>

@@ -8,7 +8,6 @@
  * features, such as custom tags, custom parsing of text, etc.
  */
 
-
 abstract class HTMLPurifier_Strategy
 {
 

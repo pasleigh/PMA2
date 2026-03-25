@@ -17,7 +17,7 @@ if (array_key_exists('prog_var', $_REQUEST) == false) {
 }
 $prog_var = $_REQUEST['prog_var'];
 
-$student_username = $_SERVER['REMOTE_USER'];
+$student_username = get_server_username();
 $is_staff = isStaff($db, $student_username);
 $is_student_current = false;
 if($is_staff == false) {
@@ -38,7 +38,6 @@ if($is_student_current == false and $is_staff == false){
     $display_block .= "<div>You are $student_name ($student_username)</div>";
     $count_modules = 0;
 
-
     $program_variants = GetProgramVariants($db, $projects_setup_proposals, $pm_id, $num_prog_variants);
     $program_variant_flags = GetProgramVariantFlags($db, $project_details, null);
 
@@ -48,8 +47,6 @@ if($is_student_current == false and $is_staff == false){
     } else {
         $prog_name = $program_variants[$prog_var];
     }
-//echo("Prog name: $prog_name<BR>\n");
-//echo("Prog var: $prog_var<BR>\n");
 
 //$display_block .= "<p>This page lists $module_short_description projects that are on offer for the session $year_begin-$year_end.</p>";
     $display_block .= "<div><h3>List of all  $module_short_description projects for $prog_name</h3>\n";
@@ -131,21 +128,16 @@ if($is_student_current == false and $is_staff == false){
     <!--++++Main page+++++++-->
     <div data-role="content">
 
-
             <?php echo("$display_block"); ?>
 
-
     </div><!-- content -->
-
 
     <div data-role="footer" data-position="fixed">
         <H1 style="color: dimgray;"><a target="_self" href="./projects_indexm_all.php?pm_id=<?php echo("$pm_id"); ?>" style="color: dimgray;">Index</a></H1>
     </div><!-- /footer -->
 
-
 </div> <!-- page -->
 <!--++++-------End of Main page---------+++++++-->
-
 
 </body>
 </html>

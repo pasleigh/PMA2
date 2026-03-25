@@ -45,11 +45,8 @@ $project_option_titles = "";
 for ($i = 0; $i < sizeof($option); $i++) {
     if ($option_flag[$i] == 1) {
         $option_title = $option_text[$i];
-        //echo("option title raw: $option_title\n");
         cleanData($option_title);
-        //echo("option title clean: $option_title\n");
         $project_option_titles .= $option_title . $sep;
-        //echo("project option title: $project_option_titles\n");
 
     }
 }
@@ -113,7 +110,6 @@ foreach ($rows as $recs) {
             $num_projects += 1;
             // count the total number of places
             foreach ($p_rows as $p_recs) {
-                //print_r($p_recs);
                 $f_assocstaff = $p_recs['f_assocstaff'];
                 //$f_UGprojects = $p_recs['f_UGprojects'];
                 $f_PGprojects = $p_recs['f_PGprojects'];
@@ -125,7 +121,6 @@ foreach ($rows as $recs) {
 
                 $num_places += $f_PGprojects;
                 $csv_block .= "$project_id$sep$fullname$sep$email$sep$f_assocstaff$sep$title$sep$f_PGprojects$sep$f_outline";
-
 
                 $date_added = $p_recs['date_added'];
                 $date_modified = $p_recs['date_modified'];
@@ -174,7 +169,6 @@ foreach ($rows as $recs) {
 }
 
 echo $html_page;
-
 
 function cleanData(&$str)
 {

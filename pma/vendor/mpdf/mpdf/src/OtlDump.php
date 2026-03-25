@@ -1128,9 +1128,6 @@ class OtlDump
 			$this->mpdf->WriteHTML('<div>GDEF table not defined</div>');
 		}
 
-//echo $this->GlyphClassMarks ; exit;
-//print_r($GlyphClass); exit;
-//print_r($GlyphByClass); exit;
 	}
 
 	function _getClassDefinitionTable($offset = 0)
@@ -1208,7 +1205,6 @@ class OtlDump
 				}
 				$ffeats[$t] = $ls;
 			}
-//print_r($ffeats); exit;
 			// Get FeatureIndexList
 			// LangSys Table - from first listed langsys
 			foreach ($ffeats as $st => $scripts) {
@@ -1228,7 +1224,6 @@ class OtlDump
 					$ffeats[$st][$t] = $FeatureIndex;
 				}
 			}
-//print_r($ffeats); exit;
 			// Feauture List => LookupListIndex es
 			$this->seek($FeatureList_offset);
 			$FeatureCount = $this->read_ushort();
@@ -1275,8 +1270,6 @@ class OtlDump
 					$GSUBScriptLang[$st] .= $t . ' ';
 				}
 			}
-
-//print_r($gsub); exit;
 
 			if ($this->mode == 'summary') {
 				$this->mpdf->WriteHTML('<h3>GSUB Scripts &amp; Languages</h3>');
@@ -1338,7 +1331,6 @@ class OtlDump
 				}
 			}
 
-//print_r($GSLookup); exit;
 			//=====================================================================================
 			// Process Whole LookupList - Get LuCoverage = Lookup coverage just for first glyph
 			$this->GSLuCoverage = [];
@@ -1421,7 +1413,6 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 				}
 			}
 
-//print_r($Lookup); exit;
 			//=====================================================================================
 			// Process (1) Whole LookupList
 			for ($i = 0; $i < $LookupCount; $i++) {
@@ -1634,7 +1625,6 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 					}
 				}
 			}
-//print_r($Lookup); exit;
 			//=====================================================================================
 			// Process (2) Whole LookupList
 			// Get Coverage tables and prepare preg_replace
@@ -1962,10 +1952,7 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 			}
 			ksort($lul); // Order the Lookups in the order they are in the GUSB table, regardless of Feature order
 			$this->_getGSUBarray($Lookup, $lul, $st);
-//print_r($lul); exit;
 		}
-
-//print_r($Lookup); exit;
 
 		return [$GSUBScriptLang, $gsub, $GSLookup, $rtlPUAstr, $rtlPUAarr];
 	}
@@ -2344,8 +2331,6 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 										}
 									}
 
-//print_r($Lookup[$i]);
-//print_r($volt[(count($volt)-1)]); exit;
 								} // LookupType 6: Chaining Contextual Substitution Subtable
 								else {
 									if ($Lookup[$i]['Type'] == 6) {
@@ -2581,7 +2566,6 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 													}
 												}
 
-//print_r($Lookup[$i]['Subtable'][$c]); exit;
 											} // Format 3: Coverage-based Chaining Context Glyph Substitution  p259
 											else {
 												if ($SubstFormat == 3) {
@@ -2679,7 +2663,6 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 		} else {
 			return $html;
 		}
-//print_r($Lookup); exit;
 	}
 
 	//=====================================================================================
@@ -2784,7 +2767,6 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 	  "REPL"
 
 	  ¦\${1}\${2} ¦\${3}\${4} ¦REPL¦\${5+} \${6+}¦\${7+} \${8+}¦
-
 
 	  INPUT nInput = 5
 	  ============================================================
@@ -3081,7 +3063,6 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 					$ffeats[$st][$t] = $FeatureIndex;
 				}
 			}
-//print_r($ffeats); exit;
 			// Feauture List => LookupListIndex es
 			$this->seek($FeatureList_offset);
 			$FeatureCount = $this->read_ushort();
@@ -3108,7 +3089,6 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 					}
 				}
 			}
-//print_r($ffeats); exit;
 			//=====================================================================================
 			$gpos = [];
 			$GPOSScriptLang = [];
@@ -3205,8 +3185,6 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 			}
 			ksort($lul); // Order the Lookups in the order they are in the GUSB table, regardless of Feature order
 			$this->_getGPOSarray($Lookup, $lul, $st);
-
-//print_r($lul); exit;
 
 			return [$GPOSScriptLang, $gpos, $Lookup];
 		} // end if GPOS
@@ -3918,7 +3896,6 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 		} else {
 			return $html;
 		}
-//print_r($Lookup); exit;
 	}
 
 	//=====================================================================================
@@ -4064,7 +4041,6 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 			}
 		}
 	}
-
 
 	//////////////////////////////////////////////////////////////////////////////////
 

@@ -13,7 +13,6 @@
 $display_block = "";
 $display_block .= $connect_msg;
 
-
 if (array_key_exists('year_begin', $_GET) == false) {
     $_GET['year_begin'] = null;
 }

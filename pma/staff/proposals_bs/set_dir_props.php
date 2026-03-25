@@ -7,8 +7,6 @@
     $BASE_DIR_VAL    = dirname(dirname(__DIR__));
     $STUDENT_DIR_VAL = dirname(dirname(__DIR__)) . '/student';
     $ADMIN_DIR_VAL   = dirname(__DIR__) . '/admin2';
-    //echo("COOKIE BASE_DIR_VAL: " . $BASE_DIR_VAL . "<BR>\n");
-    //echo("COOKIE STAFF_DIR_VAL: " . $STAFF_DIR_VAL . "<BR>\n");
 /*
 
    }else{

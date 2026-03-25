@@ -19,7 +19,6 @@ function GetQsTemplatesSelect($db, $NameKey, $MatchID){
        $template_table_name = $row[0];
        
        //if (strpos($template_table_name,'_cats') !== false) {
-       //  echo 'true';
        //}
        if ( $template_table_name == $MatchID ) {
          $template_select_block .= "<option value=\"$template_table_name\" selected=\"selected\">$template_table_name</option>\n";
@@ -51,7 +50,6 @@ function GetStaffNameTemplatesSelect($db, $NameKey, $MatchID){
        $template_table_name = $row[0];
        
        //if (strpos($template_table_name,'_cats') !== false) {
-       //  echo 'true';
        //}
        if ( $template_table_name == $MatchID ) {
          $template_select_block .= "<option value=\"$template_table_name\" selected=\"selected\">$template_table_name</option>\n";

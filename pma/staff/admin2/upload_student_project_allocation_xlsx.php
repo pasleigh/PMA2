@@ -12,7 +12,6 @@
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-//error_reporting(E_ALL & ~E_NOTICE);
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 
 $display_block = "";
@@ -43,19 +42,15 @@ if ($is_module_admin || $admin_access) {
         $_POST['op'] = null;
     }
     // if the form was submitted then enter it all into the database
-    //echo("OP=$_POST['op'] . <BR>\n");
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
         $POST_OP = "";
     }
-//echo("POST_OP=$POST_OP <BR>\n");
-
 
 //if ($access) {
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
     //$allowed_tyle_ext = array('csv', 'CSV');
 
@@ -69,18 +64,12 @@ if ($is_module_admin || $admin_access) {
 
     if ($POST_OP == "upload_csv") {
 
-        //print_r3("_REQUEST",$_REQUEST);
-        //print_r3("_FILES",$_FILES[csv]);
         $xlsx_file_name = $_FILES['csv']['name'];
         $ext = pathinfo($xlsx_file_name, PATHINFO_EXTENSION);
         $xlsx_file_size = $_FILES['csv']['size'];
         $xlsx_file_tmp = $_FILES['csv']['tmp_name'];
         $xlsx_file_type = $_FILES['csv']['type'];
         $xlsx_file_error = $_FILES['csv']['error'];
-        //echo("File name: $csv_file_name<BR>");
-        //echo("File size: $csv_file_size<BR>");
-        //echo("File tmp: $csv_file_tmp<BR>");
-        //echo("File type: $csv_file_type<BR>");
 
         $file_info = "File name $xlsx_file_name<BR>";
         $file_info .= "File size $xlsx_file_size<BR>";
@@ -142,7 +131,6 @@ if ($is_module_admin || $admin_access) {
                         $query .= "'" . addslashes($title) . "', ";
                         $query .= "'" . addslashes($supervisor_id) . "', ";
                         $query .= "'" . addslashes($second_marker_id) . "') ";
-                        //echo("$query<BR>");
                         //mysql_query($query) or die(" Unable to insert data to the table $project_allocated . <BR>Query: $query");
                         try {
                             $results = $db->query($query);
@@ -160,7 +148,6 @@ if ($is_module_admin || $admin_access) {
                         $query .= "title='" . addslashes($title) . "', ";
                         $query .= "supervisor_id='" . addslashes($supervisor_id) . "', ";
                         $query .= "second_marker_id='" . addslashes($second_marker_id) . "' WHERE sid=$sid ";
-                        //echo("$query<BR>");
                         //mysql_query($query) or die(" Unable to insert data to the table $project_allocated . <BR>Query: $query");
                         try {
                             $results = $db->query($query);
@@ -173,7 +160,6 @@ if ($is_module_admin || $admin_access) {
                         }
                     }
                     $query = "UPDATE $project_allocated SET `marker_p1m1_id`=$supervisor_id, `marker_p1m2_id`=$second_marker_id WHERE sid=$sid";
-                    //echo("$query<BR>");
                     //mysql_query($query) or die(" Unable to update id (p1)data to the table $project_allocated . <BR>Query: $query");
                     try {
                         $results = $db->query($query);
@@ -364,7 +350,6 @@ if ($is_module_admin || $admin_access) {
         }
 
     }// end of if ($POST_OP == "upload_detailed_csv")
-
 
     $num = CountAllocationTable($db, $project_allocated);
     if ($num == 0) {

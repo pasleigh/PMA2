@@ -49,7 +49,6 @@ class HTMLPurifier_Printer_HTMLDefinition extends HTMLPurifier_Printer
         return $ret;
     }
 
-
     /**
      * Renders environment table, which is miscellaneous info
      * @return string

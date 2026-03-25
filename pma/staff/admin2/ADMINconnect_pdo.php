@@ -7,11 +7,8 @@ if(isset($_SESSION['USERNAME'])){
     $this_staff_username = $_SESSION['USERNAME'];
     $admin_level = GetSuperAdminLevel($db,$this_staff_username) ;
 
-
-    //echo("user $username has super admin level = $admin_level<BR>\n");
     if( $admin_level > 1){
         //$staff_full_name = GetStaffNameFromUsername($username, $staff_names_default, false);
-        //echo("User $staff_full_name<BR>");
 
         /* Make connection to database */
         try{

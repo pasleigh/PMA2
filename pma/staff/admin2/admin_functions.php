@@ -194,7 +194,6 @@ function admin_functions_block($db,$pm_id,$project_allocated,$num_parts,$p_descr
     }
     $admin_func_block .= "</UL>";
 
-
     $admin_func_block .= "<LI class='itemHeader'>Email staff and students</LI>";
     $admin_func_block .= "<B>General email about the module</B>";
     $admin_func_block .= "<UL>";
@@ -249,8 +248,6 @@ function access_check_response($db,$this_staff_username, $this_staff_full_name, 
     }else{
         $access_phrase = "You, $this_staff_full_name ($this_staff_username), do not have admin access rights. <BR> Please return to where you came from.";
     }
-
-
 
     $access_response_phrase = $access_phrase;
     return $access;
@@ -363,9 +360,6 @@ function GetModuleAdminLevelFromPID($db, $username, $pm_id)
         }
     }
 
-    //echo("module admin level = $admin_level_module<BR>");
-    //echo("query = $query<BR>");
-
     return $admin_level_module;
 }
 /**
@@ -398,9 +392,6 @@ function GetModuleAdminLevelFromShortCode($db, $username, $short_code, $year_beg
         $result = $results->fetch();
         $admin_level_module = $result['admin_level'];
     }
-
-    //echo("module admin level = $admin_level_module<BR>");
-    //echo("query = $query<BR>");
 
     return $admin_level_module;
 }

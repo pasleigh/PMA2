@@ -24,14 +24,12 @@ function DisplayProjectSelectBlock($db, $proj_id, $staff_names2, $title, $f_supe
 
     $project_block .= GetStaffSelectID($db, $staff_names2, 'f_supervisor_id', $f_supervisor_id);
 
-
     $project_block .= "<P>Suggested Second Marker (<span class='required'>required</span>)<BR>";
     $project_block .= "<span class='footnote-size'>This suggestion will help us.";
     $project_block .= "Be aware that it may change at final marking stage.</span>";
     $project_block .= "<br></P> ";
 
     $project_block .= GetStaffSelectID($db, $staff_names2, 'f_assocstaff_id', $f_assocstaff_id);
-
 
     $project_block .= "<P>Project Outline  (<span class='required'>required</span>)\n";
 
@@ -110,7 +108,6 @@ function DisplayProjectBlock($db, $proj_id, $staff_names2, $title, $f_supervisor
     $project_block .= "<div class='simple' >$f_assocstaff</div>\n";
     $project_block .= "\n";
 
-
     $project_block .= "<h3>Project Outline  </h3>\n";
     $f_outline = stripslashes($f_outline);
     // Some tidying up of things that should not have ben put there from the project entry process
@@ -122,7 +119,6 @@ function DisplayProjectBlock($db, $proj_id, $staff_names2, $title, $f_supervisor
 
     $project_block .= "<h3>Number of Projects </h3>\n";
     $project_block .= "<div class='simple' >$num_projects</div>\n";
-
 
     $project_block .= "<h3>Programme(s) that this project is offered for:</h3>\n";
 
@@ -173,7 +169,6 @@ function GetProgramVariants($db, $projects_setup_proposals_table, $pm_id, &$num_
     // Can have up to 7 Variants
     // Get the number for this prog from the database
     $query = "SELECT * FROM $projects_setup_proposals_table WHERE proj_id='$pm_id'";
-    //echo("Query in GetProgramVariants: $$query<BR>\n");
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
@@ -264,7 +259,6 @@ function GetProgramVariantsSelect($db, $projects_setup_proposals_table, $pm_id, 
     return $select_block;
 }
 
-
 function GetProgrammeShortName($db, $student_programme_full_name, $students_programmes_table, $projects_setup_proposals_table, $pm_id)
 {
     //
@@ -284,9 +278,6 @@ function GetProgrammeShortName($db, $student_programme_full_name, $students_prog
 
     $num = $results->rowCount();
     //$prog_list_count = 0;
-
-    //echo($query ."<br>");
-    //var_dump($results);
 
     if($num > 0){
         $recs = $results->fetch();

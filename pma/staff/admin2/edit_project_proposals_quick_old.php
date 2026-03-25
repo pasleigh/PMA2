@@ -25,7 +25,6 @@ $display_block .= $connect_msg ;
 //$access = false;
 //----------------------------------------------------------------------------------------------------
 
-
 // Check the admin level
 $admin_access = false;
 $admin_access = access_check_response($db,$this_staff_username, $this_staff_full_name, $staff_names,$access_phrase);
@@ -91,7 +90,6 @@ if ($POST_OP == "submit_edited") {
             }
             $prog_variant_str .= $prog_flag;
         }
-        //echo("pr str ($master_id): $prog_variant_str <BR>");
 
         $postid = "delete$i";
         if (array_key_exists($postid, $_POST) == false) {
@@ -138,7 +136,6 @@ if ($POST_OP == "submit_edited") {
 
 }
 
-
     $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
 
 // Get the list of proposals from the $master_name table
@@ -171,9 +168,6 @@ if ($POST_OP == "submit_edited") {
     $display_block .= "<tbody>\n";
     $project_count = 1;
     $rows = $results->fetchAll();
-//echo("$query<BR>\n");
-//print_r2($results);
-//print_r2($rows);
 //if ($results->fetch(PDO::FETCH_NUM) > 0 ) {
     foreach ($rows as $recs) {
 
@@ -182,7 +176,6 @@ if ($POST_OP == "submit_edited") {
         $supervisor_name = $recs['f_supervisor'];
         $supervisor_id = GetStaffIDFromName($db, $supervisor_name, $staff_names);
         //$supervisor_name .= " ($supervisor_id)";
-
 
         $query = "SELECT * FROM $project_details WHERE master_id=$master_id";
         try {
@@ -266,9 +259,7 @@ if ($POST_OP == "submit_edited") {
             }
         );
 
-
     });
-
 
 </script>
 <BODY>

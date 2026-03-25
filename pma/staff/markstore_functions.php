@@ -1,6 +1,4 @@
 <?PHP
-//error_reporting(E_ALL);
-//ini_set('display_errors', '1');
 
 /**
  * Mark-store read/write helpers.
@@ -113,7 +111,6 @@ function GetTotalForPart($db, $sid, $part, $markstore_totals)
         $entry = "retmark$part";
         $total = $recs[$entry];
     } else {
-        //echo("$sid: $get_list<BR>");
     }
 
     return $total;
@@ -250,7 +247,6 @@ function SetThirdMarkerRequired($db, $sid, $part, $markstore_totals)
  */
 function HaveAllMarkersMarked($db, $sid, $part, $num_markers, $markstores, $markstore_totals)
 {
-    //echo("part = $part, num_markers = $num_markers<BR>");
     // $num_markers is the default number of markers.
     // If it is two and the third marker has been requested then there needs to be completion of three markers checked.
     for ($j = 1; $j <= $num_markers; $j++) {
@@ -522,7 +518,6 @@ function GetMarkMethodString($db, $sid, $part, $markstore_totals)
     if(strlen($mark_method_string) != 4){
         $mark_method_string = "0001";
     }
-    //print_r3("mark method len ",strlen($mark_method_string));
     return $mark_method_string;
 }
 
@@ -747,7 +742,6 @@ function IsSIDActive($db, $sid, $project_allocated_table)
         $rec = $results->fetch();
 
         $inactive = $rec['inactive'];
-        //echo(" inactive=$inactive ");
         if ($inactive == 0) {
             // IS active
             return true;
@@ -787,7 +781,6 @@ function GetIsNumeric($db, $pm_id, $part, $project_setup_table)
 
     if ($num_rows > 0) {
         $recs = $results->fetch();
-        //print_r3("project_setup",$recs);
         $entry = "p$part" . "_numeric";
 
         $isnumeric = $recs[$entry];
@@ -795,7 +788,6 @@ function GetIsNumeric($db, $pm_id, $part, $project_setup_table)
 
     return $isnumeric;
 }
-
 
 /**
  * Return the number of rows in the allocation table, or 0 if the table doesn't exist.
@@ -829,9 +821,6 @@ function CountAllocationTable($db, $allocation_table)
         }
     } catch (PDOException $ex) {
         //$this_function = __FUNCTION__;
-        //echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        //echo(" Query = $query<BR> \n");
-        //echo(" Err message: " . $ex->getMessage() . "<BR>\n");
         //exit();
         $num = 0;
     }
@@ -857,15 +846,10 @@ function DoesTableExist($db, $table)
         $result = true;
     } catch (\PDOException $ex) {
         //$this_function = __FUNCTION__;
-        //echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        //echo(" Query = $query<BR> \n");
-        //echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-        //var_dump($db);
         //exit();
         $result = false;
     }
 
-    //echo($result . '<BR>');
     return $result;
 }
 
@@ -883,14 +867,12 @@ function DoesColumnExistInTable($db, $table, $column)
     $res = $db->query($query);
     $count = $res->rowCount();
 
-    //echo("count = $count<BR>");
     $result = true;
 
     if($count == 0){
         $result = false;
     }
 
-    //echo($result . '<BR>');
     return $result;
 }
 

@@ -52,10 +52,8 @@ if($admin_access) {
     }
     $POST_OP = $_POST['op'];
 
-
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
     // Compile an array of the tables in this project
     $project_tables = array();
@@ -103,12 +101,10 @@ if($admin_access) {
     $index++;
     $project_tables[$index] = $projects_areas;
 
-
     $display_block .= "<h2>These are the tables in this module that will be deleted:</h2>\n";
     foreach($project_tables as $table_name){
         $display_block .= "$table_name <BR>\n";
     }
-
 
     if ($POST_OP == "delete_project") {
         $display_block .= "<H1>Delete confirmation credentials</H1>\n";
@@ -177,7 +173,6 @@ if($admin_access) {
         $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Delete the tables in the project - FOR EVER.\"></p>";
         $display_block .= "</form>\n";
     }
-
 
 } else {
     //$display_block .= "You do not have the appropriate admin level<BR>";

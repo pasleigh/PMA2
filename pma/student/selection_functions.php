@@ -25,7 +25,6 @@ function IsStaffActive($db, $this_staff_full_name, $staff_names_table = "staff_n
     // there is a module staff_names_module list that is not used yet
     // This function should be in some utilities file
     $query = "SELECT * FROM $staff_names_table WHERE fullname='$this_staff_full_name'";
-    //echo("Query: $query<BR>");
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
@@ -37,10 +36,8 @@ function IsStaffActive($db, $this_staff_full_name, $staff_names_table = "staff_n
 
     if ($results->rowCount() > 0) {
         $result = $results->fetch();
-        //var_dump($result);
         $fullname = $result['fullname'];
         $inactive = $result['inactive'];
-        //echo("Fullname: $fullname, Inactive: $inactive<br>");
         if($inactive == "0"){
             $active = true;
         }
@@ -153,7 +150,6 @@ function GetChoiceTable($db,$choices,$master_name,$choice_count = 5, $ranked_cho
     return $html;
 }
 
-
 /**
  * Return an HTML table showing all students' project selections for admin review.
  *
@@ -179,7 +175,6 @@ function GetSelectionTable($db,$selection,$choices,$master_name,$project_details
     $select_table = "<table id='holder2' width='100%'>\n<tr><td>\n";
 
     $select_table .= "<table id='selectionlist' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
-
 
     if($choice_count == 1){
         $choice_radio_header = "<th>1st</th><th></th><th></th><th></th><th></th>";
@@ -617,6 +612,5 @@ function GetProjectPopularityColour($num_projects_offered, $num_projects_chosen)
     }
 
     return $colour;
-
 
 }

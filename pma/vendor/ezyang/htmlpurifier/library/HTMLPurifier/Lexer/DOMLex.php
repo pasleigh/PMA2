@@ -172,7 +172,6 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
         return null;
     }
 
-
     /**
      * @param DOMNode $node DOMNode to be tokenized.
      * @param HTMLPurifier_Token[] $tokens   Array-list of already tokenized tokens.

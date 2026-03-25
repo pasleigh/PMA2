@@ -57,9 +57,6 @@ function perform_update_prepared_query($db, $table, $data, $where_data){
     }
 
     $query = "UPDATE $table SET $setStr WHERE  $setWhereStr";
-    //echo($query ."<BR>");
-    //print_r3("query",$query );
-    //print_r3("data",$data );
 
     try{
         $results = $db->prepare($query);
@@ -104,8 +101,6 @@ function perform_insert_prepared_query($db, $table, $data){
     $setStr = rtrim($setStr, ",");
 
     $query = "INSERT $table SET $setStr";
-    //print_r3("query",$query );
-    //print_r3("data",$data );
 
     try{
         $results = $db->prepare($query);
@@ -141,7 +136,6 @@ function perform_select_prepared_query($db, $table, $where_data, $extra){
     }
 
     $query = "SELECT * FROM $table WHERE $setWhereStr $extra";
-    //echo($query ."<BR>");
 
     try{
         $results = $db->prepare($query);

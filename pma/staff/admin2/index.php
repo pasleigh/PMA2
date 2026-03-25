@@ -9,13 +9,9 @@
 (@include_once("../staff_functions.php")) OR die("Cannot open staff_functions.php<BR>");
 (@include_once("../markstore_functions.php")) OR die("Cannot open staff_functions.php<BR>");
 
-//echo("<table border=0>");
 //foreach ($_SERVER as $key=>$val )
 //{
-//  echo "<tr><td>".$key."</td><td>" .$val."</tr>";
 //}
-//echo("</table>");
-
 
 $display_block = "";
 $display_block .= $connect_msg;
@@ -30,7 +26,6 @@ if($is_module_admin_any){
     $access_phrase = $module_level_access_phrase;
 }
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
-
 
 if($is_module_admin_any || $admin_access) {
     if (array_key_exists('module1', $_REQUEST) == false) {
@@ -67,7 +62,6 @@ if($is_module_admin_any || $admin_access) {
         $module1 = $get_data['module'];
     }
 
-
 // Check that this module/year/short_code combination exists
     $query = "select * from $projects_setup where module=$module1 AND year_begin=$year_begin AND short_code=$module_short_code";
 
@@ -75,13 +69,11 @@ if($is_module_admin_any || $admin_access) {
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
     }
-//echo($_POST['op'] . "<BR>\n");
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
         $POST_OP = "";
     }
-//echo($POST_OP . "<BR>\n");
 
 // see all the POST values
     /*
@@ -90,7 +82,6 @@ if($is_module_admin_any || $admin_access) {
     }
     */
     $locationdir = "../";
-
 
     $query = "select * from $projects_setup where 1 order by year_begin desc";
     try {
@@ -113,7 +104,6 @@ if($is_module_admin_any || $admin_access) {
         $module_postfix_l = $get_data['module_postfix'];
         $module_short_desc_l = $get_data['module_short_desc'];
         $pm_id_s = $get_data['id'];
-        //echo( "$module <BR>");
         if ($pm_id_s == $pm_id) {
             $selected = "selected";
         } else {
@@ -138,7 +128,6 @@ if($is_module_admin_any || $admin_access) {
         $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Modify the selected module/year \"></p>";
 
         $display_block .= "</form>";
-
 
         if ($POST_OP == "select") {
             // Check that this module/year/short_code combination exists
@@ -228,7 +217,6 @@ if($is_module_admin_any || $admin_access) {
     $display_block_gen_tools .= "</DIV><BR>\n";
     //$display_block .= $display_block_gen_tools;
 }
-
 
 ?>
 <HTML>

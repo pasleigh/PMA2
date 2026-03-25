@@ -97,14 +97,8 @@ function GetProjectAdminLevel($db, $username, $staff_names)
         $admin_level = $result['admin_level'];
     }
 
-    //echo("project admin level = $admin_level<BR>");
-    //echo("staff names = $staff_names<BR>");
-    //echo("username = $username<BR>");
-    //echo("query = $query<BR>");
-
     return $admin_level;
 }
-
 
 /**
  * Return true if the username has admin access to a specific module.
@@ -178,9 +172,6 @@ function GetModuleAdminLevelFromPID($db, $username, $pm_id)
         }
     }
 
-    //echo("module admin level = $admin_level_module<BR>");
-    //echo("query = $query<BR>");
-
     return $admin_level_module;
 }
 /**
@@ -212,12 +203,7 @@ function GetModuleAdminLevelFromShortCode($db, $username, $short_code, $year_beg
         $admin_level_module = $result['admin_level'];
     }
 
-    //echo("module admin level = $admin_level_module<BR>");
-    //echo("query = $query<BR>");
-
     return $admin_level_module;
 }
-
-
 
 ?>

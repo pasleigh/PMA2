@@ -39,7 +39,6 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if($is_module_admin || $admin_access) {
 
-
     $display_block .= "<h1>Upload and Downloading of projects </h1>";
     $display_block .= "<h2>Database tables: $master_name and $project_details</h2>";
 
@@ -54,22 +53,15 @@ if($is_module_admin || $admin_access) {
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
 
     if ($POST_OP == "upload_csv") {
         $allowed_tyle_ext = array('csv','CSV');
-        //print_r3("_REQUEST",$_REQUEST);
-        //print_r3("_FILES",$_FILES[csv]);
         $csv_file_name = $_FILES['csv']['name'];
         $ext = pathinfo($csv_file_name, PATHINFO_EXTENSION);
         $csv_file_size = $_FILES['csv']['size'];
         $csv_file_tmp = $_FILES['csv']['tmp_name'];
         $csv_file_type = $_FILES['csv']['type'];
-        //echo("File name: $csv_file_name<BR>");
-        //echo("File size: $csv_file_size<BR>");
-        //echo("File tmp: $csv_file_tmp<BR>");
-        //echo("File type: $csv_file_type<BR>");
 
         $is_csv = true;
         if(!in_array($ext,$allowed_tyle_ext)){
@@ -78,11 +70,8 @@ if($is_module_admin || $admin_access) {
         }
 
         if($csv_file_name != "" && $is_csv) {
-            //echo("File name: $csv_file_name<BR>");
             $importer = new CSVparse();
             $CSV_DATA = $importer->parse_file($csv_file_tmp);
-            //echo("File tmp: $csv_file_tmp<BR>");
-            //print_r2($CSV_DATA);
             foreach ($CSV_DATA as $each_proposal_entry) {
                 $csv_keys = array_keys($each_proposal_entry);
 
@@ -93,7 +82,6 @@ if($is_module_admin || $admin_access) {
                 $query .= "'" . addslashes($each_proposal_entry[$csv_keys[3]]) . "', ";
                 $query .= "'" . addslashes($each_proposal_entry[$csv_keys[4]]) . "', ";
                 $query .= "'" . addslashes($each_proposal_entry[$csv_keys[5]]) . "') ";
-                //echo("$query<BR>");
                 try {
                     $results = $db->query($query);
                 } catch (PDOException $ex) {
@@ -114,7 +102,6 @@ if($is_module_admin || $admin_access) {
                 $query .= "'" . addslashes($each_proposal_entry[$csv_keys[8]]) . "', ";
                 $query .= "'" . addslashes($each_proposal_entry[$csv_keys[9]]) . "', ";
                 $query .= "'" . addslashes($each_proposal_entry[$csv_keys[10]]) . "') ";
-                //echo("$query<BR>");
                 //mysql_query($query) or die(" Unable to insert data to the table $project_details . <BR>Query: $query");
                 try {
                     $results = $db->query($query);
@@ -126,7 +113,6 @@ if($is_module_admin || $admin_access) {
 
                     exit();
                 }
-                //print_r2($csv_keys);
                 /*while (list($key, $value) = each ($each_member)) {
 
                     echo "$key: $value<br />";
@@ -164,10 +150,6 @@ if($is_module_admin || $admin_access) {
         $tmpcsvfile = tempnam(PMA_TMP_DIR, '');
         $path = dirname($tmpcsvfile);
         //$sys_temp_dir = sys_get_temp_dir();
-        //echo("temp filename $tmpcsvfile<BR>\n");
-        //echo("path to temp file: $path<BR>\n");
-        //echo("path to sys temp dir: $sys_temp_dir<BR>\n");
-        //echo  is_writable($sys_temp_dir) ? "Temp dir is writable" : "Temp dir is not writable";
         //exit();
 
         $query = "SELECT * FROM $master_name ORDER BY id";
@@ -203,7 +185,6 @@ if($is_module_admin || $admin_access) {
             $row[10] = "Number of places for this project";
 
             $ret = fputcsv($fp, $row);
-            //echo " fputcsv return = $ret .<BR />";
             //fclose($fp);
 
             $rows = $results->fetchAll();
@@ -257,7 +238,6 @@ if($is_module_admin || $admin_access) {
 
                     //$fp = fopen('file.csv', 'w');
                     $ret = fputcsv($fp, $row);
-                    //echo "$ret <br />";
                 }
                 $i_count++;
             }
@@ -272,7 +252,6 @@ if($is_module_admin || $admin_access) {
             $display_block = "<h2> Proposals saved as CSV file to: $csv_filename</h2>";
         }
     }// end of if ($POST_OP == "submint_new")
-
 
     $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
 
@@ -302,9 +281,6 @@ if($is_module_admin || $admin_access) {
     $display_block .= "<tbody>\n";
     $proposal_count = 0;
     $rows = $results->fetchAll();
-//echo("$query<BR>\n");
-//print_r2($results);
-//print_r2($rows);
 //if ($results->fetch(PDO::FETCH_NUM) > 0 ) {
     foreach ($rows as $recs) {
 
@@ -351,7 +327,6 @@ if($is_module_admin || $admin_access) {
     $display_block .= "<p><input type=\"submit\" id=\"submitbutton_csv\" name=\"submit\" value=\"Upload a CSV \"></p>";
 
     $display_block .= "</form>\n";
-
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";

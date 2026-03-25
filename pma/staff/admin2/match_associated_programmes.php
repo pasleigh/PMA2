@@ -7,8 +7,6 @@
 (@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
 (@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
 
-//echo("Here 1<BR>");
-
 (@include_once("../markstore_functions.php")) OR die("Cannot include markstore_functions.php<BR>");
 (@include_once("./markstore_functions_admin.php")) OR die("Cannot include markstore_functions_admin.php<BR>");
 (@include_once("../proposals/project_display_functions_staff.php")) OR die("Cannot include project_display_functions_staff.php<BR>");
@@ -27,7 +25,6 @@ $display_block .= $connect_msg;
 //$display_block .= "<h1 style='background-color: #f1c40f; text-align: center;  font-size: xx-large'>THIS PAGE IS STILL UNDER CONSTRUCTION</h1>";
 //$access = false;
 //----------------------------------------------------------------------------------------------------
-
 
 // Check the admin level
 $admin_access = false;
@@ -53,7 +50,6 @@ if($is_module_admin || $admin_access) {
         $POST_OP = "";
     }
 
-    //echo("POST_OP = $POST_OP <BR>\n");
     // see all the POST val ues
     /*
     foreach ($_POST as $key => $value){
@@ -126,11 +122,6 @@ if($is_module_admin || $admin_access) {
         $i++;
     }
     $num_distinct_progs = $i;
-    //echo("<PRE><BR>");
-    //print_r2($prog_distinct_names);
-    //print_r2($prog_short_name_index);
-    //echo("</PRE><BR>");
-
 
     $changed_message = "";
 
@@ -181,7 +172,6 @@ if($is_module_admin || $admin_access) {
         $changed_message .= "<h2>Table $students_programmes updated</h2>";
     }
 
-
     $instructions = "<h3>This form is for linking programme short names used for <span style='font-face: bold; text-decoration: underline ;'>Project Proposals</span>
 to the <span style='font-face: bold; text-decoration: underline ;'> real</span> Programme Names<BR> from the student data list. (This is so that students on a particular programme are only shown projects that are relevant to them)</h3>";
     $instructions .= "<div class=\"feedbackInstructions\"> Select from the list short-name list the name that you want the programme full name to be associated with</div>";
@@ -216,7 +206,6 @@ to the <span style='font-face: bold; text-decoration: underline ;'> real</span> 
     $display_block .= "</table>\n";
     $display_block .="</form>\n";
 
-
     $display_block .= "<hr>";
     $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "?pm_id=" . htmlspecialchars($pm_id, ENT_QUOTES, 'UTF-8') . "\">\n";
     $display_block .= csrf_token_field();
@@ -232,12 +221,10 @@ to the <span style='font-face: bold; text-decoration: underline ;'> real</span> 
 
     $display_block .= "</form>\n";
 
-
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
     $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
 }
-
 
 ?>
 <HTML>
@@ -256,7 +243,6 @@ to the <span style='font-face: bold; text-decoration: underline ;'> real</span> 
     <div id="content">
         <?php echo("$display_block"); ?>
 
-
     </div><!-- /content -->
 
     <div id="footer">
@@ -267,7 +253,6 @@ to the <span style='font-face: bold; text-decoration: underline ;'> real</span> 
             <a href="./index.php">Main admin page</a>.
         </P>
     </div><!-- /footer -->
-
 
 </div><!-- /wrapper -->
 </body>

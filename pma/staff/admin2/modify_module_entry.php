@@ -40,7 +40,6 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if($is_module_admin || $admin_access) {
 // if the form was submitted then enter it all into the database
-//echo($_POST['op'] . "<BR>\n");
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
@@ -61,11 +60,8 @@ if($is_module_admin || $admin_access) {
             $original_referer = $_SERVER['HTTP_REFERER'];
         }
     }
-    //echo("Refering page: $original_referer<BR>");
-//echo("here<BR>");
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
     if ($POST_OP == "modify") {
         $display_block .= "<h2>Updating the project data $module_prefix$module1$module_postfix ($short_code) $year_begin ...</h2>";
@@ -91,7 +87,6 @@ if($is_module_admin || $admin_access) {
             staff_close='$staff_close', sel_open='$sel_open', sel_close='$sel_close', alloc_date='$alloc_date', num_parts='$num_parts',
             accept_var='$accept_var', pass_mark='$pass_mark', module_leader='$module_leader_fullname', min_feedback_words='$min_feedback_words'
              WHERE id='$pm_id'";
-        //echo $action . "<BR>";
         //mysql_query($action) or die(" Unable to update  project entry to the table $projects_setup. <BR /> Query = $action");
         try {
             $results = $db->query($query);
@@ -124,7 +119,6 @@ if($is_module_admin || $admin_access) {
             $p_desc = "p$part" . "_desc";
             $descs_part = $_POST[$p_desc];
 
-            //print_r3('_POST',$_POST);
             $p_show_feedback_id = "p$part" . "_feedback";
             $show_part_feedback_flag = 0;
             if (isset($_POST[$p_show_feedback_id])) {
@@ -135,7 +129,6 @@ if($is_module_admin || $admin_access) {
             if(!DoesColumnExistInTable($db,$projects_setup,$p_show_feedback_id)) {
                 $db->query($query);
             } else {
-                //echo("\nWarning $projects_setup $p_show_feedback_id already exists\n");
             }
             //$name = "p$part"."_template";
             //$template_tables[$part] = $_POST[$name];
@@ -217,10 +210,6 @@ if($is_module_admin || $admin_access) {
         $sel_open = $setup_res['sel_open'];
         $sel_close = $setup_res['sel_close'];
         $alloc_date = $setup_res['alloc_date'];
-        //echo("staff close: $staff_close<BR>");
-        //echo("sel_open: $sel_open<BR>");
-        //echo("sel_close: $sel_close<BR>");
-        //echo("alloc_date: $alloc_date<BR>");
 
         $num_parts = $setup_res['num_parts'];
         $accept_var = $setup_res['accept_var'];
@@ -372,7 +361,6 @@ if($is_module_admin || $admin_access) {
         }
         $query .= "$db_name='$is_checked' ";
 
-        //echo("ac query: $query<BR>");
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
@@ -436,7 +424,6 @@ if($is_module_admin || $admin_access) {
 
     }// end of if ($POST_OP == "select")
 
-
 // Display the dropdowns to select the module and year
     $display_block .= "<h1>Modify module entry : <span id='headline'>$module_short_description - $module_prefix$module1$module_postfix.</span> Starting year <span id='headline'>$year_begin</span></h1>";
 
@@ -466,7 +453,6 @@ if($is_module_admin || $admin_access) {
     $name = "allocation_date";
     $display_block .= "<TR><TD>Project to be allocated by</td><td><input type=\"text\" id=\"$name\" name=\"$name\"  value=\"$alloc_date\"size=20 maxlength=15> at time 00:00</td></tr>\n";
 
-
     $display_block .= "<tr><td colspan=\"2\"><H2>Assessment Parts:</H2></td></tr>";
 
     $display_block .= "<tr><td>Number of assessment parts: </td><td><input type=\"number\" name=\"num_parts\" value=\"$num_parts\" min=\"1\" max=\"5\" size=3 maxlength=3></td></tr>\n";
@@ -475,7 +461,6 @@ if($is_module_admin || $admin_access) {
     $display_block .= "<tr><td>Pass mark:  </td><td><input type=\"number\" name=\"pass_mark\" value=\"$pass_mark\" min=\"0\" max=\"100\" size=\"3\"> %</td></tr>\n";
     $display_block .= "<tr><td>Minimum number of feedback words:  </td><td><input type=\"number\" name=\"min_feedback_words\" value=\"$min_feedback_words\" min=\"0\" max=\"100\" size=\"3\"></td></tr>\n";
     $display_block .= "</table>\n";
-
 
     for ($part = 1; $part <= $num_parts; $part++) {
         $i = $part;
@@ -539,7 +524,6 @@ if($is_module_admin || $admin_access) {
         exit();
     }
 
-
     $recs = $results->fetch();
     $ac_visible = $recs['visible_flag'];
     $ac_class = $recs['class_flag']; // class, Excellent 1st etc
@@ -552,7 +536,6 @@ if($is_module_admin || $admin_access) {
     $display_block .= "<TR><TD colspan=\"2\"><H3>Assessment Criteria Visibility to Staff</H3></td></tr>\n";
     $display_block .= "<TR><TD colspan=\"2\">These settings control whether all or any of the various Assessment Criteria are shown to staff to help them judge whether the mark given is appropriate</td></tr>\n";
     $display_block .= "<TR><TD>Which element</td><TD>Visible = checked</td></tr>\n";
-
 
     $name = "ac_visible";
     $option_value = $ac_visible;
@@ -597,10 +580,7 @@ if($is_module_admin || $admin_access) {
         $is_checked = "checked";
     }$display_block .= "<TR><td>Show the GPA (Max = 4.25)</td><td><input type='checkbox' name='$name' value='$option_value' $is_checked></td></tr>\n";
 
-
     $display_block .= "</table>\n";
-
-
 
 //------------------------------------------------------------
 // Program variant options
@@ -691,7 +671,6 @@ if($is_module_admin || $admin_access) {
         $display_block .= "    <td style='text-align: center'><input type='checkbox' name='$name_mand' value='$option_value_mand' $is_checked_mand></td>\n";
         $display_block .= "    <td style='text-align: center'><input type='checkbox' name='$name_vis' value='$option_value_vis' $is_checked_vis></td>\n";
         $display_block .= "</tr>\n";
-
 
     }
     $display_block .= "</table>\n";

@@ -1,6 +1,5 @@
 <?php
 // Turn off all error reporting
-//error_reporting(0);
 
 // connect to the datbase
 (@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
@@ -21,15 +20,12 @@
 $display_block="";
 $display_block .= $connect_msg;
 
-
 // if the form was submitted then enter it all into the database
-//echo($_POST['op'] . "<BR>\n");
 if (array_key_exists('op', $_POST)) {
   $POST_OP = $_POST['op']  ;
 }else{
   $POST_OP = "";
 }
-//echo("here<BR>");
 
 if ($POST_OP == "create"){
     $display_block .= "<h2>Creating the new entry in the projects_setup table ...</H2>";
@@ -65,7 +61,6 @@ if ($POST_OP == "create"){
                 module='$new_module_number', module_prefix='$new_module_prefix', module_postfix='$new_module_postfix',
                  module_short_desc='$new_short_desc'
                 ";
-        //echo $action . "<BR>";
         try {
             $db->query($action);
         } catch (PDOException $ex) {
@@ -101,7 +96,6 @@ if ($POST_OP == "create"){
     // Put this in the projects_setup_proposals table (keep defaults for everything else)
     // Save this to the database
     $query = "INSERT $projects_setup_proposals SET proj_id='$pm_id'";
-    //echo $action . "<BR>";
     try {
         $db->query($query);
     } catch (PDOException $ex) {
@@ -125,7 +119,6 @@ if ($POST_OP == "create"){
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
-    //echo $action . "<BR>";
     //mysql_query($action) or die(" Unable to update new project entry to the table $projects_setup. <BR>/> Query = $action");
 
     $accept_var = trim($_POST['accept_var']);
@@ -135,7 +128,6 @@ if ($POST_OP == "create"){
     $min_feedback_words = trim($_POST['min_feedback_words']);
 
     $action = "update $projects_setup set accept_var='$accept_var', pass_mark='$pass_mark', module_leader='$module_leader_fullname', min_feedback_words='$min_feedback_words' WHERE id='$pm_id'";
-    //echo $action . "<BR>";
 
     try {
         $db->query($action);
@@ -274,7 +266,6 @@ if ($POST_OP == "create"){
             }
         }
     }
-
 
     //
     // Assess total table
@@ -424,10 +415,7 @@ if ($POST_OP == "create"){
         $table = "assessqs_" . $new_short_name_lc . "_" . $new_year_end . "_p$part";
         $p_table = "p$part" . "_template";
         $table_template = $_POST[$p_table];
-        //echo("The questions table is $table_template <BR>");
-        //echo("The questions table root name is " . substr($table_template,18) . "<BR>");
         $table_cats_template = "assessqs_cats_template_" . substr($table_template,18);
-        //echo "The cats table is $table_cats_template<BR>\n";
         //$display_block .="$table<BR>";
         // Check table exists
         if (!DoesTableExist($db,$table)) {
@@ -556,7 +544,6 @@ if ($POST_OP == "create"){
     $new_short_name = "MENG";
     $new_short_desc = "Level 5 project";
 
-
 // Display the dropdowns to select the module and year
     $display_block .= "<H1>Create a new module entry ...</H1>\n";
     $display_block .= "<P>This will create all the database tables - so get it right!</P>";
@@ -585,7 +572,6 @@ if ($POST_OP == "create"){
     $display_block .= "<p>Acceptable variation between markers : </td><td><input type=\"number\" name=\"accept_var\" value=\"$accept_var\" min=\"0\" max=\"100\" size=\"3\"> %</p>\n";
     $display_block .= "<p>Pass mark:  </td><td><input type=\"number\" name=\"pass_mark\" value=\"$pass_mark\" min=\"0\" max=\"100\" size=\"3\"> %</p>\n";
     $display_block .= "<p>Minimum number of feedback words:  </td><td><input type=\"number\" name=\"min_feedback_words\" value=\"$min_feedback_words\" min=\"0\" max=\"100\" size=\"3\"></p>\n";
-
 
     $display_block .= "<H2>Assessment Parts:</H2>";
     $display_block .= "<P><strong>Number of assessment parts: </strong><input type=\"number\" name=\"new_num_parts\" value=\"5\" min=\"1\" max=\"5\" size=6 maxlength=5> (1 to 5 - this <strong>CAN NOT</strong> be changed later)";
@@ -638,7 +624,6 @@ if ($POST_OP == "create"){
     //$display_block .= "<P> Select a previous list of staff names to use: " . GetStaffNameTemplatesSelect($db, $name, $staff_names_match) . "</P>";
     $display_block .= "<P> All modules use the global list of staff names: <b>$staff_names</b>. </P>";
     $display_block .= "\n<input type=\"hidden\" name=\"$name\" value=\"$staff_names\">";
-
 
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"create\">";
 

@@ -12,13 +12,6 @@
 
 (@include_once("$STAFF_DIR_VAL/admin2/utility_functions.php")) OR die("Cannot include utility_functions.php");
 
-//print_r3("_POST",$_POST);
-//print_r3("_REQUEST",$_REQUEST);
-//echo("staff_names: $staff_names<BR>\n");
-//echo("staff_names_default: $staff_names_default<BR>\n");
-//echo("staff_names2: $staff_names2<BR>\n");
-//echo("staff2: $staff2<BR>\n");
-//echo("staff: $staff<BR>\n");
 $refering_page=$_SERVER['HTTP_REFERER'];
 
 $staff_close_date = $staff_close;
@@ -52,7 +45,7 @@ if (!isset($_REQUEST['prog_var'])) {
 }
 $prog_var = $_REQUEST['prog_var'];
 
-$student_username = $_SERVER['REMOTE_USER'];
+$student_username = get_server_username();
 $is_staff = isStaff($db, $student_username);
 $is_student_current = false;
 
@@ -68,7 +61,6 @@ if($is_student_current == false and $is_staff == false){
 //
     $display_block .= "<div style='font-size: x-large; font-weight: bold; text-align: center'>View project proposal</div>";
     $display_block .= "<div style='font-size: large; font-weight: bold; text-align: center'>$module_short_description - $module_prefix$module1$module_postfix - $short_code, $year_begin/$year_end_short</div>";
-
 
     $query = "select * from $master_name WHERE id='$master_id' ";
     try {
@@ -135,7 +127,6 @@ if($is_student_current == false and $is_staff == false){
 
     $program_variants = GetProgramVariants($db, $projects_setup_proposals, $pm_id, $num_prog_variants);
     $program_variant_flags = GetProgramVariantFlags($db, $project_details, $master_id);
-//print_r2($program_variants);
     $display_block .= DisplayProjectBlock($db, $master_id, $staff_names2, $f_title, $f_supervisor_id, $f_assocstaff_id, $f_outline, $f_PGprojects, $option_value, $option_text, $option, $option_flag, $option_flag_v, $option_flag_m, $program_variants, $program_variant_flags);
 }
 ?>

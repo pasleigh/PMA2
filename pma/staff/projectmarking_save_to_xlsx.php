@@ -13,7 +13,6 @@ set_include_path( get_include_path().PATH_SEPARATOR."..");
 
 require_once 'vendor/autoload.php';
 
-
 $xlsx_filename = "project_marks_" . $module_prefix . $module1 . $module_postfix . "_" . $short_code . "_" . $year_begin . "-" . $year_end . ".xlsx";
 $xlsx_sheet_name = $module_prefix . $module1 . $module_postfix . "_" . $year_begin . "-" . $year_end;
 
@@ -162,7 +161,6 @@ if ($num < 1) {
 
     }
 
-
     $rowIndex = 1;
     $colIndex = 1;
     foreach ($all_rows_for_output as $row_text){
@@ -276,7 +274,6 @@ if ($num < 1) {
             $programme = "unknown";
             $sel = "";
         }
-
 
         $row[0] = $student_name;
         $row[1] = $sid;
@@ -477,7 +474,6 @@ if ($num < 1) {
                     $row[1] = $cat;
                     $row[2] = $description;
 
-
                     $query = "select * from $assessqs_year where cat=$cat and qid=$count";
                     try {
                         $results = $db->query($query);
@@ -556,7 +552,6 @@ if ($num < 1) {
         $row[1] = $num_markers;
         $row[2] = '';
         $all_rows_for_output[] = $row;
-
 
         // Get the number of categories
         // then

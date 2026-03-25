@@ -10,21 +10,17 @@
 (@include_once("template_functions_pdo.php")) OR die("Cannot include template_functions.php<BR>");
 (@include_once("../staff_functions.php")) OR die("Cannot staff_functions.php<BR>");
 
-
 $display_block = "";
 $display_block .= $connect_msg;
 
 // if the form was submitted then enter it all into the database
-//echo($_POST['op'] . "<BR>\n");
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
     $POST_OP = "";
 }
-//echo("here<BR>");
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
 if ($POST_OP == "modify") {
     $display_block .= "<h2>Updating the project data $module_prefix$module1 ($short_code) $year_begin ...</h2>";
@@ -47,7 +43,6 @@ if ($POST_OP == "modify") {
             staff_close='$staff_close', sel_open='$sel_open', sel_close='$sel_close', alloc_date='$alloc_date',
             accept_var='$accept_var', pass_mark='$pass_mark', module_leader='$module_leader_fullname', min_feedback_words='$min_feedback_words'
              WHERE id='$pm_id'";
-    //echo $action . "<BR>";
     //mysql_query($action) or die(" Unable to update  project entry to the table $projects_setup. <BR /> Query = $action");
     try {
         $results = $db->query($query);
@@ -131,10 +126,6 @@ if ($POST_OP == "modify") {
     $sel_open = $setup_res['sel_open'];
     $sel_close = $setup_res['sel_close'];
     $alloc_date = $setup_res['alloc_date'];
-    //echo("staff close: $staff_close<BR>");
-    //echo("sel_open: $sel_open<BR>");
-    //echo("sel_close: $sel_close<BR>");
-    //echo("alloc_date: $alloc_date<BR>");
 
     $num_parts = $setup_res['num_parts'];
     $accept_var = $setup_res['accept_var'];
@@ -173,7 +164,6 @@ if ($POST_OP == "modify") {
 
 }// end of if ($POST_OP == "select")
 
-
 // Display the dropdowns to select the module and year
 $display_block .= "<H1>Modify project entry ...</H1>\n";
 
@@ -202,7 +192,6 @@ $display_block .= "<TR><TD>Student selection closes</td><td><input type=\"text\"
 $name = "allocation_date";
 $display_block .= "<TR><TD>Project to be allocated by</td><td><input type=\"text\" id=\"$name\" name=\"$name\"  value=\"$alloc_date\"size=20 maxlength=15></td></tr>\n";
 
-
 $display_block .= "<tr><td colspan=\"2\"><H2>Assessment Parts:</H2></td></tr>";
 
 $display_block .= "<tr><td>Number of assessment parts: </td><td>$num_parts</td></tr>\n";
@@ -211,7 +200,6 @@ $display_block .= "<tr><td>Acceptable variation between markers : </td><td><inpu
 $display_block .= "<tr><td>Pass mark:  </td><td><input type=\"number\" name=\"pass_mark\" value=\"$pass_mark\" min=\"0\" max=\"100\" size=\"3\"> %</td></tr>\n";
 $display_block .= "<tr><td>Minimum number of feedback words:  </td><td><input type=\"number\" name=\"min_feedback_words\" value=\"$min_feedback_words\" min=\"0\" max=\"100\" size=\"3\"></td></tr>\n";
 $display_block .= "</table>\n";
-
 
 for ($part = 1; $part <= $num_parts; $part++) {
     $i = $part;

@@ -22,7 +22,6 @@ function GetStaffNameFromID($db, $staff_id, $staff_table, $usetitle)
     if ($staff_id == "") {
         return $name;
     }
-//echo("Staff table $staff_table<BR>");
     $get_list_query = "select * from $staff_table where staffid=$staff_id";
     try {
         $get_list_res = $db->query($get_list_query);
@@ -44,8 +43,6 @@ function GetStaffNameFromID($db, $staff_id, $staff_table, $usetitle)
         //$familyname = stripslashes($recs['familyname']);
         $title = $recs['title'];
         $title = stripslashes($title);
-        //echo("Full name $fullname<BR>");
-
 
         if ($usetitle == 1) {
             $name = $title . " " . $fullname;
@@ -72,7 +69,6 @@ function GetStaffEmailFromID($db, $staff_id, $staff_table)
     if ($staff_id == "") {
         return $name;
     }
-//echo("Staff table $staff_table<BR>");
     $get_list_query = "select * from $staff_table where staffid=$staff_id";
     try {
         $get_list_res = $db->query($get_list_query);
@@ -168,7 +164,6 @@ function GetStaffNameFromUsername($db, $staff_username, $staff_table, $usetitle)
     if ($staff_username == "") {
         return $name;
     }
-//echo("Staff table $staff_table<BR>");
     $get_list_query = "select * from $staff_table where username='$staff_username'";
     try {
         $get_list_res = $db->query($get_list_query);
@@ -187,12 +182,10 @@ function GetStaffNameFromUsername($db, $staff_username, $staff_table, $usetitle)
         //$firstname = stripslashes($recs['firstname']);
         //$familyname = stripslashes($recs['familyname']);
         $title = stripslashes($recs['title']);
-        //echo("Full name $fullname<BR>");
     }else{
         $fullname = "Unknown";
         $title = "unknown";
     }
-
 
     if ($usetitle == 1) {
         $name = $title . " " . $fullname;
@@ -237,12 +230,10 @@ function GetStaffIDFromName($db, $staff_fullname, $staff_table)
         //$familyname = stripslashes($recs['familyname']);
         //$title = stripslashes($recs['title']);
         if ($fullname == $staff_fullname) {
-            //echo("$staff_fullname ($staff_id)<BR>");
             return $staff_id;
         }
     }
 
-    //echo("$staff_fullname ($staff_id)<BR>");
     return $staff_id;
 }
 
@@ -273,7 +264,6 @@ function GetStaffIDFromFamilyNameAndInitial($db, $staff_family_name, $staff_tabl
     //
 
     $staff_family_name_split = explode(" ", $staff_family_name);
-
 
     $get_list_query = "select * from $staff_table where familyname LIKE '%{$staff_family_name_split[0]}%'";
 
@@ -310,7 +300,6 @@ function GetStaffIDFromFamilyNameAndInitial($db, $staff_family_name, $staff_tabl
         //
     }
 
-    //echo("$familyname ($staff_id)<BR>");
     return $staff_id;
 }
 
@@ -356,7 +345,6 @@ function GetStaffIDFromFamilyNameAndInitial2($db, $staff_family_name, $staff_tab
 
         return $staff_id;
     }
-    //echo($get_list_query . "<BR>");
 
     //$num_staff_matches = $get_list_res->rowCount();
 
@@ -364,7 +352,6 @@ function GetStaffIDFromFamilyNameAndInitial2($db, $staff_family_name, $staff_tab
 
     foreach ($rows as $recs) {
         $staff_id = $recs['staffid'];
-        //echo("staff id: $staff_id<BR>");
         //$initials = $recs['initials'];
         //$fullname = stripslashes($recs['fullname']);
         //$firstname = stripslashes($recs['firstname']);
@@ -379,7 +366,6 @@ function GetStaffIDFromFamilyNameAndInitial2($db, $staff_family_name, $staff_tab
         //
     }
 
-    //echo("$familyname ($staff_id)<BR>");
     return $staff_id;
 }
 
@@ -437,12 +423,10 @@ function GetStaffIDFromUsername($db, $staff_username, $staff_table)
         //$title = stripslashes($recs['title']);
         $username = stripslashes($recs['username']);
         if ($username == $staff_username) {
-            //echo("$staff_username, $fullname ($staff_id)<BR>");
             return $staff_id;
         }
     }
 
-    //echo("$staff_fullname ($staff_id)<BR>");
     return $staff_id;
 }
 

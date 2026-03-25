@@ -9,13 +9,9 @@
 (@include_once("../staff_functions.php")) OR die("Cannot open staff_functions.php<BR>");
 (@include_once("../markstore_functions.php")) OR die("Cannot open staff_functions.php<BR>");
 
-//echo("<table border=0>");
 //foreach ($_SERVER as $key=>$val )
 //{
-//  echo "<tr><td>".$key."</td><td>" .$val."</tr>";
 //}
-//echo("</table>");
-
 
 $display_block = "";
 $display_block .= $connect_msg;
@@ -207,7 +203,6 @@ if($access) {
                     }
                     */
 
-
                 } else {
                     // Does not exist so don't try to delete but copy the original
                     $query = "RENAME TABLE $master_name_table to $master_name_table_old";
@@ -372,13 +367,10 @@ if($access) {
 
                     try {
                         $query = "CREATE TABLE IF NOT EXISTS $allocated_table_copy LIKE $allocated_table;";
-                        //echo("query $query<BR>");
                         $results = $db->query($query);
                         $query = "TRUNCATE TABLE $allocated_table_copy";
-                        //echo("query $query<BR>");
                         $results = $db->query($query);
                         $query = "INSERT INTO $allocated_table_copy SELECT * from $allocated_table";
-                        //echo("query $query<BR>");
                         $results = $db->query($query);
                     } catch (PDOException $ex) {
                         $this_function = __FUNCTION__;
@@ -390,7 +382,6 @@ if($access) {
                     }
                     // loop through every entry
                     $query = "SELECT * FROM $allocated_table_copy WHERE 1";
-                    //echo("query $query<BR>");
                     try {
                         $results = $db->query($query);
                     } catch (PDOException $ex) {
@@ -407,7 +398,6 @@ if($access) {
                     if ($num > 0) {
                         foreach ($rows as $allocrec) {
                             $project_id = $allocrec['projectid'];
-                            //echo("proj id $project_id<BR>");
                             $supervisor_id = $allocrec['supervisor_id'];
                             $second_marker_id = $allocrec['second_marker_id'];
 
@@ -442,7 +432,6 @@ if($access) {
                                 exit();
                             }
 
-
                             // Now do all the otehr entries
                             $display_block .= "<BR>Project id: $project_id.";
                             for ($p = 1; $p <= 5; $p++) {
@@ -451,14 +440,12 @@ if($access) {
                                     $old_marker_id = $allocrec[$field];
                                     if ($old_marker_id == 0) {
                                         // do nothing
-                                        //echo("Filed $field. old_marker_id = $old_marker_id<BR>");
                                     } else {
                                         // get the id from staff_names_default corresponding to teh naem in the staff_names for thr module
                                         $old_staff_fullname = GetStaffNameFromID($db, $old_marker_id, $staff_names_table, 0);
                                         $new_marker_id = GetStaffIDFromName($db, $old_staff_fullname, $staff_names_default);
                                         // Replace this old_marker_id with the new_marker_id
                                         $query = "UPDATE $allocated_table_copy set $field='$new_marker_id' WHERE projectid='$project_id'";
-                                        //echo("query $query<BR>");
                                         //$display_block .= $query;
                                         try {
                                             $results = $db->query($query);
@@ -501,7 +488,6 @@ if($access) {
                     $display_block .= "<H2 style='font-size: large; color: #ab1471'>DONE Processing: $allocated_table</H2>";
                 }
 
-
                 // rename the staff_names table to _old
                 // copy teh entries of the staff_names_default table into the staff_names table
                 $staff_names_table_old = $staff_names_table . "_old";
@@ -536,11 +522,9 @@ if($access) {
             }
         }
 
-
         $display_block .= "<h2 style='font-size: large; color: red'>Done All</h2>\n";
 
     }// End of POST select
-
 
 }
 ?>

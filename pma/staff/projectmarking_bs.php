@@ -34,7 +34,6 @@ $table_body = "";
 
 // Loop through the parts to get the number of columns required for each
 for ($i = 1; $i <= $num_parts; $i++) {
-    //echo("Num markers ($i) = $p_num_markers[$i]<BR>");
     if ($p_num_markers[$i] == 1) {
         $number_of_cols[$i] = 2;
     } else if ($p_num_markers[$i] == 2) {
@@ -61,7 +60,6 @@ $table_head .= "
         <th rowspan='2'>Supervisor</th>
         <th rowspan='2'>Second marker</th>
         ";
-
 
 // Loop through the parts
 for ($i = 1; $i <= $num_parts; $i++) {
@@ -109,11 +107,9 @@ $table_head .= "\n</tr>\n";
 // Loop through the parts - second row
 $table_head .= "\n<tr>\n";
 for ($i = 1; $i <= $num_parts; $i++) {
-    //echo("Num markers ($i) = $p_num_markers[$i]<BR>");
     $num_cols = $number_of_cols[$i];
 
     for ($j = 1; $j <= $num_cols; $j++) {
-        //echo("Num col ($j)<BR>");
         if ($num_cols == 2) {
             if ($j == 1) {
                 $table_head .= "<th>Marker $j</th>";
@@ -209,9 +205,7 @@ foreach ($all_students_rows as $student_recs) {
                 $markers_id[$i][$j] = $marker_id;
                 $markers[$i][$j] = GetStaffNameFromID($db, $marker_id, $staff2, NULL);
                 $name = $markers_id[$i][$j];
-                //echo("markers_id = ($i,$j) $name $marker_id<BR>");
                 // Does this marker_id match the current logged in staff
-                //print_r2($number_of_cols);
                 if (($this_staff_id == $marker_id) && ($j < $number_of_cols[$i])) {
                     $count_this_staff_marking++;
                 }
@@ -304,7 +298,6 @@ foreach ($all_students_rows as $student_recs) {
                             if ($p_num_markers[$i] == 1) {
                                 // Just write the mark
                                 $total_mark = GetTotalForPart($db, $sid, $i, $markstore_totals);
-                                //echo("Total for part $i = $total_mark<BR>");
                                 if ($total_mark > 0) {
                                     $max = $p_max[$i];
                                     $total_mark_s = sprintf("%5.1f%%", (float)$total_mark * 100.0 / (float)$max);
@@ -332,7 +325,6 @@ foreach ($all_students_rows as $student_recs) {
                             } else {
                                 // Two markers so needed to check whether a third marker has been requested
                                 $total_mark = GetTotalForPart($db, $sid, $i, $markstore_totals);
-                                //echo("$sid : Total: $total_mark<BR>");
                                 if ($total_mark > 0) {
                                     // Mark had been agreed. Show the appropriate icon (green tick) and prompt
                                     $max = $p_max[$i];
@@ -443,7 +435,6 @@ foreach ($all_students_rows as $student_recs) {
         $table_cells[] = $table_cell;
         // Parts
         // Loop through the parts
-        //print_r2($number_of_cols);
         for ($i = 1; $i <= $num_parts; $i++) {
             $num_cols = $number_of_cols[$i];
             for ($j = 1; $j <= $num_cols; $j++) {
@@ -471,9 +462,6 @@ foreach ($all_students_rows as $student_recs) {
             $table_cell = str_replace("\n", "", $table_cell);
             $table_cells[$i] = $table_cell;
         }
-        //echo('<pre>');
-        //var_dump($table_cells);
-        //echo('</pre>');
         $table_rows[] = $table_cells;
     }
 }
@@ -533,7 +521,6 @@ $table_body .= "</tbody>";
         <span><BR><a target="_self" href="./projectmarking_select_bs.php<?PHP echo("?pm_id=$pm_id"); ?>"
                      style="color: dimgray;"><?PHP echo("$module_prefix$module1$module_postfix index"); ?></a></span>
     </div><!-- /footer -->
-
 
 </div><!-- /wrapper -->
 </body>

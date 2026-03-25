@@ -1,9 +1,7 @@
 <?php
 function CreateAllocatedStaffTableQuery($allocated_staff_table_name)
 {
-  //echo("$allocated_staff_table_name<BR>");
   //$str = "`$allocated_staff_table_name`<BR>";
-  //echo("$str<BR>");
 
  $create_table_query = "CREATE TABLE `$allocated_staff_table_name` (
                         `staffid` int(11) NOT NULL,

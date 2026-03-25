@@ -1,8 +1,5 @@
 <?php
 // Report all PHP errors (see changelog)
-//error_reporting(E_ALL | E_STRICT | E_WARNING | E_PARSE);
-//error_reporting(E_ALL);
-//ini_set('display_errors', '1');
 (@include_once("./set_dir_staff.php")) or die("Cannot find this file to include: set_dir_staff.php<BR>");
 (@include_once("./config.php")) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
 (@include_once("./setup_titles.php")) or die("Cannot find this file to include: setup_titles.php<BR>");
@@ -133,7 +130,6 @@ if ($saving == 1) {
 }
 echo("Action: $action<BR>");
 
-
 // Start to retrieve data on all projects allocated
 $query = "select * from $project_allocated order by projectid";
 //$get_student_list_res = mysql_query($get_student_list) or die(" Unable to create student list from $project_allocated table. <BR>Query: $get_student_list");
@@ -177,7 +173,6 @@ if ($num_rows < 1) {
         if ($p_num_markers[$part] == 1) {
             $who = 1;
         } else {
-            //echo("Multiple markers will be returned in one PDF file.<BR>");
         }
         // To do
         $marker1 = "";
@@ -268,7 +263,6 @@ if ($num_rows < 1) {
 
                 $pdf_fullpath_name = "$save_folder".DIRECTORY_SEPARATOR."$pdf_filename";
                 //ob_start();
-                //echo($pdf_fullpath_name."<BR>");
                 //$pdf_fullpath_name = "$save_folder".DIRECTORY_SEPARATOR."$pdf_filename";
                 //$mpdf->Output("$pdf_fullpath_name", 'F');
                 //$mpdf->OutputFile($pdf_fullpath_name);
@@ -325,25 +319,16 @@ if ($saving == 2) {
     // make the zip and download it
     $assess_description_text = str_replace(' ', '_', $assess_description_text);
     //$zip_command = "zip -j $save_folder/$zip_filename $save_folder/*-$assess_description_text.pdf  ";
-    //echo("<BR>Shell exec this command: $zip_command<BR>");
     //$shell_exec_return = shell_exec($zip_command);
-    //echo("<BR>Shell exec command: $zip_command. <BR>Return value: $shell_exec_return.<BR>");
 
     //$zip_command = 'echo %path%';
     //$shell_exec_return = shell_exec($zip_command);
-    //echo("<BR>Shell exec command: $zip_command. Return value: $shell_exec_return.<BR>");
 
     //for ($i = 0; $i < count($files_to_zip); ++$i) {
     //    unlink($files_to_zip[$i]);
     //}
 
     $archiveName = "$save_folder/$zip_filename";
-    //echo("Archive name: $archiveName<BR>\n\n");
-    //echo("<form action=\"download_zip.php\" method=\"POST\">\n");
-    //echo("<input type=\"hidden\" name=\"zip_filename\" value=\"$archiveName\">\n");
-    //echo("<input type=\"hidden\" name=\"saveas_zip_filename\" value=\"$zip_filename\">\n");
-    //echo("<input type=\"submit\" value=\"Click to download zip of PDFs\">\n");
-    //echo("</form>\n");
     if (file_exists($zip_file_name_tempnam)) {
         if($debug_write){
             echo("file: $zip_file_name_tempnam ready to download<BR>");

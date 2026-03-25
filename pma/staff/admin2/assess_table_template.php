@@ -1,9 +1,7 @@
 <?php
 function CreateAccessTableQuery($assess_table_name)
 {
-  //echo("$assess_table_name<BR>");
   //$str = "`$assess_table_name`<BR>";
-  //echo("$str<BR>");
   $create_table_query = "CREATE TABLE `$assess_table_name` (
     `SID` char(10) default NULL,
     `C1Q1` float default NULL,

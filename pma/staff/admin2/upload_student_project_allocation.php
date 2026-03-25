@@ -11,7 +11,6 @@
 
 (@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
 
-
 $display_block = "";
 $display_block .= $connect_msg;
 
@@ -40,35 +39,25 @@ if ($is_module_admin || $admin_access) {
         $_POST['op'] = null;
     }
     // if the form was submitted then enter it all into the database
-    //echo("OP=$_POST['op'] . <BR>\n");
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
         $POST_OP = "";
     }
-//echo("POST_OP=$POST_OP <BR>\n");
-
 
 //if ($access) {
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
     $allowed_tyle_ext = array('csv', 'CSV');
 
     if ($POST_OP == "upload_csv") {
 
-        //print_r3("_REQUEST",$_REQUEST);
-        //print_r3("_FILES",$_FILES[csv]);
         $csv_file_name = $_FILES['csv']['name'];
         $ext = pathinfo($csv_file_name, PATHINFO_EXTENSION);
         $csv_file_size = $_FILES['csv']['size'];
         $csv_file_tmp = $_FILES['csv']['tmp_name'];
         $csv_file_type = $_FILES['csv']['type'];
-        //echo("File name: $csv_file_name<BR>");
-        //echo("File size: $csv_file_size<BR>");
-        //echo("File tmp: $csv_file_tmp<BR>");
-        //echo("File type: $csv_file_type<BR>");
 
         $is_csv = true;
         if (!in_array($ext, $allowed_tyle_ext)) {
@@ -79,11 +68,8 @@ if ($is_module_admin || $admin_access) {
         if ($csv_file_name != "" && $is_csv) {
             $importer = new CSVparse();
             $CSV_DATA = $importer->parse_file($csv_file_tmp);
-            //echo("File tmp: $csv_file_tmp<BR>");
-            //print_r2($CSV_DATA);
             foreach ($CSV_DATA as $each_alloc_entry) {
                 $csv_keys = array_keys($each_alloc_entry);
-                //print_r2($csv_keys);
                 $sid = $each_alloc_entry[$csv_keys[0]];
                 $master_id = $each_alloc_entry[$csv_keys[1]];
                 $title = $each_alloc_entry[$csv_keys[2]];
@@ -115,7 +101,6 @@ if ($is_module_admin || $admin_access) {
                     $query .= "'" . addslashes($title) . "', ";
                     $query .= "'" . addslashes($supervisor_id) . "', ";
                     $query .= "'" . addslashes($second_marker_id) . "') ";
-                    //echo("$query<BR>");
                     //mysql_query($query) or die(" Unable to insert data to the table $project_allocated . <BR>Query: $query");
                     try {
                         $results = $db->query($query);
@@ -133,7 +118,6 @@ if ($is_module_admin || $admin_access) {
                     $query .= "title='" . addslashes($title) . "', ";
                     $query .= "supervisor_id='" . addslashes($supervisor_id) . "', ";
                     $query .= "second_marker_id='" . addslashes($second_marker_id) . "' WHERE sid=$sid ";
-                    //echo("$query<BR>");
                     //mysql_query($query) or die(" Unable to insert data to the table $project_allocated . <BR>Query: $query");
                     try {
                         $results = $db->query($query);
@@ -146,7 +130,6 @@ if ($is_module_admin || $admin_access) {
                     }
                 }
                 $query = "UPDATE $project_allocated SET `marker_p1m1_id`=$supervisor_id, `marker_p1m2_id`=$second_marker_id WHERE sid=$sid";
-                //echo("$query<BR>");
                 //mysql_query($query) or die(" Unable to update id (p1)data to the table $project_allocated . <BR>Query: $query");
                 try {
                     $results = $db->query($query);
@@ -202,7 +185,6 @@ if ($is_module_admin || $admin_access) {
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
                     exit();
                 }
-                //print_r2($csv_keys);
                 /*while (list($key, $value) = each ($each_member)) {
 
                     echo "$key: $value<br />";
@@ -218,17 +200,11 @@ if ($is_module_admin || $admin_access) {
 
     if ($POST_OP == "upload_detailed_csv") {
 
-        //print_r3("_REQUEST",$_REQUEST);
-        //print_r3("_FILES",$_FILES[csv]);
         $csv_file_name = $_FILES['csv']['name'];
         $ext = pathinfo($csv_file_name, PATHINFO_EXTENSION);
         $csv_file_size = $_FILES['csv']['size'];
         $csv_file_tmp = $_FILES['csv']['tmp_name'];
         $csv_file_type = $_FILES['csv']['type'];
-        //echo("File name: $csv_file_name<BR>");
-        //echo("File size: $csv_file_size<BR>");
-        //echo("File tmp: $csv_file_tmp<BR>");
-        //echo("File type: $csv_file_type<BR>");
 
         $is_csv = true;
         if (!in_array($ext, $allowed_tyle_ext)) {
@@ -239,16 +215,11 @@ if ($is_module_admin || $admin_access) {
         if ($csv_file_name != "" && $is_csv) {
             $importer = new CSVparse();
             $CSV_DATA = $importer->parse_file($csv_file_tmp);
-            //echo("File tmp: $csv_file_tmp<BR>");
-            //print_r2($CSV_DATA);
             foreach ($CSV_DATA as $each_alloc_entry) {
                 $csv_keys = array_keys($each_alloc_entry);
-                //print_r2($csv_keys);
-                //print_r2($each_alloc_entry);
                 $sid = $each_alloc_entry[$csv_keys[0]];
                 $master_id = $each_alloc_entry[$csv_keys[1]];
                 $title = $each_alloc_entry[$csv_keys[2]];
-                //echo("num_parts: $num_parts<BR>");
                 for ($i = 0; $i <= $num_parts; $i++) {
                     $supervisor_family_name = $each_alloc_entry[$csv_keys[3 + $i * 2]];
                     $second_marker_family_name = $each_alloc_entry[$csv_keys[4 + $i * 2]];
@@ -280,7 +251,6 @@ if ($is_module_admin || $admin_access) {
                     $query .= "'" . addslashes($title) . "', ";
                     $query .= "'" . addslashes($supervisor_ida[0]) . "', ";
                     $query .= "'" . addslashes($second_marker_ida[0]) . "') ";
-                    //echo("$query<BR>");
                     //mysql_query($query) or die(" Unable to insert data to the table $project_allocated . <BR>Query: $query");
                     try {
                         $results = $db->query($query);
@@ -298,7 +268,6 @@ if ($is_module_admin || $admin_access) {
                     $query .= "title='" . addslashes($title) . "', ";
                     $query .= "supervisor_id='" . addslashes($supervisor_ida[0]) . "', ";
                     $query .= "second_marker_id='" . addslashes($second_marker_ida[0]) . "' WHERE sid=$sid ";
-                    //echo("$query<BR>");
                     //mysql_query($query) or die(" Unable to insert data to the table $project_allocated . <BR>Query: $query");
                     try {
                         $results = $db->query($query);
@@ -317,7 +286,6 @@ if ($is_module_admin || $admin_access) {
                     $marker1_id = $supervisor_ida[$i];
                     $marker2_id = $second_marker_ida[$i];
                     $query = "UPDATE $project_allocated SET `$m1_entry`=$marker1_id, `$m2_entry`=$marker2_id WHERE sid=$sid";
-                    //echo("$query<BR>");
                     //mysql_query($query) or die(" Unable to update id (p1)data to the table $project_allocated . <BR>Query: $query");
                     try {
                         $results = $db->query($query);
@@ -329,7 +297,6 @@ if ($is_module_admin || $admin_access) {
                         exit();
                     }
                 }
-                //print_r2($csv_keys);
                 /*while (list($key, $value) = each ($each_member)) {
 
                     echo "$key: $value<br />";
@@ -342,7 +309,6 @@ if ($is_module_admin || $admin_access) {
         }
 
     }// end of if ($POST_OP == "upload_detailed_csv")
-
 
 //$display_block .="\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
     $num = CountAllocationTable($db, $project_allocated);
@@ -424,14 +390,11 @@ if ($is_module_admin || $admin_access) {
             $display_block .= "<TD><input type=\"text\" name=\"supervisor$student_count\" value=\"$supervisor_name\"  size=20 maxlength=30 readonly></TD>";
             $display_block .= "<TD><input type=\"text\" name=\"second_marker$student_count\" value=\"$second_marker_name\"  size=20 maxlength=30 readonly></TD>";
 
-            //print_r2($recs);
             for ($i = 1; $i <= 5; $i++) {
                 $m1_entry = "marker_p$i" . "m1_id";
                 $m2_entry = "marker_p$i" . "m2_id";
                 $marker1_id = $recs[$m1_entry];
                 $marker2_id = $recs[$m2_entry];
-                //echo("M1_entry $m1_entry, Marker1_id $marker1_id <BR>");
-                //echo("M2_entry $m2_entry, Marker2_id $marker2_id <BR>");
                 $marker1_name = GetStaffNameFromID($db, $marker1_id, $staff_names2, NULL);
                 $marker2_name = GetStaffNameFromID($db, $marker2_id, $staff_names2, NULL);
                 $display_block .= "<TD style='font-size: small;'>$marker1_name</TD>";

@@ -1,6 +1,5 @@
 <?php
 // Turn off all error reporting
-//error_reporting(0);
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
@@ -18,9 +17,6 @@ if (array_key_exists('qs_template', $_POST)==false){ $_POST['qs_template']=null;
 $assessqs_template = $_POST['qs_template'];
 
 $assessqs_cats_template = "assessqs_cats_template_" . substr($assessqs_template,18);
-//echo("Assess qs template = $assessqs_template<BR>\n");
-//echo("Assess qs cats template = $assessqs_cats_template<BR>\n");
-
 
 //if (array_key_exists('module1', $_GET)==false){ $_GET['module1']=null; }
 //if (array_key_exists('year_begin', $_GET)==false){ $_GET['year_begin']=null; }
@@ -31,17 +27,14 @@ $display_block="";
 $display_block .= $connect_msg;
 
 // if the form was submitted then enter it all into the database
-//echo($_POST['op'] . "<BR>\n");
 if (array_key_exists('op', $_POST)) {
   $POST_OP = $_POST['op']  ;
 }else{
 	$POST_OP = "";
 }
-//echo($POST_OP . "<BR>\n");
 // see all the POST values
 
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
 
   $display_block .="<form method=\"post\" action=\"$_SERVER[PHP_SELF]\" \">\n";
@@ -62,18 +55,10 @@ $assesstype_text = "Template edit" ;
 $mark_max =  100;
 $mark_pc = 100;
 
-//echo("Assess_cats table = $assess_cats<BR>\n");
-//echo("Assessqs_year table = $assessqs_year<BR>\n");
-//echo("Assesstype_text table = $assesstype_text<BR>\n");
-//echo("max mark for this part = $mark_max<BR>");
-//echo("percent of final assesment = $mark_pc<BR>");
-
-
 if ($POST_OP == "commit"){
   // Get number of categories by counting the rows in $assess_cats
   $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
   //$num_categories = mysql_num_rows($myquery);
-  //echo("num cats = $num_categories <BR>\n");
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
@@ -98,9 +83,6 @@ if ($POST_OP == "commit"){
     $section_weight[$cat] = $_POST[$id];
     $id = "factor_name" . $cat;
     $section_factor[$cat] = $_POST[$id];
-    //echo("Section: $cat : $section_q[$cat]<BR>\n");
-    //echo("  weight: $section_weight[$cat]<BR>\n");
-    //echo("  factor: $section_factor[$cat]<BR>\n");
     
     $id = "numqs" . $cat;
     $numqs = $_POST[$id];
@@ -113,10 +95,8 @@ if ($POST_OP == "commit"){
     {
       $id = "q$cat-$i";
       $question = addslashes($_POST[$id]);
-      //echo("$id : $question<BR>");
       //$id = "r$cat-$i";
       //$rmark = $_POST[$id];
-      //echo("$id : $rmark<BR>");
       $id = "res$cat-$i";
       $num_entries = $_POST[$id];
       $query_entry = "";
@@ -124,10 +104,8 @@ if ($POST_OP == "commit"){
       {
         $id = "t$cat-$i$r";
         $text[$r] = addslashes($_POST[$id]);
-        //echo("$id : $text[$r]<BR>");
         $id = "m$cat-$i$r";
         $mark[$r] = $_POST[$id];
-        //echo("$id : $mark[$r]<BR>");
         $query_entry .= ", text$r='".$text[$r]."', mark$r" . "='" . $mark[$r] ."'\n";
       }
       
@@ -137,7 +115,6 @@ if ($POST_OP == "commit"){
                          entries='$num_entries'
                          $query_entry
                          where qid='$i' and cat='$cat'"; 
-        //echo ("$action <BR>");
         //mysql_query($action) or die(" Unable to add mark data to the table: $assessqs_year. <BR /> Query = $action");
         try {
             $results = $db->query($query);
@@ -155,7 +132,6 @@ if ($POST_OP == "commit"){
                          weight_percent='$section_weight[$cat]',
                          factor='$section_factor[$cat]'
                          where cat='$cat'";
-        //echo ("$action <BR>");
         //mysql_query($action) or die(" Unable to add mark data to the table: $assess_cats. <BR /> Query = $action");
         try {
             $results = $db->query($query);
@@ -181,7 +157,6 @@ if ($POST_OP == "commit"){
       if($new_numqs > $numqs){
         // Change the "Feedback" entry to this number of Qs plus 1
         $query = "update $assessqs_year set qid='$new_numqs' where qid='$numqs'";
-        //echo ("$action <BR>");
         //mysql_query($action) or die(" Unable to change the Feedback qid table : $assessqs_year. <BR /> Query = $action");
           try {
               $results = $db->query($query);
@@ -197,7 +172,6 @@ if ($POST_OP == "commit"){
           $query = "insert $assessqs_year set qid='$i', cat='$cat', question='--New question--CHANGE ME--', entries='6',
                      text1='answer 1',mark1='0', text2='answer 2',mark2='10',text3='answer 3',mark3='25',
                      text4='answer 4',mark4='50',text5='answer 5',mark5='60',text6='answer 6',mark6='90'";
-          //echo ("$action <BR>");
           //mysql_query($action) or die(" Unable to add rows to table : $assessqs_year. <BR /> Query = $action");
               try {
                   $results = $db->query($query);
@@ -215,7 +189,6 @@ if ($POST_OP == "commit"){
         // Need to delete some questions
         for($i = $new_numqs; $i <= $numqs ; $i++){
           $query = "DELETE FROM $assessqs_year WHERE qid='$i'";
-          //echo ("$action <BR>");
           //mysql_query($action) or die(" Unable to delete rows from table : $assessqs_year. <BR /> Query = $action");
             try {
                 $results = $db->query($query);
@@ -230,7 +203,6 @@ if ($POST_OP == "commit"){
         }
         // Insert a feedback row
         $query = "insert $assessqs_year set qid='$new_numqs', cat='$cat', question='Feedback Comments:', entries='0'";
-        //echo ("$action <BR>");
         //mysql_query($action) or die(" Unable to change the Feedback qid table : $assessqs_year. <BR /> Query = $action");
           try {
               $results = $db->query($query);
@@ -254,7 +226,6 @@ else if($POST_OP == "edit")
 { 
   // No need to have an else as the rest is always done.
   
-  
   $display_block .= "<h1>This form allows you to view and edit TEMPLATE questions, marks and section weightings.</h1>";
   //$display_block .= "<h2>$assesstype_text section of module $module1, beginning year $year_begin</h2>";
   $display_block .= "<p>Questions table: $assessqs_year,  Question Categories: $assess_cats</p>";
@@ -275,7 +246,6 @@ else if($POST_OP == "edit")
 
   $display_block .="<div id=\"sticker\">0.0</div>\n";
 
-  
   $display_block .="<form method=\"post\" action=\"$_SERVER[PHP_SELF]\" \">\n";
   //This one has the validation
   //$display_block .="<form method=\"post\" onsubmit=\"return validate_form();\" action=\"$_SERVER[PHP_SELF]?module1=$module1&year_begin=$year_begin\" \">\n";
@@ -345,7 +315,6 @@ else if($POST_OP == "edit")
 
        for ($q_count=1; $q_count < $num_questions; $q_count++) {
            $get_qs_query = "select * from $assessqs_year where cat=$cat and qid=$q_count";
-           //echo("$get_qs<BR>");
            //$get_qs_res = mysql_query($get_qs);
            //$qs_list = mysql_fetch_array($get_qs_res);
            try {
@@ -369,19 +338,15 @@ else if($POST_OP == "edit")
              $r_text = "text".$r_count;
              $response_texts[$q_count][$r_count]   =$qs_list[$r_text];
              $value = $response_texts[$q_count][$r_count];
-             //echo("$q_count-$r_count $value<br>");
              $r_mark = "mark".$r_count;
              $response_marks[$q_count][$r_count]   =$qs_list[$r_mark];
            }
 
        }
-       //print_r($response_marks);
        $display_block .= show_section_questions($cat, $description, $weight_pc, $factor,$num_questions, $questions,$num_entries,$response_texts,$response_marks);
        $display_block .= "<BR>\n";
   }
 
-
-       
   $display_block .= "\n<div class=\"feedbackSection\">Total marks = <span class=\"feedbackTotalMark\" id=totalmarks> </span></div>";
   $display_block .= "<BR>\n<input type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all selected\" >";
   $display_block .="\n<input type=\"hidden\" name=\"op\" value=\"commit\">";
@@ -499,7 +464,6 @@ $(document).ready(function(){
     SumSections();
   });
   
-
   function SumSections()
   {
     var markpc = $("#markpc_id").val();
@@ -524,7 +488,6 @@ $(document).ready(function(){
      //validate_form();
    });
    
-
   function SubmitChangesToDatabase()
   {
     

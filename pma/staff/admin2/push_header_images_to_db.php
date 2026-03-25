@@ -57,7 +57,6 @@ if($POST_OP == ""){
 
     $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"I confirm that I wish to upload these images.\"></p>";
 
-
     $display_block .= "</form>";
     $display_block .= "<hr>\n";
 

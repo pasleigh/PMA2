@@ -10,7 +10,7 @@
 $display_block = "";
 $display_block .= "<div style='font-size: x-large; font-weight: bold; text-align: center'>Project Selection</div>";
 
-$student_username = $_SERVER['REMOTE_USER'];
+$student_username = get_server_username();
 
 // Which dash feedback is available?
 $query = "SELECT * FROM $dash_projects_setup";
@@ -80,7 +80,6 @@ $footer_link = date('l jS \of F Y, h:i A');
 
     </div><!-- content -->
 
-
     <div data-role="footer" data-position="fixed">
         <H1 style="color: dimgray;">
             <?php echo("$footer_link"); ?>
@@ -90,8 +89,6 @@ $footer_link = date('l jS \of F Y, h:i A');
 </div> <!-- page -->
 <!--++++-------End of Main page---------+++++++-->
 
-
 </body>
 </html>
 
-  

@@ -18,7 +18,6 @@ $csv_filename = "project_marks_" . $module_prefix . $module1 . $module_postfix .
 //$tmpcsvfile = tempnam("dummy", "");
 $tmpcsvfile = tempnam(PMA_TMP_DIR, "");
 $path = dirname($tmpcsvfile);
-//echo "$tmpcsvfile $path <br />";
 //$csv_filename = $tmpcsvfile;
 //unlink($tmpcsvfile);
 
@@ -43,7 +42,6 @@ if ($num < 1) {
 } else {
     //has records
     $fp = fopen($tmpcsvfile, 'w');
-    //echo " fopen return = $fp .<BR />";
 
     $row[0] = "";
     $row[1] = "";
@@ -106,7 +104,6 @@ if ($num < 1) {
     $row[$count] = "Final Mark";
 
     $ret = fputcsv($fp, $row);
-    //echo " fputcsv return = $ret .<BR />";
     //fclose($fp);
 
     $rows = $results->fetchAll();
@@ -181,20 +178,16 @@ if ($num < 1) {
                     exit();
                 }
                 $marks_recs = $results->fetch();
-                //echo("$query<BR>");
-                //var_dump($marks_recs);
                 $total = 0.0;
                 if($marks_recs) {
                     $total = $marks_recs['total'];
                 }
                 $row[$count] = $total;
-                //echo("Count: $count. Total=$total<BR>");
                 $count++;
             }
             if ($num_markers > 1) {
                 $total = GetTotalForPart($db, $sid, $i, $markstore_totals);
                 $row[$count] = $total;
-                //echo("Count: $count. Total=$total<BR>");
                 $count++;
             }
         }
@@ -222,7 +215,6 @@ if ($num < 1) {
 
         //$fp = fopen('file.csv', 'w');
         $ret = fputcsv($fp, $row);
-        //echo "$ret <br />";
     }
 
     fclose($fp);

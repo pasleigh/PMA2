@@ -14,7 +14,6 @@ if (array_key_exists('debug', $_GET)) {
 
 $num_cookie_days = 30;
 if (isset($_SERVER['REMOTE_USER'])) {
-    $user = $_SERVER['REMOTE_USER'];
     $user = get_server_username();
     setcookie('USERNAME', $user, [
         'expires'  => time() + $num_cookie_days * 24 * 3600,
@@ -47,7 +46,6 @@ if (isset($_SERVER['REMOTE_USER'])) {
 // Select the years available in the projects setup table
 // Check the table exists
 if (DoesTableExist($db, $projects_setup)) {
-    //echo("OK the $projects_setup  table exists<BR>\n");
 } else {
     echo("Need to create the $projects_setup  table<BR>\n");
     exit();
@@ -55,7 +53,7 @@ if (DoesTableExist($db, $projects_setup)) {
 
 $staff_username = "unknown";
 if(array_key_exists('REMOTE_USER',$_SERVER)){
-    $staff_username = $_SERVER['REMOTE_USER'];
+    $staff_username = get_server_username();
 }else{
     if(isset($_SESSION['USERNAME'])){
         $staff_username = $_SESSION['USERNAME'];
@@ -204,7 +202,6 @@ if ($access) {
     } else {
         $staff_feedback_dash_visibility = "none";
     }
-
 
 }
 

@@ -50,7 +50,6 @@ if ($access) {
         $check_pwd = true;
         if ($check_pwd) {
 
-
             $dbb = new DBBackup(array(
                 'driver' => 'mysql',
                 'host' => $hostname,
@@ -68,7 +67,6 @@ if ($access) {
                 // The backup will be at $var['msg']
                 // You can do everything you want to. Like save in a file.
                 // $fp = fopen('file.sql', 'a+');fwrite($fp, $backup['msg']);fclose($fp);
-                //echo nl2br($backup['msg']);
 
                 $dumped = $backup['msg'];
                 echo($dumped);
@@ -100,7 +98,6 @@ if ($access) {
         $display_block .= "</form>";
         //$display_block .= "\n</BODY>\n</HTML>\n";
 
-        //echo($display_block);
     }
 }else{
     $display_block .= "<h2>You must have full Super Admin level to access the functions of this page</h2><BR>";

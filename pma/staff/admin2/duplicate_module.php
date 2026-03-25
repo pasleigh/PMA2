@@ -1,6 +1,5 @@
 <?php
 // Turn off all error reporting
-//error_reporting(0);
 
 // connect to the datbase
 (@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
@@ -25,9 +24,7 @@ $display_block = "";
 //$display_block .= $connect_msg;
 $display_block .= "<div class='text-center'><h1 style='font-size: x-large; color: darkgoldenrod;'>$connect_msg</h1></div>\n";
 
-
 // if the form was submitted then enter it all into the database
-//echo($_POST['op'] . "<BR>\n");
 $post_error = false;
 if (array_key_exists('op', $_POST)) {
   $POST_OP = $_POST['op']  ;
@@ -56,7 +53,6 @@ if (array_key_exists('op', $_POST)) {
 }else{
   $POST_OP = "";
 }
-//echo("here<BR>");
 
 $display_block .= "<div>";
 
@@ -99,7 +95,6 @@ if ($POST_OP == "create"){
         $print_block .= "year_begin old $old_year_begin<BR>";
         $print_block .= "short_code new $new_short_name<BR>";
         $print_block .= "year_begin new $new_year_begin<BR>";
-        //echo($print_block);
         $pm_id_new = create_new_module_from_old($db, $projects_setup, $projects_setup_proposals, $pm_id_old, $short_code_old, $new_short_name, $old_year_begin, $new_year_begin);
         //$pm_id_new = -1;
 
@@ -170,7 +165,6 @@ if ($POST_OP == "create"){
 
     }
 
-
     $overview_table .= "</tbody>\n</table>\n";
 
     $overview_table .= "\n</tr></td>\n</table>\n <!--/holder-->";
@@ -179,7 +173,6 @@ if ($POST_OP == "create"){
 
     $display_block .= "<h1>STEP 1: Select the module you want to duplicate</h1>";
     //$display_block .= $overview_table;
-
 
     // Display a list of years
     $module_prefix_name = "CIVE";
@@ -196,7 +189,6 @@ if ($POST_OP == "create"){
     $display_block .= "</select>";
     $display_block .= "</div>";
     $display_block .= "</div>";
-
 
 // Display the dropdowns to select the module and year
     $display_block .= "<H1>STEP 2: Select a new start session / year ...</H1>\n";
@@ -234,7 +226,6 @@ if ($POST_OP == "create"){
 
     $display_block .= "<P><strong>All other details from the old module can be changed later.</strong></P>";
 
-
     $display_block .= "\n<input type='hidden' name='op' value='create'>";
 
     $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton' name='submit' value='Duplicate the chosen module using the new year and new short name'></p>";
@@ -243,7 +234,6 @@ if ($POST_OP == "create"){
 
 }// end of if ($POST_OP == "select")
 $display_block .= "</div>";
-
 
 ?>
 <!DOCTYPE html>

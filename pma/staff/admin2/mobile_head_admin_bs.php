@@ -73,7 +73,6 @@ $gear_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
     <!-- Custom styles for this template -->
    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
-
     <script src="<?php echo("$location") ?>/frameworks/bowser.min.js"></script>
 
     <script src="<?php echo("$location") ?>/frameworks/js.cookie.js"></script>

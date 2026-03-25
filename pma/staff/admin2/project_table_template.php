@@ -1,9 +1,7 @@
 <?php
 function CreateProjectMasterNameTableQuery($master_name_table_name)
 {
-    //echo("$master_name_table_name<BR>");
     //$str = "`$master_name_table_name`<BR>";
-    //echo("$str<BR>");
 
     $create_table_query = "CREATE TABLE `$master_name_table_name` (
               `id` int(11) NOT NULL auto_increment,
@@ -23,9 +21,7 @@ function CreateProjectMasterNameTableQuery($master_name_table_name)
 
 function CreateProjectDetailsTableQuery($project_details_table_name)
 {
-    //echo("$project_details_table_name<BR>");
     //$str = "`$project_details_table_name`<BR>";
-    //echo("$str<BR>");
 
     $create_table_query = "CREATE TABLE `$project_details_table_name` (
             `id` int(11) NOT NULL auto_increment,

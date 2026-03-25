@@ -21,7 +21,6 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-//error_reporting(E_ALL & ~E_NOTICE);
 error_reporting(E_ALL ^ E_NOTICE);
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 
@@ -36,17 +35,14 @@ if ($access) {
         $_POST['op'] = null;
     }
 // if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
         $POST_OP = "";
     }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
 
     $display_block .= "<h1>Edit Staff details for all modules</h1>";
@@ -134,7 +130,6 @@ if ($access) {
         $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Submit details of this new staff member.\"></p>";
 
         $display_block .= "</form>";
-
 
         $display_block .= "<hr>\n";
     }
@@ -381,7 +376,6 @@ if ($access) {
             $row[5] = "username";
 
             $ret = @fputcsv($fp, $row);
-            //echo " fputcsv return = $ret .<BR />";
             //fclose($fp);
 
             $rows = $results->fetchAll();
@@ -402,7 +396,6 @@ if ($access) {
 
                 //$fp = fopen('file.csv', 'w');
                 $ret = @fputcsv($fp, $row);
-                //echo "$ret <br />";
             }
 
             @fclose($fp);
@@ -554,7 +547,6 @@ if ($access) {
 
     $display_block .= "</form>\n";
 }
-
 
 function GetTitleSelect($NameKey, $MatchTitle)
 {

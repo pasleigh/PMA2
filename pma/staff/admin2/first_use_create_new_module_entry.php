@@ -1,6 +1,5 @@
 <?php
 // Turn off all error reporting
-//error_reporting(0);
 
 // connect to the datbase
 (@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
@@ -24,7 +23,7 @@ $staff_names2 = "staff_names";
 $definition = "definition";
 $projects_setup = "projects_setup";
 $projects_setup_proposals = "projects_setup_proposals";
-$username = $_SERVER['REMOTE_USER'];
+$username = get_server_username();
 
 $query = "SELECT * FROM $staff_names2";
 try {
@@ -58,7 +57,6 @@ try {
 //$setup_data = mysql_fetch_array($get_list_res);
 $module_prefix = $results['default_module_prefix'];
 
-
 $display_block = "";
 
 // if the form was submitted then enter it all into the database
@@ -67,7 +65,6 @@ if (array_key_exists('op', $_POST)) {
 } else {
     $POST_OP = "";
 }
-//echo("here<BR>");
 
 if ($POST_OP == "create") {
     $display_block .= "<h2>Creating the new entry in the projects_setup table ...</H2>";
@@ -101,7 +98,6 @@ if ($POST_OP == "create") {
         $action = "INSERT $projects_setup set year_begin='$new_year_begin', year_end='$new_year_end', short_code='$new_short_name',
                 module='$new_module_number', module_prefix='$new_module_prefix', module_short_desc='$new_short_desc'
                 ";
-        //echo $action . "<BR>";
         try {
             $db->query($action);
         } catch (PDOException $ex) {
@@ -136,7 +132,6 @@ if ($POST_OP == "create") {
     // Put this in the projects_setup_proposals table (keep defaults for everything else)
     // Save this to the database
     $query = "INSERT $projects_setup_proposals SET proj_id='$pm_id'";
-    //echo $action . "<BR>";
     try {
         $db->query($query);
     } catch (PDOException $ex) {
@@ -159,7 +154,6 @@ if ($POST_OP == "create") {
         echo("Error message: $err_msg<BR>\n");
         exit();
     }
-    //echo $action . "<BR>";
     //mysql_query($action) or die(" Unable to update new project entry to the table $projects_setup. <BR>/> Query = $action");
 
     $accept_var = trim($_POST['accept_var']);
@@ -169,7 +163,6 @@ if ($POST_OP == "create") {
     $min_feedback_words = trim($_POST['min_feedback_words']);
 
     $action = "update $projects_setup set accept_var='$accept_var', pass_mark='$pass_mark', module_leader='$module_leader_fullname', min_feedback_words='$min_feedback_words' WHERE id='$pm_id'";
-    //echo $action . "<BR>";
 
     try {
         $db->query($action);
@@ -231,7 +224,6 @@ if ($POST_OP == "create") {
         exit();
     }
     $display_block .= "<h2>creating the new database tables...</H2>";
-
 
     //
     // Project proposals tables
@@ -306,7 +298,6 @@ if ($POST_OP == "create") {
             }
         }
     }
-
 
     //
     // Assess total table
@@ -454,7 +445,6 @@ if ($POST_OP == "create") {
         $p_table = "p$part" . "_template";
         $table_template = $_POST[$p_table];
         echo("The questions table is $table_template <BR>");
-        //echo("The questions table root name is " . substr($table_template,18) . "<BR>");
         $table_cats_template = "assessqs_cats_template_" . substr($table_template,18);
         echo "The cats table is $table_cats_template<BR>\n";
         //$display_block .="$table<BR>";
@@ -569,14 +559,12 @@ if ($POST_OP == "create") {
     $display_block .= "<P> If everything went to plan and the above looks OK you can now start to <A href='../index.php'>use the database</a>.</P>";
     $display_block .= "<P> you will probably want to add some staff. To do this go to the <A href='./index.php'>admin section</A>, selecte the newly created project and edit the staff.</P>";
 
-
 } else {
 
 // Display a list of years 
     $module_prefix_name = "CIVE";
     $new_short_name = "MENG";
     $new_short_desc = "Level 5 project";
-
 
 // Display the dropdowns to select the module and year
     $display_block .= "<H1>Create a new project entry ...</H1>\n";
@@ -605,7 +593,6 @@ if ($POST_OP == "create") {
     $display_block .= "<p>Acceptable variation between markers : </td><td><input type=\"number\" name=\"accept_var\" value=\"$accept_var\" min=\"0\" max=\"100\" size=\"3\"> %</p>\n";
     $display_block .= "<p>Pass mark:  </td><td><input type=\"number\" name=\"pass_mark\" value=\"$pass_mark\" min=\"0\" max=\"100\" size=\"3\"> %</p>\n";
     $display_block .= "<p>Minimum number of feedback words:  </td><td><input type=\"number\" name=\"min_feedback_words\" value=\"$min_feedback_words\" min=\"0\" max=\"100\" size=\"3\"></p>\n";
-
 
     $display_block .= "<H2>Assessment Parts:</H2>";
     $display_block .= "<P><strong>Number of assessment parts: </strong><input type=\"number\" name=\"new_num_parts\" value=\"5\" min=\"1\" max=\"5\" size=6 maxlength=5> (1 to 5 - this <strong>CAN NOT</strong> be changed later)";

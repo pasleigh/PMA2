@@ -279,7 +279,6 @@ SQL;
 
     // Save this to the database
     $query = "INSERT $projects_setup_poposals_table SET proj_id='$pm_id_new', num_progs='$num_progs', prog_short_names='$prog_short_names'";
-    //echo $action . "<BR>";
     try {
         $db->query($query);
     } catch (PDOException $ex) {
@@ -370,7 +369,6 @@ function copy_module_tables($db, $short_code_old, $short_code_new, $year_begin_o
         CopyTable($db, $old_table, $new_table);
     }
 
-
     //$new_table = "staff_names_" . $new_short_name_lc . "_" . $new_year_begin;
     //$old_table = "staff_names_" . $old_short_name_lc . "_" . $old_year_begin;
     //CopyTable($db, $old_table, $new_table);
@@ -381,7 +379,6 @@ function copy_module_tables($db, $short_code_old, $short_code_new, $year_begin_o
     // Create the table if necessary
     create_project_areas_table_structure($db,$old_table );
     CopyTable($db, $old_table, $new_table);
-
 
 }
 

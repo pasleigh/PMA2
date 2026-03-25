@@ -8,7 +8,6 @@
 
 (@include_once("./admin2/admin_functions.php")) OR die("Cannot include admin functions<BR>");
 
-
 $admin = 0;
 
 $display_block = "";
@@ -24,7 +23,6 @@ if($is_module_admin) {
 }
 
 $display_block .= "<div class='text-center'><h1 style='font-size: x-large; color: darkgoldenrod;'>$access_phrase</h1></div>\n";
-
 
 if ($access || $is_module_admin) {
     $display_block .= "<div class='row text-center mt-4'>";
@@ -43,7 +41,6 @@ if ($access || $is_module_admin) {
     }
     $email_block .= "</div>";
     $download_block .= "</div>";
-
 
     $display_block .= "<div class='row text-center'>";
     $display_block .= "<div class='col-2'></div>";
@@ -154,7 +151,6 @@ if ($access || $is_module_admin) {
                 console.log(errorThrown);
             }
         });
-
 
     });
     function post(path, params, method='post') {

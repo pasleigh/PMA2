@@ -18,7 +18,7 @@ if (array_key_exists('prog_var', $_REQUEST) == false) {
 }
 $prog_var = $_REQUEST['prog_var'];
 
-$student_username = $_SERVER['REMOTE_USER'];
+$student_username = get_server_username();
 $is_staff = isStaff($db, $student_username);
 $is_student_current = false;
 if($is_staff == false) {
@@ -31,14 +31,13 @@ $display_block = "";
 $display_block .= "<div style='font-size: x-large; font-weight: bold; text-align: center'>Project Selection</div>";
 $display_block .= "<div style='font-size: large; font-weight: bold; text-align: center'>$module_short_description - $module_prefix$module1$module_postfix - $short_code, $year_begin/$year_end_short</div>";
 
-
 if($is_student_current == false and $is_staff == false){
     $display_block .= GetStudentNotOnModulePhrase();
 }else {
 //
-// Display the list of prjects for this  staff
+// Display the list of projects for this  staff
 //
-    $student_username = $_SERVER['REMOTE_USER'];
+    $student_username = get_server_username();
     $is_staff = isStaff($db, $student_username);
 
     $staff_text = "";
@@ -137,22 +136,17 @@ if($is_student_current == false and $is_staff == false){
     <!--++++Main page+++++++-->
     <div data-role="content">
 
-
         <?php echo("$display_block"); ?>
 
-
     </div><!-- content -->
-
 
     <div data-role="footer" data-position="fixed">
         <H1 style="color: dimgray;"><a target="_self" href="./projects_indexm_all.php?pm_id=<?php echo("$pm_id"); ?>"
                                        style="color: dimgray;">Index</a></H1>
     </div><!-- /footer -->
 
-
 </div> <!-- page -->
 <!--++++-------End of Main page---------+++++++-->
-
 
 </body>
 </html>

@@ -5,8 +5,6 @@ function relativePath($from, $to, $ps = DIRECTORY_SEPARATOR)
   // Replace and windows backslash separators
   $from = str_replace("\\","/",$from);
   $to = str_replace("\\","/",$to);
-  //echo("from=$from<BR>\n");
-  //echo("to=$to<BR>\n");
   $arFrom = explode($ps, rtrim($from, $ps));
   $arTo = explode($ps, rtrim($to, $ps));
   while (count($arFrom) && count($arTo) && ($arFrom[0] == $arTo[0])) {

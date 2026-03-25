@@ -73,7 +73,6 @@ $gear_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
         }
     </style>
 
-
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
     <meta name="mobile-web-app-capable" content="yes"/>
     <meta name="mobile-web-app-status-bar-style" content="black"/>

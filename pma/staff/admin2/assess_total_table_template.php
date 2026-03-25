@@ -1,9 +1,7 @@
 <?php
 function CreateAccessTotalTableQuery($assess_total_table_name)
 {
-  //echo("$assess_total_table_name<BR>");
   //$str = "`$assess_total_table_name`<BR>";
-  //echo("$str<BR>");
   $create_table_query = "CREATE TABLE IF NOT EXISTS `$assess_total_table_name` (
       `SID` char(10) default NULL,
       `retmark1` float default NULL,

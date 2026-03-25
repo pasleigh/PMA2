@@ -13,7 +13,6 @@
 (@include_once("../admin2/utility_functions.php")) OR die("Cannot include utility_functions.php");
 (@include_once("../admin2/adminusers.php")) OR die("Cannot setup admin users");
 
-
 if (!isset($_REQUEST['pm_id'])) {
     $_REQUEST['pm_id'] = null;
 }
@@ -24,13 +23,10 @@ if (!isset($_REQUEST['p_id'])) {
 }
 $proj_id = $_REQUEST['p_id'];
 
-
 if (!isset($_REQUEST['op'])) {
     $_REQUEST['op'] = null;
 }
 $POST_OP = $_REQUEST['op'];
-
-
 
 //
 // Check the date for editiing has not passed
@@ -139,7 +135,6 @@ if ($POST_OP == "") {
         $display_block .= "<input type=\"hidden\" name=\"p_id\" value=\"$proj_id\">\n";
         $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Really Delete this project\"></p>\n";
         $display_block .= "</form>\n";
-
 
     }
 } else if ($POST_OP== "del") {

@@ -30,7 +30,6 @@ if ($date_diff > 1.0) {
 $display_block .= "<H3>Display project proposals by all staff</H3>";
 $display_block .= "<h3>$module_short_description - $module_prefix$module1$module_postfix - $short_code</h3>";
 
-
 $query = "select * from $master_name order by id, f_supervisor, f_title";
 try {
     $results = $db->query($query);

@@ -25,10 +25,8 @@ $access = access_check_response($db, $this_staff_username, $this_staff_full_name
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access_phrase</h2>\n";
 $post_html = "";
 
-//error_reporting(E_ALL & ~E_NOTICE);
 error_reporting(E_ALL ^ E_NOTICE);
 
-//var_dump($_POST);
 if ($access) {
     $staff_names_table = $staff_names_default;
 
@@ -356,7 +354,6 @@ if ($access) {
 
         $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
 
-
         // Set a simple Footer including the date and page number
         $some_text = "MD to HTML to PDF test output";
         $mpdf->setFooter("$some_text Date printed: {DATE j M Y}.   page {PAGENO}");
@@ -514,7 +511,6 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
     return $select_block;
 }
 
-
 ?>
 <HTML>
 <?php
@@ -586,7 +582,6 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
 
             </div>
         </div>
-
 
     </div><!-- /content -->
 <BR>
@@ -871,7 +866,6 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
         let target = <?php echo json_encode($_SERVER["PHP_SELF"]);?>;
         post(target,paramsObj)
     }
-
 
 </script>
 <script>

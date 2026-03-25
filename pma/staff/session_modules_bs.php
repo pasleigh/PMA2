@@ -13,7 +13,6 @@
 $display_block = "";
 $display_block .= $connect_msg;
 
-
 if (array_key_exists('year_begin', $_GET) == false) {
     $_GET['year_begin'] = null;
 }
@@ -211,7 +210,6 @@ if (IsAdmin($db, $this_staff_username)) {
         </div>
     </div>
 </div>
-
 
 <!--
 <footer class="footer py-3 my-4 bg-secondary text-white">

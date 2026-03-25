@@ -23,7 +23,6 @@ $get_setup = "select year_begin, year_end, dayname(alloc_date), dayofmonth(alloc
 $get_setup_list = mysql_query($get_setup) or die(" Unable to get database configuration. Query: $get_setup");
 $setup_data = mysql_fetch_array($get_setup_list);
 
-
 $projectload = "projectload";
 $choice = $selection;
 $allocation = $project_alloc;

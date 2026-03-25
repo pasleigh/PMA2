@@ -13,7 +13,6 @@ if (array_key_exists('pm_id', $_REQUEST) == false) {
 }
 $pm_id = $_REQUEST['pm_id'];
 
-
 $query = "select * from $projects_setup where id=$pm_id";
 try {
     $results = $db->query($query);
@@ -76,7 +75,6 @@ $display_block .= "
 	<li><a href=\"selproject.php?pm_id=$pm_id\" rel=\"external\" data-role=\"button\" data-theme=\"c\">List of projects</a></li>
 </div>
 ";
-
 
 $display_block .= "
   <p>Downloadable list of projects</p>

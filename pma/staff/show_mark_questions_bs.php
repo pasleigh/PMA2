@@ -1,16 +1,6 @@
 <?PHP
 function show_mark_questions_bs($db, $cat, $cat_description, $weight_pc, $factor, $show_cat_feedback, $num_questions, $questions, $num_responses, $response_texts, $response_marks, $markstore, $sid, $min_feedback_words)
 {
-    //echo("cat = $cat<BR>\n");
-    //echo("cat_description = $cat_description<BR>\n");
-    //echo("Response texts<BR>\n");
-    //print_r2($response_texts);
-    //echo("Response marks<BR>\n");
-    //print_r2($response_marks);
-    //echo("Markstore<BR>\n");
-    //print_r2($markstore);
-    //echo("sid = $sid<BR>\n");
-
 
     // Get the student marks
     $query = "select * from $markstore where SID=$sid";
@@ -30,7 +20,6 @@ function show_mark_questions_bs($db, $cat, $cat_description, $weight_pc, $factor
         for ($i = 1; $i <= 10; $i++) {
             $id = "C$cat" . "Q$i";
             $marks[$i] = $get_marks_res[$id];
-            //echo("mark $i ($id)= $marks[$i]<BR>");
         }
         $id = "C$cat" . "Feedback";
         $feedback = $get_marks_res[$id];
@@ -90,11 +79,9 @@ function show_mark_questions_bs($db, $cat, $cat_description, $weight_pc, $factor
             $display_block .= "\n<span id=\"$tchoice_id\" name=\"$tchoice\">$response_text</span>";
             $display_block .= "\n<input type=\"hidden\" id=\"$mchoice_id\" name=\"$mchoice\" value=\"$response_mark\" size=\"5\">";
             $is_checked = "";
-            //echo("response_mark: $response_mark mark: $marks[$q_count]<BR>\n");
             if ($response_mark == $marks[$q_count]) {
                 $is_checked = "checked";
                 $marktot = $marktot + $marks[$q_count];
-                //echo("checked<BR>\n");
             }
             $display_block .= "\n<input type=\"radio\" id=\"$pchoice_id\" name=\"$rchoice\" value=\"$response_mark\" $is_checked> <BR>\n";
         }
@@ -153,7 +140,6 @@ function show_mark_questions_numeric_bs($db, $cat, $cat_description, $weight_pc,
         for ($i = 1; $i <= 10; $i++) {
             $id = "C$cat" . "Q$i";
             $marks[$i] = $get_marks_res[$id];
-            //echo("mark $i ($id)= $marks[$i]<BR>");
         }
         $id = "C$cat" . "Feedback";
         $feedback = $get_marks_res[$id];
@@ -228,7 +214,6 @@ function show_mark_questions_numeric_bs($db, $cat, $cat_description, $weight_pc,
                      <span id=sectionmarktext$cat> </span>\n</span>\n";
     $display_block .= "        <span class=\"feedbackSectionMark\" id=sectionmark$cat style=\"display: none;\"> $marktot</span>";
 
-
     //$display_block .= "</tbody>\n";
     //$display_block .= "</table>";
     $display_block .= "</div></div></span>\n";// Close the card and card-body
@@ -244,7 +229,6 @@ function show_overall_feedback_bs($db, $part_label, $markstore, $sid, $min_feedb
     if(!DoesColumnExistInTable($db,$markstore,'OverallFeedback')) {
         $db->query($query);
     } else {
-        //echo("\nWarning $markstore OverallFeedback already exists\n");
     }
 
     $query = "SELECT OverallFeedback FROM $markstore WHERE SID=$sid";
@@ -285,7 +269,6 @@ function show_overall_feedback_bs($db, $part_label, $markstore, $sid, $min_feedb
     $display_block .= "<textarea class='form-control' id='$overall_feedback_id' name='$overall_feedback_id' rows='5' placeholder='You will need to write at least $min_feedback_words words.'>$overall_feedback_text</textarea>\n";
     $display_block .= "</div>\n";
     $display_block .= "</div>\n";
-
 
     return $display_block;
 }

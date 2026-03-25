@@ -4,8 +4,6 @@ function EmailPDFAttachment($myemail_to, $myemail_from, $fileattached_pdf, $myem
    // email stuff (change data below)
    $to = $myemail_to; 
    $from = $myemail_from; 
-   //echo "From: $from <BR>";
-   //echo "MyEmailFrom: $my_email_from <BR>";
    $subject =  $myemail_subject; 
    $message = $myemail_message;
    
@@ -17,7 +15,6 @@ function EmailPDFAttachment($myemail_to, $myemail_from, $fileattached_pdf, $myem
    
    // attachment name
    $attachment = chunk_split(base64_encode($fileattached_pdf));
-
 
    // main header
    $headers  = "From: ".$from.$eol;
@@ -47,7 +44,6 @@ function EmailPDFAttachment($myemail_to, $myemail_from, $fileattached_pdf, $myem
      $body .= "Content-Type: application/octet-stream; name=\"".$name_of_file."\"".$eol; 
      $body .= "Content-Transfer-Encoding: base64".$eol;
      $body .= "Content-Disposition: attachment".$eol.$eol;
-     //echo ("To:$to<BR>subject:$subject<BR> header=$headers <BR> body=$body <br />");
      $body .= $attachment.$eol;
      $body .= "--".$separator."--";
    }

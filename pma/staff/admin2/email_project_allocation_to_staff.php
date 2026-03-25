@@ -26,7 +26,6 @@ function GetAllocatedNumber($db, $sid, $selection_table, $master_id_of_allocated
     if ($sid == "") {
         return $num;
     }
-//echo("Staff table $staff_table<BR>");
     $get_list_query = "select * from $selection_table where sid=$sid";
     try {
         $get_list_res = $db->query($get_list_query);
@@ -87,7 +86,6 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if($is_module_admin || $admin_access) {
 
-
     if (array_key_exists('module1', $_POST) == false) {
         $_POST['module1'] = null;
     }
@@ -141,10 +139,8 @@ if($is_module_admin || $admin_access) {
     $makepdf = $_REQUEST['makepdf'];
     $list = $_REQUEST['list'];
     $summary_mark = $_REQUEST['summary_mark'];
-//echo("Module1=$module1 Year begin=$year_begin<BR>");
 
 //  foreach ($_REQUEST as $key => $value){
-//    echo "{$key} = {$value}<BR>\r\n";
 //  }
 
     // Get the feedback_record table
@@ -166,8 +162,6 @@ if($is_module_admin || $admin_access) {
         // No table so create it
         create_feedback_records_table_structure($db, $feedback_records);
     }
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 // The writing of the mpdf file for each student is time consuming and memory heavy
@@ -337,13 +331,11 @@ if($is_module_admin || $admin_access) {
                     $display_block .= nl2br($email_full);
                     $display_block .= "<HR>$lb";
 
-
                     if ($subjectline == "") {
                         $subject = "Project Allocation";
                     } else {
                         $subject = $subjectline;
                     }
-
 
                     $email_manager = $module_leader_email;//"p.a.sleigh@leeds.ac.uk";
 
@@ -353,14 +345,12 @@ if($is_module_admin || $admin_access) {
                     $myemail_subject = $subject;
                     $myemail_message = nl2br($email_full);
 
-
                     $from = "$this_staff_username$local_email_domain";
                     //$to = $student_email;
                     //$to = $from;
 
                     if ($reallysend == null) {
                         $display_block .= "<em>NOT SENT: $subject to $to<HR><BR></em>";
-                        //echo("Not sent $student_name ($username). Num: $student_counter<BR>\n");
                     } else {
                         EmailBodyString($to, $from, $subject, $email_full);
                         $display_block .= "<em>Sending: $subject to $to<BR></em>";
@@ -373,14 +363,12 @@ if($is_module_admin || $admin_access) {
             } else {
                 // Not sent as flagged for not sending.
                 $display_block .= "<HR>Flagged not to send. Not sent. $staff_fullname ($staff_email). <HR><BR>$lb";
-                //echo("Flagged not to send. Not sent. $student_name ($username): Num: $student_counter<BR>$lb");
             }
 
             $student_counter = 0;
         }
 
     }// end of if ($POST_OP == "select")
-
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";

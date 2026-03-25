@@ -1,6 +1,5 @@
 <?php
 // Turn off all error reporting
-//error_reporting(0);
 (@include_once("./set_dir_staff.php")) OR die("Cannot find this file to include: set_dir_staff.php<BR>");
 (@include_once($STAFF_DIR_VAL . "/config.php")) OR die("Cannot find this file to include: config.php<BR>");
 (@include_once($STAFF_DIR_VAL . "/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
@@ -26,7 +25,6 @@ $sid = $_GET["sid"];
 $project_id = $_GET["pid"];
 $is_numeric = $_GET['isnumeric'];
 
-
 /*
 $assesspart = $_GET['part'];
 $who = $_GET['who'];
@@ -35,14 +33,6 @@ $topdf = $_GET['topdf'];
 $force_pdf = $_GET['force_pdf'];
 */
 
-//echo "sid = ". $sid . "<br>";
-//echo "pid = ". $project_id . "<br>";
-//echo "assesspart = ". $assesspart . "<br>";
-//echo "who = ". $who . "<br>";
-//echo "marker_id = ". $marker_id . "<br>";
-//echo "topdf = ". $topdf . "<br>";
-//echo "force_pdf = ". $force_pdf . "<br>";
-
 // see all the POST values
 /*
 foreach ($_POST as $key => $value){
@@ -50,7 +40,6 @@ foreach ($_POST as $key => $value){
 }
 */
 $project_marking_page = "projectmarking.php";
-
 
 $display_block .= "<h1 class='intro'>$module_short_description</h1>";
 $display_block .= "<h1>$module_prefix$module1$module_postfix , $year_begin/$year_end </h1>";
@@ -62,7 +51,6 @@ $display_block .= "<div>Number of assessment parts: $num_parts</div>";
 
 // Get the student name from SID
 $query = "select * from $students where sid = $sid";
-//echo $get_list . "<BR>";
 //$get_list_res = mysql_query($get_list) or die(" Unable to create list from $students table. Query: $get_list");
 //$recs = mysql_fetch_array($get_list_res);
 try {
@@ -105,14 +93,10 @@ try {
 }
 $num_marks_in_list = $results->rowCount();
 
-
-
-
 if($num_marks_in_list > 0){
 
     // Loop through the parts to get the number of columns required for each
     for ($i = 1; $i <= $num_parts; $i++) {
-        //echo("Num markers ($i) = $p_num_markers[$i]<BR>");
         if ($p_num_markers[$i] == 1) {
             $number_of_cols[$i] = 1;
         } else if ($p_num_markers[$i] == 2) {

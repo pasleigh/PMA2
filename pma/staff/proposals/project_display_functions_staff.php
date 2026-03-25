@@ -24,14 +24,12 @@ function DisplayProjectSelectBlockStaff($db, $proj_id, $staff_names2, $title, $f
 
     $project_block .= GetStaffSelectID($db, $staff_names2, 'f_supervisor_id', $f_supervisor_id);
 
-
     $project_block .= "<P>Suggested Second Marker (<span class='required'>required</span>)<BR>";
     $project_block .= "<span class='footnote-size'>This suggestion will help us.";
     $project_block .= "Be aware that it may change at final marking stage.</span>";
     $project_block .= "<br></P> ";
 
     $project_block .= GetStaffSelectID($db, $staff_names2, 'f_assocstaff_id', $f_assocstaff_id);
-
 
     $project_block .= "<P>Project Outline  (<span class='required'>required</span>)\n";
 
@@ -132,7 +130,6 @@ function DisplayProjectBlockStaff($db, $proj_id, $staff_names2, $title, $f_super
     $project_block .= "<h3>Number of Projects </h3>\n";
     $project_block .= "<div class='simple' >$num_projects</div>\n";
 
-
     $project_block .= "<h3>Programme(s) that this project is offered for:</h3>\n";
 
     $num_project_variants = 0;
@@ -157,7 +154,6 @@ function DisplayProjectBlockStaff($db, $proj_id, $staff_names2, $title, $f_super
     }else{
         $project_block .= "There are no program variants";
     }
-
 
     for ($i = 0; $i < sizeof($option); $i++) {
         if ($option_flags[$i] == 1) {
@@ -191,7 +187,6 @@ function GetProgramVariantsStaff($db, $projects_setup_proposals_table, $pm_id, &
     // Can have up to 7 Variants
     // Get the number for this prog from the database
     $query = "SELECT * FROM $projects_setup_proposals_table WHERE proj_id='$pm_id'";
-    //echo("Query in GetProgramVariants: $$query<BR>\n");
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {

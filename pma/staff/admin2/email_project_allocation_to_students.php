@@ -25,7 +25,6 @@ function GetAllocatedNumber($db, $sid, $selection_table, $master_id_of_allocated
     if ($sid == "") {
         return $num;
     }
-//echo("Staff table $staff_table<BR>");
     $get_list_query = "select * from $selection_table where sid=$sid";
     try {
         $get_list_res = $db->query($get_list_query);
@@ -85,7 +84,6 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if($is_module_admin || $admin_access) {
 
-
     if (array_key_exists('module1', $_POST) == false) {
         $_POST['module1'] = null;
     }
@@ -131,7 +129,6 @@ if($is_module_admin || $admin_access) {
     $send = $_POST['send'];
     $reallysend = $_POST['reallysend'];
     $reallyreallysend = $_POST['reallyreallysend'];
-    //echo("ReallySend=$reallysend . reallyreallysend=$reallyreallysend<BR>");
     $module1 = $_POST['module1'];
     $year_begin = $_POST['year_begin'];
     $messagetype = $_POST['messagetype'];
@@ -144,7 +141,6 @@ if($is_module_admin || $admin_access) {
     $makepdf = $_REQUEST['makepdf'];
     $list = $_REQUEST['list'];
     $summary_mark = $_REQUEST['summary_mark'];
-//echo("Module1=$module1 Year begin=$year_begin<BR>");
 
     // Get the feedback_record table
     // Create it is if does not exist
@@ -167,7 +163,6 @@ if($is_module_admin || $admin_access) {
     }
 
 //  foreach ($_REQUEST as $key => $value){
-//    echo "{$key} = {$value}<BR>\r\n";
 //  }
     $module_leader_email = GetStaffEmailFromFullname($db, $module_leader_fullname, $staff_names2);
     $this_staff_email = GetStaffEmailFromID($db, $this_staff_id, $staff_names2);
@@ -299,14 +294,12 @@ if($is_module_admin || $admin_access) {
 
         $student_counter = 0;
         $num_rows = $results->rowCount();//mysql_num_rows($get_student_list_res);
-        //echo("Number of rows in $project_allocated $num_rows<BR>\n");
 
         if ($num_rows < 1) {
             //no records
             $display_block .= "<p><em>Sorry, there are no students listed to send to!</em></p>";
         } else {
             //has records
-
 
             foreach ($student_rows as $recs) {
                 $student_counter++;
@@ -329,7 +322,6 @@ if($is_module_admin || $admin_access) {
                 $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_names2, NULL);
                 $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_names2, NULL);
                 $supervisor_email = GetStaffEmailFromID($db, $supervisor_id, $staff_names2);
-
 
                 $allocation = "$lb You have been allocated:$lb$lb <strong>Project: ($master_id) $title </strong>$lb$lb";
                 $allocation .= "<strong>Supervisor: $supervisor_name <A href='mailto:$supervisor_email'>$supervisor_email</A> </strong>$lb";
@@ -412,18 +404,15 @@ if($is_module_admin || $admin_access) {
                     } else {
                         // Not sent as not marked.
                         $display_block .= "<HR>Not marked. Not sent. $student_name ($username).  Num: $student_counter<HR><BR>$lb";
-                        //echo("Not marked. Not sent. $student_name ($username): Num: $student_counter<BR>$lb");
                     }
                 } else {
                     // Not sent as flagged for not sending.
                     $display_block .= "<HR>Flagged not to send. Not sent. $student_name ($username).  Num: $student_counter<HR><BR>$lb";
-                    //echo("Flagged not to send. Not sent. $student_name ($username): Num: $student_counter<BR>$lb");
                 }
 
             }
         }
     }// end of if ($POST_OP == "select")
-
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";

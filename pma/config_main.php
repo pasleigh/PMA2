@@ -17,7 +17,6 @@ if (!file_exists($_creds_file)) {
 }
 $_creds = require $_creds_file;
 
-
 switch ($school) {
   case "mech":
     $dbName = $_creds['mech']['db'];
@@ -118,7 +117,6 @@ if (!defined('PMA_TMP_DIR')) {
     }
     unset($_pma_env_tmp);
 }
-
 
 if($dbName){
    $num_days = 30;

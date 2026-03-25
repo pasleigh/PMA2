@@ -1,9 +1,7 @@
 <?php
 function CreateStudentsTableQuery($student_table_name)
 {
-  //echo("$student_table_name<BR>");
   //$str = "`$student_table_name`<BR>";
-  //echo("$str<BR>");
 
  $create_table_query = "CREATE TABLE IF NOT EXISTS `$student_table_name` (
   `sid` char(10) NOT NULL UNIQUE,
@@ -13,15 +11,12 @@ function CreateStudentsTableQuery($student_table_name)
   `sel` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
 
-
   return $create_table_query;
 }
 
 function CreateStudentsProgrammesTableQuery($students_programmes_table_name)
 {
- //echo("$students_programmes_table_name<BR>");
  //$str = "$students_programmes_table_name<BR>";
- //echo("$str<BR>");
 
  $create_table_query =
      "CREATE TABLE `$students_programmes_table_name` (
@@ -36,9 +31,7 @@ function CreateStudentsProgrammesTableQuery($students_programmes_table_name)
 
 function CreateStudentsSelectionTableQuery($student_selection_table_name)
 {
- //echo("$student_selection_table_name<BR>");
  //$str = "`$student_selection_table_name`<BR>";
- //echo("$str<BR>");
 
  $create_table_query =
      "CREATE TABLE `$student_selection_table_name` (

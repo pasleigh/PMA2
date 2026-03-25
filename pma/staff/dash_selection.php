@@ -11,7 +11,7 @@
 (@include_once("./markstore_functions.php")) OR die("Cannot include markstore_functions.php<BR>");
 (@include_once("./table_functions.php")) OR die("Cannot include table_functions.php<BR>");
 
-$staff_username = $_SERVER['REMOTE_USER'];
+$staff_username = get_server_username();
 $staff_full_name = GetStaffNameFromUsername($db, $staff_username, $staff_names_default, false);
 $staff_full_name = trim($staff_full_name);
 $access = false;
@@ -149,7 +149,6 @@ $footer_link .= " <A target='self' href='..' style='color: dimgray;'>Root Option
 
     </div><!-- content -->
 
-
     <div data-role="footer" data-position="fixed">
         <H1 style="color: dimgray;">
             <?php echo("$footer_link"); ?>
@@ -158,7 +157,6 @@ $footer_link .= " <A target='self' href='..' style='color: dimgray;'>Root Option
 
 </div> <!-- page -->
 <!--++++-------End of Main page---------+++++++-->
-
 
 </body>
 </html>

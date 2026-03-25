@@ -19,7 +19,6 @@ function show_mark_questions2_bs($db, $cat, $cat_description, $weight_pc, $facto
     for($i=1;$i<=10;$i++){
         $id = "C$cat"."Q$i";
         $marks[$i] = $get_marks_res[$id];
-        //echo("mark $i ($id)= $marks[$i]<BR>");
     }
     $id = "C$cat"."Feedback";
     $feedback = $get_marks_res[$id];
@@ -130,7 +129,6 @@ function show_mark_questions_numeric2_bs($db, $cat, $cat_description, $weight_pc
     for($i=1;$i<=10;$i++){
         $id = "C$cat"."Q$i";
         $marks[$i] = $total = $get_marks_res[$id];
-        //echo("mark $i ($id)= $marks[$i]<BR>");
     }
     $id = "C$cat"."Feedback";
     $feedback = $get_marks_res[$id];
@@ -172,7 +170,6 @@ function show_mark_questions_numeric2_bs($db, $cat, $cat_description, $weight_pc
         $display_block .= "\n<input class='form-control' type='number' id='$nrid' name='$nrid' value='$mark_w' min='0' max='100'>\n";
         $marktot=$marktot + $mark;
 
-
         $display_block .= "<BR>";
         $display_block .= "</DIV>\n";
     }
@@ -213,7 +210,6 @@ function show_overall_feedback2_bs($db, $part_label, $markstore, $sid, $who, $mi
     if(!DoesColumnExistInTable($db,$markstore,'OverallFeedback')) {
         $db->query($query);
     } else {
-        //echo("\nWarning $markstore OverallFeedback already exists\n");
     }
 
     $query = "SELECT OverallFeedback FROM $markstore WHERE SID=$sid";

@@ -77,7 +77,6 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
                     $markers_id[$i][$j] = $marker_id;
                     $markers[$i][$j] = GetStaffNameFromID($db, $marker_id, $staff_table, NULL);
                     # $name = $markers_id[$i][$j];
-                    //echo("markers_id = ($i,$j) $name $marker_id<BR>");
                 }
             }
 
@@ -307,7 +306,6 @@ function create_projects_setup_table_structure($db){
       PRIMARY KEY (`id`)
     ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-
     CREATE TABLE IF NOT EXISTS `projects_setup_proposals` (
         `proj_id` INT NOT NULL ,
         `num_progs` INT NOT NULL DEFAULT '0' ,
@@ -341,7 +339,6 @@ function create_projects_setup_table_structure($db){
         `m_furtherinfo` INT NOT NULL DEFAULT '0' ,
         UNIQUE (`proj_id`)
     ) ENGINE = InnoDB;
-
 
 SQL;
     try{
@@ -379,12 +376,10 @@ function create_admin_users_table_structure($db){
 SQL;
     try{
         $db->query($query);
-        //echo("$query<BR>\n");
     }catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
-    //echo("Leaving create admin table<BR>\n");
 
 }
 
@@ -640,7 +635,6 @@ INSERT INTO `assessqs_cats_template_report_icme` (`cat`, `description`, `weight_
 SQL;
     try{
         $db->query($query);
-        //echo("Created assesqs template tables. <BR>\n");
     }catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
@@ -1071,7 +1065,6 @@ INSERT INTO `assessqs_template_report_icme` (`qid`, `cat`, `question`, `entries`
 SQL;
     try{
         $db->query($query);
-        //echo("Created assesqs cats template tables. <BR>\n");
     }catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
@@ -1112,7 +1105,6 @@ SQL;
 
     try {
         $db->query($query);
-        //echo("Created $dash_projects_setup tables. <BR>\n");
     } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
@@ -1147,7 +1139,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
         exit();
     }
     $num_rows = $results->rowCount();
-    //echo("$id num rows = $num_rows <BR>");
 
     if ($num_rows == 0){
         // Need to create this row
@@ -1164,7 +1155,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
 
         try {
             $db->query($query);
-            //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
@@ -1186,7 +1176,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
         exit();
     }
     $num_rows = $results->rowCount();
-    //echo("$id num rows = $num_rows <BR>");
 
     if ($num_rows == 0) {
         $prefix = "peg_";
@@ -1202,7 +1191,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
 
         try {
             $db->query($query);
-            //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
@@ -1224,7 +1212,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
         exit();
     }
     $num_rows = $results->rowCount();
-    //echo("$id num rows = $num_rows <BR>");
 
     if ($num_rows == 0) {
         $prefix = "ha_";
@@ -1240,7 +1227,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
 
         try {
             $db->query($query);
-            //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
@@ -1262,7 +1248,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
         exit();
     }
     $num_rows = $results->rowCount();
-    //echo("$id num rows = $num_rows <BR>");
 
     if ($num_rows == 0) {
         $prefix = "di_";
@@ -1278,7 +1263,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
 
         try {
             $db->query($query);
-            //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
@@ -1300,7 +1284,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
         exit();
     }
     $num_rows = $results->rowCount();
-    //echo("$id num rows = $num_rows <BR>");
 
     if ($num_rows == 0) {
         $prefix = "cwt_";
@@ -1316,7 +1299,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
 
         try {
             $db->query($query);
-            //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
@@ -1338,7 +1320,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
         exit();
     }
     $num_rows = $results->rowCount();
-    //echo("$id num rows = $num_rows <BR>");
 
     if ($num_rows == 0) {
         $prefix = "kmap_";
@@ -1354,7 +1335,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
 
         try {
             $db->query($query);
-            //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
@@ -1376,7 +1356,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
         exit();
     }
     $num_rows = $results->rowCount();
-    //echo("$id num rows = $num_rows <BR>");
 
     if ($num_rows == 0) {
         $prefix = "peer_";
@@ -1392,7 +1371,6 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
 
         try {
             $db->query($query);
-            //echo("Created assesqs cats template tables. <BR>\n");
         } catch (PDOException $ex) {
             $err_msg = $ex->getMessage();
             echo($err_msg . "<BR>\n");
@@ -1426,7 +1404,6 @@ CREATE TABLE IF NOT EXISTS `assessment_criteria_flags` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
 CREATE TABLE IF NOT EXISTS `assessment_criteria` (
   `mark` int(11) NOT NULL,
   `class` tinytext NOT NULL,
@@ -1440,7 +1417,6 @@ CREATE TABLE IF NOT EXISTS `assessment_criteria` (
 SQL;
     try {
         $db->query($query);
-        //echo("Created assesqs cats template tables. <BR>\n");
     } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
@@ -1450,7 +1426,6 @@ SQL;
     try {
         $query = "TRUNCATE `assessment_criteria`";
         $db->query($query);
-        //echo("Created assesqs cats template tables. <BR>\n");
     } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
@@ -1458,7 +1433,6 @@ SQL;
     try {
         $query = "TRUNCATE `assessment_criteria_flags`";
         $db->query($query);
-        //echo("Created assesqs cats template tables. <BR>\n");
     } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
@@ -1485,7 +1459,6 @@ SQL1;
 
     try {
         $db->query($query);
-        //echo("Created assesqs cats template tables. <BR>\n");
     } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
@@ -1596,12 +1569,10 @@ INSERT INTO `assessment_criteria` (`mark`, `class`, `grade_text`, `gpa`, `descri
 (99, 'Excellent 1st', 'A+', 4.25, 'Exceptional work of the highest quality, demonstrating excellent knowledge and understanding, analysis, organisation, accuracy, relevance, presentation and appropriate skills.', '<p><B>Coverage and Content</B><BR>An inspired answer/project/dissertation which goes beyond the expectation of students\' abilities. Presented in a state-of the art manner and demonstrating exceptional talent, extensive background reading, understanding and synthesis of subject</P><p><B>Presentation Structure and Style</B><BR>Outstanding presentation, professional communication skills/media and evocative expression of ideas. No grammatical or spelling errors.</P><p><B>Referencing</B><BR>A complete list of relevant references, which justify the conclusions and are correctly and consistently used in the piece of work. </p>'),
 (100, 'Excellent 1st', 'A+', 4.25, 'Exceptional work of the highest quality, demonstrating excellent knowledge and understanding, analysis, organisation, accuracy, relevance, presentation and appropriate skills.', '<p><B>Coverage and Content</B><BR>An inspired answer/project/dissertation which goes beyond the expectation of students\' abilities. Presented in a state-of the art manner and demonstrating exceptional talent, extensive background reading, understanding and synthesis of subject</P><p><B>Presentation Structure and Style</B><BR>Outstanding presentation, professional communication skills/media and evocative expression of ideas. No grammatical or spelling errors.</P><p><B>Referencing</B><BR>A complete list of relevant references, which justify the conclusions and are correctly and consistently used in the piece of work. </p>');
 
-
 SQL2;
 
     try {
         $db->query($query);
-        //echo("Created assesqs cats template tables. <BR>\n");
     } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
@@ -1636,7 +1607,6 @@ function create_feedback_records_table_structure($db, $feedback_records_table_na
 SQL;
     try{
         $db->query($query);
-        //echo("$query<BR>\n");
     }catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");

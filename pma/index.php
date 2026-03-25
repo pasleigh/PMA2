@@ -19,7 +19,6 @@ try {
     $query = "DESCRIBE $table_name";
     $db->query($query);
 
-    //echo "$table_name exists in database $dbName <BR>\n";
     $html_block = "
       <div>
           <a class='btn' href='./staff'>Staff Area</a>
@@ -30,7 +29,6 @@ try {
       </div>\n";
 
 } catch (PDOException $ex) {
-    //echo "$table_name doesn't exist in database $dbName\n";
     $html_block = "
       <div>
           <a class='btnr' href='./staff/admin2/first_use_staff.php'>Setup system for first use</a>
@@ -165,7 +163,6 @@ $location = ".";
     <?php echo($html_block) ?>
     <button type="button" class='btng' id="btn-open">Show Cookie and Privacy Info</button>
 </div>
-
 
 </body>
 </html>

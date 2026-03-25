@@ -95,7 +95,6 @@ function GetStudentProgrammeFromUsername($db,$student_username,$students)
     return $student_programme;
 }
 
-
 /**
  * Return a student's login username looked up by their numeric ID.
  *

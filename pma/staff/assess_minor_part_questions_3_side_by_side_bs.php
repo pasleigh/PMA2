@@ -1,7 +1,6 @@
 <?php
 ob_start(); // Buffer all output — required so mPDF can set Content-Type headers even if something echoes earlier
 // Turn off all error reporting
-//error_reporting(1);
 (@include_once("./set_dir_staff.php")) OR die("Cannot find this file to include: set_dir_staff.php<BR>");
 (@include_once("./config.php")) OR die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
 (@include_once("./setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
@@ -63,17 +62,7 @@ $force_pdf = $_GET['force_pdf'];
 $is_numeric = $_GET['isnumeric'];
 $show_overall_feedback_flag = $_GET['o_f'];
 
-//echo "sid = ". $sid . "<br>";
-//echo "pid = ". $project_id . "<br>";
-//echo "assesspart = ". $assesspart . "<br>";
-//echo "who = ". $who . "<br>";
-//echo "marker_id = ". $marker_id . "<br>";
-//echo "topdf = ". $topdf . "<br>";
-//echo "force_pdf = ". $force_pdf . "<br>";
-//echo "Is numeric = " . $is_numeric . "<BR>";
-
 // if the form was submitted then enter it all into the database
-//echo("_POST[op]=" . $_POST['op'] . "<BR>\n");
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
@@ -82,7 +71,6 @@ if (array_key_exists('op', $_POST)) {
 if (isset($_POST['disagree'])) {
     $POST_OP = "disagree";
 }
-//echo("POST_OP =" . $POST_OP . "<BR>\n");
 if (array_key_exists('agreed', $_POST)) {
     $agreed_combination = $_POST['agreed'];
     $overwritten_mark = $_POST['overwritten'];
@@ -102,7 +90,6 @@ if (array_key_exists('agreed', $_POST)) {
     }
     $reason_text = GetMarkReasonString($db, $sid, $assesspart, $markstore_totals);
 }
-//echo("Agreed combination =" . $agreed_combination . "<BR>\n");
 // Get how the mark split has been done (if it  has)
 $marker_contrib = GetMarkMethodAsArray($agreed_combination);
 
@@ -117,7 +104,6 @@ foreach ($_POST as $key => $value){
             // replace the $_POST value
             $_POST[$key] = $decoded_value;
         }
-        //echo "{$key} = {$value} {$decoded_value}<BR>\r\n";
     }
 }
 
@@ -140,15 +126,6 @@ $markstore3 = $markstores[$assesspart][$who];
 $mark_max = $p_max[$assesspart];
 $mark_pc = $p_percent[$assesspart];
 
-//echo("Assess_cats table = $assess_cats<BR>\n");
-//echo("Assessqs_year table = $assessqs_year<BR>\n");
-//echo("Assesstype_text = $assesstype_text<BR>\n");
-//echo("max mark for this part = $mark_max<BR>");
-//echo("percent of final assesment = $mark_pc<BR>");
-//echo("Who = $who<BR>\n");
-//echo("markstore1 = $markstore1<BR>\n");
-//echo("markstore2 = $markstore2<BR>\n");
-
 // Get number of categories by counting the rows in $assess_cats
 $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
 //$myquery_res = mysql_query($myquery) or die(" Unable to get assess_cats data from $assess_cats table. <BR>Query: $myquery");
@@ -164,7 +141,6 @@ try {
 }
 
 $num_categories = $results->rowCount();
-//echo("num categories = $num_categories<BR>\n");
 
 $marker1 = " (marker)";
 $marker2 = " (marker)";
@@ -216,14 +192,9 @@ $third_marker_id = $recs[$marker_entry];
 $third_marker_name = GetStaffNameFromID($db, $third_marker_id, $staff2, NULL);//. " ($marker_entry, $marker_id)";
 $marker_names[$j] = $third_marker_name;
 
-//echo("supervisor = $supervisor ($supervisor_id)<BR>\n");
-//echo("marker name = $marker_names[1] ($marker_id)<BR>\n");
-//echo("second marker name = $marker_names[2] ($second_marker_id)<BR>\n");
-//echo("third marker name = $marker_names[3] ($third_marker_id)<BR>\n");
 //
 // Get the student name from SID
 $query = "select * from $students where sid = $sid";
-//echo $get_list . "<BR>";
 //$get_list_res = mysql_query($get_list) or die(" Unable to create list from $students table. Query: $get_list");
 //$recs = mysql_fetch_array($get_list_res);
 try {
@@ -246,7 +217,6 @@ $sel = $recs['sel'];
 // get the mark for this part from SID
 // Get the supervisor marks
 $query = "select * from $markstore1 where sid = $sid";
-//echo $get_list . "<BR>";
 //$get_list_res = mysql_query($get_list) or die(" Unable to create list from $markstore1 table. Query: $get_list");
 //$recs = mysql_fetch_array($get_list_res);
 try {
@@ -267,7 +237,6 @@ if($recs) {
     $mark1 = 0;
     $locked = 0;
 }
-//echo("Mark 1: $mark1 <BR>");
 
 // Get the second marker marks
 $query = "select * from $markstore2 where sid = $sid";
@@ -292,7 +261,6 @@ if($recs) {
     $mark2 = 0;
     $locked = 0;
 }
-//echo("Mark 2: $mark2 <BR>");
 
 // Get the third marker marks
 $query = "select * from $markstore3 where sid = $sid";
@@ -316,9 +284,7 @@ if($recs){
     $mark3 = 0;
     $locked = 0;
 }
-//echo("Mark 3: $mark3 <BR>");
 
-//print_r3('POST',$_POST);
 if ($POST_OP == "commit") {
     $display_block .= "<h2>Submitting the changes to the database ...</H2>";
 
@@ -356,9 +322,6 @@ if ($POST_OP == "commit") {
             //$section_weight[$cat] = $_POST[$id];
             //$id = "factor_name" . $who . $cat;
             //$section_factor[$cat] = $_POST[$id];
-            //echo("Section: $cat : $section_q[$cat]<BR>\n");
-            //echo("  weight: $section_weight[$cat]<BR>\n");
-            //echo("  factor: $section_factor[$cat]<BR>\n");
 
             // initialise the marks array
             for ($i = 1; $i <= 10; $i++) {
@@ -373,7 +336,6 @@ if ($POST_OP == "commit") {
             for ($i = 1; $i < $numqs; $i++) {
                 //$id = "q$who$cat-$i";
                 //$question = addslashes($_POST[$id]);
-                //echo("$id : $question<BR>");
 
                 $q_weight = 1.0;
                 $is_numeric_name = $is_numeric;//$_POST['is_numeric_name'];
@@ -387,7 +349,6 @@ if ($POST_OP == "commit") {
                 $rmark = $_POST[$id];
                 $rmark_w = $rmark * $q_weight;
                 $rmarks[$i] = $rmark_w;
-                //echo("$id : $rmark_w<BR>");
                 $marktot = $marktot + $rmark_w;
 
                 $mark_query_string .= "C$cat" . "Q$i=$rmark_w, ";
@@ -399,7 +360,6 @@ if ($POST_OP == "commit") {
                 $feedback_text = $_POST[$id];
                 $feedback_text = convert_smart_quotes($feedback_text);
                 $feedbacks[$cat] = addslashes($feedback_text);
-                //echo("Feedback: $feedbacks[$cat]<BR>");
                 $mark_query_string .= "C$cat" . "Feedback='$feedbacks[$cat]',";
             }else{
                 $feedback_text = "";
@@ -407,11 +367,7 @@ if ($POST_OP == "commit") {
 
             $marktot = $marktot * $factor;
             $mark_total_all_cats += $marktot;
-            //echo("factor: $factor <BR>");
-            //echo("marktot : $marktot<BR>");
-            //echo("mark_total_all_cats : $mark_total_all_cats<BR>");
 
-            //echo("Mark query: $mark_query_string<BR>");
             if ($who == 1) {
                 $markstore = $markstore1;
             } elseif ($who == 2) {
@@ -484,7 +440,6 @@ if ($POST_OP == "commit") {
                 );
                 $results = perform_update_prepared_query($db, $markstore, $data, $where_data);
             }
-            //echo $action . "<BR>";
             //mysql_query($action) or die(" Unable to add mark data to the table $markstore. <BR /> Query = $action");
             try {
                 //$results = $db->query($query);
@@ -500,7 +455,6 @@ if ($POST_OP == "commit") {
         }// $cat
         $mark_total[$who] = $mark_total_all_cats;
         $tot = $mark_total[$who];
-        //echo("Total $who: $tot|<BR>");
 
         $overall_feedback_id = "overall_feedback$who";
 
@@ -559,11 +513,9 @@ if ($POST_OP == "commit") {
 
     $locked_stat = $res['locked'];
 
-    //echo("Enter markstore totals data<BR>");
     if ($results->rowCount() > 0) {
         // exists, so update
         $query = "update $markstore_totals set retmark$assesspart=$mark_agreed_total,  locked=0, mark_method$assesspart='$agreed_combination', mark_reason$assesspart='$reason_text' where SID='$sid'";
-        //echo "<BR> Action = " . $query . "<br>";
         //mysql_query($action) or die(" Unable to add mark data to the database $markstore_totals. <BR>Query: $action");
         try {
             $results = $db->query($query);
@@ -578,7 +530,6 @@ if ($POST_OP == "commit") {
 
     } else {
         $query = "insert $markstore_totals set SID='$sid', retmark$assesspart=$mark_agreed_total,  locked=0, mark_method$assesspart='$agreed_combination', mark_reason$assesspart='$reason_text' ";
-        //echo "<BR> Action = " . $query . "<br>";
         //mysql_query($action) or die(" Unable to add mark data to the database $markstore_totals. <BR>Query: $action");
         try {
             $results = $db->query($query);
@@ -651,11 +602,9 @@ if ($POST_OP == "commit") {
 } else {// end of if ($POST_OP == "disagree")
 
     //$locked=1;
-    //echo("Locked = $locked<BR>");
     if ($locked == 1 || $force_pdf == 1) {
         //$display_block = "<h1>Project Report Mark Sheet (<span class=\"red\">Marked and Locked</span>)</h1>";
         $display_block = " ";
-        //echo "$sid,$markstore1,$markstore2,$markstore3,$assess_cats,$assessqs,$student_name,$username,$sid,$title,$supervisor,$second_marker_name,$project_id<BR>";
         //$display_block .= show_minor_part_feedback_form($sid,$markstore,$assessqs_year,$student_name,$username,$title,$supervisor,$second_marker_name,$project_id,$level,$assesstype_text,$assess_cats,$mark_max,$mark_pc);
         //$display_block .= show_feedback_form($sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs_year,$student_name,$username,$title,$supervisor,$second_marker_name,$marker_name,$project_id,$assesstype_text,$assess_cats,$mark_max,$mark_pc,$programme,$assesspart,$assesstype_text, $module_short_description, $is_numeric);
         $current_mark = GetTotalForPart($db, $sid, $assesspart, $markstore_totals);
@@ -665,9 +614,6 @@ if ($POST_OP == "commit") {
         $markstore_list = GetMarkStoreListFromMarkMethodString($agreed_combination, $markstore1, $markstore2, $markstore3);
         $marker_list = GetMarkerListFromMarkMethodString($agreed_combination, $supervisor, $second_marker_name, $third_marker_name);
         $num_markstores = count($markstore_list) - 1;
-        //echo("markers $agreed_combination <BR>");
-        //echo("num markstores = $num_markstores <BR>");
-        //print_r($markstore_list);
         if ($num_markstores == 1) {
             $display_block .= show_feedback_form1($db, $sid, $markstore_list[1], $assessqs_year, $student_name, $username, $title, $supervisor, $marker_list[1], $marker_list[1], $project_id, $assesstype_text, $assess_cats, $mark_max, $mark_pc, $programme, $assesspart, $assesstype_text, $module_short_description, $is_numeric);
         } elseif ($num_markstores == 2) {
@@ -683,8 +629,6 @@ if ($POST_OP == "commit") {
             }}
         $POST_OP = "donothing";
 
-        //echo("about to include MPDF<BR>");
-        //echo("about to start the pdf producing. topdf =$topdf<BR>");
         if ($topdf > 0 || $force_pdf == 1) {
             ob_end_clean(); // Discard any buffered HTML so mPDF can send PDF headers cleanly
             $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
@@ -705,14 +649,8 @@ if ($POST_OP == "commit") {
         }
         $display_block .= "<a href=\"$_SERVER[PHP_SELF]?sid=$sid&pid=$project_id&module1=$module1&year_begin=$year_begin&assesstype=$assesstype&topdf=1&force_pdf=1&isnumeric=$is_numeric&o_f=$show_overall_feedback_flag\">Save to PDF</A><BR />";
 
-        //echo "Locked = $locked <BR>";
-        //echo "POST_OP = $POST_OP<BR>";
-        //echo "$display_block";
-
-
     } else {// end of if locked
 
-        //echo("Showing table<BR>");
         // No need to have an else as the rest is always done.
         $forwhom = "the supervisor only: " . $supervisor;
         if ($who == 1) {
@@ -722,7 +660,6 @@ if ($POST_OP == "commit") {
         } else if ($who == 3) {
             $forwhom = "both the subervisor: " . $supervisor . " and second marker : " . $second_marker_name;
         }
-        //echo($forwhom ."<BR>");
 
         $instructions = "<h4>This form is for comparing marks from THREE markers - only when the orginal two could not agree.</h4>";
         $instructions .= "\n<h6>\nThis form should be used to compare the three markers' responses to the questions and to ensure that the final mark is acceptable for the <em>$assesstype_text</em>.</h6> \n";
@@ -747,7 +684,6 @@ if ($POST_OP == "commit") {
         //}else{
         //  $instructions .= "\n<div style=\"background-color:red;color:white;\">\n&nbsp;You are <strong>outside the acceptable range of marks</strong> you must address this before marks can be submitted.\n</div>";
         //}
-        //echo($instructions);
 
         $display_block .= "<div class='container'>";
         $display_block .= "<div class='container-fluid'>";
@@ -777,7 +713,6 @@ if ($POST_OP == "commit") {
         $display_block .= "<div class='row mt-2'><strong>This assessment contributes $mark_pc% to the modue mark</strong></div>";
 
         $display_block .= "<div class='row'><div class='col-sm-2'><strong>Current agreed mark:</strong></div><div class='col-sm-6'>$current_mark &nbsp;($agreed_combination)</div></div>";
-
 
         $display_block .= "</div>";// close of card-body
         $display_block .= "</div>";// close of card
@@ -869,35 +804,28 @@ if ($POST_OP == "commit") {
                     $questions[$q_count] = $qs_list['question'];
                     $num_entries[$q_count] = $qs_list['entries'];
                     $q_weight = $qs_list['weight'];
-                    //echo("q weight $qweight<BR>");
                     if(!is_numeric($q_weight)){
                         $q_weight = 100;
                     }
-                    //echo("q weight $qweight<BR>");
                     $q_weights[$q_count] = $q_weight;
 
                     for ($r_count = 1; $r_count <= $num_entries[$q_count]; $r_count++) {
                         $r_text = "text" . $r_count;
                         $response_texts[$q_count][$r_count] = $qs_list[$r_text];
                         $value = $response_texts[$q_count][$r_count];
-                        //echo("$q_count-$r_count $value<br>");
                         $r_mark = "mark" . $r_count;
                         $response_marks[$q_count][$r_count] = $qs_list[$r_mark];
                         //$display_block .= "[q_count][r_count] = [$q_count][$r_count]<BR>";
                     }
                 }
 
-                //print_r($response_marks);
                 $markstore = $markstores[$assesspart][$whois];
-                //echo("About to show questions<BR>");
 
                 if ($is_numeric == 1) {
                     $display_block .= show_mark_questions_numeric2_bs($db, $cat, $description, $weight_pc, $factor, $show_cat_feedback, $num_questions,  $questions, $num_entries, $q_weights,$response_texts, $response_marks, $markstore, $sid, $whois, $min_feedback_words);
                 } else {
                     $display_block .= show_mark_questions2_bs($db, $cat, $description, $weight_pc, $factor, $show_cat_feedback, $num_questions, $questions, $num_entries, $response_texts, $response_marks, $markstore, $sid, $whois, $min_feedback_words);
                 }
-
-
 
                 $display_block .= "<BR>\n";
             }
@@ -921,7 +849,6 @@ if ($POST_OP == "commit") {
         } // $whois
         //=============================End of Second Marker stuff
 
-
         $display_block .= "</div>\n<!-- end of container -->\n"; // End of container
 
 /*
@@ -937,7 +864,6 @@ if ($POST_OP == "commit") {
         $is_checked = "checked";
         $is_checked = "";
 
-
         $display_block .= "<div class='card mb-3 border-danger text-bg-light'>\n";
         $display_block .= "<div class='card-header'><h5>Options for three markers of the Report :</h5></div>\n";
         $display_block .= "<div class='card-body'>\n";
@@ -949,7 +875,6 @@ if ($POST_OP == "commit") {
         $display_block .= "<div class='col-4' style='color:#0c4128'>Maximum difference: <span class='feedbackTotalMark' id='totalmarksdiff'> </span></div>";
         $display_block .= "</div>"; // close row
         $display_block .= "<p><span class='combinationAgreed'>\n(This is $mark_pc% of the module mark)\n</span>\n</p>\n";
-
 
         $display_block .= "<div class='row combinationHeader'>";
         $display_block .= "<div class='col-3'>Markers combination</div>";
@@ -1036,8 +961,6 @@ if ($POST_OP == "commit") {
         $display_block .= "<div class='col-2'>$select_block</div>";
         $display_block .= "</div>"; // close row
 
-
-
         $display_block .= "<label for='reason_textarea' class='form-label'><h5>Reason for the decision:</h5></label>\n";
         $display_block .= "<textarea class='form-control' id='reasontext' name='reasontext' rows='5' placeholder='Please give a reason for the decision made in awarding the marks based on three markers.'>$reason_text</textarea>\n";
         $display_block .= "</div>\n";
@@ -1061,8 +984,6 @@ if ($POST_OP == "commit") {
         $display_block .= "</div>";
         //$display_block .= "</div>";
 
-
-
         //$display_block .= "<div class='row mt-3'>";
         //$display_block .= "  <div class='col-6'>";
         $display_block .= "    <input class='btn btn-lg btn-warning' type='submit' id='submitbutton' name='submit' value='Submit the selected combination of marks to the database' >\n";
@@ -1071,19 +992,13 @@ if ($POST_OP == "commit") {
         //$display_block .= "  </div>";
         //$display_block .= "</div>";
 
-
-
-
         //$display_block .= "<BR>\n<input type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all selected\" >";
         $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"commit\">";
         $display_block .= "\n<input type=\"hidden\" name=\"nc\" value=\"$num_categories\">";
 
-
-
         //$display_block .= "\n<p><input type=\"submit\" id=\"disagreebutton\" name=\"disagree\" value=\"Markers Cannot Agree. Request a third marker's opinion.\" style=\"float: left;\"></p>\n";
 
         //$display_block .= "\n<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit the selected combination of marks to the database\" ></p>\n";
-
 
         //$display_block .= "<div class='row mb-5'>\n";
         //$display_block .= "<input class='btn btn-lg btn-warning' type='submit' id='submitbutton' name='submit' value='Submit the selected combination of marks to the database' >\n";
@@ -1094,10 +1009,8 @@ if ($POST_OP == "commit") {
 
     }
 
-
 }
 // End of main
-
 
 ?>
 
@@ -1200,7 +1113,6 @@ if ($POST_OP == "commit") {
             Sum2Sections();
         });
 
-
         function Sum2Sections() {
             var markmax = Number($("#markmax").val());
             //var acceptable_variation = new Number(document.getElementById('acceptable_variation').value);
@@ -1284,7 +1196,6 @@ if ($POST_OP == "commit") {
             }
             //validate_form();
         });
-
 
         function SubmitChangesToDatabase() {
 

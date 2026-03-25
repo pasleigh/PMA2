@@ -35,13 +35,11 @@ if($gzipit){
     $sql_dump_filename .= ".gzip";
 }
 
-
 $tmpsqlfile = tempnam(PMA_TMP_DIR, "");
 $path = dirname($tmpsqlfile);
 
 $access = false;
 $access = access_check_response($db,$this_staff_username, $this_staff_full_name, $staff_names,$access_phrase);
-
 
 if ($access) {
     if ($OP == "dump") {

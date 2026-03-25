@@ -55,7 +55,6 @@ if($date_diff > 1.0 && !IsAdmin($db, $this_staff_username) && !IsProjectAdmin($d
 
     $display_block .= "<a href='#' data-role='button' data-inline='true' onclick='toggle_zero_project_links();'>Toggle showing staff with zero projects</a>";
 
-
     $query = "select * from $staff_names2 order by familyname, firstname ";
 //$get_list_res = mysql_query($get_list) or die(" Unable to create staff list from database:<BR> query = $get_list <BR>");
     try {
@@ -68,7 +67,6 @@ if($date_diff > 1.0 && !IsAdmin($db, $this_staff_username) && !IsProjectAdmin($d
         exit();
     }
     $rows = $results->fetchAll();
-
 
     if ($results->rowCount() < 1) {
         //no records
@@ -92,7 +90,6 @@ if($date_diff > 1.0 && !IsAdmin($db, $this_staff_username) && !IsProjectAdmin($d
         $display_block .= "</div>\n";
     }
 
-
 }
 ?>
 <!DOCTYPE HTML>
@@ -114,7 +111,6 @@ if($date_diff > 1.0 && !IsAdmin($db, $this_staff_username) && !IsProjectAdmin($d
             $(this).toggle();
         });
     }
-
 
     function showUser(str) {
         if (str == "") {

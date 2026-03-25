@@ -97,8 +97,6 @@ class HTMLPurifier_HTMLDefinition extends HTMLPurifier_Definition
      */
     public $doctype;
 
-
-
     // RAW CUSTOMIZATION STUFF --------------------------------------------
 
     /**

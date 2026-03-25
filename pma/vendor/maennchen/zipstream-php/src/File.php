@@ -212,7 +212,6 @@ class File
             extraField: $footer,
         );
 
-
         ($this->send)($data);
     }
 

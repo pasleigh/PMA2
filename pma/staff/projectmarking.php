@@ -74,7 +74,6 @@ $overview_table .= "\n</tr></td>\n</table>\n <!--/holder-->";
 
 // Loop through the parts to get the number of columns required for each
 for ($i = 1; $i <= $num_parts; $i++) {
-    //echo("Num markers ($i) = $p_num_markers[$i]<BR>");
     if ($p_num_markers[$i] == 1) {
         $number_of_cols[$i] = 2;
     } else if ($p_num_markers[$i] == 2) {
@@ -100,7 +99,6 @@ $display_block .= "
         <th rowspan=\"2\">Supervisor</th>
         <th rowspan=\"2\">Second marker</th>
         ";
-
 
 // Loop through the parts
 for ($i = 1; $i <= $num_parts; $i++) {
@@ -131,12 +129,9 @@ for ($i = 1; $i <= $num_parts; $i++) {
         }
     }
 
-
-    //echo("Num markers ($i) = $p_num_markers[$i]<BR>");
     $num_cols = $number_of_cols[$i];
     /*
     for($j=1; $j<=$num_cols ; $j++ ){
-      //echo("Num col ($j)<BR>");
       if($j < $num_cols){
         $display_block .= "<th>Part $i:<BR>$p_description[$i]</th>";
       }else{
@@ -160,11 +155,9 @@ $display_block .= "\n</tr>\n";
 // Loop through the parts - second row
 $display_block .= "\n<tr>\n";
 for ($i = 1; $i <= $num_parts; $i++) {
-    //echo("Num markers ($i) = $p_num_markers[$i]<BR>");
     $num_cols = $number_of_cols[$i];
 
     for ($j = 1; $j <= $num_cols; $j++) {
-        //echo("Num col ($j)<BR>");
         if ($num_cols == 2) {
             if ($j == 1) {
                 $display_block .= "<th>Marker $j</th>";
@@ -224,7 +217,6 @@ foreach ($all_students_rows as $student_recs) {
     $is_allocated = IsSIDAllocated($db,$sid,$project_allocated);
     $is_active = IsSIDActive($db,$sid,$project_allocated);
 
-    //echo("SID: $sid, is_active=$is_active, is_allocated=$is_allocated<BR>\n");
 //    $project_id = $recs['projectid'];
 //    $project_master_id = $recs['masterid'];
 //    $sid = $recs['sid'];
@@ -271,23 +263,19 @@ foreach ($all_students_rows as $student_recs) {
                 $markers_id[$i][$j] = $marker_id;
                 $markers[$i][$j] = GetStaffNameFromID($db, $marker_id, $staff2, NULL);
                 $name = $markers_id[$i][$j];
-                //echo("markers_id = ($i,$j) $name $marker_id<BR>");
                 // Does this marker_id match the current logged in staff
-                //print_r2($number_of_cols);
                 if (($this_staff_id == $marker_id) && ($j < $number_of_cols[$i])) {
                     $count_this_staff_marking++;
                 }
             }
         }
 
-        //echo("Num Projects  to mark for $this_staff_full_name = $count_this_staff_marking<BR>");
         if ($count_this_staff_marking > $num_limit) {
             // Modify option
             $modify_link = "";
             if ($modify == 1) {
                 $modify_link = "<a href=modify_student_project_details.php?pm_id=$pm_id&sid=$sid><img width=\"26\" src=\"./icons/0032_screw_driver.png\"  border=\"0\" alt=\"Modify this student's project details\" title=\"Modify this student's project details\"></a>";
             }
-
 
             $display_block .= "<tr>\n";
             $display_block .= "<td>$modify_link$student_name </td>\n";
@@ -350,7 +338,6 @@ foreach ($all_students_rows as $student_recs) {
                             if ($p_num_markers[$i] == 1) {
                                 // Just write the mark
                                 $total_mark = GetTotalForPart($db, $sid, $i, $markstore_totals);
-                                //echo("Total for part $i = $total_mark<BR>");
                                 if ($total_mark > 0) {
                                     $max = $p_max[$i];
                                     $total_mark_s = sprintf("%5.1f%%", (float)$total_mark * 100.0 / (float)$max);
@@ -373,7 +360,6 @@ foreach ($all_students_rows as $student_recs) {
                             } else {
                                 // Two markers so needed to check whether a third marker has been requested
                                 $total_mark = GetTotalForPart($db, $sid, $i, $markstore_totals);
-                                //echo("$sid : Total: $total_mark<BR>");
                                 if ($total_mark > 0) {
                                     // Mark had been agreed. Show the appropriate icon (green tick) and prompt
                                     $max = $p_max[$i];
@@ -455,7 +441,6 @@ foreach ($all_students_rows as $student_recs) {
         $display_block .= "<td>$empty_cell</td>\n";  // Second Marker
         // Parts
         // Loop through the parts
-        //print_r2($number_of_cols);
         for ($i = 1; $i <= $num_parts; $i++) {
             $num_cols = $number_of_cols[$i];
             for ($j = 1; $j <= $num_cols; $j++) {
@@ -512,14 +497,12 @@ $display_block .= "</tbody>\n</table>\n";
     <div id="content">
         <?php echo("$display_block"); ?>
 
-
     </div><!-- /content -->
 
     <div id="footer">
         <span><BR><a target="_self" href="./projectmarking_select_bs.php<?PHP echo("?pm_id=$pm_id"); ?>"
                      style="color: dimgray;"><?PHP echo("$module_prefix$module1$module_postfix index"); ?></a></span>
     </div><!-- /footer -->
-
 
 </div><!-- /wrapper -->
 </body>

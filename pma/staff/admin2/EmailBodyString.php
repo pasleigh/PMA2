@@ -4,8 +4,6 @@ function EmailBodyString($myemail_to, $myemail_from, $myemail_subject, $myemail_
    // email stuff (change data below)
    $to = $myemail_to; 
    $from = $myemail_from; 
-   //echo "From: $from <BR>";
-   //echo "MyEmailFrom: $my_email_from <BR>";
    $subject =  $myemail_subject; 
    $message = $myemail_message;
    

@@ -195,7 +195,6 @@ Class DBBackup {
     private function getColumns($tableName){
         try {
             $stmt = $this->handler->query('SHOW CREATE TABLE `' .$tableName . '`');
-            //echo(' table ' .$tableName . '<BR>');
             $q = $stmt->fetchAll();
             $q[0][1] = preg_replace("/AUTO_INCREMENT=[\w]*./", '', $q[0][1]);
             return $q[0][1];

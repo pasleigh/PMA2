@@ -1,9 +1,6 @@
 <?php
 
 // Report all PHP errors (see changelog)
-//error_reporting(E_ALL | E_STRICT | E_WARNING | E_PARSE);
-//error_reporting(E_ALL);
-//ini_set('display_errors', '1');
 (@include_once("./set_dir_staff.php")) or die("Cannot find this file to include: set_dir_staff.php<BR>");
 (@include_once("./config.php")) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
 (@include_once("./setup_titles.php")) or die("Cannot find this file to include: setup_titles.php<BR>");
@@ -43,7 +40,6 @@ $this_staff_email = GetStaffEmailFromID($db, $this_staff_id, $staff_names2);
 //set php script timeout, 0 to disable
 set_time_limit(0);
 ini_set("memory_limit", "144M");
-
 
 $savezip = 1;
 $save_folder = PMA_TMP_DIR;
@@ -91,7 +87,6 @@ if ($num_rows < 1) {
         if ($p_num_markers[$part] == 1) {
             $who = 1;
         } else {
-            //echo("Multiple markers will be returned in one PDF file.<BR>");
         }
         // To do
         $marker1 = "";
@@ -197,7 +192,6 @@ $zip_info[] = "Shell exec command: $zip_command. <BR>Return value: $shell_exec_r
 
 //$zip_command = 'echo %path%';
 //$shell_exec_return = shell_exec($zip_command);
-//echo("<BR>Shell exec command: $zip_command. Return value: $shell_exec_return.<BR>");
 
 //for ($i = 0; $i < count($files_to_zip); ++$i) {
 //    unlink($files_to_zip[$i]);

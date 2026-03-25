@@ -62,7 +62,6 @@ class Encoding {
 
         142 => "\xc5\xbd",
 
-
         145 => "\xe2\x80\x98",
         146 => "\xe2\x80\x99",
         147 => "\xe2\x80\x9c",
@@ -97,7 +96,6 @@ class Encoding {
 
         "\xc2\x8e" => "\xc5\xbd",
 
-
         "\xc2\x91" => "\xe2\x80\x98",
         "\xc2\x92" => "\xe2\x80\x99",
         "\xc2\x93" => "\xe2\x80\x9c",
@@ -131,7 +129,6 @@ class Encoding {
        "\xc5\x92"     => "\x8c",
 
        "\xc5\xbd"     => "\x8e",
-
 
        "\xe2\x80\x98" => "\x91",
        "\xe2\x80\x99" => "\x92",

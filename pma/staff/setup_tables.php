@@ -1,11 +1,5 @@
 <?php
-// Turn error reportiing on/off
-//error_reporting(E_ALL);
-//ini_set('display_errors', '1');
-//error_reporting(0);
-//ini_set('display_errors', '0');
 
-//(@include_once("./setup_titles.php")) OR die("Cannot open setup_titles.php<BR>");
 $STAFF_ROOT = getenv('BASE_DIR') . "/staff";
 $STAFF_ROOT = $STAFF_DIR_VAL;
 (@include_once("$STAFF_ROOT/csrf_functions.php")) OR die("Cannot open csrf_functions.php<BR>");
@@ -73,7 +67,6 @@ if($num_rows == 0){
     create_assessment_criteria_tables($db);
 }
 
-
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
@@ -82,7 +75,6 @@ $pm_id = $_REQUEST['pm_id'];
 // We need to do something should the module not be specified
 // Take the first (last?) entry in the  $project_setup table
 if ($pm_id == "") {
-    // Get last entry SELECT * FROM mytable ORDER BY id DESC LIMIT 1
     $query = "SELECT * FROM $projects_setup ORDER BY id DESC LIMIT 1";
     try {
         $results = $db->query($query);
@@ -221,12 +213,7 @@ if ($pm_id != "") {
 
     $admin_users_table = 'admin_users';
     $admin_users_module_table = 'admin_users_module';
-    /*
-    echo("<pre>");
-    print_r($_SERVER);
-    echo("</pre>");
-    */
-    //$this_staff_username = $_SERVER['REMOTE_USER'];
+
     $this_staff_username = $_SESSION['USERNAME'] ?? '';
     $this_staff_full_name = GetStaffNameFromUsername($db, $this_staff_username, $staff_names2, false);
     $this_staff_id = GetStaffIDFromUsername($db, $this_staff_username, $staff_names2);

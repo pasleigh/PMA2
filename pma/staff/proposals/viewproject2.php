@@ -13,9 +13,6 @@
 (@include_once("../admin2/utility_functions.php")) OR die("Cannot include utility_functions.php");
 (@include_once("../admin2/adminusers.php")) OR die("Cannot setup admin users");
 
-//print_r3("_POST",$_POST);
-//print_r3("_REQUEST",$_REQUEST);
-
 $staff_close_date = $staff_close;
 $str_staff_close_date = date("j F Y", strtotime($staff_close_date));
 $cldate = $str_staff_close_date;
@@ -43,7 +40,6 @@ $master_id = $_REQUEST['p_id'];
 //
 $display_block .= "<H3>View project proposal</H3>";
 $display_block .= "<h3>$module_short_description - $module_prefix$module1$module_postfix - $short_code</h3>";
-
 
 $query = "select * from $master_name WHERE id='$master_id' ";
 try {

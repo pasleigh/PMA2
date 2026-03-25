@@ -1,6 +1,5 @@
 <?php
 // Turn off all error reporting
-//error_reporting(0);
 
 // connect to the datbase
 (@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
@@ -23,32 +22,25 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if ($access) {
 
-
     if (array_key_exists('part', $_GET) == false) {
         $_GET['part'] = null;
     }
     $assesspart = $_GET['part'];
-//echo("Assessment part = $assesspart<BR>\n");
-
 
 //if (array_key_exists('module1', $_GET)==false){ $_GET['module1']=null; }
 //if (array_key_exists('year_begin', $_GET)==false){ $_GET['year_begin']=null; }
 //$module1 = $_GET['module1'];
 //$year_begin = $_GET['year_begin'];
 
-
 // if the form was submitted then enter it all into the database
-//echo($_POST['op'] . "<BR>\n");
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
         $POST_OP = "";
     }
-//echo($POST_OP . "<BR>\n");
 // see all the POST values
 
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
     // Start of functions
     function show_section_questions($cat, $cat_description, $weight_pc, $factor, $num_questions, $questions, $num_responses, $response_texts, $response_marks)
@@ -114,7 +106,6 @@ if ($access) {
         return $display_block;
     }// end of show_section_questions()
 
-
 // definitions for each part
 // Questions table
     $assessqs_year = $assessqs[$assesspart];
@@ -126,7 +117,6 @@ if ($access) {
     $mark_max = $p_max[$assesspart];
     $mark_pc = $p_percent[$assesspart];
     
-
 // Get number of categories by counting the rows in $assess_cats
     $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
     try {
@@ -140,8 +130,6 @@ if ($access) {
         exit();
     }
     $num_categories = $results->rowCount();
-
-//echo("num cats = $num_categories <BR>\n");
 
     if ($POST_OP == "commit") {
         $display_block .= "<h2>Submitting the changes to the database ...</H2>";
@@ -159,9 +147,6 @@ if ($access) {
             $section_weight[$cat] = $_POST[$id];
             $id = "factor_name" . $cat;
             $section_factor[$cat] = $_POST[$id];
-            //echo("Section: $cat : $section_q[$cat]<BR>\n");
-            //echo("  weight: $section_weight[$cat]<BR>\n");
-            //echo("  factor: $section_factor[$cat]<BR>\n");
 
             $id = "numqs" . $cat;
             $numqs = $_POST[$id];
@@ -173,20 +158,16 @@ if ($access) {
             for ($i = 1; $i < $numqs; $i++) {
                 $id = "q$cat-$i";
                 $question = addslashes($_POST[$id]);
-                //echo("$id : $question<BR>");
                 //$id = "r$cat-$i";
                 //$rmark = $_POST[$id];
-                //echo("$id : $rmark<BR>");
                 $id = "res$cat-$i";
                 $num_entries = $_POST[$id];
                 $query_entry = "";
                 for ($r = 1; $r <= $num_entries; $r++) {
                     $id = "t$cat-$i$r";
                     $text[$r] = addslashes($_POST[$id]);
-                    //echo("$id : $text[$r]<BR>");
                     $id = "m$cat-$i$r";
                     $mark[$r] = $_POST[$id];
-                    //echo("$id : $mark[$r]<BR>");
                     $query_entry .= ", text$r='" . $text[$r] . "', mark$r" . "='" . $mark[$r] . "'\n";
                 }
 
@@ -196,7 +177,6 @@ if ($access) {
                          entries='$num_entries'
                          $query_entry
                          where qid='$i' and cat='$cat'";
-                //echo ("$action <BR>");
                 //mysql_query($action) or die(" Unable to add mark data to the table: $assessqs_year. <BR /> Query = $action");
                 try {
                     $results = $db->query($query);
@@ -214,7 +194,6 @@ if ($access) {
                          weight_percent='$section_weight[$cat]',
                          factor='$section_factor[$cat]'
                          where cat='$cat'";
-                //echo ("$action <BR>");
                 //mysql_query($action) or die(" Unable to add mark data to the table: $assess_cats. <BR /> Query = $action");
                 try {
                     $results = $db->query($query);
@@ -242,7 +221,6 @@ if ($access) {
                 if ($new_numqs > $numqs) {
                     // Change the "Feedback" entry to this number of Qs plus 1
                     $query = "update $assessqs_year set qid='$new_numqs' where qid='$numqs'";
-                    //echo ("$action <BR>");
                     //mysql_query($action) or die(" Unable to change the Feedback qid table : $assessqs_year. <BR /> Query = $action");
                     try {
                         $results = $db->query($query);
@@ -258,7 +236,6 @@ if ($access) {
                         $query = "insert $assessqs_year set qid='$i', cat='$cat', question='--New question--CHANGE ME--', entries='6',
                      text1='answer 1',mark1='0', text2='answer 2',mark2='10',text3='answer 3',mark3='25',
                      text4='answer 4',mark4='50',text5='answer 5',mark5='60',text6='answer 6',mark6='90'";
-                        //echo ("$action <BR>");
                         //mysql_query($action) or die(" Unable to add rows to table : $assessqs_year. <BR /> Query = $action");
                         try {
                             $results = $db->query($query);
@@ -276,7 +253,6 @@ if ($access) {
                     // Need to delete some questions
                     for ($i = $new_numqs; $i <= $numqs; $i++) {
                         $query = "DELETE FROM $assessqs_year WHERE qid='$i'";
-                        //echo ("$action <BR>");
                         //mysql_query($action) or die(" Unable to delete rows from table : $assessqs_year. <BR /> Query = $action");
                         try {
                             $results = $db->query($query);
@@ -291,7 +267,6 @@ if ($access) {
                     }
                     // Insert a feedback row
                     $query = "insert $assessqs_year set qid='$new_numqs', cat='$cat', question='Feedback Comments:', entries='0'";
-                    //echo ("$action <BR>");
                     // mysql_query($action) or die(" Unable to change the Feedback qid table : $assessqs_year. <BR /> Query = $action");
                     try {
                         $results = $db->query($query);
@@ -313,7 +288,6 @@ if ($access) {
     }// end of if ($POST_OP == "commit")
 
 // No need to have an else as the rest is always done.
-
 
     $display_block .= "<h1>This form allows you to view and edit questions, marks and section weightings.</h1>";
     $display_block .= "<h2>$assesstype_text section of module $module1, beginning year $year_begin</h2>";
@@ -404,7 +378,6 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
 
         for ($q_count = 1; $q_count < $num_questions; $q_count++) {
             $query = "select * from $assessqs_year where cat=$cat and qid=$q_count";
-            //echo("$get_qs<BR>");
             //$get_qs_res = mysql_query($get_qs);
             //$qs_list = mysql_fetch_array($get_qs_res);
             try {
@@ -426,17 +399,14 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
                 $r_text = "text" . $r_count;
                 $response_texts[$q_count][$r_count] = $qs_list[$r_text];
                 $value = $response_texts[$q_count][$r_count];
-                //echo("$q_count-$r_count $value<br>");
                 $r_mark = "mark" . $r_count;
                 $response_marks[$q_count][$r_count] = $qs_list[$r_mark];
             }
 
         }
-        //print_r($questions);
         $display_block .= show_section_questions($cat, $description, $weight_pc, $factor, $num_questions, $questions, $num_entries, $response_texts, $response_marks);
         $display_block .= "<BR>\n";
     }
-
 
     $display_block .= "\n<div class=\"feedbackSection\">Total marks = <span class=\"feedbackTotalMark\" id=totalmarks> </span></div>";
     $display_block .= "<BR>\n<input type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all selected\" >";
@@ -444,9 +414,7 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
     $display_block .= "\n<input type=\"hidden\" name=\"nc\" value=\"$num_categories\">";
     $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Commit the changes to the database\"></p></form>";
 
-
 // End of main
-
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
@@ -496,7 +464,6 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
                 SumSections();
             });
 
-
             function SumSections() {
                 var markpc = $("#markpc_id").val();
                 var markmax = Number($("#markmax").val());
@@ -518,7 +485,6 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
                 }
                 //validate_form();
             });
-
 
             function SubmitChangesToDatabase() {
 

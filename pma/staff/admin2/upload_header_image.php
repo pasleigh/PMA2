@@ -34,13 +34,11 @@ if (array_key_exists('op', $_POST) == false) {
     $_POST['op'] = null;
 }
 // if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
     $POST_OP = "";
 }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 if ($access) {
 // Check image table exists
@@ -97,7 +95,6 @@ if ($access) {
 
             $query = "SELECT header_image FROM header_images WHERE id=$id";
             $result = $db->query($query);
-            //print_r($result);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 echo('<img src="data:image/png;base64,' . $row['header_image'] . '" style="border-style: solid;" /><BR><BR>');
             }
@@ -112,7 +109,6 @@ if ($access) {
 }
 ?>
 
-
 <!DOCTYPE HTML>
 <?php
 (@include_once("admin_desktop_head.php")) OR die("Cannot find this file to include: admin_desktop_head.php<BR>");
@@ -126,7 +122,6 @@ if ($access) {
 
     <div id="content">
         <?php echo $display_block; ?>
-
 
     <div>
         <BR>

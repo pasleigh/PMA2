@@ -11,17 +11,14 @@ if (array_key_exists('op', $_POST) == false) {
     $_POST['op'] = null;
 }
 // if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
     $POST_OP = "";
 }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
 
 $display_block = "";
@@ -34,7 +31,6 @@ try{
     $display_block .= "Definition table coulld not be accessed<BR>\n";
 
 }
-
 
 $display_block .= "<h1>Edit details for your School and select the header image you would like to use</h1>";
 
@@ -121,9 +117,7 @@ if ($POST_OP == "") {
 
     $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Submit School Settings.\"></p>";
 
-
     $display_block .= "</form>";
-
 
     $display_block .= "<hr>\n";
 } elseif ($POST_OP == "submit_new") {
@@ -157,11 +151,9 @@ if ($POST_OP == "") {
         exit();
     }
 
-
     $display_block .= "<BR>\n";
 
 }// end of if ($POST_OP == "edit")
-
 
 ?>
 <HTML>

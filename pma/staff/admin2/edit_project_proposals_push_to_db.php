@@ -18,9 +18,6 @@
 (@include_once("../proposals/project_display_functions_staff.php")) OR die("Cannot include project_display_functions_staff.php");
 (@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
 
-
-    //var_dump($_POST);
-    //print_r2($_POST);
     //exit();
 
     $errors         = array();      // array to hold validation errors
@@ -46,7 +43,6 @@
     $project_details_table = $project_details;
     $master_name_table = $master_name;
 
-
 // return a response ===========================================================
     // if there are any errors in our errors array, return a success boolean of false
     if ( ! empty($errors)) {
@@ -56,13 +52,11 @@
         $data['errors']  = $errors;
     } else {
         // if there are no errors process our form, then return a message
-        //var_dump($project_list);
 
         for ($i = 0; $i < sizeof($project_list); $i++) {
 
             $this_project_details = $project_list[$i];
 
-            //var_dump($this_project_details);
             $master_id = $this_project_details['master_id'];
             $title = $this_project_details['title'];
             $title = addslashes($title);
@@ -76,8 +70,6 @@
 
             $prog_variant_str = $this_project_details['progs_str'];
             $delete_chk = intval($this_project_details['delete']);
-
-
 
             //$display_block .= "$master_id, $supervisor_id, $second_supervisor_name, $second_supervisor_id, $second_supervisor_name, $number_of_projects, $prog_variant_str, $delete_chk .... <BR>\n";
             try {

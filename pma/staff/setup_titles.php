@@ -53,7 +53,6 @@ try {
     $query = "DESCRIBE $table_name";
     $db->query($query);
 
-    //echo "$table_name exists in database $dbName <BR>\n";
     $query = "SELECT * from $table_name LIMIT 1"; // Only want the first (there should only be one!)
     $setup = $db->prepare($query);
     $setup->execute();
@@ -70,11 +69,6 @@ try {
     // HTML-safe variants for direct output into page titles / head content
     $school_title_h  = htmlspecialchars($school_title  ?? '', ENT_QUOTES, 'UTF-8');
     $running_title_h = htmlspecialchars($running_title ?? '', ENT_QUOTES, 'UTF-8');
-    //echo("School: $school<BR>\n");
-    //echo("Header: $header_image<BR>\n");
-    //echo("School title: $school_title<BR>\n");
-    //echo("School module prefix: $school_module_prefix<BR>\n");
-    //echo("Running title: $running_title<BR>\n");
 
 } catch (PDOException $ex) {
 

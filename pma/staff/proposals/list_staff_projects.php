@@ -40,7 +40,6 @@ if ($nowarray[0] > $close && !IsAdmin($db, $this_staff_username) && !IsProjectAd
    exit;
 }
 
-
 //
 // Display the list of projects for this staff
 //
@@ -110,7 +109,6 @@ $display_block .= "<div>\n";
 $display_block .= "<a href='addproject2.php?pm_id=$pm_id&stid=$staffid' rel='external' data-role='button' data-theme=\"e\">Add a new project</a>\n";
 $display_block .= "</div>\n";
 
-
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -118,7 +116,6 @@ $display_block .= "</div>\n";
 <?php require("./$mobile_head"); ?>
 
 <body>
-
 
 <!--home page --> 
 <div data-role="page"  data-theme="a" id="home"> 

@@ -28,7 +28,6 @@ $display_block .= $connect_msg;
 //$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 //$display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access_phrase</h2>\n";
 
-
 $assess_part_description_text = "";
 
 // Check the admin level
@@ -107,10 +106,8 @@ if($is_module_admin || $admin_access) {
     $makepdf = $_REQUEST['makepdf'];
     $list = $_REQUEST['list'];
     $summary_mark = $_REQUEST['summary_mark'];
-//echo("Module1=$module1 Year begin=$year_begin<BR>");
 
 //  foreach ($_REQUEST as $key => $value){
-//    echo "{$key} = {$value}<BR>\r\n";
 //  }
 
     $module_leader_email = GetStaffEmailFromFullname($db, $module_leader_fullname, $staff_names2);
@@ -168,7 +165,6 @@ if($is_module_admin || $admin_access) {
       echo "{$key} = {$value}<BR>\r\n";
     }
     */
-
 
 // Email body example
     $lb = "\n";
@@ -255,14 +251,12 @@ if($is_module_admin || $admin_access) {
 
         $student_counter = 0;
         $num_rows = $results->rowCount();//mysql_num_rows($get_student_list_res);
-        //echo("Number of rows in $project_allocated $num_rows<BR>\n");
 
         if ($num_rows < 1) {
             //no records
             $display_block .= "<p><em>Sorry, there are no students listed to send to!</em></p>";
         } else {
             //has records
-
 
             foreach ($student_rows as $recs) {
                 $student_counter++;
@@ -276,26 +270,16 @@ if($is_module_admin || $admin_access) {
                 $checked_to_send = "off";
                 $checked_name = "check_$sid";
                 $checked_to_send = $_POST[$checked_name];
-                //echo("<BR>checked_id=$checked_name, checked_to_send=$checked_to_send.<BR>");
                 // To do
                 if ($p_num_markers[$part] == 1) {
                     $who = 1;
                 } else {
-                    //echo("Multiple markers has not been set up for PDF output.<BR>");
                     $who = 1;
                 }
 
-                //print_r3("sid",$sid);
-                //print_r3("part",$part);
-                //print_r3("Allocated table name",$project_allocated);
-                //print_r3("Staff table",$staff_names2);
                 $marker_names = GetMarkerNamesArray($db, $sid, $part, $project_allocated, $staff_names2);
-                //print_r3("Marker names array",$marker_names);
 
                 $mark_method = GetMarkMethodString($db, $sid, $part, $markstore_totals);
-                //print_r3("Mark method string",$mark_method);
-
-                //print_r3("markstores",$markstores);
 
                 $marker_entry = "marker_p$part" . "m$who" . "_id";
 
@@ -350,15 +334,10 @@ if($is_module_admin || $admin_access) {
                         $markstore = $markstores[$part][$who];
                         set_time_limit(0);
 
-
                         $markstore_list = GetMarkStoreListFromMarkMethodString($mark_method, $markstores[$part][1], $markstores[$part][2], $markstores[$part][3]);
-                        //print_r3("Markstore_list",$markstore_list);
 
                         $marker_list = GetMarkerListFromMarkMethodString($mark_method, $marker_names[1], $marker_names[2], $marker_names[3]);
                         $num_markstores = count($markstore_list) - 1;
-                        //echo("markers $mark_method <BR>");
-                        //echo("num markstores = $num_markstores <BR>");
-                        //print_r2($markstore_list);
                         if ($num_markstores == 1) {
                             $feedback_form_html .= show_feedback_form1($db, $sid, $markstore_list[1], $markstore_list[2], $markstore3, $markstore_totals, $assessqs_year, $student_name, $username, $title, $marker_list[1], $marker_list[1], $marker_name, $project_id, $assesstype_text, $assess_cats, $mark_max, $mark_pc, $programme, $part, $assesstype_text, $module_short_description, $is_numeric);
                         } elseif ($num_markstores == 2) {
@@ -369,9 +348,7 @@ if($is_module_admin || $admin_access) {
                         //$feedback_form_html = utf8_encode($feedback_form_html); // deprecated
                         $feedback_form_html = mb_convert_encoding($feedback_form_html, 'UTF-8', mb_list_encodings());
 
-
                         //$feedback_form_html .= show_minor_part_feedback_form($sid,$markstore,$assessqs_year,$student_name,$username,$title,$supervisor_name,$second_marker_name,$marker_name,$project_id,$assesstype_text,$assess_cats,$mark_max,$mark_pc,$programme,$part      ,$assesstype_text, $module_short_description);
-                        //echo($feedback_form_html);
                         //exit(0);
                         // MPDF functions
                         if ($makepdf == null) {
@@ -402,7 +379,6 @@ if($is_module_admin || $admin_access) {
                             $subject = $subjectline;
                         }
 
-
                         //$email_manager = "p.a.sleigh@leeds.ac.uk";
                         $email_manager = $module_leader_email;
 
@@ -412,14 +388,12 @@ if($is_module_admin || $admin_access) {
                         $myemail_subject = $subject;
                         $myemail_message = nl2br($email_full);
 
-
                         $from = $this_staff_email;
                         $cc_to = $email_manager;
                         //$to = $student_email;
                         //$to = $from;
                         if ($reallysend == null) {
                             $display_block .= "<em>NOT SENT: $subject to $myemail_to<HR><BR></em>";
-                            //echo("Not sent $student_name ($username). Num: $student_counter<BR>\n");
                         } else {
                             $ok = EmailPDFAttachment($myemail_to, $myemail_from, $fileattached_pdf, $myemail_subject, $myemail_message, $name_of_file, $do_not_attach, $cc_to);
                             //EmailBodyString($to, $from, $subject, $email_full);
@@ -436,18 +410,15 @@ if($is_module_admin || $admin_access) {
                     } else {
                         // Not sent as not marked.
                         $display_block .= "<HR>Not marked. Not sent. $student_name ($username).  Num: $student_counter<HR><BR>$lb";
-                        //echo("Not marked. Not sent. $student_name ($username): Num: $student_counter<BR>$lb");
                     }
                 } else {
                     // Not sent as flagged for not sending.
                     $display_block .= "<HR>Flagged not to send. Not sent. $student_name ($username).  Num: $student_counter<HR><BR>$lb";
-                    //echo("Flagged not to send. Not sent. $student_name ($username): Num: $student_counter<BR>$lb");
                 }
 
             }
         }
     }// end of if ($POST_OP == "select")
-
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";

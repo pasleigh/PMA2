@@ -178,7 +178,6 @@ $header_image = "leeds_civil_header.png";
         </div>
         <!-- dropdown -->
 
-
     </div>
 </nav>
 
@@ -229,7 +228,6 @@ $header_image = "leeds_civil_header.png";
     </div>
 -->
 
-
     </div>
 
     <div class="row">
@@ -258,7 +256,6 @@ $header_image = "leeds_civil_header.png";
                 <P>Much more markdown can be used see a detailed list here: <A
                         href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">Markdown-Cheatsheet</A>
                 </P>
-
 
                 <table id="tips">
                     <thead>
@@ -382,7 +379,6 @@ $header_image = "leeds_civil_header.png";
 
             </div>
         </div>
-
 
     </div>
 

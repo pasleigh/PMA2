@@ -80,7 +80,6 @@ $module_ref_block = "<h3>$module_short_description - $module_prefix$module1$modu
 $display_block .= "<h1>Add a Project Theme</h1>\n";
 $display_block .= "$module_ref_block";
 
-//echo("post op  = " . $_REQUEST['op']);
 if ($_REQUEST['op'] != "add") {
     $display_block .= "<H3>Updates to the project theme database closes at midnight $cldate</H3>\n";
     $display_block .= "<form data-ajax=\"false\" method=\"post\" onsubmit=\"return validate_form();\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
@@ -188,7 +187,6 @@ if ($_REQUEST['op'] != "add") {
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
-
 
 }
 ?>

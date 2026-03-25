@@ -19,17 +19,14 @@ if (array_key_exists('op', $_POST) == false) {
     $_POST['op'] = null;
 }
 // if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
     $POST_OP = "";
 }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
 
 $display_block = "";
@@ -40,7 +37,6 @@ if($debug){echo("Query: $query<BR>");}
 
 try{
     $row_count = $db->query($query)->fetchColumn();
-    //echo("$header_images_table has $row_count rows<B>");
     if($row_count == 0){
         // Load the images from disc
         $header_images_dir = '/../images/';
@@ -87,7 +83,6 @@ $definition_table_name = "definition";
 try{
     $db->query("DESCRIBE $definition_table_name");
 }catch (PDOException $ex) {
-    //echo "$definition_table_name doesn't exist in database $dbName\n";
     //
     // Create it
     $create_table_query = "
@@ -138,7 +133,6 @@ try{
 
     // Probably the projects_setup file does not exist
     // Check
-    //echo("here<BR>\n");
     $table_name = "projects_setup";
     try{
         $db->query("DESCRIBE $table_name");
@@ -150,7 +144,6 @@ try{
 
     // Probably the staff_names table does not exist
     // Check
-    //echo("here<BR>\n");
     $table_name = "staff_names";
     try{
         $db->query("DESCRIBE $table_name");
@@ -178,7 +171,6 @@ try{
     $display_block .= "Admin users module table created<BR>\n";
 
 }
-
 
 $display_block .= "<h1>Edit details for your School and yourself - the first member of staff to be entered in the database</h1>";
 $staff_names_table = "staff_names";
@@ -299,7 +291,7 @@ if ($POST_OP == "") {
 
     $display_block .= "<TR>\n";
     $display_block .= "<TD>username</TD>\n";
-    $username = $_SERVER['REMOTE_USER'];
+    $username = get_server_username();
     $display_block .= "<TD><input type=\"text\" name=\"username\" value='$username' size=30 maxlength=40></TD>\n";
     $display_block .= "</TR>\n";
 
@@ -316,9 +308,7 @@ if ($POST_OP == "") {
 
     $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Submit these details.\"></p>";
 
-
     $display_block .= "</form>";
-
 
     $display_block .= "<hr>\n";
 } elseif ($POST_OP == "submit_new") {
@@ -410,7 +400,6 @@ if ($POST_OP == "") {
 
     $display_block .= "<P>If the above looks right, let's go on to create the first module entry  </P><P><A href=\"./first_use_create_new_module_entry.php\">First use Module Setup</A></P><BR><hr>\n";
 }// end of if ($POST_OP == "edit")
-
 
 ?>
 <HTML>

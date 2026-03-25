@@ -1,7 +1,6 @@
 <?php
 // Turn on/off all error reporting
 error_reporting(E_ALL);
-//ini_set('display_errors', '1');
 (@include_once("./set_dir_staff.php")) OR die("Cannot find this file to include: set_dir_staff.php<BR>");
 (@include_once("./config.php")) OR die("Cannot find this file to include: config.php<BR>");
 (@include_once("./setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
@@ -70,7 +69,6 @@ $supervisor_id = $recs['supervisor_id'];
 $second_marker_id = $recs['second_marker_id'];
 $markers = array();
 $markers_id = array();
-//echo("Staff table: $staff2<BR>");
 for ($i = 1; $i <= 5; $i++) {
     $markers[$i] = array();
     $markers_id[$i] = array();
@@ -80,7 +78,6 @@ for ($i = 1; $i <= 5; $i++) {
         $markers_id[$i][$j] = $marker_id;
         $markers[$i][$j] = GetStaffNameFromID($db,$marker_id, $staff2, NULL);
         //$name = $markers_id[$i][$j];
-        //echo("markers_id = ($i,$j) $name<BR>");
     }
 }
 $inactive = $recs['inactive'];
@@ -113,10 +110,8 @@ $third_marker_part = array();
     }
 //}
 
-
 // Get the student name from SID
 $query = "select * from $students where sid = $sid";
-//echo $get_list . "<BR>";
 //$get_list_res = mysql_query($get_list) or die(" Unable to create list from $students table with query: $get_list");
 //$recs = mysql_fetch_array($get_list_res);
 try {
@@ -134,7 +129,6 @@ $student_name = $recs['name'];
 $username = $recs['username'];
 $programme = $recs['programme'];
 $sel = $recs['sel'];
-
 
 if (array_key_exists('supervisor_s', $_POST) == false) {
     $_POST['supervisor_s'] = null;
@@ -167,19 +161,13 @@ $chkLocked_status = $_POST['chkLocked'];
 $txtNewTitle = $_POST['txtNewTitle'];
 $chkSupervisorAll = $_POST['chk_supervisor_all'];
 $chkSecondMarkerAll = $_POST['chk_second_marker_all'];
-//echo("New title: $txtNewTitle <BR>\n");
 //if ( $chkLocked_status == null ){
-//  echo("Change locked status is not ticked<br>\n");
 //}else{
-//  echo("Locked chekbox status: $chkLocked_status<br>\n");
 //}
-
-//echo("module = $module1  year_begin = $year_begin<BR>");
 
 $changed_message = "";
 
 if ($new_supervisor_id != null) {
-    //echo("supervisor = $supervisor<BR>");
     // update the table of supervisor for this project
     $query = "update $project_allocated set supervisor_id='$new_supervisor_id' where sid = $sid";
     //mysql_query($mod_details) or die(" Unable to modify data in the $project_allocated table.<BR>Query: $mod_details");
@@ -199,7 +187,6 @@ if ($new_supervisor_id != null) {
 }
 
 if ($new_second_marker_id != null) {
-    //echo("second marker = $f_assocstaff<BR>");
     // update the table of second marker for this student
     $query = "update $project_allocated set second_marker_id='$new_second_marker_id' where sid = $sid";
     //mysql_query($mod_details) or die(" Unable to modify data in the $project_allocated table.<BR>Query: $mod_details");
@@ -317,7 +304,6 @@ for ($i = 1; $i <= $num_parts; $i++) {
         $is_part_locked = 1;
     }
     $changed_message .= "Updating locked status: all markers of part $i to $is_part_locked <BR>\n";
-    //echo("About to set locked for all markers of part $i to $is_part_locked<BR>");
     SetLockedStatusForPart($db, $sid, $is_part_locked, $i, $markstores);
 
 }
@@ -387,7 +373,6 @@ for ($i = 1; $i <= 5; $i++) {
         $markers_id[$i][$j] = $marker_id;
         $markers[$i][$j] = GetStaffNameFromID($db, $marker_id, $staff2, NULL);
         //$name = $markers_id[$i][$j];
-        //echo("markers_id = ($i,$j) $name<BR>");
     }
 }
 
@@ -418,14 +403,10 @@ for ($i = 1; $i <= 5; $i++) {
         }
     */
 }
-//print_r2($locked_part);
-//print_r2($markstores);
 
 $inactive = $recs['inactive'];
 
-
 // Check inactive
-//echo "Inactive = $inactive <BR>";
 $inactive_status = "active";
 $checked_status = "";
 if ($inactive == 1) {
@@ -553,7 +534,6 @@ $display_block .= "<TR><td colspan=\"2\"><input type=\"submit\" name=\"submit\" 
     <div id="content">
         <?php echo("$display_block"); ?>
 
-
     </div><!-- /content -->
 
     <div id="footer">
@@ -566,7 +546,6 @@ $display_block .= "<TR><td colspan=\"2\"><input type=\"submit\" name=\"submit\" 
         <span><a target="_self" href="./admin2/adhoc_student_project_allocation.php<?PHP echo("?pm_id=$pm_id"); ?>"
                  style="color: dimgray;">Modify Student/Project</a></span>
     </div><!-- /footer -->
-
 
 </div><!-- /wrapper -->
 </body>

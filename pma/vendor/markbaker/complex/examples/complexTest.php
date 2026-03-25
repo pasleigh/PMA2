@@ -18,7 +18,6 @@ echo $x, PHP_EOL;
 $x = new Complex('1.23e-4--2.34e-5i');
 echo $x, PHP_EOL;
 
-
 echo PHP_EOL, 'Add', PHP_EOL;
 
 $x = new Complex(123);
@@ -44,7 +43,6 @@ echo $x, PHP_EOL;
 $x = new Complex(-987.654, -32.1);
 $x->add(new Complex(0, -1));
 echo $x, PHP_EOL;
-
 
 echo PHP_EOL, 'Subtract', PHP_EOL;
 
@@ -72,7 +70,6 @@ $x = new Complex(-987.654, -32.1);
 $x->subtract(new Complex(0, -1));
 echo $x, PHP_EOL;
 
-
 echo PHP_EOL, 'Multiply', PHP_EOL;
 
 $x = new Complex(123);
@@ -99,7 +96,6 @@ $x = new Complex(-987.654, -32.1);
 $x->multiply(new Complex(0, -1));
 echo $x, PHP_EOL;
 
-
 echo PHP_EOL, 'Divide By', PHP_EOL;
 
 $x = new Complex(123);
@@ -125,7 +121,6 @@ echo $x, PHP_EOL;
 $x = new Complex(-987.654, -32.1);
 $x->divideBy(new Complex(0, -1));
 echo $x, PHP_EOL;
-
 
 echo PHP_EOL, 'Divide Into', PHP_EOL;
 

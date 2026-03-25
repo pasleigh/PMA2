@@ -17,7 +17,7 @@ $display_block = "";
 $display_block .= "<div style='font-size: x-large; font-weight: bold; text-align: center'>Project Selection</div>";
 $display_block .= "<div style='font-size: large; font-weight: bold; text-align: center'>$module_short_description - $module_prefix$module1$module_postfix - $short_code, $year_begin/$year_end_short</div>";
 
-$student_username = $_SERVER['REMOTE_USER'];
+$student_username = get_server_username();
 $is_staff = isStaff($db, $student_username);
 $is_student_current = false;
 if($is_staff == false) {
@@ -52,7 +52,6 @@ if($is_student_current == false and $is_staff == false){
 
         $is_staff_int = 0;
     }
-
 
     $display_block .= "<H1>You are $student_name ( $student_username $staff_text)</H1>\n";
     $display_block .= "<H2>On Programme: $student_programme</H2>\n";
@@ -191,7 +190,6 @@ if($is_student_current == false and $is_staff == false){
     $display_block .= "\n<input type='hidden' name='choice_number' id='choice_number' value='$choice_number'>\n";
     $display_block .= "\n<input type='hidden' name='ranked_choice_int' id='ranked_choice_int' value='$ranked_choice_int'>\n";
 
-
     // Selection instructions
     $display_block .= "<p>Please read the following instructions very carefully.</p>
 
@@ -218,7 +216,6 @@ if($is_student_current == false and $is_staff == false){
         // enter the selection in to the table
         $query = "REPLACE INTO $selection VALUES (now(), '$sid', '$student_username', '$student_name', '$new_choices[1]',
                  '$new_choices[2]', '$new_choices[3]', '$new_choices[4]', '$new_choices[5]')";
-        //echo("$query<BR>");
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
@@ -231,7 +228,6 @@ if($is_student_current == false and $is_staff == false){
         }
 
         $query = "UPDATE $students SET sel=1 WHERE sid='$sid'";
-        //echo("$query<BR>");
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
@@ -316,7 +312,6 @@ if($is_student_current == false and $is_staff == false){
 
     }
 //--------------End of project Area selection Code -----------------------------------------------------------------------
-
 
     $display_block .= "<H1>Here is the list of projects that are on offer</H1>";
 
@@ -696,9 +691,7 @@ if($is_student_current == false and $is_staff == false){
         background-position: 0px -501px;
         color: #FF0000;
 
-
     }
-
 
     #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
     #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
@@ -716,14 +709,12 @@ if($is_student_current == false and $is_staff == false){
     <div id="content">
         <?php echo("$display_block"); ?>
 
-
     </div><!-- /content -->
 
     <div id="footer">
         <span><BR><a target="_self" href="./projects_indexm_all.php<?PHP echo("?pm_id=$pm_id"); ?>"
                      style="color: dimgray;"><?PHP echo("Index"); ?></a></span>
     </div><!-- /footer -->
-
 
 </div><!-- /wrapper -->
 </body>

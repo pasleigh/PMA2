@@ -38,7 +38,6 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if($is_module_admin || $admin_access) {
 
-
     $display_block .= "<h1>Upload Totals for a Part of the Poject </h1>\n";
     $display_block .= "<h2>Database table to be updated \"$markstore_totals\"</h2>\n";
 
@@ -48,17 +47,14 @@ if($is_module_admin || $admin_access) {
         $_POST['op'] = null;
     }
 // if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
         $POST_OP = "";
     }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
     if (array_key_exists('radio_part_number', $_POST) == false) {
         $_POST['radio_part_number'] = null;
@@ -73,21 +69,13 @@ if($is_module_admin || $admin_access) {
             $marker_num = 1;
             $markstore_part = $markstores[$radio_part_number][$marker_num];
 
-            //print_r3("_REQUEST",$_REQUEST);
-            //print_r3("_FILES",$_FILES[csv]);
             $csv_file_name = $_FILES['csv']['name'];
             $csv_file_size = $_FILES['csv']['size'];
             $csv_file_tmp = $_FILES['csv']['tmp_name'];
             $csv_file_type = $_FILES['csv']['type'];
-            //echo("File name: $csv_file_name<BR>");
-            //echo("File size: $csv_file_size<BR>");
-            //echo("File tmp: $csv_file_tmp<BR>");
-            //echo("File type: $csv_file_type<BR>");
 
             $importer = new CSVparse();
             $CSV_DATA = $importer->parse_file($csv_file_tmp);
-            //echo("File tmp: $csv_file_tmp<BR>");
-            //print_r2($CSV_DATA);
             foreach ($CSV_DATA as $each_alloc_entry) {
                 $csv_keys = array_keys($each_alloc_entry);
 
@@ -110,7 +98,6 @@ if($is_module_admin || $admin_access) {
                     }
                     $row = $results->fetch();
                     $num = $results->rowCount();
-                    //echo("$num<BR>");
 
                     $part_header = "retmark" . $radio_part_number;
                     // REPLACE does a UPDATE or INSERT (Actually if exists it does a delete)
@@ -146,7 +133,6 @@ if($is_module_admin || $admin_access) {
 
                     // Put this in the part marksheet, under marker 1
                     $query = "select * from $markstore_part WHERE sid=$sid";
-                    //echo("$query<BR>");
                     try {
                         $results = $db->query($query);
                     } catch (PDOException $ex) {
@@ -158,7 +144,6 @@ if($is_module_admin || $admin_access) {
                     }
                     $row = $results->fetch();
                     $num = $results->rowCount();
-                    //echo("$num<BR>");
 
                     $part_header = "total";
                     $feedback_text = "There is no recorded feedback for this part as this was by a bulk uploaded mark list.\n";
@@ -195,7 +180,6 @@ if($is_module_admin || $admin_access) {
                         }
                     }
 
-                    //print_r2($csv_keys);
                     /*while (list($key, $value) = each ($each_member)) {
 
                         echo "$key: $value<br />";
@@ -210,7 +194,6 @@ if($is_module_admin || $admin_access) {
             echo("You must select a part number by clicking the appropriate radio button. <BR>\n");
         }
     }// end of if ($POST_OP == "upload_csv")
-
 
 //$display_block .="\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
 
@@ -252,7 +235,6 @@ if($is_module_admin || $admin_access) {
         $retmark4 = $recs['retmark4'];
         $retmark5 = $recs['retmark5'];
         $total_mark = $recs['total'];
-        //print_r2($recs);
         $query = "select * from $students where sid=$sid";
         try {
             $results = $db->query($query);
@@ -286,8 +268,6 @@ if($is_module_admin || $admin_access) {
         $display_block .= "<TD>$retmark4</TD>";
         $display_block .= "<TD>$retmark5</TD>";
         $display_block .= "<TD>$total_mark</TD>";
-
-        //print_r2($recs);
 
         $display_block .= "</TR>\n";
 

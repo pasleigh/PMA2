@@ -1,9 +1,7 @@
 <?php
 function CreateAllocatedTableQuery($allocated_table_name)
 {
-  //echo("$allocated_table_name<BR>");
   //$str = "`$allocated_table_name`<BR>";
-  //echo("$str<BR>");
 
  $create_table_query = "CREATE TABLE `$allocated_table_name` (
                         `projectid` int(11) NOT NULL auto_increment,

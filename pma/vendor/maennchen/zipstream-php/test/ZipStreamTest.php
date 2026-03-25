@@ -819,7 +819,6 @@ class ZipStreamTest extends TestCase
             return $zip->finish();
         };
 
-
         $sizeExpected = $create(OperationMode::NORMAL);
         $sizeActual = $create(OperationMode::SIMULATE_LAX);
 
@@ -841,7 +840,6 @@ class ZipStreamTest extends TestCase
 
             return $zip->finish();
         };
-
 
         $sizeExpected = $create(OperationMode::NORMAL);
         $sizeActual = $create(OperationMode::SIMULATE_LAX);
@@ -866,7 +864,6 @@ class ZipStreamTest extends TestCase
             return $zip->finish();
         };
 
-
         $sizeExpected = $create(OperationMode::NORMAL);
         $sizeActual = $create(OperationMode::SIMULATE_LAX);
 
@@ -888,7 +885,6 @@ class ZipStreamTest extends TestCase
 
             return $zip->finish();
         };
-
 
         $sizeExpected = $create(OperationMode::NORMAL);
         $sizeActual = $create(OperationMode::SIMULATE_LAX);
@@ -1009,7 +1005,6 @@ class ZipStreamTest extends TestCase
 
         $sizeExpected = $create(OperationMode::NORMAL);
         $sizeActual = $create(OperationMode::SIMULATE_LAX);
-
 
         $this->assertEquals($sizeExpected, $sizeActual);
     }

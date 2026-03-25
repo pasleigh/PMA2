@@ -12,7 +12,6 @@
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-//error_reporting(E_ALL & ~E_NOTICE);
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 
 $display_block = "";
@@ -43,7 +42,6 @@ if ($is_module_admin) {
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
 if ($is_module_admin || $admin_access) {
-
 
     $display_block .= "<h1>Upload and Downloading of projects </h1>";
     $display_block .= "<h2>Database tables: $master_name and $project_details</h2>";
@@ -137,7 +135,6 @@ if ($is_module_admin || $admin_access) {
                     $query .= "'" . addslashes($f_outline) . "', ";
                     $query .= "'" . addslashes($f_supervisor_id) . "') ";
                     $query .= "'" . addslashes($f_PGprojects) . "', ";
-                    //echo("$query<BR>");
                     //mysql_query($query) or die(" Unable to insert data to the table $project_details . <BR>Query: $query");
                     try {
                         $results = $db->query($query);
@@ -182,10 +179,6 @@ if ($is_module_admin || $admin_access) {
         $tmpcsvfile = tempnam(PMA_TMP_DIR, '');
         $path = dirname($tmpcsvfile);
         //$sys_temp_dir = sys_get_temp_dir();
-        //echo("temp filename $tmpcsvfile<BR>\n");
-        //echo("path to temp file: $path<BR>\n");
-        //echo("path to sys temp dir: $sys_temp_dir<BR>\n");
-        //echo  is_writable($sys_temp_dir) ? "Temp dir is writable" : "Temp dir is not writable";
         //exit();
 
         $query = "SELECT * FROM $master_name ORDER BY id";
@@ -221,7 +214,6 @@ if ($is_module_admin || $admin_access) {
             $row[10] = "Number of places for this project";
 
             $ret = fputcsv($fp, $row);
-            //echo " fputcsv return = $ret .<BR />";
             //fclose($fp);
 
             $rows = $results->fetchAll();
@@ -275,7 +267,6 @@ if ($is_module_admin || $admin_access) {
 
                     //$fp = fopen('file.csv', 'w');
                     $ret = fputcsv($fp, $row);
-                    //echo "$ret <br />";
                 }
                 $i_count++;
             }
@@ -290,7 +281,6 @@ if ($is_module_admin || $admin_access) {
             $display_block = "<h2> Proposals saved as CSV file to: $csv_filename</h2>";
         }
     }// end of if ($POST_OP == "submint_new")
-
 
     $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
 
@@ -320,9 +310,6 @@ if ($is_module_admin || $admin_access) {
     $display_block .= "<tbody>\n";
     $proposal_count = 0;
     $rows = $results->fetchAll();
-//echo("$query<BR>\n");
-//print_r2($results);
-//print_r2($rows);
 //if ($results->fetch(PDO::FETCH_NUM) > 0 ) {
     foreach ($rows as $recs) {
 
@@ -369,7 +356,6 @@ if ($is_module_admin || $admin_access) {
     $display_block .= "<p><input type=\"submit\" id=\"submitbutton_csv\" name=\"submit\" value=\"Upload a XLSX/CSV \"></p>";
 
     $display_block .= "</form>\n";
-
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";

@@ -11,7 +11,6 @@ $TABLE_NAME = $_POST['table_name'];
 
 echo("Let's see if the table: \"$TABLE_NAME\" exists<BR>");
 
-
 try {
     if ($connection->query("DESCRIBE $TABLE_NAME")) {
         echo "$TABLE_NAME exists in database $dbName";
@@ -28,7 +27,6 @@ $display_block = "";
 $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">";
 $display_block .= "<table>\n";
 
-
 $display_block .= "<TR>\n";
 $display_block .= "<TD>Table name</TD>\n";
 $display_block .= "<TD><input type=\"text\" name=\"table_name\"  size=10 maxlength=30></TD>\n";
@@ -39,9 +37,7 @@ $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"subm
 
 $display_block .= "</form>";
 
-
 ?>
-
 
 <!DOCTYPE HTML>
 <html>

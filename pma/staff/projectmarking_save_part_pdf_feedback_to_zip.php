@@ -1,8 +1,5 @@
 <?php
 // Report all PHP errors (see changelog)
-//error_reporting(E_ALL | E_STRICT | E_WARNING | E_PARSE);
-//error_reporting(E_ALL);
-//ini_set('display_errors', '1');
 require_once '../vendor/autoload.php';
 function write_a_test_zip($zip_filename){
     $zip = new ZipStream\ZipStream(
@@ -127,8 +124,6 @@ $zip_file_name_tempnam = tempnam('',"zip_marks_file");
 // Open a zip file
 //$zip_file_res = $zip->open($zip_file_name_tempnam, ZipArchive::CREATE|ZipArchive::OVERWRITE);
 
-
-
 // Start to retrieve data on all projects allocated
 $query = "select * from $project_allocated order by projectid";
 //$get_student_list_res = mysql_query($get_student_list) or die(" Unable to create student list from $project_allocated table. <BR>Query: $get_student_list");
@@ -144,7 +139,6 @@ try {
 
 $student_counter = 0;
 $num_rows = $results->rowCount();
-//echo("The number of rows in: $project_allocated is $num_rows<BR>\n");
 $mem_per_call_estimate = 5;
 if ($mem_per_call_estimate*$num_rows > 256)
 {
@@ -179,7 +173,6 @@ if ($num_rows < 1) {
         if ($p_num_markers[$part] == 1) {
             $who = 1;
         } else {
-            //echo("Multiple markers will be returned in one PDF file.<BR>");
         }
         // To do
         $marker1 = "";

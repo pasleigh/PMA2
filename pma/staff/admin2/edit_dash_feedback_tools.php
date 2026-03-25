@@ -24,17 +24,14 @@ if ($access) {
         $_POST['op'] = null;
     }
 // if the form was submitted then enter it all into the database
-//echo("OP=$_POST['op'] . <BR>\n");
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
         $POST_OP = "";
     }
-//echo("POST_OP=$POST_OP <BR>\n");
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
-//  echo "{$key} = {$value}<BR>\r\n";
 //}
     $display_block .= "<h1>Edit dash feedback tools and visibility</h1>";
 
@@ -220,8 +217,6 @@ if ($access) {
 
     $display_block .= "</form>";
 }
-
-
 
 ?>
 <HTML>

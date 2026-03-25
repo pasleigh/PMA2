@@ -98,7 +98,6 @@ class Complex
      */
     protected $suffix;
 
-
     /**
      * Validates whether the argument is a valid complex number, converting scalar or array values if possible
      *
@@ -163,7 +162,6 @@ class Complex
             !empty($complexParts[9]) ? $complexParts[9] : 'i'
         ];
     }
-
 
     public function __construct($realPart = 0.0, $imaginaryPart = null, $suffix = 'i')
     {

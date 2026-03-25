@@ -572,7 +572,6 @@ class ZipStream
                     return StreamWrapper::getResource($data);
                 }
 
-
                 $stream = fopen('php://memory', 'rw+');
                 if ($stream === false) {
                     // @codeCoverageIgnoreStart

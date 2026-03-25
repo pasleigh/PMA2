@@ -35,7 +35,6 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if($is_module_admin || $admin_access) {
 
-
 if (array_key_exists('chkInActive', $_POST)==false){ $_POST['chkInActive']=null; }
 if (array_key_exists('chkLocked', $_POST)==false){ $_POST['chkLocked']=null; }
 if (array_key_exists('chkLocked_p1', $_POST)==false){ $_POST['chkLocked_p1']=null; }
@@ -49,7 +48,6 @@ if (array_key_exists('op', $_POST)) {
 }else{
     $POST_OP = "";
 }
-//echo("POST_OP = $POST_OP <BR>\n");
 
 // see all the POST values
 /*
@@ -60,7 +58,6 @@ foreach ($_POST as $key => $value){
 for ($i = 1; $i <= 5; $i++) {
     $chkLocked[$i] = 0;
 }
-
 
 if ($POST_OP == "commit") {
     // Use the check box values
@@ -74,7 +71,6 @@ if ($POST_OP == "commit") {
         if ($_POST[$key_text] == "1") {
             $chkLocked[$i] = 1;
         }
-        //echo("Checked $i = $chkLocked[$i]. key =$key_text.<BR>\n");
     }
 }else{
     // Not called from itself so need to check the database for what is set
@@ -100,16 +96,13 @@ if ($POST_OP == "commit") {
         $rows = $results->fetchAll();
         foreach ($rows as $record) {
             $sid = $record['sid'];
-            //echo("SID = $sid<BR>");
             $is_locked = GetLockedStatusOverall($db, $sid, $markstore_totals);
             if ($is_locked == 0) {
                 // if ANY non-locked found then flag as not locked
                 $chkLocked[0] = 0;
-                //echo("is_locked = $is_locked<BR>");
             }
         }
 
-        //echo("Here 5<BR>");
         for ($i = 1; $i <= 5; $i++) {
             foreach ($rows as $record) {
                 $sid = $record['sid'];
@@ -221,7 +214,6 @@ If was previously locked and you DO NOT select it <strong>- it will be unlocked<
     <div id="content">
       <?php echo("$display_block"); ?>
       
-
     </div><!-- /content -->
       
     <div id="footer">
@@ -232,7 +224,6 @@ If was previously locked and you DO NOT select it <strong>- it will be unlocked<
             <a href="./index.php">Main admin page</a>.
         </P>
     </div><!-- /footer -->
-    
     
   </div><!-- /wrapper -->
 </body>

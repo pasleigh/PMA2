@@ -112,7 +112,6 @@ $module_ref_block = "<h3>$module_short_description - $module_prefix$module1$modu
 
 $display_block .= "$module_ref_block";
 
-//echo("post op  = " . $_REQUEST['op']);
 if ($_REQUEST['op'] == "save") {
 
     // Get the prog variants
@@ -206,7 +205,6 @@ if ($_REQUEST['op'] == "save") {
         exit();
     }
     $display_block .= "<h1>Saved ...</h1>";
-
 
 } else {//display for modification
     $display_block = "<h3>Modify this Project Title/Theme</h3>\n";
