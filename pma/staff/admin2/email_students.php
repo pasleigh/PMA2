@@ -382,8 +382,7 @@ if($is_module_admin || $admin_access) {
                             unset($mpdf);
                             error_reporting(0);
                             //$mpdf = new mPDF();
-                            $system_temp_dir = sys_get_temp_dir();
-$mpdf = new \Mpdf\Mpdf(['tempDir'=>$system_temp_dir]);
+                            $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
                             // Set a simple Footer including the date and page number
                             $mpdf->setFooter("$student_name Date printed: {DATE j M Y}.   page {PAGENO}");
                             $stylesheet = file_get_contents('../css/pagedesc.css');

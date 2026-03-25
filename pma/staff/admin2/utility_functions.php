@@ -1,16 +1,35 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: cenpas
- * Date: 28/09/2015
- * Time: 08:51
+ * General-purpose utility helpers used by admin2 pages.
+ *
+ * Contains:
+ *  - CSVparse class — reads a CSV file into an associative array keyed by header row.
+ *  - json_encode polyfill — legacy fallback for very old PHP builds (safe to ignore on PHP 5.2+).
+ *  - require_safe() — include wrapper that fails gracefully.
+ *  - Date/time diff helpers (s_datediff, second_diff, minute_diff, hour_diff, day_diff, secondsToTime).
  */
 
-
+/**
+ * Simple CSV file parser that maps each row to an associative array using the header row as keys.
+ *
+ * Usage:
+ *   $parser = new CSVparse();
+ *   $rows   = $parser->parse_file('/path/to/file.csv');
+ *   // $rows[0]['ColumnName'] = value
+ */
 class CSVparse
 {
     var $mappings = array();
 
+    /**
+     * Parse a CSV file and return an array of associative rows.
+     *
+     * The first row of the CSV is used as the column-name mapping.
+     * Values are passed through addslashes() for legacy DB compatibility.
+     *
+     * @param string $filename Absolute or relative path to the CSV file.
+     * @return array<int, array<string, string>> Array of rows, each row an assoc array of header => value.
+     */
     function parse_file($filename)
     {
         $id = fopen($filename, "r"); //open the file
@@ -90,6 +109,12 @@ if (!function_exists('json_encode'))
 }
 
 
+/**
+ * Include a file only if a sentinel file `must_have.php` exists in the CWD.
+ *
+ * @param string $filename Path to the file to include.
+ * @return void
+ */
 function require_safe($filename) {
     //$path = realpath(getcwd() . $filename);
     //$path && return require($path);
@@ -103,17 +128,18 @@ function require_safe($filename) {
 }
 
 
-/*
-* A mathematical decimal difference between two informed dates
-*
-* Author: Sergio Abreu
-* Website: http://sites.sitesbr.net
-*
-* Features:
-* Automatic conversion on dates informed as string.
-* Possibility of absolute values (always +) or relative (-/+)
-*/
-
+/**
+ * Return the decimal difference between two dates in the requested interval unit.
+ *
+ * Accepts date strings or DateTime objects. Pass $relative=true to allow negative results.
+ *
+ * @param string          $str_interval Interval unit: 'y'=years, 'm'=months, 'd'=days,
+ *                                      'h'=hours, 'i'=minutes, 's'=seconds.
+ * @param string|DateTime $dt_menor     Earlier (or first) date.
+ * @param string|DateTime $dt_maior     Later (or second) date.
+ * @param bool            $relative     False (default) = absolute value; true = signed result.
+ * @return float Decimal difference in the requested unit.
+ */
 function s_datediff( $str_interval, $dt_menor, $dt_maior, $relative=false){
 
     if( is_string( $dt_menor)) $dt_menor = date_create( $dt_menor);
@@ -150,6 +176,15 @@ function s_datediff( $str_interval, $dt_menor, $dt_maior, $relative=false){
 
 //This is a very simple function to calculate the difference between two datetime values, returning the result in seconds. To convert to minutes, just divide the result by 60. In hours, by 3600 and so on.
 
+/**
+ * Return the difference between two datetime strings in seconds (dt1 − dt2).
+ *
+ * Expects datetime strings in "YYYY-MM-DD HH:MM:SS" format.
+ *
+ * @param string $dt1 First datetime string.
+ * @param string $dt2 Second datetime string.
+ * @return float Difference in seconds (positive if dt1 > dt2).
+ */
 function second_diff($dt1,$dt2){
     //$dt1 = date_time value
     //$dt1 = date_time value
@@ -176,21 +211,48 @@ function second_diff($dt1,$dt2){
 
 }
 
+/**
+ * Return the difference between two datetime strings in minutes (dt1 − dt2).
+ *
+ * @param string $dt1 First datetime string ("YYYY-MM-DD HH:MM:SS").
+ * @param string $dt2 Second datetime string.
+ * @return float Difference in minutes.
+ */
 function minute_diff($dt1, $dt2){
     $diff = second_diff($dt1,$dt2);
     return $diff/60;
 }
 
+/**
+ * Return the difference between two datetime strings in hours (dt1 − dt2).
+ *
+ * @param string $dt1 First datetime string ("YYYY-MM-DD HH:MM:SS").
+ * @param string $dt2 Second datetime string.
+ * @return float Difference in hours.
+ */
 function hour_diff($dt1, $dt2){
     $diff = second_diff($dt1,$dt2);
     return $diff/(60*60);
 }
 
+/**
+ * Return the difference between two datetime strings in days (dt1 − dt2).
+ *
+ * @param string $dt1 First datetime string ("YYYY-MM-DD HH:MM:SS").
+ * @param string $dt2 Second datetime string.
+ * @return float Difference in days.
+ */
 function day_diff($dt1, $dt2){
     $diff = second_diff($dt1,$dt2);
     return $diff/(60*60*24);
 }
 
+/**
+ * Format a number of seconds as a human-readable duration string.
+ *
+ * @param int $seconds Number of seconds.
+ * @return string Formatted string e.g. "2 days, 3 hours, 15 mins and 7 secs".
+ */
 function secondsToTime($seconds) {
     $dtF = new \DateTime('@0');
     $dtT = new \DateTime("@$seconds");

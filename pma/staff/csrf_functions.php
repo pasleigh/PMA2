@@ -4,6 +4,11 @@
  * Requires an active PHP session (session_start() must have been called first).
  */
 
+/**
+ * Return the session CSRF token, generating and storing one if not yet set.
+ *
+ * @return string 64-character hex token.
+ */
 function generate_csrf_token(): string {
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -12,10 +17,13 @@ function generate_csrf_token(): string {
 }
 
 /**
- * Returns true if the submitted CSRF token matches the session token.
- * Accepts the token from either the POST field or the X-CSRF-Token HTTP header
- * (the header form is used by AJAX requests injected by the page-level script).
- * Uses hash_equals() to prevent timing attacks.
+ * Check whether the submitted CSRF token matches the session token.
+ *
+ * Accepts the token from either the POST body field `csrf_token` or the
+ * `X-CSRF-Token` HTTP header (used by AJAX requests). Uses hash_equals() to
+ * prevent timing-based side-channel attacks.
+ *
+ * @return bool True if token is present and valid, false otherwise.
  */
 function validate_csrf_token(): bool {
     if (empty($_SESSION['csrf_token'])) {
@@ -33,8 +41,13 @@ function validate_csrf_token(): bool {
 }
 
 /**
- * Returns an HTML hidden input carrying the current CSRF token.
- * Call this inside every <form> that performs a state-changing POST.
+ * Return an HTML hidden input element carrying the current CSRF token.
+ *
+ * Call this inside every `<form>` that performs a state-changing POST.
+ * Note: the JS auto-injection script in the head files handles this
+ * automatically for most pages — use this for forms built server-side only.
+ *
+ * @return string HTML `<input type="hidden" name="csrf_token" value="...">`.
  */
 function csrf_token_field(): string {
     $token = generate_csrf_token();
@@ -42,9 +55,12 @@ function csrf_token_field(): string {
 }
 
 /**
- * Convenience wrapper: aborts with a plain-text error if the token is invalid.
- * Call at the top of any POST handler block, or once in setup_tables.php for
- * application-wide coverage.
+ * Abort with HTTP 403 if the current POST request carries an invalid CSRF token.
+ *
+ * Called once inside setup_tables.php to provide application-wide coverage.
+ * Does nothing on GET/HEAD requests.
+ *
+ * @return void
  */
 function require_valid_csrf(): void {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && !validate_csrf_token()) {

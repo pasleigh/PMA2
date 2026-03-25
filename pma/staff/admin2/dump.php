@@ -28,8 +28,7 @@ $my_date_now = date("d-m-Y-H:i:s");
 $my_school = str_replace(' ', '_', $school_title);
 $sql_dump_filename = "database_dump_$my_school-$my_date_now.sql";
 
-$tempdir = sys_get_temp_dir();
-$tmpsqlfile = tempnam($tempdir, "X");
+$tmpsqlfile = tempnam(PMA_TMP_DIR, "X");
 if(!$tmpsqlfile){
     echo("Not able to create temporary file.<BR>");
 }

@@ -67,27 +67,6 @@ $project_marking_options_page = "projectmarking_select_bs.php";
 $display_block = "";
 $files_to_zip = array();
 
-if (!function_exists('sys_get_temp_dir')) {
-    function sys_get_temp_dir()
-    {
-        if (!empty($_ENV['TMP'])) {
-            return realpath($_ENV['TMP']);
-        }
-        if (!empty($_ENV['TMPDIR'])) {
-            return realpath($_ENV['TMPDIR']);
-        }
-        if (!empty($_ENV['TEMP'])) {
-            return realpath($_ENV['TEMP']);
-        }
-        $tempfile = tempnam(__FILE__, '');
-        if (file_exists($tempfile)) {
-            unlink($tempfile);
-            return realpath(dirname($tempfile));
-        }
-        return null;
-    }
-}
-
 if (array_key_exists('part', $_GET) == false) {
     $_GET['part'] = null;
 }
@@ -119,11 +98,7 @@ if ($saving == 1) {
     $action = "saving feedback PDFs one by one";
 } elseif ($saving == 2) {
     $savezip = 1;
-    if (!function_exists('sys_get_temp_dir')) {
-        echo("sys_get_temp_dir does not exist<BR>");
-    } else {
-        $save_folder = sys_get_temp_dir();
-    }
+    $save_folder = PMA_TMP_DIR;
 
     $assess_description_text = $p_description[$part];
     $zip_filename_prefix = "$module_prefix$module1-$year_begin-$year_end-$assess_description_text";
@@ -260,8 +235,7 @@ if ($num_rows < 1) {
             unset($mpdf);
             error_reporting(0);
             //$mpdf = new mPDF();
-            $system_temp_dir = sys_get_temp_dir();
-            $mpdf = new \Mpdf\Mpdf(['tempDir'=>$system_temp_dir]);
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
             $mpdf->useSubstitutions = true;
             //$mpdf->ignore_invalid_utf8 = true;
             // Set a simple Footer including the date and page number

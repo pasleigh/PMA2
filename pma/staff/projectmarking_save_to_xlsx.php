@@ -27,22 +27,8 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 $xlsx_filename = "project_marks_" . $module_prefix . $module1 . $module_postfix . "_" . $short_code . "_" . $year_begin . "-" . $year_end . ".xlsx";
 $xlsx_sheet_name = $module_prefix . $module1 . $module_postfix . "_" . $year_begin . "-" . $year_end;
 
-if ( !function_exists('sys_get_temp_dir')) {
-    function sys_get_temp_dir() {
-        if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); }
-        if (!empty($_ENV['TMPDIR'])) { return realpath( $_ENV['TMPDIR']); }
-        if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); }
-        $tempfile=tempnam(__FILE__,'');
-        if (file_exists($tempfile)) {
-            unlink($tempfile);
-            return realpath(dirname($tempfile));
-        }
-        return null;
-    }
-}
-
 //$tmpxlsxfile = tempnam("dummy", "");
-$tmpxlsxfile = tempnam(sys_get_temp_dir(), "");
+$tmpxlsxfile = tempnam(PMA_TMP_DIR, "");
 $path = dirname($tmpxlsxfile);
 //echo "$tmpxlsxfile $path <br />";
 //$xlsx_filename = $tmpxlsxfile;

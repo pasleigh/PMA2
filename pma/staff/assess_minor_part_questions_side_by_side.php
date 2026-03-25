@@ -531,7 +531,7 @@ if ($POST_OP == "commit") {
         //echo("about to start the pdf producing. topdf =$topdf<BR>");
         if ($topdf > 0 || $force_pdf == 1) {
             ob_end_clean(); // Discard any buffered HTML so mPDF can send PDF headers cleanly
-            $mpdf = new \Mpdf\Mpdf(['tempDir' => __DIR__ . '/../tmp']);
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
             // Set a simple Footer including the date and page number
             $mpdf->setFooter("$student_name. Printed: {DATE j M Y}.   page {PAGENO} of {nb}");
             $stylesheet = file_get_contents('./css/pagedesc.css');

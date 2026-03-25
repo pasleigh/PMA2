@@ -277,8 +277,7 @@ if ($is_module_admin || $admin_access) {
     } elseif ($POST_OP == "download_csv") {
         $csv_filename = "student_data_" . $module_prefix . $module1 . $module_postfix . "_" . $short_code . "_" . $year_begin . "-" . $year_end . ".csv";
 
-        $temp_dir = sys_get_temp_dir();
-        $tmpcsvfile = tempnam($temp_dir, "");
+        $tmpcsvfile = tempnam(PMA_TMP_DIR, "");
         $path = dirname($tmpcsvfile);
 
         $query = "SELECT * FROM $students ORDER BY name";

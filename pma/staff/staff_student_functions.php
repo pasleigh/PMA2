@@ -1,5 +1,20 @@
 <?PHP
 
+/**
+ * Shared staff/student identity and access-level helpers.
+ *
+ * Used by both the staff and student tiers to determine whether a given
+ * username belongs to a known user and what privileges they hold.
+ */
+
+/**
+ * Return true if the username exists in the staff table.
+ *
+ * @param PDO    $db          Active PDO connection.
+ * @param string $username    Web-server authenticated username.
+ * @param string $staff_names Staff table name.
+ * @return bool
+ */
 function IsStaff($db, $username, $staff_names)
 {
     $query = "SELECT * FROM $staff_names WHERE username='$username'";
@@ -21,6 +36,14 @@ function IsStaff($db, $username, $staff_names)
     return false;
 }
 
+/**
+ * Return true if the username exists in the students table.
+ *
+ * @param PDO    $db       Active PDO connection.
+ * @param string $username Web-server authenticated username.
+ * @param string $students Students table name.
+ * @return bool
+ */
 function IsStudent($db, $username, $students)
 {
     $query = "SELECT * FROM $students WHERE username='$username'";
@@ -43,6 +66,17 @@ function IsStudent($db, $username, $students)
     return false;
 }
 
+/**
+ * Return the super-admin level for a username (0 = no admin privileges).
+ *
+ * Reads from the global `admin_users` table. Used by both the staff and
+ * student tiers — see also GetSuperAdminLevel() in adminusers.php for
+ * the staff-only variant.
+ *
+ * @param PDO    $db       Active PDO connection.
+ * @param string $username Web-server authenticated username.
+ * @return int Admin level (0 = none, positive integer = increasing privilege).
+ */
 function GetSuperAdminLevel_staff_student($db, $username)
 {
     // Returns the admin level - 0 if no admin privilidges
@@ -68,6 +102,16 @@ function GetSuperAdminLevel_staff_student($db, $username)
     return $admin_level;
 }
 
+/**
+ * Check whether the current user has super-admin access and set a display phrase.
+ *
+ * @param PDO    $db                    Active PDO connection.
+ * @param string $this_staff_username   Authenticated username.
+ * @param string $this_staff_full_name  Staff member's full display name.
+ * @param string $staff_names_table     Staff table name (unused here, kept for signature parity).
+ * @param string $access_response_phrase Out param: human-readable access status message.
+ * @return bool True if the user has super-admin access.
+ */
 function access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names_table, &$access_response_phrase) {
     $access = false;
     if (GetSuperAdminLevel_staff_student($db, $this_staff_username)) {

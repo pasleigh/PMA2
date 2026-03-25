@@ -279,8 +279,7 @@ if ($access) {
         error_reporting(0);
         $csv_filename = "staff_names_data.csv";
 
-        $sys_temp_dir = sys_get_temp_dir();
-        $tmpcsvfile = @tempnam($sys_temp_dir, 'x');// @tempnam($sys_temp_dir, '');
+        $tmpcsvfile = @tempnam(PMA_TMP_DIR, 'x');// @tempnam(PMA_TMP_DIR, '');
         if ($tmpcsvfile === false) {
             echo("There seem to be a problem creating the temporary file for download.");
             exit();
@@ -355,8 +354,7 @@ if ($access) {
         $md_html = $_POST['md_html'];
         require_once __DIR__ . '/../../vendor/autoload.php';
 
-        $system_temp_dir = sys_get_temp_dir();
-        $mpdf = new \Mpdf\Mpdf(['tempDir'=>$system_temp_dir]);
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
 
 
         // Set a simple Footer including the date and page number

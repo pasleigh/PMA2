@@ -1,9 +1,25 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: cenpas
- * Date: 24/06/2015
- * Time: 17:01
+ * Database table creation, population, and HTML rendering helpers.
+ *
+ * The create_* functions are called during first-run setup and module duplication
+ * to ensure the required DB tables exist. The HTML-returning functions are used
+ * in the marking and admin pages to render student/staff data.
+ */
+
+/**
+ * Return an HTML table listing all allocated students for a marking part.
+ *
+ * Includes a select-all checkbox, student name, supervisor, second marker,
+ * and a flag showing whether feedback has been sent for this part.
+ *
+ * @param PDO    $db                     Active PDO connection.
+ * @param string $project_allocated      Project allocation table name.
+ * @param string $students_table         Students table name.
+ * @param string $staff_table            Staff table name.
+ * @param string $feedback_records_table Feedback records table name.
+ * @param int    $part                   Assessment part number.
+ * @return string HTML table string.
  */
 function GetStudentListTable($db,$project_allocated, $students_table, $staff_table, $feedback_records_table, $part){
     $select_all_block = "<div>Select/De-select all<input type=\"checkbox\" id=\"select-all\" name=\"selectAll\" checked value=\"\"/></div>\n";
@@ -134,6 +150,17 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
     return $display_block;
 }
 
+/**
+ * Record that feedback has been sent to a student for a given part.
+ *
+ * Inserts a new row or updates the existing one in the feedback records table.
+ *
+ * @param PDO    $db                     Active PDO connection.
+ * @param int    $sid                    Student ID.
+ * @param int    $part                   Assessment part number.
+ * @param string $feedback_records_table Feedback records table name.
+ * @return void
+ */
 function RecordFeedbackSent($db, $sid, $part, $feedback_records_table){
     $query = "select * from $feedback_records_table where sid = $sid";
     try {
@@ -166,6 +193,12 @@ function RecordFeedbackSent($db, $sid, $part, $feedback_records_table){
     }
 }
 
+/**
+ * Create the `header_images` table if it does not already exist.
+ *
+ * @param PDO $db Active PDO connection.
+ * @return void
+ */
 function create_header_images_table_structure($db){
     $query = <<<SQL
     --
@@ -186,6 +219,15 @@ SQL;
     }
 }
 
+/**
+ * Create the `dash_projects_setup` (module configuration) table if it does not exist.
+ *
+ * This table stores per-module settings: number of parts, part names, percentages,
+ * number of markers, mark method, and numeric/grade-band flag.
+ *
+ * @param PDO $db Active PDO connection.
+ * @return void
+ */
 function create_projects_setup_table_structure($db){
 
     $query = <<<SQL
@@ -310,6 +352,12 @@ SQL;
     }
 }
 
+/**
+ * Create the `admin_users` table (global super-admins) if it does not exist.
+ *
+ * @param PDO $db Active PDO connection.
+ * @return void
+ */
 function create_admin_users_table_structure($db){
 
     $query = <<<SQL
@@ -340,6 +388,12 @@ SQL;
 
 }
 
+/**
+ * Create the `admin_users_module` table (per-module admin privileges) if it does not exist.
+ *
+ * @param PDO $db Active PDO connection.
+ * @return void
+ */
 function create_admin_users_module_table_structure($db){
 
     $query = <<<SQL
@@ -367,6 +421,15 @@ SQL;
         echo($err_msg . "<BR>\n");
     }
 }
+/**
+ * Create the `staff_names` table if it does not exist.
+ *
+ * Stores staff details: username, fullname, familyname, firstname, title,
+ * initials, email, admin_level, inactive flag.
+ *
+ * @param PDO $db Active PDO connection.
+ * @return void
+ */
 function create_staff_names_table_structure($db){
 
     $query = <<<SQL
@@ -400,6 +463,15 @@ SQL;
     }
 }
 
+/**
+ * Create the assessment question categories template/examples tables if they do not exist.
+ *
+ * These tables seed the rubric builder with example category structures
+ * that admins can copy when setting up a new module's marking criteria.
+ *
+ * @param PDO $db Active PDO connection.
+ * @return void
+ */
 function create_assessqs_cats_templates_egs($db)
 {
     $query = <<<SQL
@@ -575,6 +647,14 @@ SQL;
     }
 }
 
+/**
+ * Create the assessment question templates/examples tables if they do not exist.
+ *
+ * These tables store example rubric questions that can be copied into new modules.
+ *
+ * @param PDO $db Active PDO connection.
+ * @return void
+ */
 function create_assessqs_templates_egs($db)
 {
     $query = <<<SQL
@@ -999,6 +1079,16 @@ SQL;
 
 }
 
+/**
+ * Create a module-specific project setup table if it does not exist.
+ *
+ * Each module has its own setup table named via $dash_projects_setup
+ * (e.g. `dash_projects_setup_123`).
+ *
+ * @param PDO    $db                  Active PDO connection.
+ * @param string $dash_projects_setup Table name for this module's setup.
+ * @return void
+ */
 function create_dash_projects_setup_table($db, $dash_projects_setup)
 {
     $query = <<<SQL
@@ -1031,6 +1121,16 @@ SQL;
     update_dash_projects_setup_tables($db, $dash_projects_setup);
 }
 
+/**
+ * Add any missing columns to an existing module project setup table.
+ *
+ * Called during setup to bring older module tables up to the current schema
+ * without dropping and recreating them.
+ *
+ * @param PDO    $db                  Active PDO connection.
+ * @param string $dash_projects_setup Table name for this module's setup.
+ * @return void
+ */
 function update_dash_projects_setup_tables($db, $dash_projects_setup)
 {
     // Check that the id=0 is there . Thi sis the ON/OFF switch: staff, student .NE. 0
@@ -1300,6 +1400,14 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     }
 }
 
+/**
+ * Create the global assessment criteria tables if they do not exist.
+ *
+ * These are the master criteria tables shared across modules as templates.
+ *
+ * @param PDO $db Active PDO connection.
+ * @return void
+ */
 function create_assessment_criteria_tables($db)
 {
     $query = <<<SQL
@@ -1359,6 +1467,14 @@ SQL;
     populate_assessment_criteria_tables($db);
 }
 
+/**
+ * Seed the assessment criteria tables with default category and question data.
+ *
+ * Only inserts rows if the tables are empty — safe to call on every setup run.
+ *
+ * @param PDO $db Active PDO connection.
+ * @return void
+ */
 function populate_assessment_criteria_tables($db){
 
     $query = <<<SQL1
@@ -1492,6 +1608,13 @@ SQL2;
     }
 }
 
+/**
+ * Create a feedback records table for tracking which students have received feedback emails.
+ *
+ * @param PDO    $db                         Active PDO connection.
+ * @param string $feedback_records_table_name Table name to create.
+ * @return void
+ */
 function create_feedback_records_table_structure($db, $feedback_records_table_name){
 
     $query = <<<SQL
@@ -1521,6 +1644,13 @@ SQL;
 
 }
 
+/**
+ * Create a project areas table for categorising project proposals by research area.
+ *
+ * @param PDO    $db                    Active PDO connection.
+ * @param string $project_area_table_name Table name to create.
+ * @return void
+ */
 function create_project_areas_table_structure($db, $project_area_table_name){
 
     $query = <<<SQL
@@ -1544,6 +1674,17 @@ SQL;
     }
 }
 
+/**
+ * Return true if a column exists in a given table.
+ *
+ * Note: parameter order is ($column, $table) — the reverse of DoesColumnExistInTable()
+ * in markstore_functions.php. Both do the same thing.
+ *
+ * @param PDO    $db     Active PDO connection.
+ * @param string $column Column name.
+ * @param string $table  Table name.
+ * @return bool
+ */
 function doesColumnExists($db, $column, $table) {
     try {
 

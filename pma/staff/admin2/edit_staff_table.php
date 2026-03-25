@@ -344,8 +344,7 @@ if ($access) {
         error_reporting(0);
         $csv_filename = "staff_names_data_" . $module_prefix . $module1 . $module_postfix . "_" . $short_code . "_" . $year_begin . "-" . $year_end . ".csv";
 
-        $sys_temp_dir = sys_get_temp_dir();
-        $tmpcsvfile = @tempnam($sys_temp_dir, 'x');// @tempnam($sys_temp_dir, '');
+        $tmpcsvfile = @tempnam(PMA_TMP_DIR, 'x');// @tempnam(PMA_TMP_DIR, '');
         if ($tmpcsvfile === false) {
             echo("There seem to be a problem creating the temporary file for download.");
             exit();

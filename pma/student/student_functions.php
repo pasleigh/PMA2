@@ -1,9 +1,18 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: cenpas
- * Date: 18/04/2016
- * Time: 18:59
+ * Student lookup helpers for the student-facing tier.
+ *
+ * All functions accept a $students parameter which is the module-specific
+ * students table name (set by setup_titles.php).
+ */
+
+/**
+ * Return a student's display name looked up by their login username.
+ *
+ * @param PDO    $db               Active PDO connection.
+ * @param string $student_username Web-server authenticated username.
+ * @param string $students         Students table name.
+ * @return string Student name, or empty string if not found.
  */
 function GetStudentNameFromUsername($db,$student_username,$students)
 {
@@ -27,6 +36,14 @@ function GetStudentNameFromUsername($db,$student_username,$students)
     return $student_name;
 }
 
+/**
+ * Return a student's numeric ID (sid) looked up by their login username.
+ *
+ * @param PDO    $db               Active PDO connection.
+ * @param string $student_username Web-server authenticated username.
+ * @param string $students         Students table name.
+ * @return string Numeric student ID, or empty string if not found.
+ */
 function GetStudentIDFromUsername($db,$student_username,$students)
 {
     $student_id = "";
@@ -48,6 +65,14 @@ function GetStudentIDFromUsername($db,$student_username,$students)
 
     return $student_id;
 }
+/**
+ * Return a student's degree programme looked up by their login username.
+ *
+ * @param PDO    $db               Active PDO connection.
+ * @param string $student_username Web-server authenticated username.
+ * @param string $students         Students table name.
+ * @return string Programme string, or empty string if not found.
+ */
 function GetStudentProgrammeFromUsername($db,$student_username,$students)
 {
     $student_programme = "";
@@ -71,6 +96,14 @@ function GetStudentProgrammeFromUsername($db,$student_username,$students)
 }
 
 
+/**
+ * Return a student's login username looked up by their numeric ID.
+ *
+ * @param PDO    $db         Active PDO connection.
+ * @param int    $student_id Numeric student ID (sid column).
+ * @param string $students   Students table name.
+ * @return string Login username, or empty string if not found.
+ */
 function GetStudentUsernameFromID($db,$student_id,$students)
 {
     $student_username = "";
@@ -93,6 +126,14 @@ function GetStudentUsernameFromID($db,$student_id,$students)
     return $student_username;
 }
 
+/**
+ * Return a student's degree programme looked up by their numeric ID.
+ *
+ * @param PDO    $db         Active PDO connection.
+ * @param int    $student_id Numeric student ID (sid column).
+ * @param string $students   Students table name.
+ * @return string Programme string, or empty string if not found.
+ */
 function GetStudentProgrammeFromID($db,$student_id,$students)
 {
     $student_programme = "";
@@ -115,6 +156,15 @@ function GetStudentProgrammeFromID($db,$student_id,$students)
     return $student_programme;
 }
 
+/**
+ * Return true if the username exists in the global `staff_names` table.
+ *
+ * Used on student pages to allow staff to also view student-facing content.
+ *
+ * @param PDO    $db       Active PDO connection.
+ * @param string $username Web-server authenticated username.
+ * @return bool
+ */
 function isStaff($db, $username)
 {
     $result = false;
@@ -134,6 +184,18 @@ function isStaff($db, $username)
     }
     return $result;
 }
+/**
+ * Return true if the student username appears in the module's students table.
+ *
+ * Note: $pm_id is accepted for signature compatibility but is not used in the
+ * current query — the students table is already module-specific.
+ *
+ * @param PDO    $db               Active PDO connection.
+ * @param int    $pm_id            Project-module ID (currently unused in query).
+ * @param string $student_username Web-server authenticated username.
+ * @param string $students         Students table name.
+ * @return bool
+ */
 function isStudent_on_this_module($db, $pm_id, $student_username, $students)
 {
     $result = false;
@@ -155,6 +217,11 @@ function isStudent_on_this_module($db, $pm_id, $student_username, $students)
     return $result;
 }
 
+/**
+ * Return an HTML warning banner for a student who is not listed on the current module.
+ *
+ * @return string HTML div block with a bold yellow/red warning message.
+ */
 function GetStudentNotOnModulePhrase()
 {
 

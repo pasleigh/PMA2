@@ -98,6 +98,27 @@ if(defined("DB_SERVER")){
    define("__PROPS_DIR__",__BASE_DIR__ . "/staff/proposals");
 }
 
+if (!defined('PMA_TMP_DIR')) {
+    // Determine a writable temp directory for mPDF, CSV/XLSX exports, ZIP creation, etc.
+    //
+    // Override by setting the PMA_TMP_DIR environment variable on the server, e.g.:
+    //   Apache:  SetEnv PMA_TMP_DIR /var/www/pma/tmp      (in httpd.conf or .htaccess)
+    //   Linux:   export PMA_TMP_DIR=/var/www/pma/tmp      (in the web-server user's profile)
+    //   Windows: set PMA_TMP_DIR=C:\xampp\htdocs\PMA2\pma\tmp  (system environment variables)
+    //
+    // If not set, falls back to sys_get_temp_dir() when writable (works on Linux/RedHat/Windows),
+    // otherwise falls back to pma/tmp/ which is committed with chmod 777.
+    $_pma_env_tmp = getenv('PMA_TMP_DIR');
+    if ($_pma_env_tmp && is_dir($_pma_env_tmp) && is_writable($_pma_env_tmp)) {
+        define('PMA_TMP_DIR', rtrim($_pma_env_tmp, '/\\'));
+    } elseif (is_writable(sys_get_temp_dir())) {
+        define('PMA_TMP_DIR', rtrim(sys_get_temp_dir(), '/\\'));
+    } else {
+        define('PMA_TMP_DIR', __DIR__ . '/tmp');
+    }
+    unset($_pma_env_tmp);
+}
+
 
 if($dbName){
    $num_days = 30;

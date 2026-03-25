@@ -60,10 +60,7 @@ if($is_module_admin || $admin_access) {
         //--- Download the student selection table ------------------------------//
         $csv_filename = "student_selection_" . $module_prefix . $module1 . $module_postfix . "_" . $short_code . "_" . $year_begin . "-" . $year_end . ".csv";
 
-        $sys_temp_dir = sys_get_temp_dir();
-        $temp_dir = '/tmp';
-        $temp_dir = $sys_temp_dir;
-        $tmpcsvfile = tempnam($temp_dir, '');
+        $tmpcsvfile = tempnam(PMA_TMP_DIR, '');
         $path = dirname($tmpcsvfile);
         //$sys_temp_dir = sys_get_temp_dir();
         //echo("temp filename $tmpcsvfile<BR>\n");

@@ -1,9 +1,21 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: cenpas
- * Date: 24/04/2016
- * Time: 19:35
+ * Student project selection display helpers.
+ *
+ * Generates HTML tables showing a student's project choices, the admin selection
+ * overview, and per-project demand indicators.
+ */
+
+/**
+ * Return true if the named staff member is active in the staff table.
+ *
+ * Checks the global `staff_names` table (or a custom table name).
+ * A staff member with `inactive = 0` is considered active.
+ *
+ * @param PDO    $db                   Active PDO connection.
+ * @param string $this_staff_full_name Staff full name to look up.
+ * @param string $staff_names_table    Staff table name (default: 'staff_names').
+ * @return bool True if the staff member exists and is active.
  */
 function IsStaffActive($db, $this_staff_full_name, $staff_names_table = "staff_names")
 {
@@ -35,6 +47,19 @@ function IsStaffActive($db, $this_staff_full_name, $staff_names_table = "staff_n
     }
     return $active;
 }
+/**
+ * Return an HTML table showing a student's current project choices.
+ *
+ * Displays project title, supervisor, and choice rank. If no choices have been
+ * made, returns a "not yet selected" heading instead.
+ *
+ * @param PDO   $db           Active PDO connection.
+ * @param array $choices      Array of chosen project IDs indexed by rank (1-based).
+ * @param string $master_name Projects master table name.
+ * @param int   $choice_count Maximum number of choices allowed (default 5).
+ * @param bool  $ranked_choice True if choices are ranked; false for unranked selection.
+ * @return string HTML block string.
+ */
 function GetChoiceTable($db,$choices,$master_name,$choice_count = 5, $ranked_choice = true){
 
     if($choices[1] == null){
@@ -129,6 +154,22 @@ function GetChoiceTable($db,$choices,$master_name,$choice_count = 5, $ranked_cho
 }
 
 
+/**
+ * Return an HTML table showing all students' project selections for admin review.
+ *
+ * Each row shows a student alongside their ranked project choices with
+ * popularity indicators. Used on the admin selection overview page.
+ *
+ * @param PDO    $db                   Active PDO connection.
+ * @param string $selection            Student project selection table name.
+ * @param string $choices              Student choices table name.
+ * @param string $master_name          Projects master table name.
+ * @param string $project_details      Project details table name.
+ * @param int    $prog_to_display_index Programme column index to display.
+ * @param int    $choice_count         Maximum number of ranked choices (default 5).
+ * @param bool   $ranked_choice        True if choices are ranked; false for unranked.
+ * @return string HTML table block string.
+ */
 function GetSelectionTable($db,$selection,$choices,$master_name,$project_details,$prog_to_display_index,$choice_count = 5, $ranked_choice = true){
     // Display the table of choices
     // Display the ones that this student is allowed to do by programme
@@ -292,6 +333,20 @@ function GetSelectionTable($db,$selection,$choices,$master_name,$project_details
 
     return $html;
 }
+/**
+ * Return an HTML selection table for modules that use unranked project choice.
+ *
+ * Simplified version of GetSelectionTable() — no rank column.
+ *
+ * @param PDO    $db                   Active PDO connection.
+ * @param string $selection            Student project selection table name.
+ * @param string $choices              Student choices table name.
+ * @param string $master_name          Projects master table name.
+ * @param string $project_details      Project details table name.
+ * @param int    $prog_to_display_index Programme column index to display.
+ * @param int    $choice_count         Maximum number of choices (default 5).
+ * @return string HTML table block string.
+ */
 function GetSelectionTableUnRanked($db,$selection,$choices,$master_name,$project_details,$prog_to_display_index, $choice_count = 5){
     // Display the table of choices
     // Display the ones that this student is allowed to do by programme
@@ -400,6 +455,16 @@ function GetSelectionTableUnRanked($db,$selection,$choices,$master_name,$project
     return $html;
 }
 
+/**
+ * Return the number of project slots offered for a given project.
+ *
+ * Reads the `num_offered` (or equivalent) column from the project details table.
+ *
+ * @param PDO    $db                   Active PDO connection.
+ * @param string $project_details_table Project details table name.
+ * @param int    $pid                  Project ID.
+ * @return int Number of slots offered for this project.
+ */
 function GetNumProjectsOffered($db, $project_details_table, $pid){
     $num_projects = 0;
 
@@ -421,6 +486,14 @@ function GetNumProjectsOffered($db, $project_details_table, $pid){
 
 }
 
+/**
+ * Return the number of students who have selected a given project.
+ *
+ * @param PDO    $db             Active PDO connection.
+ * @param string $selection_table Student selection table name.
+ * @param int    $pid            Project ID.
+ * @return int Number of students who have chosen this project.
+ */
 function GetProjectSelectionCount($db, $selection_table, $pid){
     $num_selected = 0;
 
@@ -489,6 +562,16 @@ function GetProjectSelectionCount($db, $selection_table, $pid){
 
 }
 
+/**
+ * Return a CSS colour string indicating how popular a project is relative to its capacity.
+ *
+ * Used to colour-code project rows in the selection table so admins can quickly
+ * spot over-subscribed or empty projects.
+ *
+ * @param int $num_projects_offered Number of slots offered for this project.
+ * @param int $num_projects_chosen  Number of students who have chosen it.
+ * @return string CSS colour string (e.g. 'red', 'green', 'orange') or empty string if not applicable.
+ */
 function GetProjectPopularityColour($num_projects_offered, $num_projects_chosen){
     $colour = "";
 

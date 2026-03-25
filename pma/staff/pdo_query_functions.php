@@ -1,4 +1,24 @@
 <?php
+/**
+ * PDO prepared-query helpers.
+ *
+ * All three functions build and execute parameterised queries from associative
+ * arrays so that callers never construct SQL strings with raw user data.
+ * On success they return the executed PDOStatement; on failure they echo the
+ * error and return the error-message string.
+ */
+
+/**
+ * Execute a prepared UPDATE statement.
+ *
+ * Builds: UPDATE $table SET col1=:col1, ... WHERE wcol1=:wcol1 AND ...
+ *
+ * @param PDO    $db         Active PDO connection.
+ * @param string $table      Table name (not user-supplied).
+ * @param array  $data       Associative array of column => value pairs to SET.
+ * @param array  $where_data Associative array of column => value pairs for WHERE (ANDed).
+ * @return PDOStatement|string Executed statement on success, error message string on failure.
+ */
 function perform_update_prepared_query($db, $table, $data, $where_data){
     // $data is an associative array dbcolumn names and the data
     // [ 'my_col_name' => my_data ];
@@ -53,6 +73,16 @@ function perform_update_prepared_query($db, $table, $data, $where_data){
     return $results;
 }
 
+/**
+ * Execute a prepared INSERT statement.
+ *
+ * Builds: INSERT $table SET col1=:col1, col2=:col2, ...
+ *
+ * @param PDO    $db    Active PDO connection.
+ * @param string $table Table name (not user-supplied).
+ * @param array  $data  Associative array of column => value pairs to INSERT.
+ * @return PDOStatement|string Executed statement on success, error message string on failure.
+ */
 function perform_insert_prepared_query($db, $table, $data){
     // $data is an associative array dbcolumn names and the data
     // [ 'my_col_name' => my_data ];

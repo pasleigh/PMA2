@@ -46,7 +46,7 @@ ini_set("memory_limit", "144M");
 
 
 $savezip = 1;
-$save_folder = sys_get_temp_dir();
+$save_folder = PMA_TMP_DIR;
 
 $assess_description_text = $p_description[$part];
 $zip_filename = "$module_prefix$module1-$year_begin-$year_end-$assess_description_text.zip";
@@ -146,8 +146,7 @@ if ($num_rows < 1) {
 
             unset($mpdf);
             error_reporting(0);
-            $system_temp_dir = sys_get_temp_dir();
-            $mpdf = new \Mpdf\Mpdf(['tempDir'=>$system_temp_dir]);
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
             $mpdf->useSubstitutions = true;
             //$mpdf->ignore_invalid_utf8 = true;
 

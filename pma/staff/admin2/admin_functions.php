@@ -1,9 +1,24 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: cenpas
- * Date: 05/04/2016
- * Time: 08:43
+ * Admin privilege helpers — full version used by the admin2 tier.
+ *
+ * This file extends adminusers.php with additional functions:
+ *   - admin_functions_block() — renders the admin navigation HTML panel
+ *   - IsModuleAdmin2() — like IsModuleAdmin() but also sets an access phrase
+ *   - access_check_response() — checks both super-admin and project-admin
+ *
+ * Functions duplicated from adminusers.php (IsAdmin, IsProjectAdmin,
+ * GetSuperAdminLevel, GetProjectAdminLevel, IsModuleAdmin,
+ * GetModuleAdminLevelFromPID, GetModuleAdminLevelFromShortCode) are
+ * re-declared here because admin pages include this file instead of adminusers.php.
+ */
+
+/**
+ * Return true if the username has any super-admin privilege (level > 0).
+ *
+ * @param PDO    $db       Active PDO connection.
+ * @param string $username Web-server authenticated username.
+ * @return bool
  */
 function IsAdmin($db, $username){
     if(GetSuperAdminLevel($db,$username) > 0){
@@ -12,12 +27,27 @@ function IsAdmin($db, $username){
     return false;
 }
 
+/**
+ * Return true if the username has project-admin privilege in the staff table.
+ *
+ * @param PDO    $db                Active PDO connection.
+ * @param string $username          Web-server authenticated username.
+ * @param string $staff_names_table Staff table name.
+ * @return bool
+ */
 function IsProjectAdmin($db, $username, $staff_names_table){
     if(GetProjectAdminLevel($db,$username, $staff_names_table) > 0){
         return true;
     }
     return false;
 }
+/**
+ * Return the super-admin level from the global `admin_users` table.
+ *
+ * @param PDO    $db       Active PDO connection.
+ * @param string $username Web-server authenticated username.
+ * @return int 0 = no privilege, positive = increasing admin level.
+ */
 function GetSuperAdminLevel($db, $username)
 {
     // Returns the admin level - 0 if no admin privilidges
@@ -43,6 +73,14 @@ function GetSuperAdminLevel($db, $username)
     return $admin_level;
 }
 
+/**
+ * Return the project-admin level from the staff names table.
+ *
+ * @param PDO    $db          Active PDO connection.
+ * @param string $username    Web-server authenticated username.
+ * @param string $staff_names Staff table name.
+ * @return int 0 = no privilege, positive = increasing admin level.
+ */
 function GetProjectAdminLevel($db, $username, $staff_names)
 {
     // Returns the project admin level - 0 if no admin privileges
@@ -68,6 +106,23 @@ function GetProjectAdminLevel($db, $username, $staff_names)
     return $admin_level;
 }
 
+/**
+ * Return an HTML admin navigation panel for a given module.
+ *
+ * Renders buttons linking to all admin functions: module settings, student/staff
+ * editors, data uploads, email tools, and the marking dashboard. Shown at the
+ * top of admin pages for quick navigation within a module.
+ *
+ * @param PDO    $db               Active PDO connection.
+ * @param int    $pm_id            Project-module ID.
+ * @param string $project_allocated Allocation table name (used to count students).
+ * @param int    $num_parts        Number of assessment parts.
+ * @param array  $p_description    Array of part description strings indexed by part number.
+ * @param string $year_begin       Academic year start (e.g. '2024').
+ * @param string $username         Currently logged-in username.
+ * @param bool   $admin_access     True if user has full admin access (shows extra options).
+ * @return string HTML block string.
+ */
 function admin_functions_block($db,$pm_id,$project_allocated,$num_parts,$p_description,$year_begin, $username, $admin_access){
     $year_end = $year_begin+1;
     $locationdir = "../";
@@ -171,6 +226,18 @@ function admin_functions_block($db,$pm_id,$project_allocated,$num_parts,$p_descr
 
 }
 
+/**
+ * Check whether the current user has super-admin or project-admin access, and set a display phrase.
+ *
+ * Unlike the staff_student_functions.php version, this also accepts project-admins.
+ *
+ * @param PDO    $db                    Active PDO connection.
+ * @param string $this_staff_username   Authenticated username.
+ * @param string $this_staff_full_name  Staff member's full display name.
+ * @param string $staff_names_table     Staff table name (used for project-admin check).
+ * @param string $access_response_phrase Out param: human-readable access status message.
+ * @return bool True if the user has any admin access (super or project).
+ */
 function access_check_response($db,$this_staff_username, $this_staff_full_name, $staff_names_table,&$access_response_phrase){
     $access = false;
     if (IsAdmin($db, $this_staff_username) ){
@@ -189,6 +256,16 @@ function access_check_response($db,$this_staff_username, $this_staff_full_name, 
     return $access;
 }
 
+/**
+ * Return true if the username has admin access to a specific module.
+ *
+ * @param PDO         $db         Active PDO connection.
+ * @param string      $username   Web-server authenticated username.
+ * @param string|null $pm_id      Project-module ID, 'all', or null to use short_code lookup.
+ * @param string|null $short_code Module short code (used when $pm_id is null).
+ * @param string|null $year_begin Academic year start (used with $short_code).
+ * @return bool
+ */
 function IsModuleAdmin($db, $username, $pm_id, $short_code, $year_begin){
     // Can test on either:
     // $pm_id
@@ -210,6 +287,21 @@ function IsModuleAdmin($db, $username, $pm_id, $short_code, $year_begin){
     }
 }
 
+/**
+ * Like IsModuleAdmin() but also sets a human-readable access phrase out-param.
+ *
+ * Used on admin pages that need to display a context-appropriate message
+ * alongside the access check result.
+ *
+ * @param PDO         $db                    Active PDO connection.
+ * @param string      $username              Web-server authenticated username.
+ * @param string      $full_name             Staff member's full display name.
+ * @param string|null $pm_id                 Project-module ID, 'all', or null.
+ * @param string|null $short_code            Module short code (used when $pm_id is null).
+ * @param string|null $year_begin            Academic year start.
+ * @param string      $access_response_phrase Out param: human-readable access status message.
+ * @return bool True if the user has module admin access.
+ */
 function IsModuleAdmin2($db, $username, $full_name, $pm_id, $short_code, $year_begin, &$access_response_phrase){
     // Can test on either:
     // $pm_id
@@ -233,6 +325,14 @@ function IsModuleAdmin2($db, $username, $full_name, $pm_id, $short_code, $year_b
     }
 }
 
+/**
+ * Return the module admin level for a given project-module ID.
+ *
+ * @param PDO    $db       Active PDO connection.
+ * @param string $username Web-server authenticated username.
+ * @param string $pm_id    Project-module ID or 'all'.
+ * @return int 0 = no privilege, positive = admin level.
+ */
 function GetModuleAdminLevelFromPID($db, $username, $pm_id)
 {
     // Returns the project admin level for a module, 0 if no admin privilidges
@@ -268,6 +368,15 @@ function GetModuleAdminLevelFromPID($db, $username, $pm_id)
 
     return $admin_level_module;
 }
+/**
+ * Return the module admin level looked up by short code and year.
+ *
+ * @param PDO    $db         Active PDO connection.
+ * @param string $username   Web-server authenticated username.
+ * @param string $short_code Module short code (e.g. 'EEE3007').
+ * @param string $year_begin Academic year start (e.g. '2024').
+ * @return int 0 = no privilege, positive = admin level.
+ */
 function GetModuleAdminLevelFromShortCode($db, $username, $short_code, $year_begin)
 {
     // Returns the project admin level for a module, 0 if no admin privilidges

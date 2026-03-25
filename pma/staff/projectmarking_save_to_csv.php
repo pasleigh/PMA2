@@ -15,22 +15,8 @@
 
 $csv_filename = "project_marks_" . $module_prefix . $module1 . $module_postfix . "_" . $short_code . "_" . $year_begin . "-" . $year_end . ".csv";
 
-if ( !function_exists('sys_get_temp_dir')) {
-    function sys_get_temp_dir() {
-        if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); }
-        if (!empty($_ENV['TMPDIR'])) { return realpath( $_ENV['TMPDIR']); }
-        if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); }
-        $tempfile=tempnam(__FILE__,'');
-        if (file_exists($tempfile)) {
-            unlink($tempfile);
-            return realpath(dirname($tempfile));
-        }
-        return null;
-    }
-}
-
 //$tmpcsvfile = tempnam("dummy", "");
-$tmpcsvfile = tempnam(sys_get_temp_dir(), "");
+$tmpcsvfile = tempnam(PMA_TMP_DIR, "");
 $path = dirname($tmpcsvfile);
 //echo "$tmpcsvfile $path <br />";
 //$csv_filename = $tmpcsvfile;

@@ -1,4 +1,21 @@
 <?php
+/**
+ * Staff lookup and HTML-widget helpers.
+ *
+ * All functions that accept a $db parameter expect an active PDO connection.
+ * All functions that accept a $staff_table / $staff_names parameter expect
+ * the table name string set by setup_titles.php ($staff_names variable).
+ */
+
+/**
+ * Return a staff member's display name looked up by their numeric ID.
+ *
+ * @param PDO    $db          Active PDO connection.
+ * @param int    $staff_id    Numeric staff ID (staffid column).
+ * @param string $staff_table Staff table name.
+ * @param int    $usetitle    1 = prepend title (Dr, Prof, etc.), 0 = full name only.
+ * @return string Display name, or empty string if not found.
+ */
 function GetStaffNameFromID($db, $staff_id, $staff_table, $usetitle)
 {
     $name = "";
@@ -41,6 +58,14 @@ function GetStaffNameFromID($db, $staff_id, $staff_table, $usetitle)
 
     return $name;
 }
+/**
+ * Return a staff member's email address looked up by their numeric ID.
+ *
+ * @param PDO    $db          Active PDO connection.
+ * @param int    $staff_id    Numeric staff ID.
+ * @param string $staff_table Staff table name.
+ * @return string Email address, or empty string if not found.
+ */
 function GetStaffEmailFromID($db, $staff_id, $staff_table)
 {
     $name = "";
@@ -73,6 +98,14 @@ function GetStaffEmailFromID($db, $staff_id, $staff_table)
     return $email;
 }
 
+/**
+ * Return a staff member's email address looked up by their full name.
+ *
+ * @param PDO    $db             Active PDO connection.
+ * @param string $staff_fullname Full name as stored in the staff table.
+ * @param string $staff_table    Staff table name.
+ * @return string Email address, or empty string if not found.
+ */
 function GetStaffEmailFromFullname($db, $staff_fullname, $staff_table)
 {
     $staff_email = "";
@@ -83,6 +116,14 @@ function GetStaffEmailFromFullname($db, $staff_fullname, $staff_table)
 
     return $staff_email;
 }
+/**
+ * Return a staff member's login username looked up by their full name.
+ *
+ * @param PDO    $db             Active PDO connection.
+ * @param string $staff_fullname Full name as stored in the staff table.
+ * @param string $staff_table    Staff table name.
+ * @return string Login username, or empty string if not found.
+ */
 function GetStaffUsernameFromFullname($db, $staff_fullname, $staff_table){
     $username = "";
     if ($staff_fullname == "") {
@@ -109,6 +150,18 @@ function GetStaffUsernameFromFullname($db, $staff_fullname, $staff_table){
 
     return $username;
 }
+/**
+ * Return a staff member's display name looked up by their login username.
+ *
+ * This is the primary auth check function: a non-empty return confirms the
+ * username exists in the staff table and the user may proceed.
+ *
+ * @param PDO    $db             Active PDO connection.
+ * @param string $staff_username Web-server authenticated username.
+ * @param string $staff_table    Staff table name.
+ * @param int    $usetitle       1 = prepend title (Dr, Prof, etc.), 0 = full name only.
+ * @return string Display name ('Unknown' if username found but name missing, '' if not found at all).
+ */
 function GetStaffNameFromUsername($db, $staff_username, $staff_table, $usetitle)
 {
     $name = "";
@@ -150,6 +203,14 @@ function GetStaffNameFromUsername($db, $staff_username, $staff_table, $usetitle)
     return $name;
 }
 
+/**
+ * Return the numeric staff ID looked up by exact full name.
+ *
+ * @param PDO    $db             Active PDO connection.
+ * @param string $staff_fullname Exact full name as stored in the staff table.
+ * @param string $staff_table    Staff table name.
+ * @return string Numeric staff ID, or empty string if not found.
+ */
 function GetStaffIDFromName($db, $staff_fullname, $staff_table)
 {
     $staff_id = "";
@@ -185,6 +246,16 @@ function GetStaffIDFromName($db, $staff_fullname, $staff_table)
     return $staff_id;
 }
 
+/**
+ * Return the staff ID matched by family name with optional space-separated first-name initial.
+ *
+ * Handles formats: "Sleigh", "Sleigh A", "Sleigh Andrew".
+ *
+ * @param PDO    $db               Active PDO connection.
+ * @param string $staff_family_name Family name, optionally followed by a space and first name/initial.
+ * @param string $staff_table      Staff table name.
+ * @return string Numeric staff ID ('0' if not found).
+ */
 function GetStaffIDFromFamilyNameAndInitial($db, $staff_family_name, $staff_table)
 {
     // Finds match for:
@@ -243,6 +314,17 @@ function GetStaffIDFromFamilyNameAndInitial($db, $staff_family_name, $staff_tabl
     return $staff_id;
 }
 
+/**
+ * Return the staff ID matched by family name with optional comma-separated first-name initial.
+ *
+ * Handles formats: "Sleigh", "Sleigh, A", "Sleigh, Andy".
+ * Used when importing from systems that format names as "Family, First".
+ *
+ * @param PDO    $db               Active PDO connection.
+ * @param string $staff_family_name Family name, optionally followed by ", First".
+ * @param string $staff_table      Staff table name.
+ * @return string Numeric staff ID ('0' if not found).
+ */
 function GetStaffIDFromFamilyNameAndInitial2($db, $staff_family_name, $staff_table)
 {
     // Finds match for:
@@ -301,6 +383,14 @@ function GetStaffIDFromFamilyNameAndInitial2($db, $staff_family_name, $staff_tab
     return $staff_id;
 }
 
+/**
+ * Return true if a staff record exists for the given login username.
+ *
+ * @param PDO    $db             Active PDO connection.
+ * @param string $staff_username Login username.
+ * @param string $staff_table    Staff table name.
+ * @return bool
+ */
 function DoesStaffExistByUsername($db, $staff_username, $staff_table){
     $staff_id = GetStaffIDFromUsername($db, $staff_username, $staff_table);
     if($staff_id == ""){
@@ -311,6 +401,14 @@ function DoesStaffExistByUsername($db, $staff_username, $staff_table){
 
 }
 
+/**
+ * Return the numeric staff ID looked up by login username.
+ *
+ * @param PDO    $db             Active PDO connection.
+ * @param string $staff_username Login username.
+ * @param string $staff_table    Staff table name.
+ * @return string Numeric staff ID, or empty string if not found.
+ */
 function GetStaffIDFromUsername($db, $staff_username, $staff_table)
 {
     $staff_id = "";
@@ -348,6 +446,15 @@ function GetStaffIDFromUsername($db, $staff_username, $staff_table)
     return $staff_id;
 }
 
+/**
+ * Return an HTML `<select>` element listing all active staff ordered by family name.
+ *
+ * @param PDO    $db          Active PDO connection.
+ * @param string $staff_table Staff table name.
+ * @param string $NameKey     The `name` and `id` attribute value for the select element.
+ * @param int    $MatchID     Staff ID of the option to pre-select (staffid column).
+ * @return string HTML `<select>...</select>` string.
+ */
 function GetStaffSelectID($db, $staff_table, $NameKey, $MatchID)
 {
     $staff_select_block = "\n<select name=\"$NameKey\" id=\"$NameKey\" class='form-control'>\n";
@@ -384,6 +491,15 @@ function GetStaffSelectID($db, $staff_table, $NameKey, $MatchID)
     return $staff_select_block;
 }
 
+/**
+ * Return an array of active staff members suitable for JSON encoding.
+ *
+ * Each element has keys: 'id' (staffid) and 'staff_name' (full name).
+ *
+ * @param PDO    $db          Active PDO connection.
+ * @param string $staff_table Staff table name.
+ * @return array<int, array{id: string, staff_name: string}>
+ */
 function get_staff_list_json($db, $staff_table){
     $staff_array = array();
     $err_msg = "";
@@ -415,6 +531,14 @@ function get_staff_list_json($db, $staff_table){
     return $staff_array;
 }
 
+/**
+ * Return an HTML `<select>` listing all schools from the KMAP definition table.
+ *
+ * @param PDO    $db      Active PDO connection.
+ * @param string $NameKey The `name` and `id` attribute value for the select element.
+ * @param int    $MatchID School ID to pre-select.
+ * @return string HTML `<select>...</select>` string.
+ */
 function GetSchoolSelectID($db,  $NameKey, $MatchID)
 {
     $definition_table = GetKMAPDefinitionTableName();
@@ -451,6 +575,14 @@ function GetSchoolSelectID($db,  $NameKey, $MatchID)
     return $school_select_block;
 }
 
+/**
+ * Return an HTML `<select>` listing all semesters from the KMAP Banner PTRM codes table.
+ *
+ * @param PDO    $db      Active PDO connection.
+ * @param string $NameKey The `name` and `id` attribute value for the select element.
+ * @param string $MatchID Banner semester code to pre-select.
+ * @return string HTML `<select>...</select>` string.
+ */
 function GetSemesterSelectID($db,  $NameKey, $MatchID)
 {
     $semester_table = GetKMAPBannerPTRMCodesTableName();
@@ -485,6 +617,19 @@ function GetSemesterSelectID($db,  $NameKey, $MatchID)
 
     return $semester_select_block;
 }
+/**
+ * Return an HTML `<select>` for staff with a custom `onchange` handler.
+ *
+ * Same as GetStaffSelectID() but the select element includes an inline
+ * `onchange` attribute, used where selecting a staff member triggers JS.
+ *
+ * @param PDO    $db          Active PDO connection.
+ * @param string $staff_table Staff table name.
+ * @param string $NameKey     The `name` attribute value for the select element.
+ * @param int    $MatchID     Staff ID to pre-select.
+ * @param string $OnChange    JavaScript expression for the `onchange` attribute.
+ * @return string HTML `<select>...</select>` string.
+ */
 function GetStaffSelectIDWithOnChange($db, $staff_table, $NameKey, $MatchID, $OnChange)
 {
     $staff_select_block = "\n<select name=\"$NameKey\" onchange=\"$OnChange\">\n";
@@ -521,6 +666,15 @@ function GetStaffSelectIDWithOnChange($db, $staff_table, $NameKey, $MatchID, $On
     return $staff_select_block;
 }
 
+/**
+ * Return a string of `<option>` elements for all active staff (no wrapping `<select>`).
+ *
+ * Use this when you need to inject options into an existing select element.
+ *
+ * @param PDO    $db          Active PDO connection.
+ * @param string $staff_table Staff table name.
+ * @return string HTML `<option>` elements string.
+ */
 function GetAllStaffSelectOptions($db, $staff_table){
     $staff_select_options_block = "";
     $staff_select_options_block .= "<option value='-1'>--- Select Staff Name ---</option>\n";
@@ -552,6 +706,18 @@ function GetAllStaffSelectOptions($db, $staff_table){
     return $staff_select_options_block;
 }
 
+/**
+ * Return true if the given staff ID and full name refer to the same record.
+ *
+ * Used to validate that a form-submitted name matches the submitted ID,
+ * preventing tampering where only the ID is used in a query.
+ *
+ * @param PDO    $db          Active PDO connection.
+ * @param string $staff_table Staff table name.
+ * @param int    $StaffID     Staff ID to look up.
+ * @param string $StaffName   Full name to compare against.
+ * @return bool True if the name in the DB matches $StaffName.
+ */
 function CompareIDandFullname($db, $staff_table, $StaffID, $StaffName)
 {
     $get_staff_list_query = "select * from $staff_table where staffid = $StaffID";
@@ -579,6 +745,14 @@ function CompareIDandFullname($db, $staff_table, $StaffID, $StaffName)
     return FALSE;
 }
 
+/**
+ * Return the number of projects supervised by a staff member.
+ *
+ * @param PDO    $db                        Active PDO connection.
+ * @param string $projects_master_name_table Projects master table name.
+ * @param int    $staffid                   Staff ID to count for.
+ * @return int Number of supervised projects.
+ */
 function CountSupervisedProjectsByID($db,$projects_master_name_table,$staffid)
 {
     $num_supervise = 0;
@@ -598,6 +772,14 @@ function CountSupervisedProjectsByID($db,$projects_master_name_table,$staffid)
 
     return $num_supervise;
 }
+/**
+ * Return the number of projects for which a staff member is the second marker.
+ *
+ * @param PDO    $db                    Active PDO connection.
+ * @param string $project_details_table Project details table name.
+ * @param int    $staffid               Staff ID to count for.
+ * @return int Number of projects being second-marked by this staff member.
+ */
 function CountSecondMarkedProjectsByID($db,$project_details_table,$staffid){
     $num_second_mark = 0;
     $query = "select * from $project_details_table where f_assocstaff_id = $staffid";
@@ -616,6 +798,16 @@ function CountSecondMarkedProjectsByID($db,$project_details_table,$staffid){
     return $num_second_mark;
 }
 
+/**
+ * Convert Windows-1252 "smart quote" characters to their HTML entity equivalents.
+ *
+ * Handles curly quotes, em/en dashes, and ellipsis characters that are
+ * commonly pasted in from Word or other Windows applications. This prevents
+ * encoding corruption when the content is stored or displayed as UTF-8.
+ *
+ * @param string $string Input string potentially containing smart quotes.
+ * @return string String with smart quote bytes replaced by HTML entities.
+ */
 /**
 
  *  Ã¢â‚¬Ëœ  8216  curly left single quote

@@ -1,4 +1,37 @@
 <?php
+/**
+ * Generate the HTML feedback report for a single student's assessed part.
+ *
+ * Builds a complete feedback display including the student/marker header table,
+ * per-category question-level marks and comments, and the overall mark summary.
+ * The returned HTML string is used both for on-screen display and as input to
+ * mPDF for PDF generation (the same HTML is rendered in both contexts).
+ *
+ * @param PDO    $db                 Active PDO connection.
+ * @param int    $sid                Student ID.
+ * @param string $markstore1         Marker 1 mark-store table name.
+ * @param string $markstore2         Marker 2 mark-store table name.
+ * @param string $markstore3         Marker 3 mark-store table name.
+ * @param string $markstore_totals   Totals/reconciliation table name.
+ * @param string $assessqs           Assessment questions table name.
+ * @param string $student_name       Student's full display name.
+ * @param string $username           Student's login username.
+ * @param string $title              Project title.
+ * @param string $supervisor_name    Supervisor's full name.
+ * @param string $second_marker_name Second marker's full name.
+ * @param string $marker_name        Primary marker's full name.
+ * @param int    $project_id         Project ID.
+ * @param string $assesstype         Assessment type code.
+ * @param string $assess_cats        Assessment categories (DB value).
+ * @param float  $max_mark           Maximum mark for this part.
+ * @param float  $mark_pc            Percentage contribution of this part to the module mark.
+ * @param string $programme          Student's degree programme.
+ * @param int    $assesspart         Assessment part number.
+ * @param string $assesstype_desc    Human-readable assessment type description.
+ * @param string $module_desc        Human-readable module description.
+ * @param int    $is_numeric         1 = numeric scoring, 0 = grade band scoring.
+ * @return string HTML feedback block ready to echo or pass to mPDF.
+ */
 function show_feedback_form1($db,$sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs,$student_name,$username,$title,$supervisor_name,$second_marker_name,$marker_name, $project_id,$assesstype, $assess_cats, $max_mark, $mark_pc,$programme, $assesspart,$assesstype_desc, $module_desc, $is_numeric)
 {
 //function show_feedback_form($sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs,$student_name,$username,$title,$supervisor_name,$second_marker_name,$marker_name, $project_id,$assesstype, $assess_cats, $max_mark, $mark_pc,$programme, $assesspart,$assesstype_desc, $module_desc, $is_numeric)

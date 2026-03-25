@@ -36,8 +36,7 @@ if($gzipit){
 }
 
 
-$sys_temp_dir = sys_get_temp_dir();
-$tmpsqlfile = tempnam($sys_temp_dir, "");
+$tmpsqlfile = tempnam(PMA_TMP_DIR, "");
 $path = dirname($tmpsqlfile);
 
 $access = false;
