@@ -18,7 +18,8 @@
       "Bash(do)",
       "Bash(perl -i -pe \"s/^[ \\\\t]+\\(\\\\$mpdf = new \\\\\\\\Mpdf\\\\\\\\Mpdf\\\\\\([''tempDir'']/            $1/\" \"$f\")",
       "Bash(done)",
-      "Bash(chmod 777 /Applications/XAMPP/xamppfiles/htdocs/PMA2/pma/tmp/mpdf)"
+      "Bash(chmod 777 /Applications/XAMPP/xamppfiles/htdocs/PMA2/pma/tmp/mpdf)",
+      "Bash(grep -r \"@include_once\\\\|require_once\" /Applications/XAMPP/xamppfiles/htdocs/PMA2/pma/*.php)"
     ]
   }
 }
