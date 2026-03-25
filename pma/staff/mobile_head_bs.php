@@ -58,7 +58,7 @@ $gear_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
             white-space:normal !important;
             max-width:400px;
             margin-bottom:4px;
-            word-wrap:break-word;"
+            word-wrap:break-word;
         }
 
     </style>
