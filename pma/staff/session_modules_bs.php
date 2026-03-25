@@ -32,6 +32,7 @@ try {
 $rows = $results->fetchAll();
 
 $greeting_block = "<h4>You are logged in as $this_staff_full_name ($this_staff_username)</h4>";
+$greeting_block .= "<h4>Below is a list of modules for the academic session $year_begin/$year_end</h4>";
 $display_block = $greeting_block;
 
 $display_propose_block = "";
