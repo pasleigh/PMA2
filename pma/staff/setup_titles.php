@@ -34,7 +34,6 @@ date_default_timezone_set('Europe/London');
 
 if (empty($db)) {
     require(__STAFF_DIR__ . '/connect_pdo.php');
-    //require('./connect_pdo.php');
 }
 
 // Needed later

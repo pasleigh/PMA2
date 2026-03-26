@@ -79,10 +79,12 @@ if (empty($staff_full_name)) {
 
 $display_pma_block = "block";
 $display_feedback_block = "block";
+/*
 if($school == "kmap2"){
     $display_pma_block = "none";
     $display_feedback_block = "block";
 }
+*/
 $display_block .= $greeting_block;
 
 $session_buttons = "";
@@ -111,7 +113,7 @@ if ($access) {
         $session_buttons .= "<A href='./session_modules_bs.php?year_begin=$year_begin' class='btn btn-lg btn-warning' target='_top'>Academic session $year_begin/$year_end  &raquo;</A>\n";
 
     }
-
+/*
     // If dash feedback available?
     $query = "SELECT * FROM $dash_projects_setup";
     try {
@@ -173,6 +175,7 @@ if ($access) {
             //$display_block .= "<P><em>$title</em>: $description - $subtitle. NOT AVAIABLE</P>\n";
         }
         // KAI-MAP
+
         $id = $kmap_id;
         $description = $recs[$id]['description'];
         $title = $recs[$id]['title'];
@@ -202,7 +205,7 @@ if ($access) {
     } else {
         $staff_feedback_dash_visibility = "none";
     }
-
+*/
 }
 
 $footer_link = date('l jS \of F Y, h:i A');
@@ -268,16 +271,18 @@ if (IsAdmin($db, $staff_username)) {
             </div>
         </div>
     </div>
+    <!--
     <div class="container-fluid text-center" style="display: <?php echo($staff_feedback_dash_visibility) ?>;">
         <hr class="style1" style="display: <?php echo("$display_pma_block"); ?>">
         <div class="well wellfb text-center bg-dark text-white" style="display: <?php echo("$display_feedback_block"); ?>">
             <H4 style="display: <?php echo("$display_pma_block"); ?>">Feedback Dashboard</H4>
             <div class="btn-group-vertical  btn-group-lg" role="group">
-                <!--<div class="d-grid gap-1 col-4 mx-auto">-->
+
                 <?php echo("$dash_buttons"); ?>
             </div>
         </div>
     </div>
+-->
 </div>
 
 <!--

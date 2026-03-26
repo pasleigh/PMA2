@@ -180,7 +180,7 @@ if($is_module_admin_any || $admin_access) {
             $display_block .= "<LI><a href=\"./change_school_definition.php\">Edit the name and header image</a></LI>\n";
             $display_block .= "<LI><a href=\"./edit_staff_table_bs.php?default_table=1\">Edit staff table </a> (This is  a <em>global</em> list of staff. Any of which may be working on any modules or tools.)</LI>\n";
             $display_block .= "<LI><a href=\"./upload_assessment_criteria_xlsx.php\">Upload a new Assessment Criteria table from xlsx/csv</a></LI>\n";
-            $display_block .= "<LI><a href=\"./edit_dash_feedback_tools.php\">Configure feedback tools</a></LI>\n";
+            //$display_block .= "<LI><a href=\"./edit_dash_feedback_tools.php\">Configure feedback tools</a></LI>\n";
             //$display_block .= "<BR><a href=\"" . $locationdir . "admin2/setup_questions_templates.php\">Edit template questions</a><br>\n";
             $display_block .= "<LI><A href=\"./edit_admin_users.php\">Edit System Level admin users (NOT module admin)</A></LI>\n";
             $display_block .= "<LI><A href=\"./edit_admin_users_module.php\">Edit Module/Tool Level admin users</A></LI>\n";

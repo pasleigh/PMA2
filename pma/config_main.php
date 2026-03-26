@@ -5,13 +5,13 @@ $password = "";
 
 $hostname = "localhost";
 $base_dir = "/var/www/html/pma";
-//$base_dir = "C:\\xampp\\htdocs\\PMA2\\pma";
+$base_dir = "C:\\xampp\\htdocs\\PMA2\\pma";
 // mac
-$base_dir = "/Applications/XAMPP/xamppfiles/htdocs/PMA2/pma";
+//$base_dir = "/Applications/XAMPP/xamppfiles/htdocs/PMA2/pma";
 // own server
 //$base_dir = "/var/www/vhosts/sleigh-munoz.co.uk/httpdocs/pma/ProjectMarkingApp-main/pma";
 
-$_creds_file = __DIR__ . '/../.db_credentials.php';
+$_creds_file = __DIR__ . '/../db_credentials.php';
 if (!file_exists($_creds_file)) {
     die("Database credentials file not found. Copy db_credentials.example.php to db_credentials.php and fill in values.");
 }
@@ -67,11 +67,6 @@ switch ($school) {
     $dbName = $_creds['env']['db'];
     $dbusername = $_creds['env']['user'];
     $password   = $_creds['env']['pass'];
-    break;
-  case "kmap2":
-    $dbName = $_creds['kmap2']['db'];
-    $dbusername = $_creds['kmap2']['user'];
-    $password   = $_creds['kmap2']['pass'];
     break;
   default:
     echo("School not defined. <BR>Go to the <A href='../index_pma.html'>index</A>");
