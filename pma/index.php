@@ -10,7 +10,6 @@ if (array_key_exists('debug', $_GET)) {
 }
 
 $rel_dir = "staff";
-//(@include_once("./staff/config.php")) OR die("Cannot find this file to include: config.php<BR>");
 (@include_once("./staff/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
 // Does the definition table exist?
 $table_name = "definition";
@@ -85,9 +84,6 @@ $location = ".";
     <meta charset="utf-8">
 
     <title>The Engineering Projects Marking App</title>
-    <!--
-    <link rel="Shortcut Icon" type="image/ico" href="<?php echo("$protocol://$BASE_URL_VALUE") ?>/staff/images/favicon.ico"/>
-    -->
     <link rel="Shortcut Icon" type="image/ico" href="<?php echo("$location") ?>/staff/images/favicon.ico"/>
 
     <STYLE type="text/css">

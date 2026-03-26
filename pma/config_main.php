@@ -11,7 +11,7 @@ $base_dir = "/Applications/XAMPP/xamppfiles/htdocs/PMA2/pma";
 // own server
 //$base_dir = "/var/www/vhosts/sleigh-munoz.co.uk/httpdocs/pma/ProjectMarkingApp-main/pma";
 
-$_creds_file = __DIR__ . '/../db_credentials.php';
+$_creds_file = __DIR__ . '/../.db_credentials.php';
 if (!file_exists($_creds_file)) {
     die("Database credentials file not found. Copy db_credentials.example.php to db_credentials.php and fill in values.");
 }

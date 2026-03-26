@@ -65,7 +65,7 @@ PMA2/
     ├── config_main.php         ← Master config: DB settings, school definitions
     ├── tmp/                    ← Runtime temp files (mPDF output, not in git)
     │
-    ├── staff/                  ← Staff marking & assessment (48 files)
+    ├── staff/                  ← Staff marking & assessment (44 files)
     │   ├── set_dir_staff.php   ← Path init + session_start (loaded first)
     │   ├── config.php          ← Loads config_main.php
     │   ├── connect_pdo.php     ← PDO DB connection object ($pdo)
@@ -335,7 +335,7 @@ Many pages exist in two versions. The project is in the process of migrating fro
 | Suffix / Location | UI Framework | Status |
 |---|---|---|
 | `*_bs.php` in `staff/` | Bootstrap 5.2.3 | Current / preferred |
-| `*.php` (no suffix) in `staff/` | No framework (desktop) or Bootstrap 3 | Legacy — being replaced |
+| `*.php` (no suffix) in `staff/` | No framework (desktop) or Bootstrap 3 | Legacy — being replaced (several already removed) |
 | `proposals_bs/` | Bootstrap 5.2.3 | Current |
 | `proposals/` | Bootstrap 3.3.7 | Legacy |
 | `admin2/*_bs.php` | Bootstrap 5.2.3 | Current |
@@ -412,8 +412,7 @@ flowchart TD
 **Important:** mPDF requires `pma/tmp/mpdf/` to exist and be writable by the web server (`chmod 777`). This directory is excluded from git via `.gitignore`.
 
 Pages that generate PDFs:
-- `assess_minor_part_questions_bs.php` and its side-by-side variants
-- `assess_minor_part_questions.php` and its side-by-side variants (legacy)
+- `assess_minor_part_questions_bs.php` and its side-by-side variants (`_side_by_side_bs.php`, `_3_side_by_side_bs.php`)
 - `show_overall_mark_feedback_pdf.php`
 - `projectmarking_save_part_pdf_feedback_to_zip.php` (bulk ZIP)
 
@@ -451,4 +450,4 @@ db_credentials.php          (server-specific, not in git)
 
 ---
 
-*Generated 2026-03-25. Update this document when adding new sections or changing the include chain.*
+*Last updated 2026-03-25. Update this document when adding new sections or changing the include chain.*
