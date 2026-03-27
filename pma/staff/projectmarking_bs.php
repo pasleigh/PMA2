@@ -468,6 +468,18 @@ foreach ($all_students_rows as $student_recs) {
 $table_body .= "</tbody>";
 
 //mysql_close();
+$admin_link_text = "";
+$show_admin_link = "none";
+$admin_link = "";
+if (IsAdmin($db, $this_staff_username)) {
+    $admin_link = "./admin2/";
+    $admin_link_text = "Super Admin";
+    $show_admin_link = "block";
+} else if (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
+    $admin_link = "./admin2/";
+    $admin_link_text = "Admin";
+    $show_admin_link = "block";
+}
 ?>
 <!DOCTYPE HTML>
 <!--<html manifest="app.manifest">-->
@@ -500,13 +512,22 @@ $table_body .= "</tbody>";
         );
     })
 </script>
-<body>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Marking table for <?PHP echo("$top_bar_prefix $module_short_description  $module_prefix$module1$module_postfix ($short_code) $year_begin/$year_end") ?></span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="./projectmarking_select_bs.php<?PHP echo("?pm_id=$pm_id"); ?>" class="nav-link px-2 text-white-50"><?PHP echo("$module_prefix$module1$module_postfix index"); ?></a></li>
+        </ul>
+        <div class="navbar-brand ms-auto" style="display: <?php echo($show_admin_link);?>">
+            <a target='_top' class="navbar-brand" href='<?php echo("$admin_link"); ?>'>
+                <i class="bi bi-gear"></i>
+                <?php echo("$admin_link_text"); ?>
+            </a>
+        </div>
+    </div>
+</nav>
 <div id="wrapper">
-
-    <div id="header">
-        <span
-                class="header">Marking table for <?PHP echo("$top_bar_prefix $module_short_description  $module_prefix$module1$module_postfix ($short_code) $year_begin/$year_end") ?></span>
-    </div><!-- /header -->
 
     <div class="container-fluid" id="content">
         <?php echo("$connect_msg"); ?>
@@ -517,10 +538,6 @@ $table_body .= "</tbody>";
 
     </div><!-- /content -->
 
-    <div id="footer">
-        <span><BR><a target="_self" href="./projectmarking_select_bs.php<?PHP echo("?pm_id=$pm_id"); ?>"
-                     style="color: dimgray;"><?PHP echo("$module_prefix$module1$module_postfix index"); ?></a></span>
-    </div><!-- /footer -->
 
 </div><!-- /wrapper -->
 </body>
@@ -533,7 +550,7 @@ $table_body .= "</tbody>";
             ]
         }
         let mydata = <?php echo json_encode($table_rows); ?>;
-        console.log(mydata);
+        //console.log(mydata);
         $('#studentlist').DataTable({
             //data: project_marking_data.markers,
             data: mydata,

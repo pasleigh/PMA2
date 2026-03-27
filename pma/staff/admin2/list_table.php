@@ -91,33 +91,32 @@ if(array_key_exists('submit_list_all',$_POST)) {
     }
 }
 ?>
-
-<HTML>
-
+<!DOCTYPE HTML>
+<html>
 <?php
-(@include_once("admin_desktop_head.php")) OR die("Cannot find this file to include: admin_desktop_head.php<BR>");
+(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
 ?>
-<style>
-    table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
-    }
-</style>
-<BODY>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Table contents listing</span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Admin index page</a></li>
+        </ul>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <span class="header">Table contents listing</span>
-    </div><!-- /header -->
-
     <div id="content">
+        <div class="container">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
         <?php echo $display_block; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- /content -->
-
-    <div id="footer">
-        <P>Return to the
-            <a href="./index.php">Admin index page</a>.
-    </div><!-- /footer -->
-
 </div><!-- /wrapper -->
-</BODY>
-</HTML>
+</body>
+</html>

@@ -13,6 +13,7 @@ ob_start(); // Buffer all output — required so mPDF can set Content-Type heade
 (@include_once("./staff_functions.php")) OR die("Cannot include staff_function.php<BR>");
 (@include_once("./show_feedback_form.php")) OR die("Cannot include show_feedback<BR>");
 (@include_once("./show_mark_questions2_bs.php")) OR die("Cannot include show_mark_questions2<BR>");
+(@include_once("./admin2/admin_functions.php")) OR die("Cannot include admin functions<BR>");
 (@include_once("./markstore_functions.php")) OR die("Cannot include markstore_function.php<BR>");
 (@include_once("./pdo_query_functions.php")) OR die("Cannot include pdo_query_functions<BR>");
 
@@ -791,7 +792,18 @@ if ($POST_OP == "commit") {
 
 }
 // End of main
-
+$admin_link_text = "";
+$show_admin_link = "none";
+$admin_link = "";
+if (IsAdmin($db, $this_staff_username)) {
+    $admin_link = "./admin2/";
+    $admin_link_text = "Super Admin";
+    $show_admin_link = "block";
+} else if (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
+    $admin_link = "./admin2/";
+    $admin_link_text = "Admin";
+    $show_admin_link = "block";
+}
 ?>
 
 <!DOCTYPE html>
@@ -1019,13 +1031,24 @@ if ($POST_OP == "commit") {
     }
 </script>
 
-<BODY>
-<div id="wrapper">
-    <div id="header">
-        <span
-            class="header">Modify individual project details :- <?PHP echo("$module_short_description  $module_prefix$module1  $year_begin/$year_end") ?></span>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Compare Marking :- <?PHP echo("$module_short_description  $module_prefix$module1  $year_begin/$year_end") ?></span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="<?php echo("$project_marking_page?pm_id=$pm_id") ?>" class="nav-link px-2 text-white-50">Full marking list</a></li>
+            <li class="nav-item"><a href="<?php echo("$project_marking_page?pm_id=$pm_id&user=1") ?>" class="nav-link px-2 text-white-50">User marking list</a></li>
+            <li class="nav-item"><a href="./index.php" class="nav-link px-2 text-white-50">Year index page</a></li>
+        </ul>
+        <div class="navbar-brand ms-auto" style="display: <?php echo($show_admin_link);?>">
+            <a target='_top' class="navbar-brand" href='<?php echo("$admin_link"); ?>'>
+                <i class="bi bi-gear"></i>
+                <?php echo("$admin_link_text"); ?>
+            </a>
+        </div>
     </div>
-    <!-- /header -->
+</nav>
+<div id="wrapper">
 
     <div id="content">
         <!-- /display_block start -->
@@ -1034,14 +1057,6 @@ if ($POST_OP == "commit") {
     </div>
     <!-- /content -->
 
-    <!-- /footer -->
-    <footer class="py-3 my-4 bg-dark text-white">
-        <ul class="nav justify-content-center">
-            <li class="nav-item"><a target="_self" href="<?php echo("$project_marking_page?pm_id=$pm_id") ?>" class="nav-link px-2 text-muted">Full marking list</a></li>
-            <li class="nav-item"><a href="<?php echo("$project_marking_page?pm_id=$pm_id&user=1") ?>" class="nav-link px-2 text-muted">User marking list</a></li>
-            <li class="nav-item"><a href="./index.php" class="nav-link px-2 text-muted">Year index page</a></li>
-        </ul>
-    </footer>
 </div>
 <!-- /wrapper -->
 </BODY>

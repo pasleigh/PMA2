@@ -512,19 +512,22 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
 }
 
 ?>
-<HTML>
+<!DOCTYPE HTML>
+<html>
 <?php
-(@include_once("./$mobile_head_admin_bs")) OR die("Cannot find this file to include: $mobile_head_admin_bs<BR>");
-//(@include_once("admin_desktop_head.php")) or die("Cannot find this file to include: admin_desktop_head.php<BR>");
+(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
 ?>
-<script>
-
-</script>
-<BODY>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Edit Staff details - Staff details are the same for ALL modules on this system</span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Main admin page</a></li>
+        </ul>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <div class="header">Edit Staff details - Staff details are the same for ALL modules on this system </div>
-    </div><!-- /header -->
 
     <div id="content">
         <div class="container">
@@ -584,17 +587,8 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
         </div>
 
     </div><!-- /content -->
-<BR>
-    <div class="footer_link" id="footer">
-        <BR>
-        <P>Return to the
-            <a href="../index.php">Year index page</a> -
-            <a href="./index.php">Main admin page</a>.
-        </P>
-    </div><!-- /footer -->
-
 </div><!-- /wrapper -->
-</BODY>
+</body>
 <script>
     function setup_staff_table(){
         //$('#allCityDataTable').empty();
@@ -874,4 +868,4 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
         setup_staff_table();
     });
 </script>
-</HTML>
+</html>

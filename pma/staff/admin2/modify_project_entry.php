@@ -241,66 +241,34 @@ $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\"
 $display_block .= "</form>\n";
 
 ?>
-<!DOCTYPE html>
-<HTML>
-<HEAD>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <TITLE>Create new project entry</TITLE>
-    <link rel="stylesheet" type="text/css" href="../css/pagedesc.css"/>
-    <!-- Load jQuery from Google's CDN -->
-    <!-- Load jQuery UI CSS  -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
-    <!-- Load jQuery JS -->
-    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-    <!-- Load jQuery UI Main JS  -->
-    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script type="text/javascript">
-        $(function () {
-            var pickerOpts = {
-                //dateFormat:"d MM yy"
-                dateFormat: $.datepicker.ATOM
-            };
-            $("#staff_close_date").datepicker(pickerOpts);
-            $("#student_selection_open_date").datepicker(pickerOpts);
-            $("#student_selection_close_date").datepicker(pickerOpts);
-            $("#allocation_date").datepicker(pickerOpts);
-            $("#p1_marking_date").datepicker(pickerOpts);
-            $("#p2_submission_date").datepicker(pickerOpts);
-            $("#p1_submission_date").datepicker(pickerOpts);
-            $("#p1_marking_date").datepicker(pickerOpts);
-            $("#p2_submission_date").datepicker(pickerOpts);
-            $("#p2_marking_date").datepicker(pickerOpts);
-            $("#p3_submission_date").datepicker(pickerOpts);
-            $("#p3_marking_date").datepicker(pickerOpts);
-            $("#p4_submission_date").datepicker(pickerOpts);
-            $("#p4_marking_date").datepicker(pickerOpts);
-            $("#p5_submission_date").datepicker(pickerOpts);
-            $("#p5_marking_date").datepicker(pickerOpts);
-        });
-    </script>
-
-</HEAD>
-<BODY>
+<!DOCTYPE HTML>
+<html>
+<?php
+(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+?>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Create New Project Entry in the database</span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="<?php echo "$_SERVER[PHP_SELF]?pm_id=$pm_id" ?>" class="nav-link px-2 text-white-50">Reload this page</a></li>
+            <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Admin index page</a></li>
+            <li class="nav-item"><a target="_self" href="../index.php<?php echo("?year_begin=$year_begin") ?>" class="nav-link px-2 text-white-50">Year index page</a></li>
+        </ul>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <span class="header">Create New Project Entry in the database </span>
-    </div><!-- /header -->
-
     <div id="content">
+        <div class="container">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
         <?php echo $display_block; ?>
-
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- /content -->
-
-    <div id="footer">
-        <strong>Cliking the links below without committing the changes means they will all be lost.</strong><BR>Return
-        to the
-        <a href="<?php echo "$_SERVER[PHP_SELF]?pm_id=$pm_id" ?>">Reload this page</a>
-        or go to the
-        <a href="./index.php">Admin index page</a>.
-        or go to the
-        <a href="../index.php<?php echo("?year_begin=$year_begin") ?>">Year index page</a>.
-    </div><!-- /footer -->
-
 </div><!-- /wrapper -->
-</BODY>
-</HTML>
+</body>
+</html>

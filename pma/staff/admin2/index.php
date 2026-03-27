@@ -9,10 +9,6 @@
 (@include_once("../staff_functions.php")) OR die("Cannot open staff_functions.php<BR>");
 (@include_once("../markstore_functions.php")) OR die("Cannot open staff_functions.php<BR>");
 
-//foreach ($_SERVER as $key=>$val )
-//{
-//}
-
 $display_block = "";
 $display_block .= $connect_msg;
 
@@ -76,11 +72,6 @@ if($is_module_admin_any || $admin_access) {
     }
 
 // see all the POST values
-    /*
-    foreach ($_POST as $key => $value){
-      echo "{$key} = {$value}<BR>\r\n";
-    }
-    */
     $locationdir = "../";
 
     $query = "select * from $projects_setup where 1 order by year_begin desc";
@@ -219,29 +210,32 @@ if($is_module_admin_any || $admin_access) {
 }
 
 ?>
-<HTML>
-<HEAD>
-    <?php
-    (@include_once("admin_desktop_head.php")) OR die("Cannot find this file to include: admin_desktop_head.php<BR>");
-    ?>
-
-</HEAD>
-<BODY>
+<!DOCTYPE HTML>
+<html>
+<?php
+(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+?>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Set up and amend data (<?php echo("$school"); ?>)</span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../index.php<?php echo("?year_begin=$year_begin") ?>" class="nav-link px-2 text-white-50">Main home page</a></li>
+        </ul>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <span class="header">Set up and amend data (<?php echo("$school"); ?>)</span>
-    </div><!-- /header -->
-
     <div id="content">
+        <div class="container">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
         <?php echo $display_block; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- /content -->
-
-    <div id="footer">
-        <P class="footer_link">Go to the
-        <a href="../index.php<?php echo("?year_begin=$year_begin") ?>">Main home page</a>.
-        </P>
-    </div><!-- /footer -->
-
 </div><!-- /wrapper -->
-</BODY>
-</HTML>
+</body>
+</html>

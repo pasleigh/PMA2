@@ -64,6 +64,18 @@ if ($access || $is_module_admin) {
     $display_block .= "</div>";
 
 }
+$admin_link_text = "";
+$show_admin_link = "none";
+$admin_link = "";
+if (IsAdmin($db, $this_staff_username)) {
+    $admin_link = "./admin2/";
+    $admin_link_text = "Super Admin";
+    $show_admin_link = "block";
+} else if (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
+    $admin_link = "./admin2/";
+    $admin_link_text = "Admin";
+    $show_admin_link = "block";
+}
 ?>
 <!DOCTYPE HTML>
 <!--<html manifest="app.manifest">-->
@@ -71,12 +83,22 @@ if ($access || $is_module_admin) {
 <?php
 (@include_once("$mobile_head_bs")) OR die("Cannot find this file to include: $mobile_head<BR>");
 ?>
-<body>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Email Feedback to Students or Save as PDF</span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="./projectmarking_select_bs.php<?php echo("?pm_id=$pm_id"); ?>" class="nav-link px-2 text-white-50"><?php echo("$module_prefix$module1$module_postfix $short_code marking"); ?></a></li>
+        </ul>
+        <div class="navbar-brand ms-auto" style="display: <?php echo($show_admin_link);?>">
+            <a target='_top' class="navbar-brand" href='<?php echo("$admin_link"); ?>'>
+                <i class="bi bi-gear"></i>
+                <?php echo("$admin_link_text"); ?>
+            </a>
+        </div>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <div class="header">Edit Staff details - Staff details are the same for ALL modules on this system </div>
-    </div><!-- /header -->
-    <!---------------------END of HEADER FILE------------------------------------->
 
     <div id="content">
         <div class="container">
@@ -87,13 +109,6 @@ if ($access || $is_module_admin) {
     </div> <!-- content -->
 
     <BR>
-    <div class="footer_link" id="footer">
-        <BR>
-        <P>Return to the
-            <a target="_self" href="./projectmarking_select_bs.php<?PHP echo("?pm_id=$pm_id"); ?>" style="color: dimgray;">
-                <?PHP echo("$module_prefix$module1$module_postfix $short_code"); ?> marking</a>
-        </P>
-    </div><!-- /footer -->
 <!--++++----------End of page-----------+++++++-->
 </div><!-- /wrapper -->
 </body>

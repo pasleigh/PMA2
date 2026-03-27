@@ -9,6 +9,7 @@
 (@include_once($STAFF_DIR_VAL . "/show_minor_part_feedback_form.php")) OR die("Cannot include show_minor_part_feedback<BR>");
 //(@include_once($STAFF_DIR_VAL . "/show_mark_questions.php")) OR die("Cannot include show_mark_questions2<BR>");
 (@include_once($STAFF_DIR_VAL . "/markstore_functions.php")) OR die("Cannot include markstore_function.php<BR>");
+(@include_once($STAFF_DIR_VAL . "/admin2/admin_functions.php")) OR die("Cannot include admin functions<BR>");
 if (array_key_exists('sid', $_GET) == false) {
     $_GET['sid'] = null;
 }
@@ -25,21 +26,8 @@ $sid = $_GET["sid"];
 $project_id = $_GET["pid"];
 $is_numeric = $_GET['isnumeric'];
 
-/*
-$assesspart = $_GET['part'];
-$who = $_GET['who'];
-$marker_id = $_GET['marker_id'];
-$topdf = $_GET['topdf'];
-$force_pdf = $_GET['force_pdf'];
-*/
 
-// see all the POST values
-/*
-foreach ($_POST as $key => $value){
-  echo "{$key} = {$value}<BR>\r\n";
-}
-*/
-$project_marking_page = "projectmarking.php";
+$project_marking_page = "projectmarking_bs.php";
 
 $display_block .= "<h1 class='intro'>$module_short_description</h1>";
 $display_block .= "<h1>$module_prefix$module1$module_postfix , $year_begin/$year_end </h1>";
@@ -190,6 +178,18 @@ if($num_marks_in_list > 0){
     // No marks
     $display_block .= "<h3>There are no final marks for this student.</h3>";
 }
+$admin_link_text = "";
+$show_admin_link = "none";
+$admin_link = "";
+if (IsAdmin($db, $this_staff_username)) {
+    $admin_link = "./admin2/";
+    $admin_link_text = "Super Admin";
+    $show_admin_link = "block";
+} else if (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
+    $admin_link = "./admin2/";
+    $admin_link_text = "Admin";
+    $show_admin_link = "block";
+}
 
 ?>
 
@@ -197,7 +197,7 @@ if($num_marks_in_list > 0){
 <!--<html manifest="app.manifest">-->
 <html>
 <?php
-(@include_once("$desktop_head")) OR die("Cannot find this file to include: $desktop_head<BR>");
+(@include_once("$mobile_head_bs")) OR die("Cannot find this file to include: $desktop_head<BR>");
 ?>
 <script>
     $(function () {
@@ -212,31 +212,38 @@ if($num_marks_in_list > 0){
         );
     })
 </script>
-<BODY>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Overall Assessment Feedback : <?PHP echo("$module_short_description  $module_prefix$module1$module_postfix,  $year_begin/$year_end") ?></span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="./<?php echo("$project_marking_page?pm_id=$pm_id") ?>" class="nav-link px-2 text-white-50">Full marking list</a></li>
+            <li class="nav-item"><a target="_self" href="./<?php echo("$project_marking_page?pm_id=$pm_id&user=1") ?>" class="nav-link px-2 text-white-50">User marking list</a></li>
+            <li class="nav-item"><a href="./index.php" class="nav-link px-2 text-white-50">Year index page</a></li>
+        </ul>
+        <div class="navbar-brand ms-auto" style="display: <?php echo($show_admin_link);?>">
+            <a target='_top' class="navbar-brand" href='<?php echo("$admin_link"); ?>'>
+                <i class="bi bi-gear"></i>
+                <?php echo("$admin_link_text"); ?>
+            </a>
+        </div>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <span
-                class="header">Overall Assessment Feedback : <?PHP echo("$module_short_description  $module_prefix$module1$module_postfix,  $year_begin/$year_end") ?>
-        </span>
-    </div><!-- /header -->
 
     <div id="content">
-        <div>
-            <?php echo("$display_block"); ?>
-        </div>
-    </div><!-- /content -->
+        <div class="container">
+            <div class="container-fluid">
+                <div class='card'>
+                    <div class='card-header'>Overall Assessment Feedback</div>
+                    <div class="card-body">
 
-    <div id="footer">
-      <span><BR>
-          <a target="_self" href="./<?php echo("$project_marking_page?pm_id=$pm_id") ?>" style="color: dimgray;">Full
-              marking list</a>
-          &nbsp;or &nbsp;
-          <a target="_self" href="./<?php echo("$project_marking_page?pm_id=$pm_id&user=1") ?>" style="color: dimgray;">User
-              marking list</a>
-          &nbsp;or &nbsp;
-          <a href="./index.php" style="color: dimgray;">Year index page</a>
-      </span>
-    </div><!-- /footer -->
+                <?php echo("$display_block"); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- content -->
 
 </div><!-- /wrapper -->
 </BODY>

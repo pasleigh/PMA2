@@ -601,42 +601,33 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
 }
 
 ?>
-<HTML>
+<!DOCTYPE HTML>
+<html>
 <?php
-(@include_once("admin_desktop_head.php")) or die("Cannot find this file to include: admin_desktop_head.php<BR>");
+(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
 ?>
-<script>
-    $(function () {
-        $("#staffinfo").dataTable(
-            {
-                //"bSort":    false,
-                "paging": false,
-                //"ordering": false,
-                //"info":     false,
-                "searching": false
-            }
-        );
-    })
-</script>
-<BODY>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Edit Staff details - this applies to ALL modules in the system</span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Main admin page</a></li>
+        </ul>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <span
-                class="header">Edit Staff details - this applies to ALL modules in the system </span>
-    </div><!-- /header -->
-
     <div id="content">
+        <div class="container">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
         <?php echo $display_block; ?>
-
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- /content -->
-
-    <div class="footer_link" id="footer">
-        <P>Return to the
-            <a href="../index.php">Year index page</a> -
-            <a href="./index.php">Main admin page</a>.
-        </P>
-    </div><!-- /footer -->
-
 </div><!-- /wrapper -->
-</BODY>
-</HTML>
+</body>
+</html>

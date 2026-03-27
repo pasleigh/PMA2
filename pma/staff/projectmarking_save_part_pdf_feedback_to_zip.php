@@ -76,7 +76,7 @@ if($POST_OP == 'download') {
     download_zip($file_to_download, $saveas_filename);
     exit();
 }
-$project_marking_page = "projectmarking.php";
+$project_marking_page = "projectmarking_bs.php";
 $project_marking_options_page = "projectmarking_select_bs.php";
 
 $display_block = "";

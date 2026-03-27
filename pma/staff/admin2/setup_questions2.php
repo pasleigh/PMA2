@@ -655,225 +655,35 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
     $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
 }
 ?>
-<!DOCTYPE html>
-<HTML>
-<HEAD>
-    <?php
-    (@include_once("admin_desktop_head.php")) OR die("Cannot find this file to include: admin_desktop_head.php<BR>");
-    ?>
-
-    <script>
-        $(document).ready(function () {
-            DisplaySections();
-            SumSections();
-            var s = $("#sticker");
-            var pos = s.position();
-            $(window).scroll(function () {
-                var windowpos = $(window).scrollTop();
-                //s.html("Distance from top:" + pos.top + "<br />Scroll position: " + windowpos);
-                if (windowpos >= pos.top) {
-                    s.addClass("stick");
-                } else {
-                    s.removeClass("stick");
-                }
-            });
-            $("[name='section'] input[type='radio']").click(function () {
-                var section = Number($(this).attr('name').substring(1, 2));
-                var question_num = Number($(this).attr('name').substring(3));
-                //alert("Section: " + section);
-                //alert("Question num: " + question_num);
-                var q_weight_id = "qw" + String(section) + "-" + String(question_num);
-                var q_weight = $("#" + q_weight_id).val();
-                q_weight *= 0.01;
-                //alert("Q: " + question_num + " weight: " + q_weight);
-
-                var mark_id = "idm" + ((this).id).substring(3);
-                var mark_id_val = $("#" + mark_id).val();
-                var mark_val = mark_id_val * q_weight;
-                //alert("markid: " + mark_id + " val: " + mark_id_val);
-                //$("#sectionmark" + section).html(mark_id_val);
-
-                var section_total = 0.0;
-                $("#table" + section + " input[type='radio']:checked").each(function () {
-                    //alert($(this).val());
-                    var question_val = $(this).val();
-                    question_num = Number($(this).attr('name').substring(3));
-                    q_weight_id = "qw" + String(section) + "-" + String(question_num);
-                    q_weight = $("#" + q_weight_id).val();
-                    question_val = question_val * q_weight * 0.01;
-                    section_total += Number(question_val);
-
-                    //alert(section_total);
-                });
-
-                var factor = $("#factor_id" + section).val();
-                $("#sectionmarktext" + section).html("(" + factor + " x " + section_total + " = )");
-                $("#sectionmark" + section).html((factor * section_total).toFixed(2));
-
-                SumSections();
-            });
-
-            function DisplaySections(){
-                var i;
-                var max_num_cats = 5;
-                var num_cats = $("#new_num_cats").val();
-                for( i = 1 ; i <= max_num_cats; i++){
-                    var my_id = "#section_block" + Number(i).toString();
-                    if(i > num_cats){
-                        // hide
-                        $(my_id).hide();
-                        // uncheck the associated radio buttons
-                    }else{
-                        // show
-                        $(my_id).show();
-                    }
-                }
-            }
-            function SumSections() {
-                var markpc = $("#markpc_id").val();
-                var markmax = Number($("#markmax").val());
-
-                var mark1 = Number($("#sectionmark1").text());
-                var mark2 = Number($("#sectionmark2").text());
-                var mark3 = Number($("#sectionmark3").text());
-                var mark4 = Number($("#sectionmark4").text());
-                var mark5 = Number($("#sectionmark5").text());
-                //$("#totalmarks").html((mark1+mark2+mark3+mark4+mark5).toFixed(2));
-                $("#totalmarks").html(((mark1 + mark2 + mark3 + mark4 + mark5) * 100 / markmax).toFixed(1) + "%");
-                $("#sticker").html(((mark1 + mark2 + mark3 + mark4 + mark5) * 100 / markmax).toFixed(1) + "%");
-            }
-
-            $("#validate").click(function () {
-                var num = CheckAllSelected();
-                if (num > 0) {
-                    alert(num + " questions have not been given responses. Fix this.");
-                }
-                //validate_form();
-            });
-
-            $("#new_num_cats").change(function () {
-                DisplaySections()
-            });
-
-            $("input[id^=new_numqs").change(function () {
-                // Hide / show the question block
-                var i;
-                var max_num_qs = 10;
-                //alert(this.name + "value " + this.value)
-                //q_block_c$cat" . "_q$q_count
-                var num_qs = this.value;
-                var section = this.name.substring(9, this.name.length);
-                for( i = 1; i <= max_num_qs; i++)
-                {
-                    var my_id = "#q_block_c" + Number(section).toString() + "_q" + Number(i).toString();
-                    if(i > num_qs){
-                        // hide
-                        $(my_id).hide();
-                        // Need to uncheck all of the radio buttons.
-                        // radio group name
-                        var radio_group_name  = "r" + section + "-"  + i;
-                        var selector = "input:radio[name=" + radio_group_name + "]";
-                        $(selector).each(function(){
-                            this.checked = false;
-                        })
-                    }else{
-                        // show
-                        $(my_id).show();
-                    }
-                }
-                //var section = Number(this.name).substring(9, this.name.length));
-                //alert(section);
-            });
-
-            $("input[id^=res").change(function () {
-                //alert(this.name + "value " + this.value)
-                var max_num_responses = 11;
-                var section = this.name.substring(3, 4);
-                var q_number = this.name.substring(5, this.name.length);
-                var q_count = this.value;
-                //alert("name: " + this.name + " value: " + this.value + " section: " + section + " question no.: " + q_number)
-                //$tchoice = "t" . $cat . "-" . $q_count . $r_count;
-                var q_block_id = "#qb_id_t" + section + "-" + q_number;
-                for(var i = 1; i <= max_num_responses; i++)
-                {
-                    var my_id = q_block_id + Number(i).toString();
-                    if(i > q_count){
-                        // hide
-                        $(my_id).hide();
-                    }else{
-                        // show
-                        $(my_id).show();
-                    }
-                }
-            })
-            function SubmitChangesToDatabase() {
-
-                return true;
-            }
-        });
-        function CheckAllSelected() {
-            //alert("Checking for unclicked radio buttons");
-            var groups = {};
-
-            $(":radio").each(function () {
-                groups[this.name] = true;
-                //alert("Group:" + this.name);
-            });
-            //alert("Num Groups: " + Object.keys(groups).length);
-
-            var num_not_selected = 0;
-
-            for (group in groups) {
-                var radioButttons = $(":radio[name=" + group + "]:checked");
-                isChecked = !!radioButttons.length;
-                if (!isChecked) {
-                    // change the color of the question. It happens to have the same name
-                    //alert(group);
-                    $(":text[name=q" + group.substring(1) + "]").css("background-color", "pink");
-                    num_not_selected++;
-                }
-                else {
-                    $(":text[name=q" + group.substring(1) + "]").css("background-color", "white");
-                }
-            }
-
-            return num_not_selected;
-        }
-        function validate_form() {
-            //alert("validating form");
-            var num_not_selected = Number(CheckAllSelected());
-            //alert("Num not selected = " + num_not_selected );
-            //return false;
-            if (num_not_selected == 0) {
-                alert("All done.");
-                return true;
-            } else {
-                alert(num_not_selected + " questions still need to have responses ticked.");
-            }
-            return false;
-
-        }
-    </script>
-</HEAD>
-<BODY link="#0000FF" vlink="#800080">
+<!DOCTYPE HTML>
+<html>
+<?php
+(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+?>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Edit questions and test marks scheme</span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../projectmarking_select.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module page</a></li>
+            <li class="nav-item"><a target="_self" href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="./edit_module_settings.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module admin page</a></li>
+            <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Main admin page</a></li>
+        </ul>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <span class="header">Edit questions and test marks scheme</span>
-    </div><!-- /header -->
-
     <div id="content">
+        <div class="container">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
         <?php echo $display_block; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- /content -->
-
-    <div id="footer">
-        <P>Return to the
-            <a href="../projectmarking_select.php?pm_id=<?php echo("$pm_id") ?>">Module page</a> -
-            <a href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>">Year index page</a> -
-            <a href="./edit_module_settings.php?pm_id=<?php echo("$pm_id") ?>">Module admin page</a> -
-            <a href="./index.php">Main admin page</a>.
-        </P>
-    </div><!-- /footer -->
-
 </div><!-- /wrapper -->
-</BODY>
-</HTML>
+</body>
+</html>

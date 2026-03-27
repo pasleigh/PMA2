@@ -421,139 +421,35 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
     $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
 }
 ?>
-<!DOCTYPE html>
-<HTML>
-<HEAD>
-    <?php
-    (@include_once("admin_desktop_head.php")) OR die("Cannot find this file to include: admin_desktop_head.php<BR>");
-    ?>
-
-    <script>
-        $(document).ready(function () {
-            SumSections();
-            var s = $("#sticker");
-            var pos = s.position();
-            $(window).scroll(function () {
-                var windowpos = $(window).scrollTop();
-                //s.html("Distance from top:" + pos.top + "<br />Scroll position: " + windowpos);
-                if (windowpos >= pos.top) {
-                    s.addClass("stick");
-                } else {
-                    s.removeClass("stick");
-                }
-            });
-            $("#section input[type='radio']").click(function () {
-                var section = Number($(this).attr('name').substring(1, 2));
-                //alert("Section: " + section);
-
-                var mark_id = "idm" + ((this).id).substring(3);
-                //alert("markid: " + mark_id);
-                $("#sectionmark" + section).html($("#" + mark_id).val());
-
-                var section_total = 0.0;
-                $("#table" + section + " input[type='radio']:checked").each(function () {
-                    //alert($(this).val());
-                    section_total += Number($(this).val());
-                    //alert(section_total);
-                });
-
-                var factor = $("#factor_id" + section).val();
-                $("#sectionmarktext" + section).html("(" + factor + " x " + section_total + " = )");
-                $("#sectionmark" + section).html((factor * section_total).toFixed(2));
-
-                SumSections();
-            });
-
-            function SumSections() {
-                var markpc = $("#markpc_id").val();
-                var markmax = Number($("#markmax").val());
-
-                var mark1 = Number($("#sectionmark1").text());
-                var mark2 = Number($("#sectionmark2").text());
-                var mark3 = Number($("#sectionmark3").text());
-                var mark4 = Number($("#sectionmark4").text());
-                var mark5 = Number($("#sectionmark5").text());
-                //$("#totalmarks").html((mark1+mark2+mark3+mark4+mark5).toFixed(2));
-                $("#totalmarks").html(((mark1 + mark2 + mark3 + mark4 + mark5) * 100 / markmax).toFixed(1) + "%");
-                $("#sticker").html(((mark1 + mark2 + mark3 + mark4 + mark5) * 100 / markmax).toFixed(1) + "%");
-            }
-
-            $("#validate").click(function () {
-                var num = CheckAllSelected();
-                if (num > 0) {
-                    alert(num + " questions have not been given responses. Fix this.");
-                }
-                //validate_form();
-            });
-
-            function SubmitChangesToDatabase() {
-
-                return true;
-            }
-        });
-        function CheckAllSelected() {
-            //alert("Checking for unclicked radio buttons");
-            var groups = {};
-
-            $(":radio").each(function () {
-                groups[this.name] = true;
-                //alert("Group:" + this.name);
-            });
-            //alert("Num Groups: " + Object.keys(groups).length);
-
-            var num_not_selected = 0;
-
-            for (group in groups) {
-                var radioButttons = $(":radio[name=" + group + "]:checked");
-                isChecked = !!radioButttons.length;
-                if (!isChecked) {
-                    // change the color of the question. It happens to have the same name
-                    //alert(group);
-                    $(":text[name=q" + group.substring(1) + "]").css("background-color", "pink");
-                    num_not_selected++;
-                }
-                else {
-                    $(":text[name=q" + group.substring(1) + "]").css("background-color", "white");
-                }
-            }
-
-            return num_not_selected;
-        }
-        function validate_form() {
-            //alert("validating form");
-            var num_not_selected = Number(CheckAllSelected());
-            //alert("Num not seleectd = " + num_not_selected );
-            //return false;
-            if (num_not_selected == 0) {
-                alert("All done.");
-                return true;
-            } else {
-                alert(num_not_selected + " questions still need to have responses ticked.");
-            }
-            return false;
-
-        }
-    </script>
-</HEAD>
-<BODY link="#0000FF" vlink="#800080">
+<!DOCTYPE HTML>
+<html>
+<?php
+(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+?>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Edit questions and test marks scheme</span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../projectmarking_select.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module page</a></li>
+            <li class="nav-item"><a target="_self" href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="./edit_module_settings.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module admin page</a></li>
+            <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Main admin page</a></li>
+        </ul>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <span class="header">Edit questions and test marks scheme</span>
-    </div><!-- /header -->
-
     <div id="content">
+        <div class="container">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
         <?php echo $display_block; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- /content -->
-
-    <div id="footer">
-        <P>Return to the
-            <a href="../projectmarking_select.php?pm_id=<?php echo("$pm_id") ?>">Module page</a> -
-            <a href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>">Year index page</a> -
-            <a href="./edit_module_settings.php?pm_id=<?php echo("$pm_id") ?>">Module admin page</a> -
-            <a href="./index.php">Main admin page</a>.
-        </P>
-    </div><!-- /footer -->
-
 </div><!-- /wrapper -->
-</BODY>
-</HTML>
+</body>
+</html>

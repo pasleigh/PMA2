@@ -419,68 +419,35 @@ if($is_module_admin || $admin_access) {
     $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
 }
 ?>
-<!DOCTYPE html>
-<HTML>
-<HEAD>
-    <?php
-    (@include_once("admin_desktop_head.php")) OR die("Cannot find this file to include: admin_desktop_head.php<BR>");
-    ?>
-<script type="text/javascript">
-function submitForm(myValue)
-{
-	//action=\"modproject.php?module1=$module1&year_begin=$year_begin\"
-  var elem = document.getElementById("myop");
-  elem.value = myValue;
-  //alert("Submitted" + myValue);
-  //document.projectlist.submit();
-  if(myValue=="mod")
-  {
-    document.projectlist.action = 'modproject.php?<?php echo("module1=$module1&year_begin=$year_begin") ?>';
-  }else{
-    document.projectlist.action = 'delproject.php?<?php echo("module1=$module1&year_begin=$year_begin") ?>';
-  }
-  document.projectlist.submit();
-}
-$(function(){
-    $("#student_email_list").dataTable(
-        {
-            //"bSort":    false,
-            "paging":   false,
-            //"ordering": false,
-            //"info":     false,
-            "searching":false
-        }
-    );
-})
-$(function() {
-    $("#select-all").on("click", function () {
-        var all = $(this);
-        $('#students_select_table').find('input:checkbox').each(function () {
-            $(this).prop("checked", all.prop("checked"));
-        });
-    });
-});
-</script>
-</HEAD>
-<BODY link="#0000FF" vlink="#800080">
+<!DOCTYPE HTML>
+<html>
+<?php
+(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+?>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Email Students' Project Allocation for: <?php echo(" $module_short_description ($module1), $year_begin")?></span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../projectmarking_select.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module page</a></li>
+            <li class="nav-item"><a target="_self" href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="./edit_module_settings.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module admin page</a></li>
+            <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Main admin page</a></li>
+        </ul>
+    </div>
+</nav>
 <div id="wrapper">
-  <div id="header"> 
-    <span class="header">Email Students' Project Allocation for: <?php echo(" $module_short_description ($module1), $year_begin")?></span>
-  </div><!-- /header -->
-
-  <div id="content">
-    <?php echo $display_block; ?>
-  </div><!-- /content -->
-
-  <div id="footer">
-      <P>Return to the
-          <a href="../projectmarking_select.php?pm_id=<?php echo("$pm_id") ?>">Module page</a> -
-          <a href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>">Year index page</a> -
-          <a href="./edit_module_settings.php?pm_id=<?php echo("$pm_id") ?>">Module admin page</a> -
-          <a href="./index.php">Main admin page</a>.
-      </P>
-  </div><!-- /footer -->
-    
+    <div id="content">
+        <div class="container">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
+        <?php echo $display_block; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /content -->
 </div><!-- /wrapper -->
-</BODY>
-</HTML>
+</body>
+</html>

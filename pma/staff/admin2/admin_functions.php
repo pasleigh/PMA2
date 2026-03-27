@@ -174,7 +174,7 @@ function admin_functions_block($db,$pm_id,$project_allocated,$num_parts,$p_descr
     $admin_func_block .= "<UL>";
     //$admin_func_block .= "<LI><a href=\"" . $locationdir . "admin2/upload_totals_for_part.php?pm_id=$pm_id\">Bulk Upload csv of marks directly for an assessment part.</a></LI>\n";
     $admin_func_block .= "<LI><a href=\"" . $locationdir . "admin2/upload_totals_for_part_xlsx.php?pm_id=$pm_id\">Bulk Upload xlsx/csv of marks directly for an assessment part.</a></LI>\n";
-    $admin_func_block .= "<LI><a href=\"" . $locationdir . "./projectmarking.php?pm_id=$pm_id&modify=1\">Marking page with modify option</A></LI>";
+    $admin_func_block .= "<LI><a href=\"" . $locationdir . "./projectmarking_bs.php?pm_id=$pm_id&modify=1\">Marking page with modify option</A></LI>";
     $admin_func_block .= "</UL>";
 
     $admin_func_block .= "<LI class='itemHeader'>Setup/view assessment questions </LI>";

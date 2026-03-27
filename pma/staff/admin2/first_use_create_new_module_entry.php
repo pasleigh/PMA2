@@ -653,46 +653,30 @@ if ($POST_OP == "create") {
 }// end of if ($POST_OP == "select")
 
 ?>
-<!DOCTYPE html>
-<HTML>
-<HEAD>
-    <?php
-    (@include_once("admin_desktop_head.php")) OR die("Cannot find this file to include: admin_desktop_head.php<BR>");
-    ?>
-    <script type="text/javascript">
-        $(function () {
-            var pickerOpts = {
-                //dateFormat:"d MM yy"
-                dateFormat: $.datepicker.ATOM
-            };
-            $("#p1_submission_date").datepicker(pickerOpts);
-            $("#p1_marking_date").datepicker(pickerOpts);
-            $("#p2_submission_date").datepicker(pickerOpts);
-            $("#p2_marking_date").datepicker(pickerOpts);
-            $("#p3_submission_date").datepicker(pickerOpts);
-            $("#p3_marking_date").datepicker(pickerOpts);
-            $("#p4_submission_date").datepicker(pickerOpts);
-            $("#p4_marking_date").datepicker(pickerOpts);
-            $("#p5_submission_date").datepicker(pickerOpts);
-            $("#p5_marking_date").datepicker(pickerOpts);
-        });
-    </script>
-
-</HEAD>
-<BODY>
+<!DOCTYPE HTML>
+<html>
+<?php
+(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+?>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Create New Project Entry in the database</span>
+        <ul class="nav justify-content-center"></ul>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <span class="header">Create New Project Entry in the database </span>
-    </div><!-- /header -->
-
     <div id="content">
+        <div class="container">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
         <?php echo $display_block; ?>
-
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- /content -->
-
-    <div id="footer">
-    </div><!-- /footer -->
-
 </div><!-- /wrapper -->
-</BODY>
-</HTML>
+</body>
+</html>

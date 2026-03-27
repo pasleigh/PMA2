@@ -10,6 +10,7 @@ error_reporting(E_ALL);
 (@include_once("./staff_functions.php")) OR die("Cannot include staff_functions.php<BR>");
 (@include_once("./markstore_functions.php")) OR die("Cannot include markstore_functions.php<BR>");
 (@include_once("./admin2/markstore_functions_admin.php")) OR die("Cannot include markstore_functions_admin.php<BR>");
+(@include_once("./admin2/admin_functions.php")) OR die("Cannot include admin functions<BR>");
 
 /*
 foreach ($_REQUEST as $key => $value){
@@ -317,7 +318,7 @@ for ($i = 1; $i <= $num_parts; $i++) {
     if (isset($_POST[$third_marker_part_id])) {
         $is_third_marker_required_for_part = 1;
     }
-    $changed_message .= "Updating \"third marker required\" status of part $i to $is_third_marker_required_for_part <BR>\n";
+    $changed_message .= "Updating 'third marker required' status of part $i to $is_third_marker_required_for_part <BR>\n";
     SetThirdMarkerStatusForPart($db, $sid, $is_third_marker_required_for_part, $i, $markstore_totals);
 
     // update the third marker array
@@ -415,46 +416,51 @@ if ($inactive == 1) {
 }
 
 $instructions = "<h3>This form is for amending project details for an individual student</h3>";
-$instructions .= "<div class=\"feedbackInstructions\">Select the new second marker, change the title or \"unlock\" the project for
+$instructions .= "<div class='feedbackInstructions'>Select the new second marker, change the title or 'unlock' the project for
 revision of marking ... and then click the modify button <br />
     </div>";
 
 $display_block = $changed_message;
 //$display_block .= $instructions;
-$display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id&sid=$sid\">\n";
+$display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&sid=$sid'>\n";
 
 $display_block .= "<h1>$module_prefix$module1 Projects: Individual Student Details</h1>
-             <div align=\"left\">";
+             <div align='left'>";
 
-$display_block .= "<table class=\"tableSimple\" >";
+$display_block .= "<table class='tableSimple' >";
 
-$display_block .= "<tr><td colspan='2'>$instructions</tr>";
-$display_block .= "<tr><td colspan='2'><span><a target='_self' href='./projectmarking.php?pm_id=$pm_id&modify=1'> Marking Sheet (with modify functions)</a></span>";
+$display_block .= "<tr><td colspan='2'>$instructions</td</tr>";
+$display_block .= "<tr><td colspan='2'>";
+$display_block .= "<span><a class='btn btn-primary' target='_self' href='./projectmarking_bs.php?pm_id=$pm_id&modify=1'> Go back to Marking Sheet (with modify functions)</a></span>";
+$display_block .= "</tr></td>";
+$display_block .= "<tr><td colspan='2'>";
+$display_block .= "<input class='btn btn-info' type='submit' name='submit' value='Submit the modified data'>";
+$display_block .= "</tr></td>";
 
 $display_block .= "<tr><td><b>Student:</b></td><td>$student_name&nbsp;&nbsp;</td></tr>";
 
 $display_block .= "<tr><td><b>Supervisor:</b></td><td>";
 $display_block .= GetStaffSelectID($db, $staff2, "supervisor_s", $new_supervisor_id);
-$display_block .= "use for all fields <INPUT TYPE=\"CHECKBOX\" NAME=\"chk_supervisor_all\" >";
+$display_block .= "use for all supervisor fields <INPUT TYPE='CHECKBOX' NAME='chk_supervisor_all' >";
 $display_block .= "</td></tr>";
 
 $display_block .= "<tr><td><b>2nd Marker:</b></td><td>";
 $display_block .= GetStaffSelectID($db, $staff2, "second_marker_s", $new_second_marker_id);
-$display_block .= "use for all fields <INPUT TYPE=\"CHECKBOX\" NAME=\"chk_second_marker_all\" >";
+$display_block .= "use for all second markerfields <INPUT TYPE='CHECKBOX' NAME='chk_second_marker_all' >";
 $display_block .= "</td></tr>";
 
 $display_block .= "<tr><td><b>Programme:</b></td><td> $programme&nbsp;&nbsp;</td></tr>";
 
 $display_block .= "<tr><td><b>Title:</b>&nbsp; <i>$project_title</i></td><td> ";
-$display_block .= "New title: <input type=\"text\" size=\"110\" name=\"txtNewTitle\" value=\"$project_title\"></td></tr>";
+$display_block .= "New title: <input type='text' size='110' name='txtNewTitle' value='$project_title'></td></tr>";
 
 $display_block .= "<tr><td><b>Project ID:</b></td><td><i>$project_id</i></td></tr>";
 
 $display_block .= "<tr><td><b>Student active status:</b>&nbsp; <i>$inactive_status</i></td><td>";
-$display_block .= "Toggle inactive state <INPUT TYPE=\"CHECKBOX\" NAME=\"chkInActive\"\" $checked_status> (It would NORMALLY be unchecked.)</td></tr>";
+$display_block .= "Toggle inactive state <INPUT TYPE='CHECKBOX' NAME='chkInActive'' $checked_status> (It would NORMALLY be unchecked.)</td></tr>";
 
 $display_block .= "<tr><td><b>Student locked marking status:</b>&nbsp; <i>Locked status</i></td><td>";
-$display_block .= "change (toggle)<INPUT TYPE=\"CHECKBOX\" NAME=\"chkLocked\"\" $locked_checked_status> (This would NORMALLY be unchecked.)</td></tr>";
+$display_block .= "change (toggle)<INPUT TYPE='CHECKBOX' NAME='chkLocked'' $locked_checked_status> (This would NORMALLY be unchecked.)</td></tr>";
 
 // Do all the parts locked status
 $display_block .= "<TR><td><b>Set the locked status for all parts.</b></td><td>(This will lock / unlock all three markers.) [You can only lock part already marked]</td><tr>";
@@ -466,7 +472,7 @@ for ($i = 1; $i <= $num_parts; $i++) {
         $checked_status = "checked";
     }
     $locked_part_id = "locked_p$i" . "_id";
-    $display_block .= "<td>change (toggle)<INPUT TYPE=\"CHECKBOX\" NAME=\"$locked_part_id\" $checked_status>$locked_checked_status</td><tr>";
+    $display_block .= "<td>change (toggle)<INPUT TYPE='CHECKBOX' NAME='$locked_part_id' $checked_status>$locked_checked_status</td><tr>";
 }
 
 // Do all the parts markers 1, 2, 3
@@ -489,7 +495,7 @@ for ($i = 1; $i <= $num_parts; $i++) {
 
 // Do all the parts third marker required status
 // Only allow to toggle off (not to switch on)
-$display_block .= "<TR><td><b>Set \"third marker required\" flags as necessary.</b></td><td></td><tr>";
+$display_block .= "<TR><td><b>Set 'third marker required' flags as necessary.</b></td><td></td><tr>";
 
 for ($i = 1; $i <= $num_parts; $i++) {
     $display_block .= "<TR><td>Third marker status part $i: </td>";
@@ -500,53 +506,68 @@ for ($i = 1; $i <= $num_parts; $i++) {
         $third_marker_status_text = "Third marker required";
     }
     $third_marker_part_id = "third_marker_p$i" . "_id";
-    $display_block .= "<td>change (toggle)<INPUT TYPE=\"CHECKBOX\" NAME=\"$third_marker_part_id\" $checked_status> $third_marker_status_text</td><tr>";
+    $display_block .= "<td>change (toggle)<INPUT TYPE='CHECKBOX' NAME='$third_marker_part_id' $checked_status> $third_marker_status_text</td><tr>";
     //else {
-    //    $display_block .= "<td>Not required<input type=\"hidden\" name=\"$third_marker_part_id\" value=\"0\"></td><tr>";
+    //    $display_block .= "<td>Not required<input type='hidden' name='$third_marker_part_id' value='0'></td><tr>";
     //}
 }
 
-$display_block .= "<TR><td colspan=\"2\"><input type=\"submit\" name=\"submit\" value=\"modify\">
+$display_block .= "<TR><td colspan='2'><input class='btn btn-info' type='submit' name='submit' value='Submit the modified data'>
                                   </form></td></TR>";
 
 //mysql_close();
+$admin_link_text = "";
+$show_admin_link = "none";
+$admin_link = "";
+if (IsAdmin($db, $this_staff_username)) {
+    $admin_link = "./admin2/";
+    $admin_link_text = "Super Admin";
+    $show_admin_link = "block";
+} else if (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
+    $admin_link = "./admin2/";
+    $admin_link_text = "Admin";
+    $show_admin_link = "block";
+}
 ?>
-<HTML>
-<HEAD>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <TITLE>Project Modify details</TITLE>
-    <link rel="stylesheet" type="text/css" href="./css/pagedesc.css"/>
-    <!-- Load jQuery from Google's CDN -->
-    <!-- Load jQuery UI CSS  -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
-    <!-- Load jQuery JS -->
-    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-    <!-- Load jQuery UI Main JS  -->
-    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-</HEAD>
-<BODY>
+<!DOCTYPE HTML>
+<html>
+<?php (@include_once("$mobile_head_bs")) OR die("Cannot find this file to include: $mobile_head_bs<BR>"); ?>
+<!-- jQuery UI needed for staff selection autocomplete -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Modify individual project details :- <?PHP echo("$module_short_description  $module_prefix$module1  $year_begin/$year_end") ?></span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="./projectmarking_bs.php<?PHP echo("?pm_id=$pm_id&modify=1"); ?>" class="nav-link px-2 text-white-50">Marking sheet</a></li>
+            <li class="nav-item"><a target="_self" href="./projectmarking_select_bs.php<?PHP echo("?pm_id=$pm_id"); ?>" class="nav-link px-2 text-white-50"><?PHP echo("$module_prefix$module1 index"); ?></a></li>
+            <li class="nav-item"><a target="_self" href="./admin2/index.php<?PHP echo("?pm_id=$pm_id"); ?>" class="nav-link px-2 text-white-50">Admin index</a></li>
+            <li class="nav-item"><a target="_self" href="./admin2/adhoc_student_project_allocation.php<?PHP echo("?pm_id=$pm_id"); ?>" class="nav-link px-2 text-white-50">Modify Student/Project</a></li>
+        </ul>
+        <div class="navbar-brand ms-auto" style="display: <?php echo($show_admin_link);?>">
+            <a target='_top' class="navbar-brand" href='<?php echo("$admin_link"); ?>'>
+                <i class="bi bi-gear"></i>
+                <?php echo("$admin_link_text"); ?>
+            </a>
+        </div>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <span
-            class="header">Modify individual project details :- <?PHP echo("$module_short_description  $module_prefix$module1  $year_begin/$year_end") ?></span>
-    </div><!-- /header -->
 
     <div id="content">
-        <?php echo("$display_block"); ?>
+        <div class="container">
+            <div class="container-fluid">
+                <div class='card'>
+                    
+                    <div class="card-body">
 
-    </div><!-- /content -->
-
-    <div id="footer">
-        <span><BR><a target="_self" href="./projectmarking.php<?PHP echo("?pm_id=$pm_id&modify=1"); ?>"
-                     style="color: dimgray;"><?PHP echo("Marking Sheet"); ?></a></span>&nbsp;
-        <span><a target="_self" href="./projectmarking_select.php<?PHP echo("?pm_id=$pm_id"); ?>"
-                 style="color: dimgray;"><?PHP echo("$module_prefix$module1 index"); ?></a></span>
-        <span><a target="_self" href="./admin2/index.php<?PHP echo("?pm_id=$pm_id"); ?>" style="color: dimgray;">Admin
-                index (admin users only)</a></span>
-        <span><a target="_self" href="./admin2/adhoc_student_project_allocation.php<?PHP echo("?pm_id=$pm_id"); ?>"
-                 style="color: dimgray;">Modify Student/Project</a></span>
-    </div><!-- /footer -->
-
+                <?php echo("$display_block"); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- content -->
 </div><!-- /wrapper -->
 </body>
 

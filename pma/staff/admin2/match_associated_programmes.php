@@ -227,35 +227,36 @@ to the <span style='font-face: bold; text-decoration: underline ;'> real</span> 
 }
 
 ?>
-<HTML>
-<HEAD>
-    <?php
-    (@include_once("admin_desktop_head.php")) OR die("Cannot find this file to include: admin_desktop_head.php<BR>");
-    ?>
-</HEAD>
-<BODY>
+<!DOCTYPE HTML>
+<html>
+<?php
+(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+?>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Match programm short names with programme full (real) names:- <?PHP echo("$module_short_description  $module_prefix$module1$module_postfix  $year_begin/$year_end") ?></span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../projectmarking_select.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module page</a></li>
+            <li class="nav-item"><a target="_self" href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="./edit_module_settings.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module admin page</a></li>
+            <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Main admin page</a></li>
+        </ul>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <span
-            class="header">Match programm short names with programme full (real) names:- <?PHP echo("$module_short_description  $module_prefix$module1$module_postfix  $year_begin/$year_end") ?></span>
-    </div><!-- /header -->
-
     <div id="content">
+        <div class="container">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
         <?php echo("$display_block"); ?>
-
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- /content -->
-
-    <div id="footer">
-        <P>Return to the
-            <a href="../projectmarking_select.php?pm_id=<?php echo("$pm_id") ?>">Module page</a> -
-            <a href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>">Year index page</a> -
-            <a href="./edit_module_settings.php?pm_id=<?php echo("$pm_id") ?>">Module admin page</a> -
-            <a href="./index.php">Main admin page</a>.
-        </P>
-    </div><!-- /footer -->
-
 </div><!-- /wrapper -->
 </body>
-
-</HTML>
+</html>
 

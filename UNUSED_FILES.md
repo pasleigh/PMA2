@@ -11,7 +11,7 @@ They are not reachable from any entry point. Review before deleting.
 
 | File | Notes |
 |---|---|
-| `change_school_definition_new.php` | Likely superseded by the non-`_new` version |
+| `change_school_definition_new.php` | Likely superseded by the non-`_new` version |csrf_token: csrf_token,
 | `dump2.php` | Dev/diagnostic tool — check if needed for admin maintenance |
 | `edit_project_proposals_quick_old.php` | Explicitly marked `_old` — probably safe to delete |
 | `edit_project_visibility.php` | Orphaned admin function — check if feature was intentionally removed |

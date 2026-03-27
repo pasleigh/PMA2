@@ -277,51 +277,33 @@ if($access) {
     }
 
 ?>
-<HTML>
+<!DOCTYPE HTML>
+<html>
 <?php
-(@include_once("admin_desktop_head.php")) OR die("Cannot find this file to include: admin_desktop_head.php<BR>");
+(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
 ?>
-<script>
-    $(function () {
-        $("#adminstaffinfo").dataTable(
-            {
-                //"bSort":    false,
-                "paging": false,
-                //"ordering": false,
-                //"info":     false,
-                "searching": false
-            }
-        );
-        $("#staffinfo").dataTable(
-            {
-                //"bSort":    false,
-                "paging": false,
-                //"ordering": false,
-                //"info":     false,
-                "searching": false
-            }
-        );
-    })
-</script>
-<BODY>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Edit Staff details - <?php echo("$module_short_description ($short_code) $module_prefix$module1 $year_begin ") ?></span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Admin index page</a></li>
+            <li class="nav-item"><a target="_self" href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>" class="nav-link px-2 text-white-50">Year index page</a></li>
+        </ul>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <span
-            class="header">Edit Staff details - <?php echo("$module_short_description ($short_code) $module_prefix$module1 $year_begin ") ?></span>
-    </div><!-- /header -->
-
     <div id="content">
+        <div class="container">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
         <?php echo $display_block; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- /content -->
-
-    <div class="footer_link" id="footer">
-        <P>
-            <a href="./index.php">Admin index page</a>.
-            or go to the
-            <a href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>">Year index page</a>.
-        </P>
-    </div><!-- /footer -->
-
 </div><!-- /wrapper -->
-</BODY>
-</HTML>
+</body>
+</html>

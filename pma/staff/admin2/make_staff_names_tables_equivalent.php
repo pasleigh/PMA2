@@ -528,37 +528,32 @@ if($access) {
 
 }
 ?>
-<HTML>
-<HEAD>
-    <?php
-    (@include_once("admin_desktop_head.php")) OR die("Cannot find this file to include: admin_desktop_head.php<BR>");
-    ?>
-    <style>
-        table {
-            border-collapse: collapse;
-        }
-
-        table, td, th {
-            border: 1px solid black;
-        }
-    </style>
-</HEAD>
-<BODY>
+<!DOCTYPE HTML>
+<html>
+<?php
+(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+?>
+<body style="padding-top: 56px;">
+<nav class="navbar fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <span class="navbar-brand">Set up and amend projects (<?php echo("$this_staff_username"); ?>)</span>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">Index page</a></li>
+        </ul>
+    </div>
+</nav>
 <div id="wrapper">
-    <div id="header">
-        <span class="header">Set up and amend projects (<?php echo("$this_staff_username"); ?>)</span>
-    </div><!-- /header -->
-
     <div id="content">
+        <div class="container">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
         <?php echo $display_block; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- /content -->
-
-    <div id="footer">
-        <P class="footer_link">Go to the
-        <a href="../index.php">Index page</a>.
-        </P>
-    </div><!-- /footer -->
-
 </div><!-- /wrapper -->
-</BODY>
-</HTML>
+</body>
+</html>
