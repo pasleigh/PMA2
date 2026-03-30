@@ -46,22 +46,24 @@ $display_block_edit_buttons = "";
 $date_diff = day_diff($now_datetime, $staff_close_date);
 //$display_block .= "Date diff (day) = $date_diff, Close: $staff_close_date, Now: $now_datetime<BR>\n";
 
-$display_block .= "<h3>Project Proposals for: <BR>$module_short_description - $module_prefix$module1$module_postfix - $short_code</h3>";
+$display_block .= "<div class='text-center'>\n";
+$display_block .= "<h1><span class='text-white'>Project Proposals for: </span>$module_short_description - $module_prefix$module1$module_postfix - $short_code</h3>";
 
 $display_block .= "
-<p>View/edit project themes <BR>(You will not be able to add/change projects after  <span style='color: yellow; border-width: 1pt;'> $str_staff_close_date </span>)</p>";
+<h2>View/edit project themes</h2>
+<p>(You will not be able to add/change projects after <span class='text-deadline'> $str_staff_close_date </span>)</p>";
 
 $display_block_edit_buttons .= "
-        <div data-role=\"controlgroup\">
-            <a href=\"addproject2.php?pm_id=$pm_id\" rel=\"external\" data-role=\"button\" data-theme=\"e\">Add a Project Theme</a>
-            <a href=\"modproject_bystaff2.php?pm_id=$pm_id\" rel=\"external\" data-role=\"button\" data-theme=\"b\">View / Edit / Delete an existing Project</a>
+        <div class='btn-group-vertical mt-2'>
+            <a href='addproject2.php?pm_id=$pm_id' class='btn btn-warning'>Add a Project Theme</a>
+            <a href='modproject_bystaff2.php?pm_id=$pm_id' class='btn btn-primary'>View / Edit / Delete an existing Project</a>
         </div>
         ";
 
 if($date_diff > 1.0 ){
     $display_block .= "<H1>The deadline for entering project proposals has passed.</H1>";
     if (IsAdmin($db, $this_staff_username) or IsProjectAdmin($db, $this_staff_username, $staff_names)) {
-        $display_block .= "<P style='color: #6bc43d;'>As module level administrator you have access to modifying projects past the deadline date. <span style='color: red;'>Do this sparingly.</span></P>";
+        $display_block .= "<P class='text-admin-ok'>As module level administrator you have access to modifying projects past the deadline date. <span class='text-passed'>Do this sparingly.</span></P>";
         $display_block .= $display_block_edit_buttons;
     }
 }else {
@@ -69,53 +71,50 @@ if($date_diff > 1.0 ){
 }
 
 $display_block .= "
-
 <p>View Projects from full list</p>
-<div data-role=\"controlgroup\">
-	<li><a href=\"selproject.php?pm_id=$pm_id\" rel=\"external\" data-role=\"button\" data-theme=\"c\">List of projects</a></li>
+<div class='btn-group-vertical mt-2'>
+    <a href='selproject.php?pm_id=$pm_id' class='btn btn-secondary'>List of projects</a>
 </div>
 ";
 
 $display_block .= "
   <p>Downloadable list of projects</p>
-  <div data-role=\"controlgroup\">
-  	<li><a href=\"list_projects_csv.php?pm_id=$pm_id\" rel=\"external\" data-role=\"button\" data-theme=\"c\">Excel file of projects </a></li>
+  <div class='btn-group-vertical mt-2'>
+      <a href='list_projects_csv.php?pm_id=$pm_id' class='btn btn-secondary'>Excel file of projects</a>
   </div>
-  <span style=\"font-size: small;\">This gives you an excel file that is functional but not pretty. Format it youself if you want it to look nice.
-  	<BR>Excel may ask you if it is safe to open this file. The risk that it is not safe is low, I suggest you click the \"Yes\" button.</span>
+  <div><span style='font-size: small;'>This gives you an excel file that is functional but not pretty. Format it yourself if you want it to look nice.
+      <BR>Excel may ask you if it is safe to open this file. The risk that it is not safe is low, I suggest you click the &quot;Yes&quot; button.</span></div>
   ";
-
+$display_block .= "</div>";
 ?>
 <!DOCTYPE HTML>
-<!--<html manifest="app.manifest">-->
 <html>
-<?php
-(@include_once("./$mobile_head")) OR die("Cannot find this file to include: $mobile_head<BR>");
-?>
-<body>
+<?php (@include_once("./mobile_head_bs.php")) OR die("Cannot find this file to include: mobile_head_bs.php<BR>"); ?>
+<body class="bg-dark text-white">
 
-<!--home page -->
-<div data-role="page" data-theme="a" id="home">
-
-    <div id="jqm-homeheader" data-role="header">
-        <!--<h1 id="jqm-logo"><img src="../images/<?php echo($header_image) ?>" alt="Leeds Civil Logo" width="320" height="87"/></h1>-->
-        <h1 id="jqm-logo"><img src="./images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/></h1>
-        <p><?php echo("$school_title - $running_title ") ?><?php echo("$year_begin/$year_end") ?></p>
+<nav class="navbar navbar-expand-sm fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <a class="navbar-brand" href="projects_indexm2.php?pm_id=<?php echo($pm_id); ?>"><?php echo("$school_title $running_title"); ?></a>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../../.." class="nav-link px-2 text-white-50">Root options</a></li>
+        </ul>
+        <div class="navbar-brand ms-auto">
+            <a target="_self" class="navbar-brand" href="../session_modules_bs.php?year_begin=<?php echo($year_begin); ?>">
+                <i class="bi bi-arrow-left"></i> <?php echo("$year_begin/$year_end"); ?> index
+            </a>
+        </div>
     </div>
-    <!---------------------END of HEADER FILE------------------------------------->
+</nav>
 
-    <!--++++Main page+++++++-->
-    <div data-role="content">
+<div class="container bg-dark text-white">
+    <div class="text-center props-logo mt-0">
+        <img src="../images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/>
+    </div>
+    <hr>
+    <div class="text-center">
         <?php echo("$display_block"); ?>
+    </div>
+</div>
 
-    </div> <!-- content -->
-
-    <div data-role="footer" data-position="fixed">
-        <H1><a target="_self" href="../session_modules.php<?PHP echo("?year_begin=$year_begin"); ?>"
-               style="color: dimgray;"><?PHP echo("$year_begin/$year_end"); ?> projects index</a></h1>
-    </div><!-- /footer -->
-
-</div> <!-- page -->
-<!--++++----------End of page-----------+++++++-->
 </body>
 </html>

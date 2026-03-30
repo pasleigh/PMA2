@@ -49,7 +49,7 @@ if ($POST_OP == "") {
     //check for required fields
     if ($proj_id == "") {
         $display_block = "<P>You must select a project. Return to ";
-        $display_block .= "<a href=\"list_staff_projects.php?pm_id=$pm_id\"> staff project list</a></P>";
+        $display_block .= "<a href='list_staff_projects.php?pm_id=$pm_id'> staff project list</a></P>";
     } else {
         // get master_info
         $query = "select * from $master_name where id = $proj_id";
@@ -123,7 +123,7 @@ if ($POST_OP == "") {
         $option_value[7] = $f_works;
         $option_value[8] = $f_furtherinfo;
 
-        $display_block .= "<form data-ajax=\"false\" method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id&p_id=$proj_id\">\n";
+        $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&p_id=$proj_id'>\n";
 
         $program_variants = GetProgramVariantsStaff($db, $projects_setup_proposals, $pm_id, $num_program_variants);
         $program_variant_flags = GetProgramVariantFlagsStaff($db, $project_details, $master_id);
@@ -131,9 +131,9 @@ if ($POST_OP == "") {
         $display_block .= DisplayProjectBlockStaff($db, $master_id, $staff_names2, $f_title, $f_supervisor_id, $f_assocstaff_id, $f_outline, $f_PGprojects, $option_value, $option_text, $option, $option_flag,$option_flag_v,$option_flag_m, $program_variants, $program_variant_flags);
 
         $display_block .= "<br>\n";
-        $display_block .= "<input type=\"hidden\" name=\"op\" value=\"del\">\n";
-        $display_block .= "<input type=\"hidden\" name=\"p_id\" value=\"$proj_id\">\n";
-        $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Really Delete this project\"></p>\n";
+        $display_block .= "<input type='hidden' name='op' value='del'>\n";
+        $display_block .= "<input type='hidden' name='p_id' value='$proj_id'>\n";
+        $display_block .= "<p><input type='submit' id='submitbutton' class='btn btn-danger' name='submit' value='Really Delete this project'></p>\n";
         $display_block .= "</form>\n";
 
     }
@@ -141,7 +141,7 @@ if ($POST_OP == "") {
     //check for required fields
     if ($proj_id == "") {
         $display_block = "<P>You must select a project. Return to ";
-        $display_block .= "<a href=\"./projects_indexm2.php?pm_id=$pm_id\">Main project entry</a></P>";
+        $display_block .= "<a href='./projects_indexm2.php?pm_id=$pm_id'>Main project entry</a></P>";
 
         //exit;
     } else {
@@ -192,39 +192,32 @@ if ($POST_OP == "") {
 }
 
 ?>
-
 <!DOCTYPE HTML>
 <html>
+<?php (@include_once("./mobile_head_bs.php")) OR die("Cannot find this file to include: mobile_head_bs.php<BR>"); ?>
+<body class="bg-dark text-white">
 
-<?php require("./$mobile_head"); ?>
-
-<body>
-
-<!--home page -->
-<div data-role="page" data-theme="a" id="home">
-    <div id="jqm-homeheader" data-role="header">
-        <!--<h1 id="jqm-logo"><img src="../images/<?php echo($header_image) ?>" alt="Leeds Eng Logo" width="320" height="87"/></h1>-->
-        <h1 id="jqm-logo"><img src="./images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/></h1>
-
-        <p><?php echo("$school_title - $running_title ") ?><?php echo("$year_begin/$year_end") ?></p>
-
+<nav class="navbar navbar-expand-sm fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <a class="navbar-brand" href="projects_indexm2.php?pm_id=<?php echo($pm_id); ?>"><?php echo("$school_title $running_title"); ?></a>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../../.." class="nav-link px-2 text-white-50">Root options</a></li>
+        </ul>
+        <div class="navbar-brand ms-auto">
+            <a class="navbar-brand" href="./modproject_bystaff2.php?pm_id=<?php echo($pm_id); ?>">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
     </div>
-    <!---------------------END of HEADER FILE------------------------------------->
-    <!--++++Main page+++++++-->
-    <div data-role="content">
+</nav>
 
-        <?php echo $display_block; ?>
-
-    </div> <!-- content -->
-
-    <div data-role="footer" data-position="fixed">
-        <H1>
-            <a href="./modproject_bystaff2.php<?php echo("?pm_id=$pm_id") ?>" data-role="button">Back</a>
-        </H1>
-    </div><!-- /footer -->
-
-</div> <!-- page -->
-<!--++++----------End of page-----------+++++++-->
+<div class="container bg-dark text-white">
+    <div class="text-center props-logo">
+        <img src="../images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/>
+    </div>
+    <hr>
+    <?php echo $display_block; ?>
+</div>
 
 </body>
 </html>

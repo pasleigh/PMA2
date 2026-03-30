@@ -21,15 +21,17 @@ $date_diff = day_diff($now_datetime, $staff_close_date);
 
 $display_block = "";
 
-if ($date_diff > 1.0) {
-    $display_block .= "<H1>The deadline for entering project proposals has passed.</H1>";
-}
+
 //
 // Display the list of staff
 //
-$display_block .= "<H3>Display project proposals by all staff</H3>";
-$display_block .= "<h3>$module_short_description - $module_prefix$module1$module_postfix - $short_code</h3>";
 
+$display_block .= "<h1><span class='text-white'>Display project proposals by all staff for: </span>$module_short_description - $module_prefix$module1$module_postfix - $short_code</h3>";
+
+//$display_block .= "<h3>$module_short_description - $module_prefix$module1$module_postfix - $short_code</h3>";
+if ($date_diff > 1.0) {
+    $display_block .= "<H1>The deadline for entering project proposals has passed.</H1>";
+}
 $query = "select * from $master_name order by id, f_supervisor, f_title";
 try {
     $results = $db->query($query);
@@ -50,15 +52,15 @@ if ($num_projects < 1) {
     $display_block .= "\n <P><strong>Select a Project to view:</strong><br>\n";
     $rows = $results->fetchAll();
 
-    $display_block .= "<div data-role='controlgroup'>\n";
+    //$display_block .= "<div class='d-grid gap-2'>\n";
+    $display_block .= "<div class='btn-group-vertical mt-2'>";
     $count = 1;
     foreach ($rows as $recs) {
         $master_id = $recs['id'];
         $project_title = $recs['f_title'];
         $supervisor_name = $recs['f_supervisor'];
 
-        //$display_block .= "$master_id: $project_title<BR>";
-        $display_block .= "<a href='viewproject2.php?pm_id=$pm_id&p_id=$master_id' rel='external' data-role='button' data-theme=\"b\">$count:  ($master_id) $project_title - $supervisor_name</a>\n";
+        $display_block .= "<a href='viewproject2.php?pm_id=$pm_id&p_id=$master_id' class='btn btn-primary'>$count: ($master_id) $project_title - $supervisor_name</a>\n";
 
         $count++;
 
@@ -69,35 +71,34 @@ if ($num_projects < 1) {
 ?>
 <!DOCTYPE HTML>
 <html>
+<?php (@include_once("./mobile_head_bs.php")) OR die("Cannot find this file to include: mobile_head_bs.php<BR>"); ?>
+<body class="bg-dark text-white">
 
-<?php require("./$mobile_head"); ?>
-
-<body>
-
-<!--home page -->
-<div data-role="page" data-theme="a" id="home">
-    <div id="jqm-homeheader" data-role="header">
-        <!--<h1 id="jqm-logo"><img src="../images/<?php echo($header_image) ?>" alt="Leeds Eng Logo" width="320" height="87"/></h1>-->
-        <h1 id="jqm-logo"><img src="./images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/></h1>
-        <p><?php echo("$school_title - $running_title ") ?><?php echo("$year_begin/$year_end") ?></p>
-
+<nav class="navbar navbar-expand-sm fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <a class="navbar-brand" href="projects_indexm2.php?pm_id=<?php echo($pm_id); ?>"><?php echo("$school_title $running_title"); ?></a>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../../.." class="nav-link px-2 text-white-50">Root options</a></li>
+        </ul>
+        <div class="navbar-brand ms-auto">
+            <a class="navbar-brand" href="./projects_indexm2.php?pm_id=<?php echo($pm_id); ?>">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
     </div>
-    <!---------------------END of HEADER FILE------------------------------------->
-    <!--++++Main page+++++++-->
-    <div data-role="content">
+</nav>
 
-        <?php echo $display_block; ?>
-
-    </div> <!-- content -->
-
-    <div data-role="footer" data-position="fixed">
-        <H1>
-            <a href="./projects_indexm2.php<?php echo("?pm_id=$pm_id") ?>" data-role="button">Back</a>
-        </H1>
-    </div><!-- /footer -->
-
-</div> <!-- page -->
-<!--++++----------End of page-----------+++++++-->
+<div class="container bg-dark text-white">
+    <div class="text-center props-logo">
+        <img src="../images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/>
+    </div>
+    <hr>
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <?php echo $display_block; ?>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

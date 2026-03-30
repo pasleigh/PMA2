@@ -14,44 +14,44 @@ function DisplayProjectSelectBlockStaff($db, $proj_id, $staff_names2, $title, $f
     } else {
         $num_projects = $f_PGprojects;
     }
-    $project_block .= "<P>Project Title/Theme (<span  class='required'>required</span>)<br>\n";
-    $project_block .= "<span class='footnote-size'>Provide a research theme that is wide and can cover several projects. <BR>\n";
+    $project_block .= "<H2>Project Title/Theme (<span  class='required'>required</span>)</h2>\n";
+    $project_block .= "<P>Provide a research theme that is wide and can cover several projects. <BR>\n";
     $project_block .= "The precise project title may change following discussions with the individual students.</span>";
     $project_block .= "<br></P>\n";
-    $project_block .= "<input type=\"text\" name=\"f_title\" id=\"f_title\" value='$title' size=75 maxlength=150>\n";
+    $project_block .= "<input class='form-control mb-3' type='text' name='f_title' id='f_title' value='$title' size=75 maxlength=150>\n";
 
-    $project_block .= "<P>Principal Supervisor  (<span class='required'>required</span>)<br>\n";
-
+    $project_block .= "<H2>Principal Supervisor  (<span class='required'>required</span>)</h3>\n";
+$project_block .= "<div class='row'><div class='col-md-3'>";
     $project_block .= GetStaffSelectID($db, $staff_names2, 'f_supervisor_id', $f_supervisor_id);
-
-    $project_block .= "<P>Suggested Second Marker (<span class='required'>required</span>)<BR>";
-    $project_block .= "<span class='footnote-size'>This suggestion will help us.";
-    $project_block .= "Be aware that it may change at final marking stage.</span>";
-    $project_block .= "<br></P> ";
-
+    $project_block .= "</div></div>\n";
+    $project_block .= "<h2 class='mt-3'>Suggested Second Marker (<span class='required'>required</span>)</h3>";
+    $project_block .= "This suggestion will help us.";
+    $project_block .= "Be aware that it may change at final marking stage.";
+    $project_block .= "</P> ";
+$project_block .= "<div class='row'><div class='col-md-3'>";
     $project_block .= GetStaffSelectID($db, $staff_names2, 'f_assocstaff_id', $f_assocstaff_id);
+    $project_block .= "</div></div>\n";
+    $project_block .= "<h2 class='mt-3'>Project Outline  (<span class='required'>required</span>)</h3>\n";
 
-    $project_block .= "<P>Project Outline  (<span class='required'>required</span>)\n";
-
-    $project_block .= "<A HREF='format.html' onClick=\"return popup(this, 'info')\">Formatting Tips</a><br>\n";
-    $project_block .= "<span class='footnote-size'>\n";
+    $project_block .= "<A HREF='format.html' onClick='return popup(this, 'info')'>Formatting Tips</a><br>\n";
     $project_block .= "Give the students a picture of the theme and highlight possibile topics of interest within it.";
-    $project_block .= "The aim here is to grab their interest.</span></P>\n";
-    $project_block .= "<textarea name=\"f_outline\"  id=\"f_outline\" cols=75 rows=10 wrap=virtual  style='background-color: lightgrey; color: black ;'>$f_outline</textarea>\n";
-    $project_block .= "<P>Number of Projects  (<span class='required'>required</span>)<br>\n";
+    $project_block .= "The aim here is to grab their interest.</P>\n";
+    $project_block .= "<textarea class='form-control' name='f_outline'  id='f_outline' cols=75 rows=10 wrap=virtual  style='background-color: lightgrey; color: black ;'>$f_outline</textarea>\n";
+    $project_block .= "<div class='row'><div class='col-md-3'>";
+    $project_block .= "<h2 class='mt-3'>Number of Projects  (<span class='required'>required</span>)</h3>\n";
 
-    $project_block .= "<input type=\"number\" min=\"0\" max=\"10\" name=\"f_PGprojects\" id=\"f_PGprojects\" value=\"$num_projects\" size=4 maxlength=4>\n";
-
+    $project_block .= "<input class='form-control' type='number' min='0' max='10' name='f_PGprojects' id='f_PGprojects' value='$num_projects' size=4 maxlength=4>\n";
+    $project_block .= "</div></div>\n";
     // Need to look up the flag on the $projects_setup table
     $num_project_variants = 0;
     if(is_array($program_variants)){
         $num_project_variants = sizeof($program_variants);
     }
     if($num_project_variants == 0){
-        $project_block .= "<p>There are no programme variants to specify projects for.</p>\n";
+        $project_block .= "<H2 class='mt-3'>There are no programme variants to specify projects for.</H2>\n";
     }else {
         $project_block .= "<h3>Programme(s) that this project is offered for:</h3> (Select one or more by clicking the label)\n";
-        $project_block .= "<fieldset data-role=\"controlgroup\" data-type=\"horizontal\">\n";
+        $project_block .= "<fieldset data-role='controlgroup' data-type='horizontal'>\n";
         for ($i = 0; $i < $num_project_variants; $i++) {
             $name = "prog$i";
             if ($program_variant_flags[$i] == 1) {
@@ -67,8 +67,8 @@ function DisplayProjectSelectBlockStaff($db, $proj_id, $staff_names2, $title, $f
                 $is_avaiable = 0;
                 $remark = "NOT offered for this programme";
             }
-            $project_block .= "<input type='checkbox' name='$name' id='$name' $is_checked >\n";
-            $project_block .= "<label for='$name'>$program_variants[$i]</label>\n";
+            $project_block .= "<input class='form-check-input' type='checkbox' name='$name' id='$name' $is_checked >\n";
+            $project_block .= "<label class='form-check-label' for='$name'>$program_variants[$i]</label>\n";
         }
         $project_block .= "</fieldset>\n";
     }
@@ -92,8 +92,8 @@ function DisplayProjectSelectBlockStaff($db, $proj_id, $staff_names2, $title, $f
                 $required_text = "(<span style='color: red;'>required</span>)";
             }
 
-            $project_block .= "<P>$text $visible_text $required_text</P>\n";
-            $project_block .= "<textarea name='$name' cols='75' rows='4' wrap='virtual' style='height: inherit; background-color:  darkgrey ;' $required>$value</textarea><BR>\n";
+            $project_block .= "<h2 class='mb-3'>$text $visible_text $required_text</h2>\n";
+            $project_block .= "<textarea class='form-control' name='$name' cols='75' rows='4' wrap='virtual' style='height: inherit; background-color:  darkgrey ;' $required>$value</textarea><BR>\n";
         }
     }
     return $project_block;
@@ -109,28 +109,28 @@ function DisplayProjectBlockStaff($db, $proj_id, $staff_names2, $title, $f_super
         $num_projects = $f_PGprojects;
     }
 
-    $project_block .= "<h3>Project Title/Theme </h3>\n";
-    $project_block .= "<div class='simple' >Project No. $proj_id: <span class='simple-white'>$title</span></div>\n";
+    $project_block .= "<h2 class='mt-3'>Project Title/Theme </h2>\n";
+    $project_block .= "<div class='simple mb-3' >Project No. $proj_id: <span class='simple-white'>$title</span></div>\n";
 
-    $project_block .= "<h3>Principal Supervisor </h3>\n";
+    $project_block .= "<h2 class='mt-3'>Principal Supervisor </h2>\n";
     $supervisor_name = GetStaffNameFromID($db, $f_supervisor_id, $staff_names2, NULL);
-    $project_block .= "<div class='simple' >$supervisor_name</div>\n";
+    $project_block .= "<div class='simple mb-3'' >$supervisor_name</div>\n";
     $project_block .= "\n";
 
-    $project_block .= "<h3>Suggested Second Marker</h3>";
+    $project_block .= "<h2 class='mt-3'>Suggested Second Marker</h2>";
     $f_assocstaff = GetStaffNameFromID($db, $f_assocstaff_id, $staff_names2, NULL);
-    $project_block .= "<div class='simple' >$f_assocstaff</div>\n";
+    $project_block .= "<div class='simple mb-3'' >$f_assocstaff</div>\n";
     $project_block .= "\n";
 
-    $project_block .= "<h3>Project Outline  </h3>\n";
+    $project_block .= "<h2 class='mt-3'>Project Outline  </h2>\n";
     $f_outline = stripcslashes($f_outline);
     $f_outline = nl2br($f_outline);
-    $project_block .= "<div class='simple-white' >$f_outline</div>\n";
+    $project_block .= "<div class='simple-white mb-3'' >$f_outline</div>\n";
 
-    $project_block .= "<h3>Number of Projects </h3>\n";
-    $project_block .= "<div class='simple' >$num_projects</div>\n";
+    $project_block .= "<h2 class='mt-3'>Number of Projects </h2>\n";
+    $project_block .= "<div class='simple mb-3' >$num_projects</div>\n";
 
-    $project_block .= "<h3>Programme(s) that this project is offered for:</h3>\n";
+    $project_block .= "<h2 class='mt-3'>Programme(s) that this project is offered for:</h2>\n";
 
     $num_project_variants = 0;
     if(is_array($program_variants)){
@@ -148,7 +148,7 @@ function DisplayProjectBlockStaff($db, $proj_id, $staff_names2, $title, $f_super
                 $icon = "'../icons/_0006_Cross.png'";
                 $remark = "NOT offered for this programme";
             }
-            //<img width=\"26\" src=$icon  border=\"0\" alt=\"$this_mark_s click to $remark\" title=\"$this_mark_s click to $remark\">
+            //<img width='26' src=$icon  border='0' alt='$this_mark_s click to $remark' title='$this_mark_s click to $remark'>
             $project_block .= "<img width='20' src=$icon border='0' alt='$remark' title='$remark'> $program_variants[$i] &nbsp;&nbsp; ";
         }
     }else{
@@ -170,7 +170,7 @@ function DisplayProjectBlockStaff($db, $proj_id, $staff_names2, $title, $f_super
                 $value_text = "Nothing specified";
             }else{
             }
-            $project_block .= "<h3>$option_text[$i] $visible_text</h3>\n";
+            $project_block .= "<h2 class='mt-3'>$option_text[$i] $visible_text</h2>\n";
             $project_block .= "<div>$value_text</div>\n";
         }
     }
@@ -262,14 +262,14 @@ function GetProgramVariantsSelectStaff($db, $projects_setup_proposals_table, $pm
 {
     $prog_variants = GetProgramVariantsStaff($db, $projects_setup_proposals_table, $pm_id, $num_prog_variants);
 
-    $select_block = "\n<select name=\"$NameKey\" id='$NameKey'>\n";
+    $select_block = "\n<select name='$NameKey' id='$NameKey'>\n";
 
     for($i = 0 ; $i < $num_prog_variants; $i++){
         $prog_name = $prog_variants[$i];
         if ($i == $MatchID) {
-            $select_block .= "<option value=\"$i\" selected=\"selected\">$prog_name</option>\n";
+            $select_block .= "<option value='$i' selected='selected'>$prog_name</option>\n";
         } else {
-            $select_block .= "<option value=\"$i\">$prog_name</option>\n";
+            $select_block .= "<option value='$i'>$prog_name</option>\n";
         }
     }
     $select_block .= "</select>\n";

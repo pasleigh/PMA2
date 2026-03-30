@@ -50,10 +50,12 @@ if($date_diff > 1.0 && !IsAdmin($db, $this_staff_username) && !IsProjectAdmin($d
 //
 // Display the list of staff
 //
-    $display_block = "<H3>Display and edit project proposals by all staff</H3>";
-    $display_block .= "<h3>$module_short_description - $module_prefix$module1$module_postfix - $short_code</h3>";
+    $display_block .= "<div class='text-center'>\n";
+    $display_block .= "<h1><span class='text-white'>Display and edit project proposals by all staff for: </span>\n";
 
-    $display_block .= "<a href='#' data-role='button' data-inline='true' onclick='toggle_zero_project_links();'>Toggle showing staff with zero projects</a>";
+    $display_block .= "$module_short_description - $module_prefix$module1$module_postfix - $short_code</h1>\n";
+
+    $display_block .= "<button type='button' class='btn btn-secondary btn-sm mb-2' onclick='toggle_zero_project_links();'>Toggle showing staff with zero projects</button>\n";
 
     $query = "select * from $staff_names2 order by familyname, firstname ";
 //$get_list_res = mysql_query($get_list) or die(" Unable to create staff list from database:<BR> query = $get_list <BR>");
@@ -73,7 +75,8 @@ if($date_diff > 1.0 && !IsAdmin($db, $this_staff_username) && !IsProjectAdmin($d
         $display_block .= "<p><em>Sorry, there are no staff names in the database!</em></p>";
     } else {
         //has records
-        $display_block .= "<div data-role='controlgroup'>";
+        //$display_block .= "<div class='d-grid gap-1 col-6 mx-auto'>\n";
+        $display_block .= "</P><div class='btn-group-vertical mt-2'>";
         foreach ($rows as $recs) {
             $initials = $recs['initials'];
             $staffname = stripslashes($recs['fullname']);
@@ -84,107 +87,54 @@ if($date_diff > 1.0 && !IsAdmin($db, $this_staff_username) && !IsProjectAdmin($d
             $num_supervised = CountSupervisedProjectsByID($db, $master_name, $staffid);
             $num_second_marked = CountSecondMarkedProjectsByID($db, $project_details, $staffid);
             if ($inactive == 0) {
-                $display_block .= "<a id='$staffid_anchor' href='list_staff_projects.php?pm_id=$pm_id&stid=$staffid' rel='external' data-role='button' data-theme=\"b\">$staffname [$num_supervised]</a>\n";
+                $display_block .= "<a id='$staffid_anchor' href='list_staff_projects.php?pm_id=$pm_id&stid=$staffid' class='btn btn-primary'>$staffname [$num_supervised]</a>\n";
             }
         }
         $display_block .= "</div>\n";
     }
+    $display_block .= "</div>\n";
 
 }
 ?>
 <!DOCTYPE HTML>
 <html>
+<?php (@include_once("./mobile_head_bs.php")) OR die("Cannot find this file to include: mobile_head_bs.php<BR>"); ?>
+<body class="bg-dark text-white">
 
-<?php require("./$mobile_head"); ?>
+<nav class="navbar navbar-expand-sm fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <a class="navbar-brand" href="projects_indexm2.php?pm_id=<?php echo($pm_id); ?>"><?php echo("$school_title $running_title"); ?></a>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../../.." class="nav-link px-2 text-white-50">Root options</a></li>
+        </ul>
+        <div class="navbar-brand ms-auto">
+            <a class="navbar-brand" href="./projects_indexm2.php?pm_id=<?php echo($pm_id); ?>">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+</nav>
 
-<body>
-<script type="text/javascript">
-    //$(document).ready(
+<div class="container bg-dark text-white">
+    <div class="text-center props-logo">
+        <img src="../images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/>
+    </div>
+    <hr>
 
-    $(document).ready(function () {
-        toggle_zero_project_links();
-    });
-
-    function toggle_zero_project_links()
-    {
-        $("a:contains('[0]')").each(function () {
-            $(this).toggle();
+    <script type="text/javascript">
+        $(document).ready(function () {
+            toggle_zero_project_links();
         });
-    }
 
-    function showUser(str) {
-        if (str == "") {
-            document.getElementById("txtHint").innerHTML = "";
-            return;
-        } else {
-            if (window.XMLHttpRequest) {
-                // code for IE7+, Firefox, Chrome, Opera, Safari
-                xmlhttp = new XMLHttpRequest();
-            } else {
-                // code for IE6, IE5
-                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    document.getElementById("txtHint").innerHTML = xmlhttp.responseText;
-                }
-            };
-            xmlhttp.open("GET","getuser.php?q="+str,true);
-            xmlhttp.send();
+        function toggle_zero_project_links() {
+            $("a:contains('[0]')").each(function () {
+                $(this).toggle();
+            });
         }
-    }
+    </script>
 
-    function submitForm(myValue)
-    {
-        //action=\"modproject.php?module1=$module1&year_begin=$year_begin\"
-      var elem = document.getElementById("myop");
-      elem.value = myValue;
-      var mysel_id_elem = document.getElementById("mysel_id");
-      mySelID = mysel_id_elem.value;
-      //alert("Submitted" + myValue);
-      //document.projectlist.submit();
-      if(myValue=="mod")
-      {
-        document.projectlist.action = 'modproject.php?<?php echo("pm_id=$pm_id&sel_id=") ?>'+mySelID;
-      }else if(myValue=="predel"){
-        document.projectlist.action = 'delproject.php?<?php echo("pm_id=$pm_id&sel_id=") ?>'+mySelID;
-      }else{// view
-        document.projectlist.action = 'viewproject.php?<?php echo("pm_id=$pm_id&op=view&sel_id=") ?>'+mySelID;
-      }
-      document.projectlist.submit();
-    }
-
-    //var myDiv = document.getElementById("myDiv");
-    //document.getElementById("stid").onchange = function(){
-    //    alert("changed");
-    //    myDiv.style.display = (this.selectedIndex == 0) ? "block" : "none";
-    //}
-    //)
-</script>
-<!--home page --> 
-<div data-role="page"  data-theme="a" id="home"> 
-<div id="jqm-homeheader" data-role="header"> 
-	<!--<h1 id="jqm-logo"><img src="../images/<?php echo($header_image) ?>" alt="Leeds Eng Logo" width="320" height="87" /></h1>-->
-    <h1 id="jqm-logo"><img src="./images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/></h1>
-    <p><?php echo("$school_title - $running_title ") ?> <?php echo ("$year_begin/$year_end") ?></p>
-
+    <?php echo $display_block; ?>
 </div>
-<!---------------------END of HEADER FILE------------------------------------->
-<!--++++Main page+++++++-->
-<div data-role="content">
-	
-       <?php echo $display_block; ?>
-       
- </div> <!-- content -->
- 
- <div data-role="footer" data-position="fixed">
- 	<H1>
- 		<a href="./projects_indexm2.php<?php echo("?pm_id=$pm_id") ?>" data-role="button">Back</a>
- 		</H1>
-  </div><!-- /footer -->
-
-</div> <!-- page -->
-<!--++++----------End of page-----------+++++++-->
 
 </body>
 </html>

@@ -31,7 +31,7 @@ $short_code = $res['short_code'];
 
 $html_filename = $module_prefix . $module1 . "_" . $year_begin . "_" . $year_end . ".xls";
 
-header("Content-Disposition: attachment; filename=\"$html_filename\"");
+header("Content-Disposition: attachment; filename=$html_filename");
 header("Content-Type: application/vnd.ms-excel");
 
 $html_page = "";
@@ -72,7 +72,7 @@ foreach ($rows as $recs) {
     $initials = $recs['initials'];
     $fullname = $recs['fullname'];
     $email = $recs['email'];
-    $email_link = "<a href=\"mailto:$email\">$fullname. </A>";
+    $email_link = "<a href='mailto:$email'>$fullname. </A>";
     $query = "select id, f_title from $master_name where f_supervisor = '$fullname' order by id";
     try {
         $results = $db->query($query);

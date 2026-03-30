@@ -73,7 +73,7 @@ if ($results->rowCount() < 1) {
     $display_block .= "<H3>Display and edit project proposals by $staffname</H3>";
     $display_block .= "$module_ref_block";
 
-    $display_block .= "<div data-role='controlgroup'>";
+    $display_block .= "<div class='d-grid gap-2 col-md-6'>";
 
     // List projects by this staff
     $query = "select * from $master_name where f_supervisor_id = $staffid";
@@ -97,7 +97,7 @@ if ($results->rowCount() < 1) {
         $project_title = $recs['f_title'];
 
         //$display_block .= "$master_id: $project_title<BR>";
-        $display_block .= "<a href='modproject2.php?pm_id=$pm_id&p_id=$master_id' rel='external' data-role='button' data-theme=\"b\">$count:  ($master_id) $project_title</a>\n";
+        $display_block .= "<a href='modproject2.php?pm_id=$pm_id&p_id=$master_id' class='btn btn-primary'>$count: ($master_id) $project_title</a>\n";
 
         $count++;
 
@@ -105,42 +105,37 @@ if ($results->rowCount() < 1) {
     $display_block .= "</div>\n";
 }
 
-$display_block .= "<div>\n";
-$display_block .= "<a href='addproject2.php?pm_id=$pm_id&stid=$staffid' rel='external' data-role='button' data-theme=\"e\">Add a new project</a>\n";
+$display_block .= "<div class='mt-3'>\n";
+$display_block .= "<a href='addproject2.php?pm_id=$pm_id&stid=$staffid' class='btn btn-warning'>Add a new project</a>\n";
 $display_block .= "</div>\n";
 
 ?>
 <!DOCTYPE HTML>
 <html>
+<?php (@include_once("./mobile_head_bs.php")) OR die("Cannot find this file to include: mobile_head_bs.php<BR>"); ?>
+<body class="bg-dark text-white">
 
-<?php require("./$mobile_head"); ?>
+<nav class="navbar navbar-expand-sm fixed-top navbar-dark text-white bg-secondary">
+    <div class="container">
+        <a class="navbar-brand" href="projects_indexm2.php?pm_id=<?php echo($pm_id); ?>"><?php echo("$school_title $running_title"); ?></a>
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a target="_self" href="../../.." class="nav-link px-2 text-white-50">Root options</a></li>
+        </ul>
+        <div class="navbar-brand ms-auto">
+            <a class="navbar-brand" href="./modproject_bystaff2.php?pm_id=<?php echo($pm_id); ?>">
+                <i class="bi bi-arrow-left"></i> Staff list
+            </a>
+        </div>
+    </div>
+</nav>
 
-<body>
-
-<!--home page --> 
-<div data-role="page"  data-theme="a" id="home"> 
-<div id="jqm-homeheader" data-role="header"> 
-	<!--<h1 id="jqm-logo"><img src="../images/<?php echo($header_image) ?>" alt="Leeds Eng Logo" width="320" height="87" /></h1>-->
-    <h1 id="jqm-logo"><img src="./images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/></h1>
-    <p><?php echo("$school_title - $running_title ") ?> <?php echo ("$year_begin/$year_end") ?></p>
-
+<div class="container bg-dark text-white">
+    <div class="text-center props-logo">
+        <img src="../images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/>
+    </div>
+    <hr>
+    <?php echo $display_block; ?>
 </div>
-<!---------------------END of HEADER FILE------------------------------------->
-<!--++++Main page+++++++-->
-<div data-role="content">
-	
-       <?php echo $display_block; ?>
-       
- </div> <!-- content -->
- 
- <div data-role="footer" data-position="fixed">
- 	<H1>
- 		<a href="./modproject_bystaff2.php<?php echo("?pm_id=$pm_id") ?>" data-role="button">Back to staff list</a>
- 		</H1>
-  </div><!-- /footer -->
-
-</div> <!-- page -->
-<!--++++----------End of page-----------+++++++-->
 
 </body>
 </html>
