@@ -66,7 +66,7 @@ $footer_link = date('l jS \of F Y, h:i A');
     <!---------------------START of HEADER------------------------------------->
     <div id="jqm-homeheader" data-role="header">
         <!--<h1 id="jqm-logo"><img src="<?php echo("../staff/images/$header_image"); ?>" alt="Logo" width="320" height="87"/></h1>-->
-        <h1 id="jqm-logo"><img src="./images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/></h1>
+        <h1 id="jqm-logo"><img src="../staff/images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/></h1>
         <p><?php echo("$school_title $running_title"); ?></p>
     </div>
     <!---------------------END of HEADER------------------------------------->

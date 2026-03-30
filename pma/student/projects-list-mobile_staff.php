@@ -38,9 +38,7 @@ if($is_student_current == false and $is_staff == false){
     $display_block .= "<div>You are $student_name ($student_username)</div>";
     $count_modules = 0;
 
-    $display_block .= "<div><h3>List of $module_short_description projects listed by staff name</h3>\n";
-
-    $display_block .= "<fieldset data-role='controlgroup'>\n";
+    $display_block .= "<h3>List of $module_short_description projects listed by staff name</h3>\n";
 
     $query = "select * from $staff_names order by familyname, firstname ";
 //$get_list_res = mysql_query($get_list) or die(" Unable to create staff list from database:<BR> query = $get_list <BR>");
@@ -55,14 +53,14 @@ if($is_student_current == false and $is_staff == false){
     }
     $rows = $results->fetchAll();
 
-    $display_block .= "<a href='#' data-role='button' data-inline='true' onclick='toggle_zero_project_links();'>Toggle showing staff with zero projects</a>";
+    $display_block .= "<button class='btn btn-outline-secondary btn-sm mb-2' onclick='toggle_zero_project_links();'>Toggle staff with zero projects</button>";
 
     if ($results->rowCount() < 1) {
         //no records
         $display_block .= "<p><em>Sorry, there are no staff names in the database!</em></p>";
     } else {
         //has records
-        $display_block .= "<div data-role='controlgroup'>";
+        $display_block .= "<div class='text-center'><div class='btn-group-vertical mt-2'>";
         foreach ($rows as $recs) {
             $initials = $recs['initials'];
             $staffname = stripslashes($recs['fullname']);
@@ -73,49 +71,37 @@ if($is_student_current == false and $is_staff == false){
             $num_supervised = CountSupervisedProjectsByID($db, $master_name, $staffid);
             $num_second_marked = CountSecondMarkedProjectsByID($db, $project_details, $staffid);
             if ($inactive == 0) {
-                $display_block .= "<a id='$staffid_anchor' href='list_staff_projects.php?pm_id=$pm_id&stid=$staffid' rel='external' data-role='button' data-theme=\"b\">$staffname [$num_supervised]</a>\n";
+                $display_block .= "<a id='$staffid_anchor' href='list_staff_projects.php?pm_id=$pm_id&stid=$staffid' class='btn btn-primary'>$staffname [$num_supervised]</a>\n";
             }
         }
-        //$display_block .= "</div>\n";
+        $display_block .= "</div></div>\n";
     }
-    $display_block .= "</fieldset>\n";
-
-    $display_block .= "</div>
-<!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->";
 }
 ?>
 
 <!DOCTYPE HTML>
-<!--<html manifest="app.manifest">-->
 <html>
-<?php (@include_once("../staff/$mobile_head")) OR die("Cannot find this file to include: $mobile_head<BR>"); ?>
+<?php (@include_once("./mobile_head_bs.php")) OR die("Cannot find this file to include: mobile_head_bs.php<BR>"); ?>
+<body class="bg-light text-dark">
 
-<body>
-
-<!--home page -->
-<div data-role="page" data-theme="a" id="home">
-
-    <!---------------------START of HEADER------------------------------------->
-    <div id="jqm-homeheader" data-role="header">
-        <!--<h1 id="jqm-logo"><img src="<?php echo("../staff/images/$header_image"); ?>" alt="Logo" width="320" height="87"/></h1>-->
-        <h1 id="jqm-logo"><img src="./images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/></h1>
-        <p><?php echo("$school_title $running_title"); ?></p>
+<nav class="navbar navbar-expand-sm fixed-top navbar-dark bg-success">
+    <div class="container">
+        <a class="navbar-brand" href="index.php"><?php echo("$school_title $running_title"); ?></a>
+        <div class="navbar-brand ms-auto">
+            <a class="navbar-brand" href="projects_indexm_all.php?pm_id=<?php echo($pm_id); ?>"><i class="bi bi-arrow-left"></i> Module index</a>
+        </div>
     </div>
-    <!---------------------END of HEADER------------------------------------->
-    <!--++++Main page+++++++-->
-    <div data-role="content">
+</nav>
 
+<div class="container bg-light text-dark">
+    <div class="text-center props-logo mt-0">
+        <img src="../staff/images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/>
+    </div>
+    <hr>
+    <div class="text-center">
         <?php echo $display_block; ?>
-
-    </div> <!-- content -->
-
-    <div data-role="footer" data-position="fixed">
-        <H1 style="color: dimgray;"><a target="_self" href="./projects_indexm_all.php?pm_id=<?php echo("$pm_id"); ?>"
-                                       style="color: dimgray;">Index</a></H1>
-    </div><!-- /footer -->
-
-</div> <!-- page -->
-<!--++++----------End of page-----------+++++++-->
+    </div>
+</div>
 
 <script>
     $(document).ready(function () {
@@ -128,7 +114,6 @@ if($is_student_current == false and $is_staff == false){
             $(this).toggle();
         });
     }
-
 </script>
 </body>
 </html>

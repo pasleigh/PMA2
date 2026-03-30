@@ -230,3 +230,17 @@ function GetStudentNotOnModulePhrase()
 
     return $html_block;
 }
+
+function GetStudentFriendlyName(string $name): array {
+    // Split "Surname, Firstname A. B." on the first comma
+    $parts = explode(',', $name, 2);
+    if (count($parts) < 2) {
+        return ['surname' => trim($name), 'firstname' => ''];
+    }
+    $surname   = trim($parts[0]);
+    // First whitespace-delimited token after the comma is the firstname;
+    // anything after that is initials ("A.", "B. C.", etc.)
+    $tokens    = preg_split('/\s+/', trim($parts[1]));
+    $firstname = $tokens[0] ?? '';
+    return ['surname' => $surname, 'firstname' => $firstname];
+}

@@ -132,35 +132,27 @@ if($is_student_current == false and $is_staff == false){
 ?>
 <!DOCTYPE HTML>
 <html>
+<?php (@include_once("./mobile_head_bs.php")) OR die("Cannot find this file to include: mobile_head_bs.php<BR>"); ?>
+<body class="bg-light text-dark">
 
-<?php (@include_once("../staff/$mobile_head")) OR die("Cannot find this file to include: $mobile_head<BR>"); ?>
-
-<body>
-
-<!--home page -->
-<div data-role="page" data-theme="a" id="home">
-    <div id="jqm-homeheader" data-role="header">
-        <!--<h1 id="jqm-logo"><img src="../staff/images/<?php echo($header_image) ?>" alt="Leeds Eng Logo" width="320" height="87"/></h1>-->
-        <h1 id="jqm-logo"><img src="./images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/></h1>
-        <p><?php echo("$school_title - $running_title ") ?><?php echo("$year_begin/$year_end") ?></p>
-
+<nav class="navbar navbar-expand-sm fixed-top navbar-dark bg-success">
+    <div class="container">
+        <a class="navbar-brand" href="index.php"><?php echo("$school_title $running_title"); ?></a>
+        <div class="navbar-brand ms-auto">
+            <a class="navbar-brand" href="<?php echo($refering_page); ?>"><i class="bi bi-arrow-left"></i> Back</a>
+        </div>
     </div>
-    <!---------------------END of HEADER FILE------------------------------------->
-    <!--++++Main page+++++++-->
-    <div data-role="content">
+</nav>
 
+<div class="container bg-light text-dark">
+    <div class="text-center props-logo mt-0">
+        <img src="../staff/images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/>
+    </div>
+    <hr>
+    <div>
         <?php echo $display_block; ?>
-
-    </div> <!-- content -->
-
-    <div data-role="footer" data-position="fixed">
-        <H1>
-            <a href="<?php echo("$refering_page") ?>" data-role="button">Back</a>
-        </H1>
-    </div><!-- /footer -->
-
-</div> <!-- page -->
-<!--++++----------End of page-----------+++++++-->
+    </div>
+</div>
 
 </body>
 </html>

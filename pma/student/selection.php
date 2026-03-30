@@ -328,13 +328,7 @@ if($is_student_current == false and $is_staff == false){
     $display_block .= "\n<input type='hidden' name='urid_3' id='urid_3' value='$nc3'>\n";
     $display_block .= "\n<input type='hidden' name='urid_4' id='urid_4' value='$nc4'>\n";
     $display_block .= "\n<input type='hidden' name='urid_5' id='urid_5' value='$nc5'>\n";
-/*
-    $display_block .= "<input type='hidden' name='choice1' id='choice1' value='-1'>\n";
-    $display_block .= "<input type='hidden' name='choice2' id='choice2' value='-2'>\n";
-    $display_block .= "<input type='hidden' name='choice3' id='choice3' value='-3'>\n";
-    $display_block .= "<input type='hidden' name='choice4' id='choice4' value='-4'>\n";
-    $display_block .= "<input type='hidden' name='choice5' id='choice5' value='-5'>\n";
-*/
+
     $display_block .= "<BR>\n<input type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all selected\" >\n";
     $display_block .= "<input type=\"hidden\" name=\"op\" value=\"submit\">";
     $display_block .= "<input type='hidden' name='is_staff' id='is_staff' value='$is_staff_int'>\n";

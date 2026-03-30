@@ -49,9 +49,9 @@ if($is_student_current == false and $is_staff == false){
     }
 
 //$display_block .= "<p>This page lists $module_short_description projects that are on offer for the session $year_begin-$year_end.</p>";
-    $display_block .= "<div><h3>List of all  $module_short_description projects for $prog_name</h3>\n";
+    $display_block .= "<h3>List of all $module_short_description projects for $prog_name</h3>\n";
 
-    $display_block .= "<fieldset data-role='controlgroup'>\n";
+    $display_block .= "<div class='text-center'><div class='btn-group-vertical mt-2'>\n";
 
 //Loop through all project themes
     $query = "SELECT * FROM $master_name ORDER BY id";
@@ -96,48 +96,36 @@ if($is_student_current == false and $is_staff == false){
         }
 
         if ($num_projects > 0 and $show_this_project) {
-            $display_block .= "      <a href=\"./viewproject2.php?pm_id=$pm_id&p_id=$project_id&prog_var=$prog_var\" rel='external'
-                   data-role='button' data-theme='a'>$project_id: $f_title</A>\n";
+            $display_block .= "<a href=\"./viewproject2.php?pm_id=$pm_id&p_id=$project_id&prog_var=$prog_var\" class='btn btn-primary'>$project_id: $f_title</a>\n";
         }
     }
-    $display_block .= "</fieldset>\n";
-
-    $display_block .= "</div>
-<!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->";
+    $display_block .= "</div></div>\n";
 }
 ?>
 
 <!DOCTYPE HTML>
-<!--<html manifest="app.manifest">-->
 <html>
-<?php (@include_once("../staff/$mobile_head")) OR die("Cannot find this file to include: $mobile_head<BR>"); ?>
+<?php (@include_once("./mobile_head_bs.php")) OR die("Cannot find this file to include: mobile_head_bs.php<BR>"); ?>
+<body class="bg-light text-dark">
 
-<body>
-
-<!--home page -->
-<div data-role="page" data-theme="a" id="home">
-
-    <!---------------------START of HEADER------------------------------------->
-    <div id="jqm-homeheader" data-role="header">
-        <!--<h1 id="jqm-logo"><img src="<?php echo("../staff/images/$header_image"); ?>" alt="Logo" width="320" height="87"/></h1>-->
-        <h1 id="jqm-logo"><img src="./images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/></h1>
-        <p><?php echo("$school_title $running_title"); ?></p>
+<nav class="navbar navbar-expand-sm fixed-top navbar-dark bg-success">
+    <div class="container">
+        <a class="navbar-brand" href="index.php"><?php echo("$school_title $running_title"); ?></a>
+        <div class="navbar-brand ms-auto">
+            <a class="navbar-brand" href="projects_indexm_all.php?pm_id=<?php echo($pm_id); ?>"><i class="bi bi-arrow-left"></i> Module index</a>
+        </div>
     </div>
-    <!---------------------END of HEADER------------------------------------->
+</nav>
 
-    <!--++++Main page+++++++-->
-    <div data-role="content">
-
-            <?php echo("$display_block"); ?>
-
-    </div><!-- content -->
-
-    <div data-role="footer" data-position="fixed">
-        <H1 style="color: dimgray;"><a target="_self" href="./projects_indexm_all.php?pm_id=<?php echo("$pm_id"); ?>" style="color: dimgray;">Index</a></H1>
-    </div><!-- /footer -->
-
-</div> <!-- page -->
-<!--++++-------End of Main page---------+++++++-->
+<div class="container bg-light text-dark">
+    <div class="text-center props-logo mt-0">
+        <img src="../staff/images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/>
+    </div>
+    <hr>
+    <div class="text-center">
+        <?php echo("$display_block"); ?>
+    </div>
+</div>
 
 </body>
 </html>

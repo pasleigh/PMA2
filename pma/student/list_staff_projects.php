@@ -77,7 +77,7 @@ if($is_student_current == false and $is_staff == false){
         $display_block .= "<H3>Display project proposals by $staffname</H3>";
         $display_block .= "$module_ref_block";
 
-        $display_block .= "<div data-role='controlgroup'>";
+        $display_block .= "<div class='text-center'><div class='btn-group-vertical mt-2'>";
 
         // List projects by this staff
         $query = "select * from $master_name where f_supervisor_id = $staffid";
@@ -100,13 +100,12 @@ if($is_student_current == false and $is_staff == false){
             $master_id = $recs['id'];
             $project_title = $recs['f_title'];
 
-            //$display_block .= "$master_id: $project_title<BR>";
-            $display_block .= "<a href='viewproject2.php?pm_id=$pm_id&p_id=$master_id&prog_var=$prog_var' rel='external' data-role='button' data-theme=\"a\">$count:  ($master_id) $project_title</a>\n";
+            $display_block .= "<a href='viewproject2.php?pm_id=$pm_id&p_id=$master_id&prog_var=$prog_var' class='btn btn-primary'>$count: ($master_id) $project_title</a>\n";
 
             $count++;
 
         }
-        $display_block .= "</div>\n";
+        $display_block .= "</div></div>\n";
     }
 
     $display_block .= "<div>\n";
@@ -116,37 +115,28 @@ if($is_student_current == false and $is_staff == false){
 }
 ?>
 <!DOCTYPE HTML>
-<!--<html manifest="app.manifest">-->
 <html>
-<?php (@include_once("../staff/$mobile_head")) OR die("Cannot find this file to include: $mobile_head<BR>"); ?>
+<?php (@include_once("./mobile_head_bs.php")) OR die("Cannot find this file to include: mobile_head_bs.php<BR>"); ?>
+<body class="bg-light text-dark">
 
-<body>
-
-<!--home page -->
-<div data-role="page" data-theme="a" id="home">
-
-    <!---------------------START of HEADER------------------------------------->
-    <div id="jqm-homeheader" data-role="header">
-        <!--<h1 id="jqm-logo"><img src="<?php echo("../staff/images/$header_image"); ?>" alt="Logo" width="320" height="87"/></h1>-->
-        <h1 id="jqm-logo"><img src="./images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/></h1>
-        <p><?php echo("$school_title $running_title"); ?></p>
+<nav class="navbar navbar-expand-sm fixed-top navbar-dark bg-success">
+    <div class="container">
+        <a class="navbar-brand" href="index.php"><?php echo("$school_title $running_title"); ?></a>
+        <div class="navbar-brand ms-auto">
+            <a class="navbar-brand" href="projects-list-mobile_staff.php?pm_id=<?php echo($pm_id); ?>"><i class="bi bi-arrow-left"></i> Staff list</a>
+        </div>
     </div>
-    <!---------------------END of HEADER------------------------------------->
+</nav>
 
-    <!--++++Main page+++++++-->
-    <div data-role="content">
-
+<div class="container bg-light text-dark">
+    <div class="text-center props-logo mt-0">
+        <img src="../staff/images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/>
+    </div>
+    <hr>
+    <div class="text-center">
         <?php echo("$display_block"); ?>
-
-    </div><!-- content -->
-
-    <div data-role="footer" data-position="fixed">
-        <H1 style="color: dimgray;"><a target="_self" href="./projects_indexm_all.php?pm_id=<?php echo("$pm_id"); ?>"
-                                       style="color: dimgray;">Index</a></H1>
-    </div><!-- /footer -->
-
-</div> <!-- page -->
-<!--++++-------End of Main page---------+++++++-->
+    </div>
+</div>
 
 </body>
 </html>
