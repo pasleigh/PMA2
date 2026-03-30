@@ -854,3 +854,23 @@ function convert_smart_quotes($string)
     );
     return str_replace($search, $replace, $string);
 }
+function IsStaffB($db, $username, $staff_names)
+{
+    $query = "SELECT * FROM $staff_names WHERE username='$username'";
+
+    try {
+        $results = $db->query($query);
+    } catch (PDOException $ex) {
+        echo "An Error occured running query<BR>\n";
+        $err_msg = $ex->getMessage();
+        echo($err_msg);
+    }
+
+    if ($results->rowCount() > 0) {
+        $result = $results->fetch();
+        //$staff_id = $result['staffid'];
+        return true;
+    }
+
+    return false;
+}

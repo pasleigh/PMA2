@@ -2,7 +2,6 @@
 (@include_once("./set_dir_staff.php")) OR die("Cannot find this file to include: set_dir_staff.php<BR>");
 (@include_once("./connect_pdo.php")) OR die("Cannot find this file to include: connect_pdo.php<BR>");
 
-(@include_once("./staff_student_functions.php")) OR die("Cannot include staff_student_functions.php<BR>");
 
 $staff_username = "unknown";
 if(array_key_exists('REMOTE_USER',$_SERVER)){
@@ -12,7 +11,7 @@ if(array_key_exists('REMOTE_USER',$_SERVER)){
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaff($db, $staff_username, $staff_names) == false){
+if(IsStaffB($db, $staff_username, $staff_names) == false){
     echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
     exit();

@@ -5,11 +5,11 @@
 (@include_once("./setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
 (@include_once("./connect_pdo.php")) OR die("Cannot connect to the database<BR>");
 (@include_once("./setup_tables.php")) OR die("Cannot setup database tables");
+(@include_once("./staff_functions.php")) OR die("Cannot open staff_functions.php<BR>");
 (@include_once("./markstore_functions.php")) OR die("Cannot find markstore_functions");
 
 (@include_once("./admin2/utility_functions.php")) OR die("Cannot load utility_function.php");
 (@include_once("./admin2/adminusers.php")) OR die("Cannot setup admin users");
-(@include_once("./staff_student_functions.php")) OR die("Cannot find staff_student_functions.php");
 
 $staff_username = "unknown";
 if(array_key_exists('REMOTE_USER',$_SERVER)){
@@ -19,7 +19,7 @@ if(array_key_exists('REMOTE_USER',$_SERVER)){
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaff($db, $staff_username, $staff_names) == false){
+if(IsStaffB($db, $staff_username, $staff_names) == false){
     echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
     exit();

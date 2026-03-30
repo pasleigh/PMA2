@@ -10,7 +10,6 @@ ob_start(); // Buffer all output — required so mPDF can set Content-Type heade
 (@include_once($STAFF_DIR_VAL . "/show_mark_questions_bs.php")) OR die("Cannot include show_mark_questions2<BR>");
 (@include_once($STAFF_DIR_VAL . "/pdo_query_functions.php")) OR die("Cannot include pdo_query_functions<BR>");
 (@include_once($STAFF_DIR_VAL . "/admin2/admin_functions.php")) OR die("Cannot include admin functions<BR>");
-(@include_once($STAFF_DIR_VAL . "/staff_student_functions.php")) OR die("Cannot include staff_student_functions.php<BR>");
 
 $staff_username = "unknown";
 if(array_key_exists('REMOTE_USER',$_SERVER)){
@@ -20,7 +19,7 @@ if(array_key_exists('REMOTE_USER',$_SERVER)){
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaff($db, $staff_username, $staff_names) == false){
+if(IsStaffB($db, $staff_username, $staff_names) === false){
     echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
     exit();
