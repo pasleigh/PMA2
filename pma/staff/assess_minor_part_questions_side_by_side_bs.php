@@ -5,10 +5,6 @@ ob_start(); // Buffer all output — required so mPDF can set Content-Type heade
 (@include_once("./config.php")) OR die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
 (@include_once("./setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
 (@include_once("./connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-
-//if (array_key_exists('pm_id', $_REQUEST)==false){ $_REQUEST['pm_id']=null; }
-//$pm_id=$_REQUEST['pm_id'];
-
 (@include_once("./setup_tables.php")) OR die("Cannot setup database tables<BR>");
 (@include_once("./staff_functions.php")) OR die("Cannot include staff_function.php<BR>");
 (@include_once("./show_feedback_form.php")) OR die("Cannot include show_feedback<BR>");
@@ -16,6 +12,21 @@ ob_start(); // Buffer all output — required so mPDF can set Content-Type heade
 (@include_once("./admin2/admin_functions.php")) OR die("Cannot include admin functions<BR>");
 (@include_once("./markstore_functions.php")) OR die("Cannot include markstore_function.php<BR>");
 (@include_once("./pdo_query_functions.php")) OR die("Cannot include pdo_query_functions<BR>");
+(@include_once("./staff_student_functions.php")) OR die("Cannot include staff_student_functions.php<BR>");
+
+$staff_username = "unknown";
+if(array_key_exists('REMOTE_USER',$_SERVER)){
+    $staff_username = get_server_username();
+}else{
+    if(isset($_SESSION['USERNAME'])){
+        $staff_username = $_SESSION['USERNAME'];
+    }
+}
+if(IsStaff($db, $staff_username, $staff_names) == false){
+    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+    echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
+    exit();
+}
 
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 

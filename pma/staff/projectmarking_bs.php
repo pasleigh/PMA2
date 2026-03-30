@@ -3,14 +3,27 @@
 (@include_once("./config.php")) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
 (@include_once("./setup_titles.php")) or die("Cannot find this file to include: setup_titles.php<BR>");
 (@include_once("./connect_pdo.php")) or die("Cannot connect to the database<BR>");
-
-/* The project_setup query is now done in setup_tables.php
-$get_data_query = "select * from $projects_setup where id=$pm_id";
-*/
 (@include_once("./setup_tables.php")) or die("Cannot setup database tables<BR>");
 (@include_once("./staff_functions.php")) or die("Cannot include staff_function.php<BR>");
 (@include_once("./markstore_functions.php")) or die("Cannot include markstore_function.php<BR>");
 (@include_once("./admin2/adminusers.php")) or die("Cannot setup admin users<BR>");
+
+(@include_once("./staff_student_functions.php")) OR die("Cannot include staff_student_functions.php<BR>");
+
+$staff_username = "unknown";
+if(array_key_exists('REMOTE_USER',$_SERVER)){
+    $staff_username = get_server_username();
+}else{
+    if(isset($_SESSION['USERNAME'])){
+        $staff_username = $_SESSION['USERNAME'];
+    }
+}
+if(IsStaff($db, $staff_username, $staff_names) == false){
+    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+    echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
+    exit();
+}
+
 
 if (array_key_exists('modify', $_REQUEST) == false) {
     $_REQUEST['modify'] = null;

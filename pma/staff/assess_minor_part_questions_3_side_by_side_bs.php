@@ -17,6 +17,22 @@ ob_start(); // Buffer all output — required so mPDF can set Content-Type heade
 (@include_once("./show_mark_questions2_bs.php")) OR die("Cannot include show_mark_questions2<BR>");
 (@include_once("./markstore_functions.php")) OR die("Cannot include markstore_function.php<BR>");
 (@include_once("./pdo_query_functions.php")) OR die("Cannot include pdo_query_functions<BR>");
+(@include_once("./staff_functions.php")) OR die("Cannot include staff_function.php<BR>");
+(@include_once("./staff_student_functions.php")) OR die("Cannot include staff_student_functions.php<BR>");
+
+$staff_username = "unknown";
+if(array_key_exists('REMOTE_USER',$_SERVER)){
+    $staff_username = get_server_username();
+}else{
+    if(isset($_SESSION['USERNAME'])){
+        $staff_username = $_SESSION['USERNAME'];
+    }
+}
+if(IsStaff($db, $staff_username, $staff_names) == false){
+    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+    echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
+    exit();
+}
 
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 

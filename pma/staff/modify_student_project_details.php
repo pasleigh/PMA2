@@ -12,11 +12,23 @@ error_reporting(E_ALL);
 (@include_once("./admin2/markstore_functions_admin.php")) OR die("Cannot include markstore_functions_admin.php<BR>");
 (@include_once("./admin2/admin_functions.php")) OR die("Cannot include admin functions<BR>");
 
-/*
-foreach ($_REQUEST as $key => $value){
-    echo "{$key} = {$value}<BR>\r\n";
+(@include_once("./staff_student_functions.php")) OR die("Cannot include staff_student_functions.php<BR>");
+
+$staff_username = "unknown";
+if(array_key_exists('REMOTE_USER',$_SERVER)){
+    $staff_username = get_server_username();
+}else{
+    if(isset($_SESSION['USERNAME'])){
+        $staff_username = $_SESSION['USERNAME'];
+    }
 }
-*/
+if(IsStaff($db, $staff_username, $staff_names) == false){
+    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+    echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
+    exit();
+}
+
+
 if (array_key_exists('sid', $_REQUEST) == false) {
     $_REQUEST['sid'] = null;
 }

@@ -10,17 +10,23 @@
 (@include_once("../proposals/project_display_functions_staff.php")) OR die("Cannot include project_display_functions_staff.php");
 (@include_once("../admin2/utility_functions.php")) OR die("Cannot include utility_functions.php");
 (@include_once("../admin2/adminusers.php")) OR die("Cannot setup admin users");
-/*
-echo("_REQUEST<BR>\n");
-foreach ($_REQUEST as $key=>$val )
-{
-  echo "Key: ".$key." val: " .$val."<BR>\n";
+
+(@include_once("../staff_student_functions.php")) OR die("Cannot find staff_student_functions.php");
+
+$staff_username = "unknown";
+if(array_key_exists('REMOTE_USER',$_SERVER)){
+    $staff_username = get_server_username();
+}else{
+    if(isset($_SESSION['USERNAME'])){
+        $staff_username = $_SESSION['USERNAME'];
+    }
 }
-echo("<pre>");
-echo("GET");
-print_r($_GET);
-echo("</pre>");
-*/
+if(IsStaff($db, $staff_username, $staff_names) == false){
+    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+    echo "<p><A target='self' href='../..'>Return to the home page</a>.</P>";
+    exit();
+}
+
 if (!isset($_REQUEST['pm_id'])) {
     $_REQUEST['pm_id'] = null;
 }

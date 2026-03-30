@@ -9,6 +9,23 @@
 //(@include_once("./show_mark_questions.php")) OR die("Cannot include show_mark_questions<BR>");
 (@include_once("./markstore_functions.php")) OR die("Cannot include markstore_functions<BR>");
 
+(@include_once("./staff_student_functions.php")) OR die("Cannot include staff_student_functions.php<BR>");
+
+$staff_username = "unknown";
+if(array_key_exists('REMOTE_USER',$_SERVER)){
+    $staff_username = get_server_username();
+}else{
+    if(isset($_SESSION['USERNAME'])){
+        $staff_username = $_SESSION['USERNAME'];
+    }
+}
+if(IsStaff($db, $staff_username, $staff_names) == false){
+    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+    echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
+    exit();
+}
+
+
 set_include_path( get_include_path().PATH_SEPARATOR."..");
 
 require_once 'vendor/autoload.php';
