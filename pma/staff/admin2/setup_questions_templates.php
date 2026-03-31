@@ -430,7 +430,7 @@ function show_section_questions($cat, $cat_description, $weight_pc, $factor,$num
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="setup_template_questions.php" class="nav-link px-2 text-white-50">Reload this page</a></li>
             <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Admin index page</a></li>
-            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">This year module list</a></li>
         </ul>
     </div>
 </nav>

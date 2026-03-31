@@ -31,17 +31,6 @@ if($is_module_admin) {
 
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
-/*
-if (IsAdmin($db, $this_staff_username) ){
-    $access_phrase = "You, $this_staff_full_name ($this_staff_username), have <em>database level</em> admin access. Be very carefull.";
-    $access = true;
-}else if(IsProjectAdmin($db, $this_staff_username, $staff_names)){
-    $access_phrase = "You, $this_staff_full_name ($this_staff_username), have <em>Project level</em> admin access. Be carefull.";
-    $access = true;
-}else{
-    $access_phrase = "You, $this_staff_full_name ($this_staff_username), do not have admin access right. <BR> Please return to where you cam from.";
-}
-*/
 
 if ($admin_access || $is_module_admin) {
 
@@ -65,8 +54,8 @@ if ($admin_access || $is_module_admin) {
     <div class="container">
         <span class="navbar-brand">Edit module details - <?php echo("$module_short_description ($short_code) $module_prefix$module1$module_postfix $year_begin ") ?></span>
         <ul class="nav justify-content-center">
-            <li class="nav-item"><a target="_self" href="../projectmarking_select.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module page</a></li>
-            <li class="nav-item"><a target="_self" href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="../projectmarking_select_bs.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module page</a></li>
+            <li class="nav-item"><a target="_self" href="../session_modules_bs.php?year_begin= <?php echo("$year_begin") ?>" class="nav-link px-2 text-white-50">This year module list</a></li>
             <li class="nav-item"><a target="_self" href="./edit_module_settings.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module admin page</a></li>
             <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Main admin page</a></li>
         </ul>

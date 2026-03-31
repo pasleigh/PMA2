@@ -57,24 +57,24 @@ if ($POST_OP == "") {
 
     $display_block .= "<h2>School details</h2>";
 
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">";
+    $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]'>";
 
     $display_block .= "<table border='0'>\n";
     $display_block .= "<TR>\n";
     $display_block .= "<TD>School name in title: (e.g. Civil Engineering) </TD>\n";
-    $display_block .= "<TD><input type=\"text\" name=\"school_title\"  value=\"$school_title\" size=30 maxlength=30></TD>\n";
+    $display_block .= "<TD><input type='text' name='school_title'  value='$school_title' size=30 maxlength=30></TD>\n";
     $display_block .= "</TR>\n";
     $display_block .= "<TR>\n";
     $display_block .= "<TD>School short name: (e.g. civil) </TD>\n";
-    $display_block .= "<TD><input type=\"text\" name=\"school_short_name\" value=\"$school_short_name\" size=30 maxlength=30></TD>\n";
+    $display_block .= "<TD><input type='text' name='school_short_name' value='$school_short_name' size=30 maxlength=30></TD>\n";
     $display_block .= "</TR>\n";
     $display_block .= "<TR>\n";
     $display_block .= "<TD>School default module code: (e.g. CIVE) </TD>\n";
-    $display_block .= "<TD><input type=\"text\" name=\"school_module_code\" value='$school_module_code' size=6 maxlength=6></TD>\n";
+    $display_block .= "<TD><input type='text' name='school_module_code' value='$school_module_code' size=6 maxlength=6></TD>\n";
     $display_block .= "</TR>\n";
     $display_block .= "<TR>\n";
     $display_block .= "<TD>Running title of this marking system: (e.g. Project Marking App) </TD>\n";
-    $display_block .= "<TD><input type=\"text\" name=\"school_running_title\" value='$school_running_title' size=30 maxlength=30></TD>\n";
+    $display_block .= "<TD><input type='text' name='school_running_title' value='$school_running_title' size=30 maxlength=30></TD>\n";
     $display_block .= "</TR>\n";
     $display_block .= "<TR>\n";
     $display_block .= "<TD>Select a header image:</TD>\n";
@@ -113,9 +113,9 @@ if ($POST_OP == "") {
     //$display_block .= "</TR>\n";
     $display_block .= "</table>\n";
 
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_new\">";
+    $display_block .= "\n<input type='hidden' name='op' value='submit_new'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Submit School Settings.\"></p>";
+    $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton_new' name='submit' value='Submit Changes to School Settings.'></p>";
 
     $display_block .= "</form>";
 

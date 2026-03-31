@@ -15,15 +15,10 @@ $gear_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
     <?php if (function_exists('generate_csrf_token')): ?>
     <meta name="csrf-token" content="<?php echo htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>">
     <?php endif; ?>
-<!--
-    <link rel="Shortcut Icon" type="image/ico" href="<?php echo("$protocol://$BASE_URL_VALUE") ?>/staff/images/favicon.ico"/>
-    <link href="<?php echo("$protocol://$BASE_URL_VALUE") ?>/staff/css/pagedesc.css" type="text/css" rel="stylesheet"/>
--->
+
     <link rel="Shortcut Icon" type="image/ico" href="<?php echo("$location") ?>/images/favicon.ico"/>
     <link href="<?php echo("$location") ?>/css/pagedesc.css" type="text/css" rel="stylesheet"/>
 
-    <!--<link rel="stylesheet" type="text/css" href="./frameworks/Bootstrap-3.3.7/css/bootstrap.min.css"/>-->
-    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">-->
     <link href="<?php echo("$location") ?>/frameworks/bootstrap-5.2.3-dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="<?php echo("$location") ?>/frameworks/DataTables-1.10.16/css/dataTables.bootstrap.min.css"/>
 
@@ -31,27 +26,13 @@ $gear_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
 
     <script type="text/javascript" src="<?php echo("$location") ?>/frameworks/jQuery-3.2.1/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="<?php echo("$location") ?>/frameworks/popper.min.js"></script>
-    <!--<script type="text/javascript" src="./frameworks/Bootstrap-3.3.7/js/bootstrap.min.js"></script>-->
-    <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>-->
     <script type="text/javascript" src="<?php echo("$location") ?>/frameworks/bootstrap-5.2.3-dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="<?php echo("$location") ?>/frameworks/DataTables-1.10.16/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="<?php echo("$location") ?>/frameworks/DataTables-1.10.16/js/dataTables.bootstrap.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!--
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.3/css/jquery.dataTables.css" type="text/css" rel="stylesheet" />
 
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
--->
     <script type="text/javascript" charset="utf8" src="<?php echo("$location") ?>/frameworks/datatables-plugins/1.10.16/date-uk.js"></script>
-    <!--
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/1.10.16/sorting/date-uk.js"></script>
--->
+
     <style>
         /* This causes the bootstrap button to wrap text and thus fit in the width*/
         .btn{
@@ -66,10 +47,7 @@ $gear_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
     <link rel="stylesheet" type="text/css" href="<?php echo("$location") ?>/frameworks/jqueryui/1.12.1/jquery-ui.css"/>
     <script type="text/javascript" src="<?php echo("$location") ?>/frameworks/jqueryui/1.12.1/jquery-ui.js"></script>
 
-    <!--
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css"/>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
--->
+
     <!-- Custom styles for this template -->
    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
@@ -77,35 +55,19 @@ $gear_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
 
     <script src="<?php echo("$location") ?>/frameworks/js.cookie.js"></script>
 
-    <!--
-    <link href="css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" type="text/css" media="all">
-    <script src="js/jquery.bootstrap-touchspin.min.js"></script>
--->
+
     <link rel="stylesheet" type="text/css" href="<?php echo("$location") ?>/frameworks/bootstrap-plugins/jquery.bootstrap-touchspin.min.css"/>
     <script type="text/javascript" charset="utf8" src="<?php echo("$location") ?>/frameworks/bootstrap-plugins/jquery.bootstrap-touchspin.min.js"></script>
-    <!--
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-touchspin/3.1.2/jquery.bootstrap-touchspin.min.css"/>
-    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-touchspin/3.1.2/jquery.bootstrap-touchspin.min.js"></script>
--->
+
 
     <link rel="stylesheet" type="text/css" href="<?php echo("$location") ?>/frameworks/bootstrap-plugins/bootstrap-treeview.min.css"/>
     <script type="text/javascript" charset="utf8" src="<?php echo("$location") ?>/frameworks/bootstrap-plugins/bootstrap-treeview.min.js"></script>
-<!--
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css"/>
-    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
--->
+
 
     <script src="<?php echo("$location") ?>/frameworks/highcharts/highcharts.js"></script>
     <script src="<?php echo("$location") ?>/frameworks/highcharts/exporting.js"></script>
 
-    <!--
-    <script type="text/javascript" charset="utf8" src="https://code.highcharts.com/highcharts.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://code.highcharts.com/highcharts-more.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://code.highcharts.com/highcharts-3d.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://code.highcharts.com/modules/heatmap.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
--->
+
     <link rel="stylesheet" href="<?php echo("$location") ?>/css/site-bootstrap.css">
 
     <script>

@@ -10,8 +10,6 @@
 $display_block = "";
 $display_block .= "<div style='font-size: x-large; font-weight: bold; text-align: center'>Project Selection</div>";
 
-$student_username = $_SERVER['REMOTE_USER'];
-
 $student_username = "unknown";
 if(array_key_exists('REMOTE_USER',$_SERVER)){
     $student_username = get_server_username();
@@ -41,6 +39,7 @@ $count_modules = 0;
 
 // Get the full list of modules from the project_setup table
 $query = "select * from $projects_setup ORDER BY year_begin DESC, module";
+
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
@@ -80,16 +79,16 @@ foreach ($res as $rec) {
     // Students and their allocations
     $students = $prefix . "students_" . $short_code_lc . "_" . $year_begin;
 
-
     // Get the details of this project pm_id
     $query = "SELECT * FROM $students WHERE username='$student_username'";
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $students table<BR>\n";
-        echo(" Query = $query<BR> \n");
-        echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-        exit();
+        $label = "An Error occured accessing the $students table<BR>\n";
+        //echo(" Query = $query<BR> \n");
+        //echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+        error_log('PMA database error' . $label . ': ' . $ex->getMessage());
+        //exit();
     }
 
 

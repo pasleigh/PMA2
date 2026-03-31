@@ -7,11 +7,11 @@ $hostname = "localhost";
 $base_dir = "/var/www/html/pma";
 $base_dir = "C:\\xampp\\htdocs\\PMA2\\pma";
 // mac
-$base_dir = "/Applications/XAMPP/xamppfiles/htdocs/PMA2/pma";
+// $base_dir = "/Applications/XAMPP/xamppfiles/htdocs/PMA2/pma";
 // own server
 //$base_dir = "/var/www/vhosts/sleigh-munoz.co.uk/httpdocs/pma/ProjectMarkingApp-main/pma";
 
-$_creds_file = __DIR__ . '/../../db_credentials_pma.php';
+$_creds_file = __DIR__ . '/../db_credentials_pma.php';
 if (!file_exists($_creds_file)) {
   echo($_creds_file );
     die("Database credentials file not found. Copy db_credentials.example.php to db_credentials_pma.php and fill in values.");

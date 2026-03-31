@@ -132,7 +132,7 @@ $display_block .= "</form>";
         <span class="navbar-brand">Edit visibility of projects details - <?php echo("$module_short_description ($short_code) $module_prefix$module1 $year_begin ") ?></span>
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Admin index page</a></li>
-            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">This year module list</a></li>
         </ul>
     </div>
 </nav>

@@ -102,7 +102,7 @@ if ($access) {
     foreach ($results as $res) {
         $year_begin = $res['year_begin'];
         $year_end = $year_begin + 1;
-        $display_block .= "<A href=\"./session_modules.php?year_begin=$year_begin\" rel=\"external\" data-role=\"button\" data-theme=\"e\">Session $year_begin/$year_end</A>\n";
+        $display_block .= "<A href=\"./session_modules_bs.php?year_begin=$year_begin\" rel=\"external\" data-role=\"button\" data-theme=\"e\">Session $year_begin/$year_end</A>\n";
         $session_buttons .= "<A href='./session_modules_bs.php?year_begin=$year_begin' class='btn btn-lg btn-warning' target='_top'>Academic session $year_begin/$year_end  &raquo;</A>\n";
 
     }

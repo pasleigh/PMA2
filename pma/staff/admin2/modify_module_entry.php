@@ -427,63 +427,63 @@ if($is_module_admin || $admin_access) {
 // Display the dropdowns to select the module and year
     $display_block .= "<h1>Modify module entry : <span id='headline'>$module_short_description - $module_prefix$module1$module_postfix.</span> Starting year <span id='headline'>$year_begin</span></h1>";
 
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
-    $display_block .= "<table class=\"tableSimple\">\n";
-    $display_block .= "<tr><td colspan=\"2\"><H2>Some project/module details</H2></td></tr>";
+    $display_block .= "<table class='tableSimple m-3'>\n";
+    $display_block .= "<tr><td colspan='2'><H2>Some project/module details</H2></td></tr>";
     $display_block .= "<tr><td>Module ID</td><td>$pm_id</td></tr>\n";
     $display_block .= "<tr><td>Year begin</td><td>$year_begin</td></tr>\n";
     $display_block .= "<tr><td>Year end</td><td>$year_end</td></tr>\n";
     $display_block .= "<tr><td>Module code</td><td>\n";
-    $display_block .= "<input type=\"text\" id=\"module_prefix\" name=\"module_prefix\" value=\"$module_prefix\" size='5' maxlength='5'>\n";
-    $display_block .= "<input type=\"text\" id=\"module1_code\" name=\"module1_code\" value=\"$module1\" size='4' maxlength='4'>\n";
-    $display_block .= "<input type=\"text\" id=\"module_postfix\" name=\"module_postfix\" value=\"$module_postfix\" size='1' maxlength=1>\n";
+    $display_block .= "<input type='text' id='module_prefix' name='module_prefix' value='$module_prefix' size='5' maxlength='5'>\n";
+    $display_block .= "<input type='text' id='module1_code' name='module1_code' value='$module1' size='4' maxlength='4'>\n";
+    $display_block .= "<input type='text' id='module_postfix' name='module_postfix' value='$module_postfix' size='1' maxlength=1>\n";
     $display_block .= "</td></tr>\n";
     $display_block .= "<tr><td>Module short name</td><td>$short_code</td></tr>\n";
-    $display_block .= "<tr><td>Short description</td><td><input type=\"text\" id=\"module_short_desc\" name=\"module_short_desc\" value=\"$module_short_description\" size=\"25\"> (Up to 25 characters, not blank)</td></tr>\n";
+    $display_block .= "<tr><td>Short description</td><td><input type='text' id='module_short_desc' name='module_short_desc' value='$module_short_description' size='25'> (Up to 25 characters, not blank)</td></tr>\n";
 
-    $display_block .= "<tr><td colspan=\"2\"><H2>Some key dates:</H2></td></tr>";
+    $display_block .= "<tr><td colspan='2'><H2>Some key dates:</H2></td></tr>";
 
     $name = "staff_close_date";
-    $display_block .= "<TR><TD>Project proposal date close for staff</td><td><input type=\"text\" id=\"$name\" name=\"$name\"  value=\"$staff_close\"size=20 maxlength=15> at time 23:59</td></tr>\n";
+    $display_block .= "<TR><TD>Project proposal date close for staff</td><td><input type='text' id='$name' name='$name'  value='$staff_close'size=20 maxlength=15> at time 23:59</td></tr>\n";
     $name = "student_selection_open_date";
-    $display_block .= "<TR><TD>Student selection opens</td><td><input type=\"text\" id=\"$name\" name=\"$name\"  value=\"$sel_open\"size=20 maxlength=15> at time 00:00</td></tr>\n";
+    $display_block .= "<TR><TD>Student selection opens</td><td><input type='text' id='$name' name='$name'  value='$sel_open'size=20 maxlength=15> at time 00:00</td></tr>\n";
     $name = "student_selection_close_date";
-    $display_block .= "<TR><TD>Student selection closes</td><td><input type=\"text\" id=\"$name\" name=\"$name\"  value=\"$sel_close\"size=20 maxlength=15> at time 23:59</td></tr>\n";
+    $display_block .= "<TR><TD>Student selection closes</td><td><input type='text' id='$name' name='$name'  value='$sel_close'size=20 maxlength=15> at time 23:59</td></tr>\n";
     $name = "allocation_date";
-    $display_block .= "<TR><TD>Project to be allocated by</td><td><input type=\"text\" id=\"$name\" name=\"$name\"  value=\"$alloc_date\"size=20 maxlength=15> at time 00:00</td></tr>\n";
+    $display_block .= "<TR><TD>Project to be allocated by</td><td><input type='text' id='$name' name='$name'  value='$alloc_date'size=20 maxlength=15> at time 00:00</td></tr>\n";
 
-    $display_block .= "<tr><td colspan=\"2\"><H2>Assessment Parts:</H2></td></tr>";
+    $display_block .= "<tr><td colspan='2'><H2>Assessment Parts:</H2></td></tr>";
 
-    $display_block .= "<tr><td>Number of assessment parts: </td><td><input type=\"number\" name=\"num_parts\" value=\"$num_parts\" min=\"1\" max=\"5\" size=3 maxlength=3></td></tr>\n";
+    $display_block .= "<tr><td>Number of assessment parts: </td><td><input type='number' name='num_parts' value='$num_parts' min='1' max='5' size=3 maxlength=3></td></tr>\n";
     $display_block .= "<tr><td>Module leader:  </td><td>" . GetStaffSelectID($db, $staff_names2, "staff_id", GetStaffIDFromName($db, $module_leader_fullname, $staff_names2)) . "</td></tr>\n";
-    $display_block .= "<tr><td>Acceptable variation between markers : </td><td><input type=\"number\" name=\"accept_var\" value=\"$accept_var\" min=\"0\" max=\"100\" size=\"3\"> %</td></tr>\n";
-    $display_block .= "<tr><td>Pass mark:  </td><td><input type=\"number\" name=\"pass_mark\" value=\"$pass_mark\" min=\"0\" max=\"100\" size=\"3\"> %</td></tr>\n";
-    $display_block .= "<tr><td>Minimum number of feedback words:  </td><td><input type=\"number\" name=\"min_feedback_words\" value=\"$min_feedback_words\" min=\"0\" max=\"100\" size=\"3\"></td></tr>\n";
+    $display_block .= "<tr><td>Acceptable variation between markers : </td><td><input type='number' name='accept_var' value='$accept_var' min='0' max='100' size='3'> %</td></tr>\n";
+    $display_block .= "<tr><td>Pass mark:  </td><td><input type='number' name='pass_mark' value='$pass_mark' min='0' max='100' size='3'> %</td></tr>\n";
+    $display_block .= "<tr><td>Minimum number of feedback words:  </td><td><input type='number' name='min_feedback_words' value='$min_feedback_words' min='0' max='100' size='3'></td></tr>\n";
     $display_block .= "</table>\n";
 
     for ($part = 1; $part <= $num_parts; $part++) {
         $i = $part;
-        $display_block .= "<table class=\"tableSimple\">\n";
-        $display_block .= "<TR><TD colspan=\"2\"><H3>Part $part:</H3></td></tr>\n";
+        $display_block .= "<table class='tableSimple m-3'>\n";
+        $display_block .= "<TR><TD colspan='2'><H3>Part $part:</H3></td></tr>\n";
 
         $name = "p$part" . "_desc";
         $desc = $p_description[$i];//$_POST[$name];
-        $display_block .= "<TR><TD>Description of assesment part $part: </td><td><input type=\"text\" name=\"$name\"  value=\"$desc\"size=25 maxlength=25></td></tr>\n";
+        $display_block .= "<TR><TD>Description of assesment part $part: </td><td><input type='text' name='$name'  value='$desc'size=25 maxlength=25></td></tr>\n";
         //$name = "p$part"."_template";
         //$display_block .="<P> Select a questions template for  part $part: " . GetQsTemplatesSelect($name,$template_tables[$part]) ."</P>";
 
         $name = "p$part" . "_num_markers";
         $num_markers = $p_num_markers[$i];//$_POST[$name];
-        $display_block .= "<TR><TD>Number of markers for part $part: </td><td><input type=\"number\" name=\"$name\" value=\"$num_markers\" min=\"1\" max=\"3\" size=6 maxlength=5></td></tr>\n";
+        $display_block .= "<TR><TD>Number of markers for part $part: </td><td><input type='number' name='$name' value='$num_markers' min='1' max='3' size=6 maxlength=5></td></tr>\n";
 
         $name = "p$part" . "_percent";
         $weight = $p_percent[$i];//$_POST[$name];;
-        $display_block .= "<TR><TD>% weight of part $part: </td><td><input type=\"number\" name=\"$name\" value=\"$weight\" min=\"0\" max=\"100\" size=6 maxlength=5></td></tr>\n";
+        $display_block .= "<TR><TD>% weight of part $part: </td><td><input type='number' name='$name' value='$weight' min='0' max='100' size=6 maxlength=5></td></tr>\n";
 
         $name = "p$part" . "_max";
         $max_mark = $p_max[$i];//$_POST[$name];
-        $display_block .= "<TR><TD>Maximum mark for part $part: </td><td><input type=\"number\" name=\"$name\" value=\"$max_mark\" min=\"1\" max=\"100\" size=6 maxlength=5></td></tr>\n";
+        $display_block .= "<TR><TD>Maximum mark for part $part: </td><td><input type='number' name='$name' value='$max_mark' min='1' max='100' size=6 maxlength=5></td></tr>\n";
 
         $name = "p$part" . "_numeric";
         $is_numeric = $p_numeric[$i];//$_POST[$name];
@@ -491,7 +491,7 @@ if($is_module_admin || $admin_access) {
         if ($is_numeric == 1) {
             $is_checked = "checked";
         }
-        $display_block .= "<TR><TD>Numeric (checked) or phrases (not checked) response format for part $part:<BR>(Questions format must match this choice.) </td><td><input type=\"checkbox\" name=\"$name\" value=\"$is_numeric\" $is_checked></td></tr>\n";
+        $display_block .= "<TR><TD>Numeric (checked) or phrases (not checked) response format for part $part:<BR>(Questions format must match this choice.) </td><td><input type='checkbox' name='$name' value='$is_numeric' $is_checked></td></tr>\n";
 
         $name = "p$part" . "_feedback";
         $show_part_feedback_flag = $p_show_feedback[$i];
@@ -499,15 +499,15 @@ if($is_module_admin || $admin_access) {
         if ($show_part_feedback_flag == 1) {
             $is_checked = "checked";
         }
-        $display_block .= "<TR><TD>Collect overall feedback for part $part (as well, or instead of, section feedback):<BR>(Checked means show the feedback box on the marking page.) </td><td><input type=\"checkbox\" name=\"$name\" value=\"$name\" $is_checked></td></tr>\n";
+        $display_block .= "<TR><TD>Collect overall feedback for part $part (as well, or instead of, section feedback):<BR>(Checked means show the feedback box on the marking page.) </td><td><input type='checkbox' name='$name' value='$name' $is_checked></td></tr>\n";
 
         $name = "p$part" . "_submission_date";
         $date = $p_submission_date[$i];//$_POST[$name];
-        $display_block .= "<TR><TD>Submission date for part $part: </td><td><input type=\"text\" id=\"$name\" name=\"$name\"  value=\"$date\"size=20 maxlength=15></td></tr>\n";
+        $display_block .= "<TR><TD>Submission date for part $part: </td><td><input type='text' id='$name' name='$name'  value='$date'size=20 maxlength=15></td></tr>\n";
 
         $name = "p$part" . "_marking_date";
         $date = $p_marking_date[$i];//$_POST[$name];
-        $display_block .= "<TR><TD>Mark-by date for part $part: </td><td><input type=\"text\" id=\"$name\" name=\"$name\"  value=\"$date\"size=20 maxlength=15></td></tr>\n";
+        $display_block .= "<TR><TD>Mark-by date for part $part: </td><td><input type='text' id='$name' name='$name'  value='$date'size=20 maxlength=15></td></tr>\n";
         $display_block .= "</table>\n";
     }
     //------------------------------------------------------------
@@ -532,9 +532,9 @@ if($is_module_admin || $admin_access) {
     $ac_university = $recs['descriptor_university_flag']; // university descriptor
     $ac_school = $recs['descriptor_school_flag']; // School descriptor
 
-    $display_block .= "<table class=\"tableSimple\" style=\"width:400px\">\n";
-    $display_block .= "<TR><TD colspan=\"2\"><H3>Assessment Criteria Visibility to Staff</H3></td></tr>\n";
-    $display_block .= "<TR><TD colspan=\"2\">These settings control whether all or any of the various Assessment Criteria are shown to staff to help them judge whether the mark given is appropriate</td></tr>\n";
+    $display_block .= "<table class='tableSimple m-3' style='width:400px'>\n";
+    $display_block .= "<TR><TD colspan='2'><H3>Assessment Criteria Visibility to Staff</H3></td></tr>\n";
+    $display_block .= "<TR><TD colspan='2'>These settings control whether all or any of the various Assessment Criteria are shown to staff to help them judge whether the mark given is appropriate</td></tr>\n";
     $display_block .= "<TR><TD>Which element</td><TD>Visible = checked</td></tr>\n";
 
     $name = "ac_visible";
@@ -604,12 +604,15 @@ if($is_module_admin || $admin_access) {
         $recs = $results->fetch();
         $num_progs = $recs['num_progs'];
         $prog_short_names_string = $recs['prog_short_names'];
-        $prog_list = explode(";", $prog_short_names_string);
+        $prog_list = [];
+        if($prog_short_names_string){
+            $prog_list = explode(";", $prog_short_names_string);
+        }
         $prog_list_count = sizeof($prog_list);
     }
-    $display_block .= "<table class=\"tableSimple\">\n";
-    $display_block .= "<TR><TD colspan=\"2\"><H3>Programme Variants</H3></td></tr>\n";
-    $display_block .= "<TR><TD colspan=\"2\">Use short names, e.g. Arch, Aero, Civil & Struct, Chem Eng. <BR> And often you won't need to use any.</td></tr>\n";
+    $display_block .= "<table class='tableSimple m-3'>\n";
+    $display_block .= "<TR><TD colspan='2'><H3>Programme Variants</H3></td></tr>\n";
+    $display_block .= "<TR><TD colspan='2'>Use short names, e.g. Arch, Aero, Civil & Struct, Chem Eng. <BR> And often you won't need to use any.</td></tr>\n";
     $num_parts = 7;
     for ($part = 1; $part <= $num_parts; $part++) {
         $i = $part;
@@ -624,20 +627,10 @@ if($is_module_admin || $admin_access) {
     $display_block .= "</table>\n";
 
 //------------------------------------------------------------------------
-// Program extra information on proposals form options
-//$option_text[0]='Related sites'; $option[0]='_relsites';
-//$option_text[1]='Related modules'; $option[1]='_relmods';
-//$option_text[2]='Background reading'; $option[2]='_backread';
-//$option_text[3]='Skills necessary'; $option[3]='_skills';
-//$option_text[4]='Software requirements'; $option[4]='_software';
-//$option_text[5]='Software support required'; $option[5]='_softsupport';
-//$option_text[6]='Lab work description'; $option[6]='_labs';
-//$option_text[7]='Workshop requirements'; $option[7]='_works';
-//$option_text[8]='Furthur information'; $option[8]='_furtherinfo';
 
-    $display_block .= "<table class=\"tableSimple\">\n";
-    $display_block .= "<TR><TD colspan=\"4\"><H3>Extra information to capture</H3></td></tr>\n";
-    $display_block .= "<TR><TD colspan=\"4\">This might be used by the module manager to organise resources<BR>It may also be useful to the students.</td></tr>\n";
+    $display_block .= "<table class='tableSimple m-3'>\n";
+    $display_block .= "<TR><TD colspan='4'><H3>Extra information to capture</H3></td></tr>\n";
+    $display_block .= "<TR><TD colspan='4'>This might be used by the module manager to organise resources<BR>It may also be useful to the students.</td></tr>\n";
     $display_block .= "<TR><TD>&nbsp;</td><TD>Visible</td><TD>Mandatory for staff</td><TD>Students see it</td></tr>\n";
     for ($i = 0; $i < sizeof($option); $i++) {
         $option_label = $option_text[$i];
@@ -702,9 +695,9 @@ if($is_module_admin || $admin_access) {
     }
     $choice_number = $setup_res['choice_number'];
 
-    $display_block .= "<table class=\"tableSimple\">\n";
-    $display_block .= "<TR><TD colspan=\"2\"><H3>Project/Area Selection settings</H3></td></tr>\n";
-    $display_block .= "<TR><TD colspan=\"2\">These setting determine how we want students to select projects.</td></tr>\n";
+    $display_block .= "<table class='tableSimple m-3'>\n";
+    $display_block .= "<TR><TD colspan='2'><H3>Project/Area Selection settings</H3></td></tr>\n";
+    $display_block .= "<TR><TD colspan='2'>These setting determine how we want students to select projects.</td></tr>\n";
     $display_block .= "<TR><TD>Description</td><TD>Value</td></tr>\n";
 
     $ranked_checked = "";
@@ -738,15 +731,15 @@ if($is_module_admin || $admin_access) {
     $display_block .= "</table>\n";
 //------------------------------------------------------------------------
 
-    $display_block .= "\n<input type=\"hidden\" name=\"referer\" value=\"$original_referer\">";
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"modify\">";
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit the modified values for $module_prefix$module1$module_postfix, $year_begin \"></p>\n";
+    $display_block .= "\n<input type='hidden' name='referer' value='$original_referer'>";
+    $display_block .= "\n<input type='hidden' name='op' value='modify'>";
+    $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton' name='submit' value='Submit the modified values for $module_prefix$module1$module_postfix, $year_begin '></p>\n";
 
     $display_block .= "</form>\n";
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 ?>
 <!DOCTYPE HTML>
@@ -759,8 +752,8 @@ if($is_module_admin || $admin_access) {
     <div class="container">
         <span class="navbar-brand">Edit module entry - <?php echo("$module_short_description ($short_code) $module_prefix$module1$module_postfix $year_begin ") ?></span>
         <ul class="nav justify-content-center">
-            <li class="nav-item"><a target="_self" href="../projectmarking_select.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module page</a></li>
-            <li class="nav-item"><a target="_self" href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="../projectmarking_select_bs.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module page</a></li>
+            <li class="nav-item"><a target="_self" href="../session_modules_bs.php?year_begin= <?php echo("$year_begin") ?>" class="nav-link px-2 text-white-50">This year module list</a></li>
             <li class="nav-item"><a target="_self" href="./edit_module_settings.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module admin page</a></li>
             <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Main admin page</a></li>
         </ul>

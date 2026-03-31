@@ -57,7 +57,7 @@ if ($POST_OP == "submit_edited") {
 }
 $display_block .= "<HR>";
 
-$display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
+$display_block .= "<form method='post' action='$_SERVER[PHP_SELF]'>\n";
 
 $query = "select * from $projects_setup where 1 order by year_begin desc";
 try {
@@ -70,8 +70,8 @@ try {
     exit();
 }
 
-//$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
-$display_block .= "<TABLE id=\"projectinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
+//$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
+$display_block .= "<TABLE id='projectinfo' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
 $display_block .= "
     <thead>
       <tr>
@@ -98,7 +98,7 @@ foreach ($rows as $recs) {
 
     $project_count++;
     $display_block .= "<TR>\n";
-    $display_block .= "<TD><input type=\"text\" name=\"p_id_$project_count\" value=\"$pm_id_s\"  size=5 maxlength=5 readonly></TD>";
+    $display_block .= "<TD><input type='text' name='p_id_$project_count' value='$pm_id_s'  size=5 maxlength=5 readonly></TD>";
     $display_block .= "<TD>$year</TD>";
     $display_block .= "<TD>$module_prefix$module_number</TD>";
     $display_block .= "<TD>$module_short_code_s</TD>";
@@ -107,17 +107,17 @@ foreach ($rows as $recs) {
     if ($visibility == 1) {
         $checked = "checked";
     }
-    $display_block .= "<TD><input type=\"checkbox\" name=\"visibility_$project_count\" value=\"1\" $checked></TD>\n";
+    $display_block .= "<TD><input type='checkbox' name='visibility_$project_count' value='1' $checked></TD>\n";
     $display_block .= "</TR>\n";
 
 }
 $display_block .= "</tbody>\n";
 $display_block .= "</TABLE>\n";
 
-$display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_edited\">";
-$display_block .= "\n<input type=\"hidden\" name=\"project_count\" value=\"$project_count\">";
+$display_block .= "\n<input type='hidden' name='op' value='submit_edited'>";
+$display_block .= "\n<input type='hidden' name='project_count' value='$project_count'>";
 
-$display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit changes to visibility of projects.\"></p>";
+$display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton' name='submit' value='Submit changes to visibility of projects.'></p>";
 
 $display_block .= "</form>";
 //---------------------------------------------------------------------------------
@@ -134,7 +134,6 @@ $display_block .= "</form>";
         <span class="navbar-brand">Edit visibility of projects details - <?php echo("$module_short_description ($short_code) $module_prefix$module1 $year_begin ") ?></span>
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Admin index page</a></li>
-            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">Year index page</a></li>
         </ul>
     </div>
 </nav>

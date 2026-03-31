@@ -520,10 +520,9 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">
     <div class="container">
-        <span class="navbar-brand">Edit Staff details - Staff details are the same for ALL modules on this system</span>
+        <span class="navbar-brand">Edit Staff details - Staff details are the same for ALL modules for the School</span>
         <ul class="nav justify-content-center">
-            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">Year index page</a></li>
-            <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Main admin page</a></li>
+            <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Admin index page</a></li>
         </ul>
     </div>
 </nav>

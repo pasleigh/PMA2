@@ -219,7 +219,7 @@ if (IsAdmin($db, $this_staff_username)) {
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="./<?php echo("$project_marking_page?pm_id=$pm_id") ?>" class="nav-link px-2 text-white-50">Full marking list</a></li>
             <li class="nav-item"><a target="_self" href="./<?php echo("$project_marking_page?pm_id=$pm_id&user=1") ?>" class="nav-link px-2 text-white-50">User marking list</a></li>
-            <li class="nav-item"><a href="./index.php" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a href="./index.php" class="nav-link px-2 text-white-50">This year module list</a></li>
         </ul>
         <div class="navbar-brand ms-auto" style="display: <?php echo($show_admin_link);?>">
             <a target='_top' class="navbar-brand" href='<?php echo("$admin_link"); ?>'>

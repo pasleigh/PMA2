@@ -4,3 +4,4 @@ SetEnv LOCAL_USER cenpas
 
 # a student user for testing purposes
 # SetEnv LOCAL_USER cn22ca 
+# SetEnv LOCAL_USER cn18jfb

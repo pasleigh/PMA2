@@ -125,7 +125,7 @@ foreach ($rows as $res) {
         $module_postfix = $res['module_postfix'];
         $module_short_description = $res['module_short_desc'];
         $short_code = $res['short_code'];
-        $display_block .= "<A href=\"./projectmarking_select.php?pm_id=$pm_id\" rel=\"external\" data-role=\"button\" data-theme=\"e\">$module_short_description - $module_prefix$module1$module_postfix - $short_code</A>\n";
+        $display_block .= "<A href=\"./projectmarking_select_bs.php?pm_id=$pm_id\" rel=\"external\" data-role=\"button\" data-theme=\"e\">$module_short_description - $module_prefix$module1$module_postfix - $short_code</A>\n";
         $module_buttons .= "<A href='./projectmarking_select_bs.php?pm_id=$pm_id' class='btn btn-success' target='_top'>$module_short_description - $module_prefix$module1$module_postfix - $short_code</A>";
         $visible_count++;
     }else{

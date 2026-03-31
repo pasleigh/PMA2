@@ -1306,7 +1306,7 @@ if (IsAdmin($db, $this_staff_username)) {
         <span class="navbar-brand">Modify individual project details :- <?PHP echo("$module_short_description  $module_prefix$module1  $year_begin/$year_end") ?></span>
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="./<?php echo("$project_marking_page?pm_id=$pm_id") ?>" class="nav-link px-2 text-white-50">Back to marking list</a></li>
-            <li class="nav-item"><a href="./index.php" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a href="./index.php" class="nav-link px-2 text-white-50">This year module list</a></li>
         </ul>
         <div class="navbar-brand ms-auto" style="display: <?php echo($show_admin_link);?>">
             <a target='_top' class="navbar-brand" href='<?php echo("$admin_link"); ?>'>

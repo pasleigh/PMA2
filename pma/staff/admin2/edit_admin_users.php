@@ -39,24 +39,23 @@ if($access) {
     if ($POST_OP == "new") {
 
         $display_block = "<h2>Select names from this default staff list to become admin users</h2>";
-        $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "\">\n";
+        $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
     $display_block .= csrf_token_field();
 
-// Get the list of staff from the staff_names2 table
-        $query = "select * from $staff_names_default order by familyname";
-//$get_list_res = mysql_query($get_list) or die(" Unable to create staff name list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
-        try {
-            $results = $db->query($query);
-        } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
-            error_log($ex->getMessage());
-            echo "A database error occurred. Please contact the system administrator.<BR>\n";
-            exit();
-        }
+    // Get the list of staff from the staff_names2 table
+    $query = "select * from $staff_names_default order by familyname";
+    try {
+        $results = $db->query($query);
+    } catch (PDOException $ex) {
+        $this_function = __FUNCTION__;
+        echo("An Error occured accessing the database in function: $this_function <BR>\n");
+        error_log($ex->getMessage());
+        echo "A database error occurred. Please contact the system administrator.<BR>\n";
+        exit();
+    }
 
-        $display_block .= "<TABLE id=\"staffinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
-        $display_block .= "
+    $display_block .= "<TABLE id='staffinfo' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
+    $display_block .= "
     <thead>
       <tr>
         <th>ID</th>
@@ -72,7 +71,6 @@ if($access) {
         $staff_count = 0;
         $rows = $results->fetchAll();
         foreach ($rows as $recs) {
-
             $staffid = $recs['staffid'];
             $firstname = stripslashes($recs['firstname']);
             $familyname = stripslashes($recs['familyname']);
@@ -81,23 +79,24 @@ if($access) {
             $mod_admin_level = stripslashes($recs['admin_level']);
             $staff_count++;
             $display_block .= "<TR>\n";
-            $display_block .= "<TD><input type=\"hidden\" name=\"staffid$staff_count\" value=\"$staffid\"> $staffid</TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"firstname$staff_count\" value=\"$firstname\"  size=10 maxlength=30></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"familyname$staff_count\" value=\"$familyname\"  size=30 maxlength=40></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"email$staff_count\" value=\"$email\"  size=30 maxlength=40></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"username$staff_count\" value=\"$username\"  size=8 maxlength=20></TD>";
+            $display_block .= "<TD><input type='hidden' name='staffid$staff_count' value='$staffid'> $staffid</TD>";
+            $display_block .= "<TD><input type='text' name='firstname$staff_count' value='$firstname'  size=10 maxlength=30></TD>";
+            $display_block .= "<TD><input type='text' name='familyname$staff_count' value='$familyname'  size=30 maxlength=40></TD>";
+            $display_block .= "<TD><input type='text' name='email$staff_count' value='$email'  size=30 maxlength=40></TD>";
+            $display_block .= "<TD><input type='text' name='username$staff_count' value='$username'  size=10 maxlength=40></TD>";
+            //$display_block .= "<TD><span id='username$staff_count'>$username</span></TD>";
             $display_block .= "<TD>" . GetAdminLevelSelect("admin_level$staff_count", $mod_admin_level) . "</TD>";
-            $display_block .= "<TD><input type=\"checkbox\" name=\"copy_to_admin_chk\" value=\"0\" >(checked = move to admin)</TD>\n";
+            $display_block .= "<TD><input type='checkbox' name='copy_to_admin_chk' value='0' >(checked = move to admin)</TD>\n";
             $display_block .= "</TR>\n";
 
         }
         $display_block .= "</tbody>\n";
         $display_block .= "</TABLE>\n";
 
-        $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_selected\">";
-        $display_block .= "\n<input type=\"hidden\" name=\"staff_count\" value=\"$staff_count\">";
+        $display_block .= "\n<input type='hidden' name='op' value='submit_selected'>";
+        $display_block .= "\n<input type='hidden' name='staff_count' value='$staff_count'>";
 
-        $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit changes to staff details.\"></p>";
+        $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton' name='submit' value='Submit changes to staff details.'></p>";
 
         $display_block .= "</form>";
 
@@ -177,9 +176,10 @@ if($access) {
 
     $display_block .= "<HR>";
     $display_block .= "<H2>The current Admin users table</H2>";
-    $display_block .= "<p>Change the admin level if you like</p>";
+    $display_block .= "<p>Change the admin level as appropriate</p>";
+    $display_block .= "<p> 0,1,2 = Normal staff, 3 = Full system control : Super Admin.</p>";
 
-    $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "\">\n";
+    $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
     $display_block .= csrf_token_field();
 
 // Get the list of staff from the staff_names2 table
@@ -195,7 +195,7 @@ if($access) {
         exit();
     }
 
-    $display_block .= "<TABLE id=\"adminstaffinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
+    $display_block .= "<TABLE id='adminstaffinfo' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
     $display_block .= "
     <thead>
       <tr>
@@ -219,10 +219,12 @@ if($access) {
         $mod_admin_level = stripslashes($recs['admin_level']);
         $admin_staff_count++;
         $display_block .= "<TR>\n";
-        $display_block .= "<TD><input type=\"hidden\" name=\"staffid$admin_staff_count\" value=\"$staffid\"> $staffid</TD>\n";
-        $display_block .= "<TD><input type=\"text\" name=\"fullname$admin_staff_count\" value=\"$firstname $familyname\"  size=10 maxlength=30 readonly></TD>\n";
-        $display_block .= "<TD><input type=\"text\" name=\"email$admin_staff_count\" value=\"$email\"  size=30 maxlength=40 readonly></TD>\n";
-        $display_block .= "<TD><input type=\"text\" name=\"username$admin_staff_count\" value=\"$username\"  size=8 maxlength=20 readonly></TD>\n";
+        $display_block .= "<TD><input type='hidden' name='staffid$admin_staff_count' value='$staffid'> $staffid</TD>\n";
+        $display_block .= "<TD><input type='text' name='fullname$admin_staff_count' value='$firstname $familyname'  size=30 maxlength=40 readonly></TD>\n";
+        $display_block .= "<TD><input type='text' name='email$admin_staff_count' value='$email'  size=30 maxlength=40 readonly></TD>\n";
+        //$display_block .= "<TD><input type='text' name='username$admin_staff_count' value='$username'  size=8 maxlength=20 readonly></TD>\n";
+        $display_block .= "<TD><span id='username$admin_staff_count'>$username</span>";
+        $display_block .= "<input type='hidden' name='username$admin_staff_count' value='$username'></TD>";
         $display_block .= "<TD>" . GetAdminLevelSelect("admin_level$admin_staff_count", $mod_admin_level) . "</TD>\n";
         $display_block .= "</TR>\n";
 
@@ -230,10 +232,10 @@ if($access) {
     $display_block .= "</tbody>\n";
     $display_block .= "</TABLE>\n";
 
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_modified\">";
-    $display_block .= "\n<input type=\"hidden\" name=\"admin_staff_count\" value=\"$admin_staff_count\">";
+    $display_block .= "\n<input type='hidden' name='op' value='submit_modified'>";
+    $display_block .= "\n<input type='hidden' name='admin_staff_count' value='$admin_staff_count'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit changes to admin users details.\"></p>";
+    $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton' name='submit' value='Submit changes to admin users details.'></p>";
 
     $display_block .= "</form>";
 
@@ -241,10 +243,11 @@ if($access) {
 
 //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Add a new admin user from the default staff list...</H2>\n";
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"new\">";
+    $display_block .= "<h1>Still need to do this</h1>";
+    $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]'>\n";
+    $display_block .= "\n<input type='hidden' name='op' value='new'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Add a NEW admin user.\"></p>";
+    $display_block .= "<p><input class='btn btn-success mt-3' type='submit' id='submitbutton_new' name='submit' value='Add a NEW admin user.'></p>";
 
     $display_block .= "</form>";
 
@@ -258,7 +261,7 @@ if($access) {
         $levels[3] = "2";
         $levels[4] = "3";
 
-        $select_block = "\n<select name=\"$NameKey\">\n";
+        $select_block = "\n<select name='$NameKey'>\n";
 
         for ($i = 1; $i <= 4; $i++) {
             $Level = $levels[$i];
@@ -269,7 +272,7 @@ if($access) {
                 $selected = "";
             }
 
-            $select_block .= "<option value=\"$Level\" $selected>$Level</option>\n";
+            $select_block .= "<option value='$Level' $selected>$Level</option>\n";
         }
         $select_block .= "</select>\n";
 
@@ -288,7 +291,6 @@ if($access) {
         <span class="navbar-brand">Edit Staff details - <?php echo("$module_short_description ($short_code) $module_prefix$module1 $year_begin ") ?></span>
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Admin index page</a></li>
-            <li class="nav-item"><a target="_self" href="../session_modules.php?year_begin= <?php echo("$year_begin") ?>" class="nav-link px-2 text-white-50">Year index page</a></li>
         </ul>
     </div>
 </nav>

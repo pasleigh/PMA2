@@ -114,7 +114,7 @@ if ($access) {
     <div class="container">
         <span class="navbar-brand">Submit a database request (<?php echo("$this_staff_username"); ?>)</span>
         <ul class="nav justify-content-center">
-            <li class="nav-item"><a target="_self" href="../index.php<?php echo("?year_begin=$year_begin") ?>" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="../index.php<?php echo("?year_begin=$year_begin") ?>" class="nav-link px-2 text-white-50">This year module list</a></li>
         </ul>
     </div>
 </nav>

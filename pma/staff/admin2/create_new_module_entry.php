@@ -34,11 +34,11 @@ if ($POST_OP == "create"){
     $new_short_name = trim($_POST['new_module_short_name']);
     $new_short_name_lc = strtolower($new_short_name);
     if (strlen($new_short_name) < 2) {
-        echo("<B>The module short name must be between 2 and 5 characters long</B>. You have entered \"$new_short_name\"");
+        echo("<B>The module short name must be between 2 and 5 characters long</B>. You have entered '$new_short_name'");
         exit;
     }
     if (strlen($new_short_name) > 5) {
-        echo("<B>The module short name must be between 2 and 5 characters long</B>. You have entered \"$new_short_name\"");
+        echo("<B>The module short name must be between 2 and 5 characters long</B>. You have entered '$new_short_name'");
         exit;
     }
     $new_year_begin = $_POST['new_year_begin'];
@@ -547,34 +547,35 @@ if ($POST_OP == "create"){
 // Display the dropdowns to select the module and year
     $display_block .= "<H1>Create a new module entry ...</H1>\n";
     $display_block .= "<P>This will create all the database tables - so get it right!</P>";
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
+    $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]'>\n";
     $display_block .= "<H2>Module start session/year</H2>";
     $display_block .= "<P>The <strong>year</strong> is the year of the session, that begining in Spetember.</P>";
-    $display_block .= "<P><strong>Year: </strong><select name=\"new_year_begin\" > \n";
 
-    for ($year = 2016; $year <= 2030; $year++) {
-        $display_block .= "<option value=\"$year\" >$year</option>\n";
+    $display_block .= "<div class='row'><div class='col-4'><label for='new_year_begin' class='form-label'><h4>Year</h4></label>\n";
+    $display_block .= "<select class='form-control' id='new_year_begin' name='new_year_begin' > \n";
+    for ($year = 2025; $year <= 2040; $year++) {
+        $display_block .= "<option value='$year' >$year</option>\n";
     }
-    $display_block .= "</select> (This <strong>CAN NOT</strong> changed later)</P>\n";
+    $display_block .= "</select></div><P> (This <strong>CAN NOT</strong> be changed later)</P>\n";
 
     $display_block .= "<H2>Module prefix and number</H2><P>E.g. For the module CIVE3708  the <strong>prefix</strong> will be CIVE, and the  <strong>number</strong> 3708</P>";
-    $display_block .= "<P><strong>Module code prefix: </strong><input type=\"text\" name=\"new_module_prefix_name\" value=\"$module_prefix_name\" size=5 maxlength=4></P>";
-    $display_block .= "<P><strong>Module code number: </strong><input type=\"text\" name=\"new_module_number\" value=\"1234\" size=5 maxlength=4>";
-    $display_block .= "<P><strong>Module code post-fix: </strong><input type=\"text\" name=\"new_module_postfix_name\" value=\"$module_postfix_name\" size=1 maxlength=1></P>";
+    $display_block .= "<P><strong>Module code prefix: </strong><input type='text' name='new_module_prefix_name' value='$module_prefix_name' size=5 maxlength=4></P>";
+    $display_block .= "<P><strong>Module code number: </strong><input type='text' name='new_module_number' value='1234' size=5 maxlength=4>";
+    $display_block .= "<P><strong>Module code post-fix: </strong><input type='text' name='new_module_postfix_name' value='$module_postfix_name' size=1 maxlength=1></P>";
     $display_block .= "<H2>The module short name.</H2>";
     $display_block .= "<P> E.g. For level 3 projects you could use BENG, for level 5 project use MENG, MSc might use the programme codes (e.g. WASH, EEPM, SE, ICME).  <BR>Ad-hoc modules e.g. IDP you might use IDP. It shoud be no more that 4 letters.</P>";
-    $display_block .= "<P><strong>Module short name</strong> <input type=\"text\" name=\"new_module_short_name\" value=\"$new_short_name\" size=5 maxlength=5> (Note that this must be UNIQUE for the session/year - and it <strong>CAN NOT</strong> be changed later.)</P>";
-    $display_block .= "<P><strong>Module short description</strong> <input type=\"text\" name=\"new_module_short_desc\" value=\"$new_short_desc\" size=25 maxlength=25> (Up to 25 characters, not blank)</P>";
+    $display_block .= "<P><strong>Module short name</strong> <input type='text' name='new_module_short_name' value='$new_short_name' size=5 maxlength=5> (Note that this must be UNIQUE for the session/year - and it <strong>CAN NOT</strong> be changed later.)</P>";
+    $display_block .= "<P><strong>Module short description</strong> <input type='text' name='new_module_short_desc' value='$new_short_desc' size=25 maxlength=25> (Up to 25 characters, not blank)</P>";
 
     $display_block .= "<H2>Assessment management details:</H2>";
 
     $display_block .= "<p>Module leader:  </td><td>" . GetStaffSelectID($db, $staff_names2, "staff_id", GetStaffIDFromName($db, $module_leader_fullname, $staff_names2)) . "</p>\n";
-    $display_block .= "<p>Acceptable variation between markers : </td><td><input type=\"number\" name=\"accept_var\" value=\"$accept_var\" min=\"0\" max=\"100\" size=\"3\"> %</p>\n";
-    $display_block .= "<p>Pass mark:  </td><td><input type=\"number\" name=\"pass_mark\" value=\"$pass_mark\" min=\"0\" max=\"100\" size=\"3\"> %</p>\n";
-    $display_block .= "<p>Minimum number of feedback words:  </td><td><input type=\"number\" name=\"min_feedback_words\" value=\"$min_feedback_words\" min=\"0\" max=\"100\" size=\"3\"></p>\n";
+    $display_block .= "<p>Acceptable variation between markers : </td><td><input type='number' name='accept_var' value='$accept_var' min='0' max='100' size='3'> %</p>\n";
+    $display_block .= "<p>Pass mark:  </td><td><input type='number' name='pass_mark' value='$pass_mark' min='0' max='100' size='3'> %</p>\n";
+    $display_block .= "<p>Minimum number of feedback words:  </td><td><input type='number' name='min_feedback_words' value='$min_feedback_words' min='0' max='100' size='3'></p>\n";
 
     $display_block .= "<H2>Assessment Parts:</H2>";
-    $display_block .= "<P><strong>Number of assessment parts: </strong><input type=\"number\" name=\"new_num_parts\" value=\"5\" min=\"1\" max=\"5\" size=6 maxlength=5> (1 to 5 - this <strong>CAN NOT</strong> be changed later)";
+    $display_block .= "<P><strong>Number of assessment parts: </strong><input type='number' name='new_num_parts' value='5' min='1' max='5' size=6 maxlength=5> (1 to 5 - this <strong>CAN NOT</strong> be changed later)";
 
     $descs[1] = "Objectives";
     $descs[2] = "Presentation";
@@ -601,21 +602,21 @@ if ($POST_OP == "create"){
         $display_block .= "<H3>Part $part:</H3>";
         $name = "p$part" . "_desc";
         $desc = $descs[$part];
-        $display_block .= "<P>Description of assesment part $part: <input type=\"text\" name=\"$name\"  value=\"$desc\" size=25 maxlength=25>";
+        $display_block .= "<P>Description of assesment part $part: <input type='text' name='$name'  value='$desc' size=25 maxlength=25>";
         $name = "p$part" . "_template";
         $display_block .= "<P> Select a questions template for  part $part: " . GetQsTemplatesSelect($db, $name, $template_tables[$part]) . "</P>";
         $name = "p$part" . "_num_markers";
-        $display_block .= "<P>Number of markers for part $part: <input type=\"number\" name=\"$name\" value=\"1\" min=\"1\" max=\"3\" size=6 maxlength=5>";
+        $display_block .= "<P>Number of markers for part $part: <input type='number' name='$name' value='1' min='1' max='3' size=6 maxlength=5>";
         $name = "p$part" . "_percent";
         $weight = $weights[$part];
-        $display_block .= "<P>% weight of part $part: <input type=\"number\" name=\"$name\" value=\"$weight\" min=\"0\" max=\"100\" size=6 maxlength=5>";
+        $display_block .= "<P>% weight of part $part: <input type='number' name='$name' value='$weight' min='0' max='100' size=6 maxlength=5>";
         $name = "p$part" . "_max";
-        $display_block .= "<P>Maximum mark for part $part: <input type=\"number\" name=\"$name\" value=\"100\" min=\"1\" max=\"100\" size=6 maxlength=5>";
+        $display_block .= "<P>Maximum mark for part $part: <input type='number' name='$name' value='100' min='1' max='100' size=6 maxlength=5>";
         $name = "p$part" . "_submission_date";
         $date = "2016-09-24";//date('Y-m-d');//"2014-09-24";
-        $display_block .= "<P>Submission date for part $part: <input type=\"text\" id=\"$name\" name=\"$name\"  value=\"$date\" size=20 maxlength=15>";
+        $display_block .= "<P>Submission date for part $part: <input type='text' id='$name' name='$name'  value='$date' size=20 maxlength=15>";
         $name = "p$part" . "_marking_date";
-        $display_block .= "<P>Mark-by date for part $part: <input type=\"text\" id=\"$name\" name=\"$name\"  value=\"$date\" size=20 maxlength=15>";
+        $display_block .= "<P>Mark-by date for part $part: <input type='text' id='$name' name='$name'  value='$date' size=20 maxlength=15>";
     }
 
     $display_block .= "<H2>Staff names list:</H2>";
@@ -623,11 +624,11 @@ if ($POST_OP == "create"){
     $staff_names_match = "staff_names";
     //$display_block .= "<P> Select a previous list of staff names to use: " . GetStaffNameTemplatesSelect($db, $name, $staff_names_match) . "</P>";
     $display_block .= "<P> All modules use the global list of staff names: <b>$staff_names</b>. </P>";
-    $display_block .= "\n<input type=\"hidden\" name=\"$name\" value=\"$staff_names\">";
+    $display_block .= "\n<input type='hidden' name='$name' value='$staff_names'>";
 
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"create\">";
+    $display_block .= "\n<input type='hidden' name='op' value='create'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Setup a new set of tables for the above module\"></p>";
+    $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton' name='submit' value='Setup a new set of tables for the above module'></p>";
 
     $display_block .= "</form>";
 
@@ -642,11 +643,9 @@ if ($POST_OP == "create"){
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">
     <div class="container">
-        <span class="navbar-brand">Create New Project Entry in the database</span>
+        <span class="navbar-brand">Create A New Project/Module Entry </span>
         <ul class="nav justify-content-center">
-            <li class="nav-item"><a target="_self" href="setup_projects_for_year.php<?php echo "?pm_id=$pm_id" ?>" class="nav-link px-2 text-white-50">Reload this page</a></li>
             <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Admin index page</a></li>
-            <li class="nav-item"><a target="_self" href="../index.php<?php echo("?year_begin=$year_begin") ?>" class="nav-link px-2 text-white-50">Year index page</a></li>
         </ul>
     </div>
 </nav>

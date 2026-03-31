@@ -376,7 +376,7 @@ $display_block .= "<HR><P><a href='./edit_staff_table.php'>Back to Old Staff Edi
         <span class="navbar-brand">Edit Staff details</span>
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Admin index page</a></li>
-            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">This year module list</a></li>
         </ul>
     </div>
 </nav>

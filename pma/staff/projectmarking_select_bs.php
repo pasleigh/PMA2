@@ -153,7 +153,7 @@ if (IsAdmin($db, $this_staff_username)) {
     <ul class="nav justify-content-center">
         <li class="nav-item"><a target="_self" href="index.php" class="nav-link px-2 text-white-50">Year index</a></li>
         <li class="nav-item"><a target="_self" href="./session_modules_bs.php<?PHP echo("?year_begin=$year_begin"); ?>" class="nav-link px-2 text-white-50"><?PHP echo("$year_begin/$year_end modules index"); ?></a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-white-50">Year index page</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-white-50">This year module list</a></li>
     </ul>
 </footer>
 -->

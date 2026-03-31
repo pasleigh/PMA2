@@ -101,22 +101,23 @@ if($is_module_admin_any || $admin_access) {
             $selected = "";
         }
         $project_list_desc = "$year_l $module_prefix_l$module_number_l$module_postfix_l - $module_short_code_s_l - $module_short_desc_l";
-        $project_list_options .= "<option $selected value=\"$pm_id_s\">$project_list_desc</option>\n";
+        $project_list_options .= "<option $selected value='$pm_id_s'>$project_list_desc</option>\n";
     }
 
 // Display the dropdowns to select the module and year
     if($school != "kmap2") {
         $display_block .= "<h1>Select the module and year  you want to modify...</H1>\n";
 
-        $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
+        $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]'>\n";
 
-        $display_block .= "<P>Project/Module descriptions in the database: <select name=\"pm_id\" >\n";
+        $display_block .= "<div><h4>Project/Module descriptions in the database:</h4>\n";
+        $display_block .= "<select class='form-select' name='pm_id' >\n";
         $display_block .= $project_list_options;
-        $display_block .= "</select>\n</P>";
+        $display_block .= "</select>\n</div>";
 
-        $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"select\">";
+        $display_block .= "\n<input type='hidden' name='op' value='select'>";
 
-        $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Modify the selected module/year \"></p>";
+        $display_block .= "<p><input class='btn btn-secondary mt-3' type='submit' id='submitbutton' name='submit' value='Modify the selected module/year '></p>";
 
         $display_block .= "</form>";
 
@@ -154,7 +155,7 @@ if($is_module_admin_any || $admin_access) {
 
             } else {
                 $display_block .= "This combination of year (<B>$year_begin</B>) /module (<B>$module1</B>) /short code (<B>$module_short_code</B>) has not been previously set up.<BR>";
-                $display_block .= "Select again or go to this <A href=\"./create_new_module_entry.php\">Create new Module Entry</A> link.<BR>&nbsp;<BR>\n";
+                $display_block .= "Select again or go to this <A href='./create_new_module_entry.php'>Create new Module Entry</A> link.<BR>&nbsp;<BR>\n";
             }
         }// End of POST select
     }
@@ -165,17 +166,17 @@ if($is_module_admin_any || $admin_access) {
             $display_block .= "<DIV style='border-style: solid; border-width: 3px; border-color: maroon; padding: 5px; background-color: Khaki' >\n";
             $display_block .= "<h1>System Level admin functions</h1>";
             $display_block .= "<OL>";
-            $display_block .= "<LI><A href=\"./create_new_module_entry.php\">Create new Module Entry</A></LI>\n";
-            $display_block .= "<LI><A href=\"./duplicate_module.php\">Duplicate a previously used module to create <strong>new</strong> module</A></LI>\n";
-            $display_block .= "<LI><a href=\"./edit_module_visibility.php\">Edit which Modules are visible to staff and students</a></LI>\n";
-            $display_block .= "<LI><a href=\"./change_school_definition.php\">Edit the name and header image</a></LI>\n";
-            $display_block .= "<LI><a href=\"./edit_staff_table_bs.php?default_table=1\">Edit staff table </a> (This is  a <em>global</em> list of staff. Any of which may be working on any modules or tools.)</LI>\n";
-            $display_block .= "<LI><a href=\"./upload_assessment_criteria_xlsx.php\">Upload a new Assessment Criteria table from xlsx/csv</a></LI>\n";
-            //$display_block .= "<LI><a href=\"./edit_dash_feedback_tools.php\">Configure feedback tools</a></LI>\n";
-            //$display_block .= "<BR><a href=\"" . $locationdir . "admin2/setup_questions_templates.php\">Edit template questions</a><br>\n";
-            $display_block .= "<LI><A href=\"./edit_admin_users.php\">Edit System Level admin users (NOT module admin)</A></LI>\n";
-            $display_block .= "<LI><A href=\"./edit_admin_users_module.php\">Edit Module/Tool Level admin users</A></LI>\n";
-            //$display_block .= "<BR><a href=\"./view_staff_load_aggregated.php\">View staff project load aggregated over several modules</a><br>";
+            $display_block .= "<LI><A href='./create_new_module_entry.php'>Create new Module Entry</A></LI>\n";
+            $display_block .= "<LI><A href='./duplicate_module.php'>Duplicate a previously used module to create <strong>new</strong> module</A></LI>\n";
+            $display_block .= "<LI><a href='./edit_module_visibility.php'>Edit which Modules are visible to staff and students</a></LI>\n";
+            $display_block .= "<LI><a href='./change_school_definition.php'>Edit the name and header image</a></LI>\n";
+            $display_block .= "<LI><a href='./edit_staff_table_bs.php?default_table=1'>Edit staff table </a> (This is  a <em>global</em> list of staff. Any of which may be working on any modules or tools.)</LI>\n";
+            $display_block .= "<LI><a href='./upload_assessment_criteria_xlsx.php'>Upload a new Assessment Criteria table from xlsx/csv</a></LI>\n";
+            //$display_block .= "<LI><a href='./edit_dash_feedback_tools.php'>Configure feedback tools</a></LI>\n";
+            //$display_block .= "<BR><a href='" . $locationdir . "admin2/setup_questions_templates.php'>Edit template questions</a><br>\n";
+            $display_block .= "<LI><A href='./edit_admin_users.php'>Edit System Level admin users (NOT module admin)</A></LI>\n";
+            $display_block .= "<LI><A href='./edit_admin_users_module.php'>Edit Module/Tool Level admin users</A></LI>\n";
+            //$display_block .= "<BR><a href='./view_staff_load_aggregated.php'>View staff project load aggregated over several modules</a><br>";
             $display_block .= "</OL>";
             $display_block .= "</DIV><BR>\n";
         }else {
@@ -203,7 +204,7 @@ if($is_module_admin_any || $admin_access) {
     $display_block_gen_tools = "<DIV style='border-style: solid; border-width: 3px; border-color: darkorchid; padding: 5px; background-color: lightgoldenrodyellow' >\n";
     $display_block_gen_tools .= "<h1>Some general tools</h1>";
     $display_block_gen_tools .= "<UL>";
-    $display_block_gen_tools .= "<LI><a href=\"./view_staff_load_aggregated.php\">View staff project load aggregated over several modules</a></LI>";
+    $display_block_gen_tools .= "<LI><a href='./view_staff_load_aggregated.php'>View staff project load aggregated over several modules</a></LI>";
     $display_block_gen_tools .= "</UL>";
     $display_block_gen_tools .= "</DIV><BR>\n";
     //$display_block .= $display_block_gen_tools;
@@ -218,7 +219,7 @@ if($is_module_admin_any || $admin_access) {
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">
     <div class="container">
-        <span class="navbar-brand">Set up and amend data (<?php echo("$school"); ?>)</span>
+        <span class="navbar-brand">Setup and Modify Projects/Modules and System data</span>
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="../index.php<?php echo("?year_begin=$year_begin") ?>" class="nav-link px-2 text-white-50">Main home page</a></li>
         </ul>

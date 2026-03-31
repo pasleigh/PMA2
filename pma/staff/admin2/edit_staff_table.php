@@ -611,7 +611,7 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
     <div class="container">
         <span class="navbar-brand">Edit Staff details - this applies to ALL modules in the system</span>
         <ul class="nav justify-content-center">
-            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">Year index page</a></li>
+            <li class="nav-item"><a target="_self" href="../index.php" class="nav-link px-2 text-white-50">This year module list</a></li>
             <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Main admin page</a></li>
         </ul>
     </div>

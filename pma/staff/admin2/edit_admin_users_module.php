@@ -83,7 +83,7 @@ if($access) {
             $selected = "";
         }
         $project_list_desc = "$year_l $module_prefix_l$module_number_l$module_postfix_l - $module_short_code_s_l - $module_short_desc_l";
-        $project_list_options .= "<option $selected value=\"$pm_id_s\">$project_list_desc</option>\n";
+        $project_list_options .= "<option $selected value='$pm_id_s'>$project_list_desc</option>\n";
     }
     if($pm_id_selected == null){$pm_id_selected = $pm_id_first;}
     // plus the feedback tools
@@ -115,14 +115,14 @@ if($access) {
     // Display the dropdowns to select the module and year
     $display_block .= "<h2>Select the module/year you want to view/edit Module Level Admin Users for...</H1>\n";
 
-    $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "\">\n";
+    $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
     $display_block .= csrf_token_field();
-    $display_block .= "<P>Project/Module descriptions in the database: ";
-    $display_block .= "<select name='pm_id_selected' id='module_select'>\n";
+    $display_block .= "<P><strong>Project/Module descriptions in the database: </strong>";
+    $display_block .= "<select class='form-control' name='pm_id_selected' id='module_select'>\n";
     $display_block .= $project_list_options;
     $display_block .= "</select>\n</P>";
     $display_block .= "<input type='hidden' name='op' value='select'>";
-    $display_block .= "<p><input type='submit' id='submitbutton' name='submit' value='List admin user for the selected module/year'></p>";
+    $display_block .= "<p><input class='btn btn-secondary' type='submit' id='submitbutton' name='submit' value='List admin user for the selected module/year'></p>";
     $display_block .= "</form>";
 
     if ($POST_OP == "selected_new_staff") {
@@ -237,7 +237,7 @@ if($access) {
             }
         }
     }
-    //if ($POST_OP == "select"  || $new_admin_staff_id != null) {
+
     {
         // Display the admin users table for this module
 
@@ -308,26 +308,26 @@ if($access) {
         $display_block .= "</tbody>\n";
         $display_block .= "</TABLE>\n";
 
-        $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_modified\">";
-        $display_block .= "\n<input type=\"hidden\" name=\"pm_id_selected\" value=\"$pm_id_selected\">";
-        $display_block .= "\n<input type=\"hidden\" name=\"admin_staff_count\" value=\"$admin_staff_count\">";
+        $display_block .= "\n<input type='hidden' name='op' value='submit_modified'>";
+        $display_block .= "\n<input type='hidden' name='pm_id_selected' value='$pm_id_selected'>";
+        $display_block .= "\n<input type='hidden' name='admin_staff_count' value='$admin_staff_count'>";
 
-        $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Delete ticked staff from admin list for this module/year.\"></p>";
+        $display_block .= "<p><input class='btn btn-outline-danger' type='submit' id='submitbutton' name='submit' value='Delete ticked staff from admin list for this module/year.'></p>";
 
         $display_block .= "</form>";
 
         //---------------------------------------------------------------------------------
         if($pm_id_selected != 'all') {
             $display_block .= "<hr><h2>Add a new admin person to the above selected module / year ...</H2>\n";
-            $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "\">\n";
+            $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
             $display_block .= csrf_token_field();
             $NameKey = 'new_admin_staff_id';
             $MatchID = null;
             $display_block .= GetStaffSelectID($db, $staff_names, $NameKey, $MatchID);
-            $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"selected_new_staff\">";
-            $display_block .= "\n<input type=\"hidden\" name=\"pm_id_selected\" value=\"$pm_id_selected\">";
+            $display_block .= "\n<input type='hidden' name='op' value='selected_new_staff'>";
+            $display_block .= "\n<input type='hidden' name='pm_id_selected' value='$pm_id_selected'>";
 
-            $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit_new\" value=\"Add a NEW admin user to this module/year.\"></p>";
+            $display_block .= "<div class='m-3'><input class='btn btn-primary' type='submit' id='submitbutton_new' name='submit_new' value='Add a NEW admin user to this module/year.'></div>";
 
             $display_block .= "</form>";
         }
@@ -349,7 +349,7 @@ if($access) {
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">
     <div class="container">
-        <span class="navbar-brand">Module Level Admin Users Editing</span>
+        <span class="navbar-brand">Edit the Module Level Admin Users</span>
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Admin index page</a></li>
         </ul>
