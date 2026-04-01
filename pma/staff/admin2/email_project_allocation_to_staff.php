@@ -233,23 +233,23 @@ if($is_module_admin || $admin_access) {
     if ($POST_OP == "select") {
         $display_block .= "<P>In the box below type the covering email text you want to send to staff. Put in HTML code if necessary.<BR>";
 
-        $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$part\">
-                      <P><textarea rows=\"20\" cols=\"100\" name=\"email_body_text\" placeholder=\"Type the text you want to send to all staff...\">$email_body</textarea></P>\n";
-        $display_block .= "<P>Email Subject line <input size=\"80\" type=\"text\" name=\"subjectline\" value=\"Student Allocation for $module_short_description. \"></P>\n";
+        $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$part'>
+                      <P><textarea class='form-control' rows='20' cols='100' name='email_body_text' placeholder='Type the text you want to send to all staff...'>$email_body</textarea></P>\n";
+        $display_block .= "<P>Email Subject line <input size='80' class='form-control'  type='text' name='subjectline' value='Student Allocation for $module_short_description. '></P>\n";
 
-        $display_block .= "<p><input type=\"checkbox\" name=\"reallysend\" value=\"reallysend\">Tick this box to confirm you REALLY want to send the emails.</p>\n
-                     <p><input type=\"checkbox\" name=\"makepdf\" value=\"active\">Tick this box as well to be sure you really really want to send the emails.</p>\n
+        $display_block .= "<p><input type='checkbox' name='reallysend' value='reallysend'>Tick this box to confirm you REALLY want to send the emails.</p>\n
+                     <p><input type='checkbox' name='makepdf' value='active'>Tick this box as well to be sure you really really want to send the emails.</p>\n
                      <p><B>BOTH of the above must be ticked for the email  to be sent to staff.</B></p>\n";
 
         //$display_block .= $summary_block;
 
-        $display_block .= "\n<input type=\"hidden\" name=\"module1\" value=\"$module1\">
-                     <input type=\"hidden\" name=\"year_begin\" value=\"$year_begin\">
-                     <input type=\"hidden\" name=\"op\" value=\"send\">
+        $display_block .= "\n<input type='hidden' name='module1' value='$module1'>
+                     <input type='hidden' name='year_begin' value='$year_begin'>
+                     <input type='hidden' name='op' value='send'>
                      
-                     <P><input type=\"submit\" name=\"submit\" value=\"Tick the boxes and click to here to email allocations NOW.\"></P>\n";
-        $display_block .= "<p><B>From the table below all names that are ticked will have their allocation emailed (usually this is ALL students)<BR><span style=\"font-size:70%;\">(Only allocated students will be included.)</span></B></p>";
-        //$display_block .= "<div>Select/Un-select all<input type=\"checkbox\" id=\"select-all\" nmae=\"selectAll\" checked value=\"\"/></div>\n";
+                     <P><input class='btn btn-primary' type='submit' name='submit' value='Tick the boxes and click to here to email allocations NOW.'></P>\n";
+        $display_block .= "<p><B>From the table below all names that are ticked will have their allocation emailed (usually this is ALL students)<BR><span style='font-size:70%;'>(Only allocated students will be included.)</span></B></p>";
+        //$display_block .= "<div>Select/Un-select all<input type='checkbox' id='select-all' nmae='selectAll' checked value=''/></div>\n";
         $display_block .= GetStudentListTable($db, $project_allocated, $students, $staff2, $feedback_records, $part);
         $display_block .= "\n</form><BR><HR>";
     } elseif ($POST_OP == "send") {
@@ -372,7 +372,7 @@ if($is_module_admin || $admin_access) {
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 ?>
 <!DOCTYPE HTML>

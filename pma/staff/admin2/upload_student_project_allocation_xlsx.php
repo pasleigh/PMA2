@@ -36,7 +36,7 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 if ($is_module_admin || $admin_access) {
 
     $display_block .= "<h1>Upload Student Project Allocation</h1>";
-    $display_block .= "<h2>Database table to be updated \"$project_allocated\"</h2>";
+    $display_block .= "<h2>Database table to be updated '$project_allocated'</h2>";
 
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
@@ -367,7 +367,7 @@ if ($is_module_admin || $admin_access) {
             exit();
         }
         $rows = $results->fetchAll();
-        $display_block .= "<TABLE id=\"studentallocation\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
+        $display_block .= "<TABLE id='studentallocation' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
         $display_block .= "
     <thead>
       <tr>
@@ -419,12 +419,12 @@ if ($is_module_admin || $admin_access) {
 
             $student_count++;
             $display_block .= "<TR>\n";
-            $display_block .= "<TD><input type=\"text\" name=\"pid$student_count\" value=\"$pid\"  size=4 maxlength=9 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"sid$student_count\" value=\"$sid\"  size=10 maxlength=10 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"name$student_count\" value=\"$student_name\"  size=20 maxlength=20 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"title$student_count\" value=\"$title\"  size=50 maxlength=100 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"supervisor$student_count\" value=\"$supervisor_name\"  size=20 maxlength=30 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"second_marker$student_count\" value=\"$second_marker_name\"  size=20 maxlength=30 readonly></TD>";
+            $display_block .= "<TD><input type='text' name='pid$student_count' value='$pid'  size=4 maxlength=9 readonly></TD>";
+            $display_block .= "<TD><input type='text' name='sid$student_count' value='$sid'  size=10 maxlength=10 readonly></TD>";
+            $display_block .= "<TD><input type='text' name='name$student_count' value='$student_name'  size=20 maxlength=20 readonly></TD>";
+            $display_block .= "<TD><input type='text' name='title$student_count' value='$title'  size=50 maxlength=100 readonly></TD>";
+            $display_block .= "<TD><input type='text' name='supervisor$student_count' value='$supervisor_name'  size=20 maxlength=30 readonly></TD>";
+            $display_block .= "<TD><input type='text' name='second_marker$student_count' value='$second_marker_name'  size=20 maxlength=30 readonly></TD>";
 
             for ($i = 1; $i <= 5; $i++) {
                 $m1_entry = "marker_p$i" . "m1_id";
@@ -443,39 +443,39 @@ if ($is_module_admin || $admin_access) {
         $display_block .= "</tbody>\n";
         $display_block .= "</TABLE>\n";
 
-        $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_edited\">";
-        $display_block .= "\n<input type=\"hidden\" name=\"student_count\" value=\"$student_count\">";
+        $display_block .= "\n<input type='hidden' name='op' value='submit_edited'>";
+        $display_block .= "\n<input type='hidden' name='student_count' value='$student_count'>";
     }
 
     //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Upload a Simple XLSX/CSV... (with the same marker/second marker for each part)</H2>\n";
-    $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\" enctype=\"multipart/form-data\">\n";
+    $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id' enctype='multipart/form-data'>\n";
     $display_block .= "<P> You can alternatively upload a XLSX/CSV file to update and <B>add</B> students' allocations (you cannot delete students) </P>";
     $display_block .= "<P> Create a XLSX/CSV with the headings:<B>SID</B>,<B>Project ID</B>, <B>Title</B>,  <B>Supervisor Surname (plus ', Initial' [e.g. Smith, A] if necessary)</B>, <B>Second marker Surname (plus ', Initial' if necessary)</B> and load here.</P>";
     $display_block .= "<P>(The Project ID is not used, but must exist in the file.)</P>";
-    $display_block .= "<P></P><input name=\"csv\" type=\"file\" id=\"csv\" /></P>";
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"upload_csv\">";
+    $display_block .= "<P></P><input class='btn btn-outline-primary' name='csv' type='file' id='csv' /></P>";
+    $display_block .= "\n<input type='hidden' name='op' value='upload_csv'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_csv\" name=\"submit\" value=\"Upload a simple XLSX/CSV \"></p>";
+    $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton_csv' name='submit' value='Upload a simple XLSX/CSV '></p>";
 
     $display_block .= "</form>\n";
     //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Upload a detailed XLSX/CSV... (with different marker for each part)</H2>\n";
-    $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\" enctype=\"multipart/form-data\">\n";
+    $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id' enctype='multipart/form-data'>\n";
     $display_block .= "<P> You can alternatively upload a XLSX/CSV file to update and <B>add</B> students' allocations (you cannot delete students) </P>";
     $display_block .= "<P> The detailed breakdown of the imported allocation of markers will be show on this page ... you cannot edit them.</P>";
     $display_block .= "<P> Create a XLSX/CSV with the headings:<B>SID</B>, <B>Project ID</B>, <B>Title</B>,  <B>Supervisor Surname (plus ', Initial' [e.g. Smith, A] if necessary)</B>, <B>Second marker Surname (plus ', Initial' if necessary)</B>, <B>P1M1</B>, <B>P1M2</B>, <B>P2M1</B>, <B>P2M2</B>, <B>P3M1</B>, <B>P3M2</B>, <B>P4M1</B>, <B>P4M2</B>, <B>P5M1</B>, <B>P5M2</B>. These are the repeated pairs of markers' surnames for each part -  (NOTE you need BOTH the first and second marker - even if a part does not have a second marker) (You only need upto the number of parts i.e. if there are 2 parts, you will need 6 columns of staff names).</P>";
     $display_block .= "<P>(The Project ID is not used, but must exist in the file.)</P>";
 
-    $display_block .= "<P></P><input name=\"csv\" type=\"file\" id=\"csv\" /></P>";
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"upload_detailed_csv\">";
+    $display_block .= "<P></P><input class='btn btn-outline-success' name='csv' type='file' id='csv' /></P>";
+    $display_block .= "\n<input type='hidden' name='op' value='upload_detailed_csv'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_full_csv\" name=\"submit\" value=\"Upload a detailed XLSX/CSV \"></p>";
+    $display_block .= "<p><input class='btn btn-success' type='submit' id='submitbutton_full_csv' name='submit' value='Upload a detailed XLSX/CSV '></p>";
 
     $display_block .= "</form>\n";
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 ?>
 <!DOCTYPE HTML>

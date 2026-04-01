@@ -241,4 +241,7 @@ if ($access) {
     </div><!-- /content -->
 </div><!-- /wrapper -->
 </body>
+<script>
+    $("#assessmentcriteria").dataTable();
+</script>
 </html>

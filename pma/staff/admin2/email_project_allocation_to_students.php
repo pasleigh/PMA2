@@ -61,11 +61,6 @@ function GetAllocatedNumber($db, $sid, $selection_table, $master_id_of_allocated
 $display_block = "";
 $display_block .= $connect_msg;
 
-// Check the admin level
-//$access = false;
-//$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
-//$display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
-
 $assess_part_description_text = "";
 
 // Check the admin level
@@ -78,7 +73,7 @@ if (array_key_exists('pm_id', $_REQUEST) == false) {
 $pm_id = $_REQUEST['pm_id'];
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase );
 if($is_module_admin){
-    $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
+    $access_phrase = $module_level_access_phrase;
 }
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
@@ -136,7 +131,7 @@ if($is_module_admin || $admin_access) {
     $subjectline = $_POST['subjectline'];
     $pm_id = $_REQUEST['pm_id'];
     $POST_OP = $_REQUEST['op'];
-//$activestaff = $_REQUEST['activestaff'];
+
     $part = $_REQUEST['part'];
     $makepdf = $_REQUEST['makepdf'];
     $list = $_REQUEST['list'];
@@ -237,21 +232,21 @@ if($is_module_admin || $admin_access) {
     if ($POST_OP == "select") {
         $display_block .= "<P>In the box below type the covering email text you want to send to students. Put in HTML code if necessary.<BR>";
 
-        $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$part\">
-                      <P><textarea rows=\"20\" cols=\"100\" name=\"email_body_text\" placeholder=\"Type the text you want to send to all staff...\">$email_body</textarea></P>\n";
-        $display_block .= "<P>Email Subject line <input size=\"80\" type=\"text\" name=\"subjectline\" value=\"Allocation for $module_short_description. \"></P>\n";
+        $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$part'>
+                      <P><textarea class='form-control'  rows='20' cols='100' name='email_body_text' placeholder='Type the text you want to send to all staff...'>$email_body</textarea></P>\n";
+        $display_block .= "<P>Email Subject line <input size='80' class='form-control'  type='text' name='subjectline' value='Allocation for $module_short_description. '></P>\n";
 
-        $display_block .= "<p><input type=\"checkbox\" name=\"reallysend\" value=\"reallysend\">Tick this box to confirm you REALLY want to send the emails.</p>\n";
-        $display_block .= "<p><input type=\"checkbox\" name=\"reallyreallysend\" value=\"reallyreallysend\">Tick this box as well to be sure you really really want to send the emails.</p>\n";
+        $display_block .= "<p><input type='checkbox' name='reallysend' value='reallysend'>Tick this box to confirm you REALLY want to send the emails.</p>\n";
+        $display_block .= "<p><input type='checkbox' name='reallyreallysend' value='reallyreallysend'>Tick this box as well to be sure you really really want to send the emails.</p>\n";
         $display_block .= "<p><B>BOTH of the above must be ticked for the email  to be sent to students.</B></p>\n";
 
-        $display_block .= "\n<input type=\"hidden\" name=\"module1\" value=\"$module1\">";
-        $display_block .= "<input type=\"hidden\" name=\"year_begin\" value=\"$year_begin\">";
-        $display_block .= "<input type=\"hidden\" name=\"op\" value=\"send\">";
+        $display_block .= "\n<input type='hidden' name='module1' value='$module1'>";
+        $display_block .= "<input type='hidden' name='year_begin' value='$year_begin'>";
+        $display_block .= "<input type='hidden' name='op' value='send'>";
 
-        $display_block .= "<P><input type=\"submit\" name=\"submit\" value=\"Tick the boxes and click to here to email allocations NOW.\"></P>\n";
+        $display_block .= "<P><input class='btn btn-primary'  type='submit' name='submit' value='Tick the boxes and click to here to email allocations NOW.'></P>\n";
         $display_block .= "<p><B>From the table below all names that are ticked will have their allocation emailed<BR>";
-        $display_block .= "<span style=\"font-size:70%;\">(Only allocated students will be emailed.)</span></B></p>";
+        $display_block .= "<span style='font-size:70%;'>(Only allocated students will be emailed.)</span></B></p>";
 
         $display_block .= GetStudentListTable($db, $project_allocated, $students, $staff2, $feedback_records, $part);
         $display_block .= "\n</form><BR><HR>";
@@ -416,7 +411,7 @@ if($is_module_admin || $admin_access) {
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 ?>
 <!DOCTYPE HTML>

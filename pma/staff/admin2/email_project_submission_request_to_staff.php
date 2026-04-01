@@ -12,11 +12,6 @@
 $display_block = "";
 $display_block .= $connect_msg;
 
-// Check the admin level
-//$access = false;
-//$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
-//$display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
-
 (@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
 
 $display_block = "";
@@ -161,19 +156,19 @@ if($is_module_admin || $admin_access) {
 
         $display_block .= "<P>You can mail a <B>list of thier own projects</b> to staff by clicking the box below. <BR>The text you type  will then be followed by a list of the projects by each member of staff and instruction on how to access the data.</P>";
 
-        $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">
-                      <P><textarea rows=\"20\" cols=\"100\" name=\"email_body_text\" placeholder=\"Type the text you want to send to all staff...\">$email_body</textarea></P>\n";
-        $display_block .= "<P>Email Subject line <input type=\"text\" name=\"subjectline\"></P>\n";
+        $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>
+                      <P><textarea class='form-control' rows='20' cols='100' name='email_body_text' placeholder='Type the text you want to send to all staff...'>$email_body</textarea></P>\n";
+        $display_block .= "<P>Email Subject line <input class='form-control' type='text' name='subjectline'></P>\n";
 
-        $display_block .= "<p><input type=\"checkbox\" name=\"reallysend\" value=\"reallysend\">Tick this box to confirm you want to send emails.</p>\n
-                     <p><input type=\"checkbox\" name=\"messagetype\" value=\"free\">Tick this box to NOT INCLUDE a list of projects offered by the named supervisor.</p>\n
-                     <p><input type=\"checkbox\" name=\"activestaff\" value=\"active\" checked>Un-Tick this box to send to ALL staff. Ticked it goes to only to <B>active</b> staff.</p>\n
+        $display_block .= "<p><input type='checkbox' name='reallysend' value='reallysend'>Tick this box to confirm you want to send emails.</p>\n
+                     <p><input type='checkbox' name='messagetype' value='free'>Tick this box to NOT INCLUDE a list of projects offered by the named supervisor.</p>\n
+                     <p><input type='checkbox' name='activestaff' value='active' checked>Un-Tick this box to send to ALL staff. Ticked it goes to only to <B>active</b> staff.</p>\n
 
-                     <input type=\"hidden\" name=\"module1\" value=\"$module1\">
-                     <input type=\"hidden\" name=\"year_begin\" value=\"$year_begin\">
-                     <input type=\"hidden\" name=\"op\" value=\"send\">
+                     <input type='hidden' name='module1' value='$module1'>
+                     <input type='hidden' name='year_begin' value='$year_begin'>
+                     <input type='hidden' name='op' value='send'>
                      
-                     <P><input type=\"submit\" name=\"submit\" value=\"Tick the box and click to this text to all staff NOW.\"></P>
+                     <P><input class='btn btn-primary' type='submit' name='submit' value='Tick the box and click to this text to all staff NOW.'></P>
                      </form><BR><HR>";
 
     } elseif ($POST_OP == "send") {
@@ -250,11 +245,11 @@ if($is_module_admin || $admin_access) {
                                 $email_block .= "$sp$sp$master_id: $project_title $lb";
                             }
                         }
-                        $email_block .= "$lb To edit projects or add-to/delete one go to the link shown and click on \"Add\" or \"View/Edit/Delete\":$lb$lb";
+                        $email_block .= "$lb To edit projects or add-to/delete one go to the link shown and click on 'Add' or 'View/Edit/Delete':$lb$lb";
                         $email_full = $email_fullname;
                         $email_full .= nl2br($email_body_text);
                         $email_full .= $email_block;
-                        //$email_full .= "<A href=\"$link\">$link<A>$lb$lb";
+                        //$email_full .= "<A href='$link'>$link<A>$lb$lb";
                         $email_full .= "Project entry needs to be completed by: $cldate $lb$lb";
                         //$email_full .= "Andy";
                         $email_full .= $this_staff_full_name;
@@ -294,7 +289,7 @@ if($is_module_admin || $admin_access) {
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 
 ?>

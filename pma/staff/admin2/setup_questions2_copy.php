@@ -14,16 +14,6 @@
 $display_block = "";
 $display_block .= $connect_msg;
 
-// Check the admin level
-//$access = false;
-//$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
-//$display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
-
-//----------------------------------------------------------------------------------------------------
-//$display_block .= "<h1 style='background-color: #f1c40f; text-align: center;  font-size: xx-large'>THIS PAGE IS STILL UNDER CONSTRUCTION<BR>DO NOT CLICK THE BUTTONS</h1>";
-//$access = false;
-//----------------------------------------------------------------------------------------------------
-
 $assess_part_description_text = "";
 
 // Check the admin level
@@ -165,7 +155,7 @@ if($is_module_admin || $admin_access) {
             // double debug - shows all ofthe _REQUEST array
             $debug_call = '&dd';
         }
-        $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$assesspart$debug_call\">\n";
+        $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$assesspart$debug_call'>\n";
 
         $display_block .= "\n<input type='hidden' name='assessqs_new' value='$assessqs_new_table'>\n";
         $display_block .= "\n<input type='hidden' name='assessqs_cats_new' value='$assessqs_cats_new_table'>\n";
@@ -173,8 +163,8 @@ if($is_module_admin || $admin_access) {
 
         $display_block .= "Tick to confirm: ";
         $display_block .= "<input type='checkbox' name='confirm_delete'><br>\n";
-        $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"delete_confirmed\">\n";
-        $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"I confirm I wish to delete existing questions and replace them - I KNOW THAT I CANNOT GET THEM BACK.\"></p>\n";
+        $display_block .= "\n<input type='hidden' name='op' value='delete_confirmed'>\n";
+        $display_block .= "<p><input type='submit' id='submitbutton' name='submit' value='I confirm I wish to delete existing questions and replace them - I KNOW THAT I CANNOT GET THEM BACK.'></p>\n";
         $display_block .= "</form>\n";
         $display_block .= "<a href='./edit_module_settings.php?pm_id=$pm_id'>Or go back to module admin page</a>";
 
@@ -263,18 +253,17 @@ if($is_module_admin || $admin_access) {
             // double debug - shows all ofthe _REQUEST array
             $debug_call = '&dd';
         }
-        $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$assesspart$debug_call\">\n";
+        $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$assesspart$debug_call'>\n";
         $display_block .= $select_block;
-        $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"delete_project\">";
-        $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Proceed to replace the existing questions with those from the selected -  YOU ACKNOWLEDGE THAT EXISTING QUESTION DATA WILL BE OVERWRITTEN.\"></p>";
+        $display_block .= "\n<input type='hidden' name='op' value='delete_project'>";
+        $display_block .= "<p><input class='btn btn-primary mt-3'  type='submit' id='submitbutton' name='submit' value='Proceed to replace the existing questions with those from the selected -  YOU ACKNOWLEDGE THAT EXISTING QUESTION DATA WILL BE OVERWRITTEN.'></p>";
         $display_block .= "</form>\n";
-        $display_block .= "<a href='./edit_module_settings.php?pm_id=$pm_id'>Or got back to module admin page</a>";
 
     }
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 
 ?>

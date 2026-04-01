@@ -14,16 +14,6 @@
 $display_block = "";
 $display_block .= $connect_msg;
 
-// Check the admin level
-//$access = false;
-//$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
-//$display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
-
-//----------------------------------------------------------------------------------------------------
-//$display_block .= "<h1 style='background-color: #f1c40f; text-align: center;  font-size: xx-large'>THIS PAGE IS STILL UNDER CONSTRUCTION<BR>DO NOT CLICK THE BUTTONS</h1>";
-//$access = false;
-//----------------------------------------------------------------------------------------------------
-
 $assess_part_description_text = "";
 
 // Check the admin level
@@ -51,10 +41,7 @@ if($admin_access) {
         $_POST['op'] = null;
     }
     $POST_OP = $_POST['op'];
-
-// see all the POST values
-//foreach ($_POST as $key => $value){
-//}
+    
     // Compile an array of the tables in this project
     $project_tables = array();
 
@@ -90,9 +77,7 @@ if($admin_access) {
     $project_tables[$index] = $master_name;
     $index++;
     $project_tables[$index] = $project_details;
-
-    //$index++;
-    //$project_tables[$index] = $staff_names;
+    
     $index++;
     $project_tables[$index] = $staff_inactive;
     $index++;
@@ -108,12 +93,12 @@ if($admin_access) {
 
     if ($POST_OP == "delete_project") {
         $display_block .= "<H1>Delete confirmation credentials</H1>\n";
-        $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+        $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
         $display_block .= "Tick to confirm: ";
         $display_block .= "<input type='checkbox' name='confirm_delete'><br>\n";
-        $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"delete_confirmed\">\n";
-        $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"I confirm that I wish to delete all these tables - I KNOW THAT I CANNOT GET THEM BACK.\"></p>\n";
+        $display_block .= "\n<input type='hidden' name='op' value='delete_confirmed'>\n";
+        $display_block .= "<p><input class='btn btn-danger' type='submit' id='submitbutton' name='submit' value='I confirm that I wish to delete all these tables - I KNOW THAT I CANNOT GET THEM BACK.'></p>\n";
         $display_block .= "</form>\n";
 
     }elseif($POST_OP == "delete_confirmed"){
@@ -168,15 +153,15 @@ if($admin_access) {
             }
 
     }else{
-        $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
-        $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"delete_project\">";
-        $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Delete the tables in the project - FOR EVER.\"></p>";
+        $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
+        $display_block .= "\n<input type='hidden' name='op' value='delete_project'>";
+        $display_block .= "<p><input class='btn btn-danger' type='submit' id='submitbutton' name='submit' value='Delete the tables in the project - FOR EVER.'></p>";
         $display_block .= "</form>\n";
     }
 
 } else {
     //$display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 
 ?>

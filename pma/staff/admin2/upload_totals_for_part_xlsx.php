@@ -43,7 +43,7 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 if($is_module_admin || $admin_access) {
 
     $display_block .= "<h1>Upload Totals for a Part of the Poject </h1>\n";
-    $display_block .= "<h2>Database table to be updated \"$markstore_totals\"</h2>\n";
+    $display_block .= "<h2>Database table to be updated '$markstore_totals'</h2>\n";
 
     $display_block .= "<h1>Be VERY VERY carefull as this overwrites data and could ruin the database.</h1>\n";
 
@@ -224,7 +224,7 @@ if($is_module_admin || $admin_access) {
         }
     }// end of if ($POST_OP == "upload_csv")
 
-//$display_block .="\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+//$display_block .="\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
 // Get the list of allcoations from the students table
     $query = "select * from $markstore_totals";
@@ -239,8 +239,8 @@ if($is_module_admin || $admin_access) {
     }
     $rows = $results->fetchAll();
     $num = $results->rowCount();
-//$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
-    $display_block .= "\n<TABLE id=\"marktotals\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
+//$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
+    $display_block .= "\n<TABLE id='marktotals' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
     $display_block .= "
     <thead>
       <tr>
@@ -279,16 +279,7 @@ if($is_module_admin || $admin_access) {
 
         $student_count++;
         $display_block .= "<TR>\n";
-        /*
-            $display_block .= "<TD><input type=\"text\" name=\"sid$student_count\" value=\"$sid\"  size=10 maxlength=10 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"name$student_count\" value=\"$student_name\"  size=20 maxlength=20 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"retmark1$student_count\" value=\"$retmark1\"  size=10 maxlength=100 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"retmark2$student_count\" value=\"$retmark2\"  size=10 maxlength=100 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"retmark3$student_count\" value=\"$retmark3\"  size=10 maxlength=100 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"retmark4$student_count\" value=\"$retmark4\"  size=10 maxlength=100 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"retmark5$student_count\" value=\"$retmark5\"  size=10 maxlength=100 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"total$student_count\" value=\"$total_mark\"  size=10 maxlength=30 readonly></TD>";
-        */
+
         $display_block .= "<TD>$sid</TD>";
         $display_block .= "<TD>$student_name</TD>";
         $display_block .= "<TD>$retmark1</TD>";
@@ -304,16 +295,16 @@ if($is_module_admin || $admin_access) {
     $display_block .= "</tbody>\n";
     $display_block .= "</TABLE>\n";
 
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_edited\">";
-    $display_block .= "\n<input type=\"hidden\" name=\"student_count\" value=\"$student_count\">\n";
+    $display_block .= "\n<input type='hidden' name='op' value='submit_edited'>";
+    $display_block .= "\n<input type='hidden' name='student_count' value='$student_count'>\n";
 
-//$display_block .="<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit changes to student details.\"></p>";
+//$display_block .="<p><input type='submit' id='submitbutton' name='submit' value='Submit changes to student details.'></p>";
 
 //$display_block .="</form>\n";
 
 //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Upload XLSX/CSV... </H2>\n";
-    $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\" enctype=\"multipart/form-data\">\n";
+    $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id' enctype='multipart/form-data'>\n";
     $display_block .= "<P> Upload a XLSX/CSV file to enter totals data for a part <B>overwriting and data there</B></P>\n";
     $display_block .= "<P> Create a XLSX/CSV with the headings:<B>SID</B>, <B>Student Name</B>, <B>Part Num</B>,  <B>Total Mark for part</B> and load here.</P>\n";
     $display_block .= "<input type='radio' name='radio_part_number' value=1> part 1<br>\n";
@@ -325,17 +316,17 @@ if($is_module_admin || $admin_access) {
     $display_block .= "<P><B> Note 1: From the XLSX/CSV  file the student name is not used.</B><br>\n";
     $display_block .= "<B> Note 2: The part number in the XLSX/CSV must match the part number selected above.</B></P>\n";
 
-    $display_block .= "<P></P><input name=\"csv\" type=\"file\" id=\"csv\" /></P>\n";
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"upload_csv\">\n";
+    $display_block .= "<P></P><input class='btn btn-outline-primary' name='csv' type='file' id='csv' /></P>\n";
+    $display_block .= "\n<input type='hidden' name='op' value='upload_csv'>\n";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_csv\" name=\"submit\" value=\"Upload the XLSX/CSV \"></p>\n";
+    $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton_csv' name='submit' value='Upload the XLSX/CSV '></p>\n";
 
     $display_block .= "</form>\n";
 
 //---------------------------------------------------------------------------------
 }else{
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 
 ?>

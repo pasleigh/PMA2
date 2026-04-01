@@ -101,13 +101,13 @@ SQL;
     }
 
     $display_block .= "Hide/Show table <input type='checkbox' id='hideshow_checkbox' ><BR>";
-# $display_block .= "<button id=\"hide\">Hide table</button>\n";
-# $display_block .= "<button id=\"show\">Show table</button>\n";
+# $display_block .= "<button id='hide'>Hide table</button>\n";
+# $display_block .= "<button id='show'>Show table</button>\n";
 ################## Update table form ################################################
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"update_table\">";
-    $display_block .= "<p align='right'>Careful, this resets all \"use\" data =><input type=\"submit\" id=\"update_table\" name=\"submit\" value=\"Update table.\"> </p>";
+    $display_block .= "\n<input type='hidden' name='op' value='update_table'>";
+    $display_block .= "<p align='right'>Careful, this resets all 'use' data =><input type='submit' id='update_table' name='submit' value='Update table.'> </p>";
 
     $display_block .= "</form>";
 
@@ -230,7 +230,7 @@ SQL;
 #######################################################################
 # Draw the table and prep the chart date_add()
 #######################################################################
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
 // Get the list of staff from the staff_names2 table
     $query = "select * from $project_allocated_staff order by familyname";
@@ -246,11 +246,11 @@ SQL;
         exit();
     }
 
-//$display_block .= "<select name=\"staffname_select\">\n";
+//$display_block .= "<select name='staffname_select'>\n";
 
-//$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
-    $display_block .= "<div id=\"alloc_table_div\" style=\"display:none;\">\n";
-    $display_block .= "<TABLE id=\"staffinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
+//$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
+    $display_block .= "<div id='alloc_table_div' style='display:none;'>\n";
+    $display_block .= "<TABLE id='staffinfo' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
     $display_block .= "
     <thead>
       <tr>
@@ -293,20 +293,20 @@ SQL;
             #$inactive = stripslashes($recs['inactive']);
             $staff_count++;
             $display_block .= "<TR>\n";
-            $display_block .= "<TD><input type=\"hidden\" name=\"staffid$staff_count\" value=\"$staffid\"> $staffid</TD>";
-            #$display_block .= "<TD><input type=\"text\" name=\"initials$staff_count\" value=\"$initials\"  size=5 maxlength=30></TD>";
+            $display_block .= "<TD><input type='hidden' name='staffid$staff_count' value='$staffid'> $staffid</TD>";
+            #$display_block .= "<TD><input type='text' name='initials$staff_count' value='$initials'  size=5 maxlength=30></TD>";
             #$display_block .= "<TD>". GetTitleSelect("title$staff_count",$title) . "</TD>";
             $display_block .= "<TD>$firstname</TD>";
             $display_block .= "<TD>$familyname</TD>";
             $display_block .= "<TD>$fullname</TD>";
-            #$display_block .= "<TD><input type=\"text\" name=\"email$staff_count\" value=\"$email\"  size=30 maxlength=40></TD>";
-            #$display_block .= "<TD><input type=\"text\" name=\"username$staff_count\" value=\"$username\"  size=8 maxlength=20></TD>";
-            #$display_block .= "<TD><input type=\"text\" name=\"room$staff_count\" value=\"$room\"  size=5 maxlength=10></TD>";
+            #$display_block .= "<TD><input type='text' name='email$staff_count' value='$email'  size=30 maxlength=40></TD>";
+            #$display_block .= "<TD><input type='text' name='username$staff_count' value='$username'  size=8 maxlength=20></TD>";
+            #$display_block .= "<TD><input type='text' name='room$staff_count' value='$room'  size=5 maxlength=10></TD>";
             #$checked = "";
             #if($inactive==1){
             #  $checked = "checked";
             #}
-            #$display_block .= "<TD><input type=\"checkbox\" name=\"use$staffid\" value=\"1\" $checked></TD>\n";
+            #$display_block .= "<TD><input type='checkbox' name='use$staffid' value='1' $checked></TD>\n";
             $display_block .= "<TD>$num_supervise</TD>";
             $display_block .= "<TD>$num_second_mark</TD>";
             $display_block .= "<TD>$num_total</TD>";
@@ -315,7 +315,7 @@ SQL;
             if ($use == 1) {
                 $checked = "checked";
             }
-            $display_block .= "<TD><input type=\"checkbox\" name=\"use$staff_count\" value=\"1\" $checked></TD>\n";
+            $display_block .= "<TD><input type='checkbox' name='use$staff_count' value='1' $checked></TD>\n";
 
             $display_block .= "</TR>\n";
 
@@ -346,25 +346,25 @@ SQL;
 
     $display_block .= "\n</div>\n";//alloc_table_div
 
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_edited\">";
-    $display_block .= "\n<input type=\"hidden\" name=\"staff_count\" value=\"$staff_count\">";
+    $display_block .= "\n<input type='hidden' name='op' value='submit_edited'>";
+    $display_block .= "\n<input type='hidden' name='staff_count' value='$staff_count'>";
 
-    $display_block .= "<p align='right'><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value='Update \"Use to plot.\"'></p>";
+    $display_block .= "<p align='right'><input type='submit' id='submitbutton' name='submit' value='Update 'Use to plot.''></p>";
 
     $display_block .= "</form>";
 
 # <!--this is the div that will hold the pie chart-->
-    $display_block .= "\n<div class=\"bordered\" id=\"chart_div2\"></div>\n";
-    $display_block .= "\n<div id=\"chart2_url_div\"></div>\n";
+    $display_block .= "\n<div class='bordered' id='chart_div2'></div>\n";
+    $display_block .= "\n<div id='chart2_url_div'></div>\n";
 
-    $display_block .= "\n<div class=\"bordered\" id=\"chart_div\"></div>\n";
-    $display_block .= "\n<div id=\"chart_url_div\"></div>\n";
+    $display_block .= "\n<div class='bordered' id='chart_div'></div>\n";
+    $display_block .= "\n<div id='chart_url_div'></div>\n";
 //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Save table to CSV...</H2>\n";
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"savecsv\">";
+    $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
+    $display_block .= "\n<input type='hidden' name='op' value='savecsv'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Save table to CSV file.\"></p>";
+    $display_block .= "<p><input type='submit' id='submitbutton_new' name='submit' value='Save table to CSV file.'></p>";
 
     $display_block .= "</form>";
 

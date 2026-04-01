@@ -25,10 +25,6 @@ $POST_OP = $_REQUEST['op'];
 $display_block = "";
 $display_block .= $connect_msg;
 
-// Check the admin level
-//$access = false;
-//$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
-//$display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
 // Check the admin level
 $admin_access = false;
@@ -45,18 +41,18 @@ if($is_module_admin){
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
 if($is_module_admin || $admin_access) {
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
     $display_block .= "<h1>Select a student to add an adhoc (self defined) project</h1>
-             <div align=\"left\">
-             <table  class=\"tableSimple\"> 
+             <div align='left'>
+             <table  class='tableSimple'> 
              <tr>
              <td>Select the student by SID</td>
              </tr>
              <tr>
              <td><b>SID:</b>&nbsp; ";
 
-    $sid_select = "<select name=\"sid_s\">\n";
+    $sid_select = "<select name='sid_s'>\n";
 
     $query = "select * from $students order by name";
 //$get_list_res = mysql_query($get_list) or die(" Unable to create student list from database. <BR>Query: $get_list");
@@ -75,9 +71,9 @@ if($is_module_admin || $admin_access) {
         $student_name = stripslashes($recs['name']);
 
         if ($sid_s == $sid) {
-            $sid_select .= "<option value=\"$sid_s\" selected=\"selected\">$student_name ($sid_s)</option>\n";
+            $sid_select .= "<option value='$sid_s' selected='selected'>$student_name ($sid_s)</option>\n";
         } else {
-            $sid_select .= "<option value=\"$sid_s\">$student_name ($sid_s)</option>\n";
+            $sid_select .= "<option value='$sid_s'>$student_name ($sid_s)</option>\n";
         }
     }
     $sid_select .= "</select>";
@@ -85,9 +81,9 @@ if($is_module_admin || $admin_access) {
     $display_block .= $sid_select;
     $display_block .= "&nbsp;&nbsp;</td></tr>";
 
-    $display_block .= "<TR><td><input type=\"submit\" name=\"submit\" value=\"modify\"></td></TR>\n";
+    $display_block .= "<TR><td><input class='btn btn-primary' type='submit' name='submit' value='Select this student'></td></TR>\n";
 
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"selected\">";
+    $display_block .= "\n<input type='hidden' name='op' value='selected'>";
     $display_block .= "</form>\n";
 
     $display_block .= "<HR>\n";
@@ -151,13 +147,14 @@ if($is_module_admin || $admin_access) {
         $recs = $results->fetch();
 
         $student_name = stripslashes($recs['name']);
-        $display_block .= "<BR>Modify this student <A href=\"../modify_student_project_details.php?pm_id=$pm_id&sid=$sid&pid=$project_id\">$student_name ($sid)</A>";
+        $display_block .= "<BR>Click this buton to modify/ allocate the project for the named student<BR>\n";
+        $display_block .= "<A class='btn btn-success' href='../modify_student_project_details.php?pm_id=$pm_id&sid=$sid&pid=$project_id'>$student_name ($sid)</A>";
         $display_block .= "<BR><BR><HR>\n";
     }
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 ?>
 <!DOCTYPE HTML>

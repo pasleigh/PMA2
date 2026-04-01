@@ -16,15 +16,6 @@
 $display_block = "";
 $display_block .= $connect_msg;
 
-// Check the admin level
-//$access = false;
-//$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
-//$display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
-
-//----------------------------------------------------------------------------------------------------
-//$display_block .= "<h1 style='background-color: #f1c40f; text-align: center;  font-size: xx-large'>THIS PAGE IS STILL UNDER CONSTRUCTION</h1>";
-//$access = false;
-//----------------------------------------------------------------------------------------------------
 
 // Check the admin level
 $admin_access = false;
@@ -50,12 +41,6 @@ if($is_module_admin || $admin_access) {
         $POST_OP = "";
     }
 
-    // see all the POST val ues
-    /*
-    foreach ($_POST as $key => $value){
-      echo "{$key} = {$value}<BR>\r\n";
-    }
-    */
 
     if ($POST_OP == "delete") {
         // delete the entries in the uniqe programme names table
@@ -174,19 +159,19 @@ if($is_module_admin || $admin_access) {
 
     $instructions = "<h3>This form is for linking programme short names used for <span style='font-face: bold; text-decoration: underline ;'>Project Proposals</span>
 to the <span style='font-face: bold; text-decoration: underline ;'> real</span> Programme Names<BR> from the student data list. (This is so that students on a particular programme are only shown projects that are relevant to them)</h3>";
-    $instructions .= "<div class=\"feedbackInstructions\"> Select from the list short-name list the name that you want the programme full name to be associated with</div>";
+    $instructions .= "<div class='feedbackInstructions'> Select from the list short-name list the name that you want the programme full name to be associated with</div>";
 
     $display_block .= $changed_message;
 
-    $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "?pm_id=" . htmlspecialchars($pm_id, ENT_QUOTES, 'UTF-8') . "\">\n";
+    $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "?pm_id=" . htmlspecialchars($pm_id, ENT_QUOTES, 'UTF-8') . "'>\n";
     $display_block .= csrf_token_field();
 
     $display_block .= "<h1>$module_prefix$module1$module_postfix $module_short_description </h1>
-             <div align=\"left\">\n";
+             <div align='left'>\n";
 
-    $display_block .= "<table class=\"tableSimple\" >\n";
+    $display_block .= "<table class='tableSimple' >\n";
 
-    $display_block .= "<tr><td colspan=\"2\">$instructions</tr>\n";
+    $display_block .= "<tr><td colspan='2'>$instructions</tr>\n";
 
     $display_block .= "<tr><td><b>Programme Full name</b></td>";
     $display_block .= "<td><B>Select the corresponding programme short name</b></td></tr>";
@@ -200,22 +185,22 @@ to the <span style='font-face: bold; text-decoration: underline ;'> real</span> 
         $select_block = GetProgramVariantsSelectStaff($db, $projects_setup_proposals, $pm_id, $NameKey, $MatchID);
         $display_block .= "<td>$select_block</td></TR>";
     }
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"commit\">\n";
+    $display_block .= "\n<input type='hidden' name='op' value='commit'>\n";
 
-    $display_block .= "<TR><td colspan=\"2\"><input type=\"submit\" name=\"submit\" value=\"Modify programme name associations\"></td></TR>\n";
+    $display_block .= "<TR><td colspan='2'><input class='btn btn-primary' type='submit' name='submit' value='Modify programme name associations'></td></TR>\n";
     $display_block .= "</table>\n";
     $display_block .="</form>\n";
 
     $display_block .= "<hr>";
-    $display_block .= "<form method=\"post\" action=\"" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "?pm_id=" . htmlspecialchars($pm_id, ENT_QUOTES, 'UTF-8') . "\">\n";
+    $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "?pm_id=" . htmlspecialchars($pm_id, ENT_QUOTES, 'UTF-8') . "'>\n";
     $display_block .= csrf_token_field();
 
     $display_block .= "<h1>Delete the list of Distinct Programme Full Names</h1>\n";
-    $display_block .= "<div align=\"left\">\n";
+    $display_block .= "<div align='left'>\n";
     $display_block .= "<div>You might want to do this if you have changed the list of programmes by changing the student list. <BR>DON'T make a habit of this ... it may have unwanted consequences</div>\n";
 
-    $display_block .= "<div><BR><input type=\"submit\" name=\"submit_delete\" value=\"Delete the Distinct Programme Full Names list\"></div>\n";
-    $display_block .= "<input type=\"hidden\" name=\"op\" value=\"delete\">\n";
+    $display_block .= "<div><BR><input class='btn btn-danger' type='submit' name='submit_delete' value='Delete the Distinct Programme Full Names list'></div>\n";
+    $display_block .= "<input type='hidden' name='op' value='delete'>\n";
 
     $display_block .= "</div>\n";
 
@@ -223,7 +208,7 @@ to the <span style='font-face: bold; text-decoration: underline ;'> real</span> 
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 
 ?>
