@@ -23,11 +23,6 @@ require_once __BASE_DIR__ . '/vendor/autoload.php';
 $display_block = "";
 $display_block .= $connect_msg;
 
-// Check the admin level
-//$access = false;
-//$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
-//$display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access_phrase</h2>\n";
-
 $assess_part_description_text = "";
 
 // Check the admin level
@@ -178,11 +173,11 @@ if($is_module_admin || $admin_access) {
     $summary_block = "";
     if ($summary_mark == 1) {
         // selection of what goes in the summary block
-        $summary_block .= "<div style=\"border-style: solid; border-width:1px; width:50%\" >Select which marks to return to the students<BR>\n";
+        $summary_block .= "<div style='border-style: solid; border-width:1px; width:50%' >Select which marks to return to the students<BR>\n";
         $summary_block .= "<UL>\n";
         for ($i = 1; $i <= $num_parts; $i++) {
             $summary_block .= "<LI>Part $i: $p_description[$i] ($p_percent[$i]%)";
-            $summary_block .= "<input type=\"checkbox\" name=\"show_mark_$i\" value=\"show_mark_$i\" checked>";
+            $summary_block .= "<input type='checkbox' name='show_mark_$i' value='show_mark_$i' checked>";
             $summary_block .= "</LI>\n";
         }
         $summary_block .= "<LI>Plus the overall mark.</LI>\n";
@@ -193,23 +188,23 @@ if($is_module_admin || $admin_access) {
     if ($POST_OP == "select") {
         $display_block .= "<P>In the box below type the covering email text you want to send to students. Put in HTML code if necessary.<BR>";
 
-        $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$part\">
-                      <P><textarea rows=\"20\" cols=\"100\" name=\"email_body_text\" placeholder=\"Type the text you want to send to all staff...\">$email_body</textarea></P>\n";
-        $display_block .= "<P>Email Subject line <input size=\"80\" type=\"text\" name=\"subjectline\" value=\"Feedback for $module_short_description. $assess_part_description_text part $summary_desc\"></P>\n";
+        $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$part'>
+                      <P><textarea rows='20' cols='100' name='email_body_text' placeholder='Type the text you want to send to all staff...'>$email_body</textarea></P>\n";
+        $display_block .= "<P>Email Subject line <input size='80' type='text' name='subjectline' value='Feedback for $module_short_description. $assess_part_description_text part $summary_desc'></P>\n";
 
-        $display_block .= "<p><input type=\"checkbox\" name=\"reallysend\" value=\"reallysend\">Tick this box to confirm you REALLY want to send the emails.</p>\n
-                     <p><input type=\"checkbox\" name=\"makepdf\" value=\"active\">Tick this box to actually produce thePDFs.</p>\n
+        $display_block .= "<p><input type='checkbox' name='reallysend' value='reallysend'>Tick this box to confirm you REALLY want to send the emails.</p>\n
+                     <p><input type='checkbox' name='makepdf' value='active'>Tick this box to actually produce thePDFs.</p>\n
                      <p><B>BOTH of the above must be ticked for the email AND attachment to be sent to students.</B></p>\n";
 
         $display_block .= $summary_block;
 
-        $display_block .= "\n<input type=\"hidden\" name=\"module1\" value=\"$module1\">
-                     <input type=\"hidden\" name=\"year_begin\" value=\"$year_begin\">
-                     <input type=\"hidden\" name=\"op\" value=\"send\">
+        $display_block .= "\n<input type='hidden' name='module1' value='$module1'>
+                     <input type='hidden' name='year_begin' value='$year_begin'>
+                     <input type='hidden' name='op' value='send'>
                      
-                     <P><input type=\"submit\" name=\"submit\" value=\"Tick the boxes and click to here to email feedback NOW.\"></P>\n";
-        $display_block .= "<p><B>From the table below all names that are ticked will have their results emailed<BR><span style=\"font-size:70%;\">(Only results from completed work that has been marked will be sent.)</span></B></p>";
-        //$display_block .= "<div>Select/Un-select all<input type=\"checkbox\" id=\"select-all\" nmae=\"selectAll\" checked value=\"\"/></div>\n";
+                     <P><input type='submit' name='submit' value='Tick the boxes and click to here to email feedback NOW.'></P>\n";
+        $display_block .= "<p><B>From the table below all names that are ticked will have their results emailed<BR><span style='font-size:70%;'>(Only results from completed work that has been marked will be sent.)</span></B></p>";
+        //$display_block .= "<div>Select/Un-select all<input type='checkbox' id='select-all' nmae='selectAll' checked value=''/></div>\n";
         $display_block .= GetStudentListTable($db, $project_allocated, $students, $staff2);
         $display_block .= "\n</form><BR><HR>";
     } elseif ($POST_OP == "send") {
@@ -421,8 +416,8 @@ if($is_module_admin || $admin_access) {
     }// end of if ($POST_OP == "select")
 
 } else {
-    $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    //$display_block .= "You do not have the appropriate admin level<BR>";
+
 }
 
 ?>

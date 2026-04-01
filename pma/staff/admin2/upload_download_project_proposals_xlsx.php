@@ -18,16 +18,6 @@ $display_block = "";
 $display_block .= $connect_msg;
 
 // Check the admin level
-//$access = false;
-//$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
-//$display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
-
-//----------------------------------------------------------------------------------------------------
-//$display_block .= "<h1 style='background-color: #f1c40f; text-align: center;  font-size: xx-large'>THIS PAGE IS STILL UNDER CONSTRUCTION<BR>DO NOT CLICK THE BUTTONS</h1>";
-//$access = false;
-//----------------------------------------------------------------------------------------------------
-
-// Check the admin level
 $admin_access = false;
 $admin_access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 
@@ -282,7 +272,7 @@ if ($is_module_admin || $admin_access) {
         }
     }// end of if ($POST_OP == "submint_new")
 
-    $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
 // Get the list of proposals from the $master_name table
     $query = "SELECT * FROM $master_name ORDER BY id";
@@ -296,8 +286,8 @@ if ($is_module_admin || $admin_access) {
 
         exit();
     }
-//$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
-    $display_block .= "<TABLE id=\"proposalinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
+//$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
+    $display_block .= "<TABLE id='proposalinfo' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
     $display_block .= "
     <thead>
       <tr>
@@ -318,7 +308,7 @@ if ($is_module_admin || $admin_access) {
         $supervisor_name = $recs['f_supervisor'];
         $supervisor_id = $recs['f_supervisor_id'];
         $display_block .= "<TR>\n";
-        $display_block .= "<TD><input type=\"hidden\" name=\"pid$proposal_count\" value=\"$pid\">$pid</TD>";
+        $display_block .= "<TD><input type='hidden' name='pid$proposal_count' value='$pid'>$pid</TD>";
         $display_block .= "<TD>$project_title</TD>";
         $display_block .= "<TD>$supervisor_name</TD>";
 
@@ -327,7 +317,7 @@ if ($is_module_admin || $admin_access) {
         if ($sel == 1) {
             $checked = "checked";
         }
-        $display_block .= "<TD><input type=\"checkbox\" name=\"export$proposal_count\" value=\"1\" $checked></TD>\n";
+        $display_block .= "<TD><input type='checkbox' name='export$proposal_count' value='1' $checked></TD>\n";
 
         $display_block .= "</TR>\n";
 
@@ -337,29 +327,29 @@ if ($is_module_admin || $admin_access) {
     $display_block .= "</tbody>\n";
     $display_block .= "</TABLE>\n";
 
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"download_csv\">";
-    $display_block .= "\n<input type=\"hidden\" name=\"proposal_count\" value=\"$proposal_count\">";
+    $display_block .= "\n<input type='hidden' name='op' value='download_csv'>";
+    $display_block .= "\n<input type='hidden' name='proposal_count' value='$proposal_count'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Export proposals to CSV.\"></p>";
+    $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton' name='submit' value='Export proposals to CSV.'></p>";
 
     $display_block .= "</form>\n";
 
 //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Upload a XLSX/CSV...</H2>\n";
-    $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\" enctype=\"multipart/form-data\">\n";
+    $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id' enctype='multipart/form-data'>\n";
     $display_block .= "<P> You can upload a XLSX/CSV file to update and <B>add</B> proposals (you cannot delete proposals this way.) </P>";
     $display_block .= "<P> The XLSX/CSV should be the same format as the one downloaded from this same page. <BR>It is useful, for example,  for copying project proposals from a previous year to the current.</P>";
 
-    $display_block .= "<P></P><input name=\"csv\" type=\"file\" id=\"csv\" /></P>";
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"upload_csv\">";
+    $display_block .= "<P></P><input class='btn btn-outline-success' name='csv' type='file' id='csv' /></P>";
+    $display_block .= "\n<input type='hidden' name='op' value='upload_csv'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_csv\" name=\"submit\" value=\"Upload a XLSX/CSV \"></p>";
+    $display_block .= "<p><input class='btn btn-success' type='submit' id='submitbutton_csv' name='submit' value='Upload a XLSX/CSV '></p>";
 
     $display_block .= "</form>\n";
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 
 ?>

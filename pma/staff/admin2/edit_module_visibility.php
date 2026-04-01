@@ -124,7 +124,7 @@ $display_block .= "</form>";
 
 ?>
 <!DOCTYPE HTML>
-<html>
+<html lang="en">
 <?php
 (@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
 ?>
@@ -151,4 +151,7 @@ $display_block .= "</form>";
     </div><!-- /content -->
 </div><!-- /wrapper -->
 </body>
+<script>
+    $("#projectinfo").dataTable();
+</script>
 </html>

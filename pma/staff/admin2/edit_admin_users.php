@@ -30,112 +30,69 @@ if($access) {
         $POST_OP = "";
     }
 
-// see all the POST values
-//foreach ($_POST as $key => $value){
-//}
+    if (array_key_exists('new_admin_staff_id', $_POST) == false) {
+        $_POST['new_admin_staff_id'] = null;
+    }
+    $new_admin_staff_id = $_POST['new_admin_staff_id'];
 
     $display_block .= "<h1>Edit System Level Admin users </h1>";
 
-    if ($POST_OP == "new") {
-
-        $display_block = "<h2>Select names from this default staff list to become admin users</h2>";
-        $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
-    $display_block .= csrf_token_field();
-
-    // Get the list of staff from the staff_names2 table
-    $query = "select * from $staff_names_default order by familyname";
-    try {
-        $results = $db->query($query);
-    } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-        exit();
-    }
-
-    $display_block .= "<TABLE id='staffinfo' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
-    $display_block .= "
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>First name</th>
-        <th>Family name</th>
-        <th>Email</th>
-        <th>Username</th>
-        <th>Admin level</th>
-        <th>Copy to admin users</th>
-      </tr>
-    </thead>";
-        $display_block .= "<tbody>\n";
-        $staff_count = 0;
-        $rows = $results->fetchAll();
-        foreach ($rows as $recs) {
-            $staffid = $recs['staffid'];
-            $firstname = stripslashes($recs['firstname']);
-            $familyname = stripslashes($recs['familyname']);
-            $email = stripslashes($recs['email']);
-            $username = stripslashes($recs['username']);
-            $mod_admin_level = stripslashes($recs['admin_level']);
-            $staff_count++;
-            $display_block .= "<TR>\n";
-            $display_block .= "<TD><input type='hidden' name='staffid$staff_count' value='$staffid'> $staffid</TD>";
-            $display_block .= "<TD><input type='text' name='firstname$staff_count' value='$firstname'  size=10 maxlength=30></TD>";
-            $display_block .= "<TD><input type='text' name='familyname$staff_count' value='$familyname'  size=30 maxlength=40></TD>";
-            $display_block .= "<TD><input type='text' name='email$staff_count' value='$email'  size=30 maxlength=40></TD>";
-            $display_block .= "<TD><input type='text' name='username$staff_count' value='$username'  size=10 maxlength=40></TD>";
-            //$display_block .= "<TD><span id='username$staff_count'>$username</span></TD>";
-            $display_block .= "<TD>" . GetAdminLevelSelect("admin_level$staff_count", $mod_admin_level) . "</TD>";
-            $display_block .= "<TD><input type='checkbox' name='copy_to_admin_chk' value='0' >(checked = move to admin)</TD>\n";
-            $display_block .= "</TR>\n";
-
+    if ($POST_OP == "selected_new_staff") {
+        try {
+            $results = $db->prepare("SELECT * FROM $staff_names WHERE staffid=?");
+            $results->execute([$new_admin_staff_id]);
+        } catch (PDOException $ex) {
+            $this_function = __FUNCTION__;
+            echo("An Error occured accessing the database in function: $this_function <BR>\n");
+            echo("Unable to update data to the table $staff_names<BR>\n");
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
+            exit();
         }
-        $display_block .= "</tbody>\n";
-        $display_block .= "</TABLE>\n";
+        if($results->rowCount() > 0) {
+            $staff_recs = $results->fetch();
+            $firstname = $staff_recs['firstname'];
+            $familyname = $staff_recs['familyname'];
 
-        $display_block .= "\n<input type='hidden' name='op' value='submit_selected'>";
-        $display_block .= "\n<input type='hidden' name='staff_count' value='$staff_count'>";
+            $fullname = $staff_recs['fullname'];
+            $username = $staff_recs['username'];
+            $email = $staff_recs['email'];
+            $staffid = $staff_recs['staffid'];
 
-        $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton' name='submit' value='Submit changes to staff details.'></p>";
+            $mod_admin_level = 3;
 
-        $display_block .= "</form>";
-
-        $display_block .= "<hr>\n";
-    } elseif ($POST_OP == "submit_selected") {
-        $staff_count = $_POST['staff_count'];
-        for ($i = 1; $i <= $staff_count; $i++) {
-
-            //$display_block .= "Submitting: <BR>\n";
-            $postid = "staffid$i";
-            $staffid = $_POST[$postid];
-            $postid = "firstname$i";
-            $firstname = $_POST[$postid];
-            $postid = "familyname$i";
-            $familyname = $_POST[$postid];
-            $fullname = "$firstname $familyname";
-
-            $postid = "email$i";
-            $email = $_POST[$postid];
-            $postid = "username$i";
-            $username = $_POST[$postid];
-
-            $postid = "admin_level$i";
-            $mod_admin_level = $_POST[$postid];
-
-            //$display_block .= "$staffid, $fullname, $firstname, $familyname, $initials, $title, $email, $username, $room, $inactive_chk .... <BR>\n";
+            // Insert the data into the admin_users_module table
+            // Need to check that it does not already exist
             try {
-                $results = $db->prepare("INSERT INTO $admin_users_table SET firstname=?,familyname=?,fullname=?,email=?,username=?,admin_level=?");
-                $results->execute([$firstname, $familyname, $fullname, $email, $username, $mod_admin_level]);
+                $results_admin = $db->prepare("SELECT * FROM $admin_users_table WHERE username=?");
+                $results_admin->execute([$username]);
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
-                echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                echo("Unable to update data to the table $admin_users_table<BR>\n");
+                echo "An Error occured accessing the database in function: $this_function <BR>\n";
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
+            if ($results_admin->rowCount() == 0) {
+                try {
+                    $results_admin = $db->prepare("INSERT INTO $admin_users_table SET firstname=?,familyname=?,fullname=?,email=?,username=?,admin_level=?");
+                    $results_admin->execute([$firstname, $familyname, $fullname, $email, $username, $mod_admin_level]);
+                } catch (PDOException $ex) {
+                    $this_function = __FUNCTION__;
+                    echo("An Error occured accessing the database in function: $this_function <BR>\n");
+                    echo("Unable to update data to the table $admin_users_table<BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                    exit();
+                }
+
+                $display_block .= "<B>Admin user added: $fullname</B><BR>\n";
+            } else {
+                $display_block .= "<B>Admin user already exists: $fullname</B><BR>Username: $username<hr>\n";
+            }
+
+
         }
-        $display_block .= "<B>Admin users added</B><BR><hr>\n";
     } elseif ($POST_OP == "submit_modified") {
         $display_block .= "Submitting: <BR>\n";
 
@@ -147,6 +104,8 @@ if($access) {
 
             $postid = "admin_level$i";
             $mod_admin_level = $_POST[$postid];
+
+            $staffid = $_POST["staffid$i"];
 
             // Should not make yourself less than 3 - as you would be ejected from the admin section
             if ($username == $this_staff_username) {
@@ -166,9 +125,22 @@ if($access) {
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
-
+            // loop through all _POST find the "ai" keys
+            if(array_key_exists("ai_$staffid",$_POST)){
+                $staff_admin_index = $staffid;
+                try {
+                    $results = $db->prepare("DELETE FROM $admin_users_table WHERE `id`=?");
+                    $results->execute([$staff_admin_index]);
+                } catch (PDOException $ex) {
+                    $this_function = __FUNCTION__;
+                    echo("An Error occured accessing the database in function: $this_function <BR>\n");
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                    exit();
+                }
+            }
         }
-        $display_block .= "<B>Done</B><BR><hr>\n";
+        $display_block .= "<B>Done</B><BR>\n";
     }
 
 //---------------------------------------------------------------------------------
@@ -199,11 +171,12 @@ if($access) {
     $display_block .= "
     <thead>
       <tr>
-        <th>ID</th>
+        <th>Staff ID</th>
         <th>Full name</th>
         <th>Email</th>
         <th>Username</th>
         <th>Admin level</th>
+        <th>Tick to Delete</th>
       </tr>
     </thead>";
     $display_block .= "<tbody>\n";
@@ -226,6 +199,8 @@ if($access) {
         $display_block .= "<TD><span id='username$admin_staff_count'>$username</span>";
         $display_block .= "<input type='hidden' name='username$admin_staff_count' value='$username'></TD>";
         $display_block .= "<TD>" . GetAdminLevelSelect("admin_level$admin_staff_count", $mod_admin_level) . "</TD>\n";
+        $name_id = "ai_$staffid";
+        $display_block .= "<TD><input type='checkbox' name='$name_id' id='$name_id' value='1'></TD>\n";
         $display_block .= "</TR>\n";
 
     }
@@ -239,18 +214,21 @@ if($access) {
 
     $display_block .= "</form>";
 
-    $display_block .= "<hr>\n";
+    //$display_block .= "<hr>\n";
 
 //---------------------------------------------------------------------------------
-    $display_block .= "<hr><h2>Add a new admin user from the default staff list...</H2>\n";
-    $display_block .= "<h1>Still need to do this</h1>";
-    $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]'>\n";
-    $display_block .= "\n<input type='hidden' name='op' value='new'>";
 
-    $display_block .= "<p><input class='btn btn-success mt-3' type='submit' id='submitbutton_new' name='submit' value='Add a NEW admin user.'></p>";
+    $display_block .= "<hr><h2>Add a new system-level admin person ...</H2>\n";
+    $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
+    $display_block .= csrf_token_field();
+    $NameKey = 'new_admin_staff_id';
+    $MatchID = null;
+    $display_block .= GetStaffSelectID($db, $staff_names, $NameKey, $MatchID);
+    $display_block .= "\n<input type='hidden' name='op' value='selected_new_staff'>";
+
+    $display_block .= "<div class='m-3'><input class='btn btn-success' type='submit' id='submitbutton_new' name='submit_new' value='Add a NEW admin user to this module/year.'></div>";
 
     $display_block .= "</form>";
-
 //---------------------------------------------------------------------------------
 
 }
@@ -308,4 +286,7 @@ if($access) {
     </div><!-- /content -->
 </div><!-- /wrapper -->
 </body>
+<script>
+    $("#adminstaffinfo").dataTable();
+</script>
 </html>

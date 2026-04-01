@@ -17,11 +17,6 @@ require_once __BASE_DIR__ . '/vendor/autoload.php';
 $display_block = "";
 $display_block .= $connect_msg;
 
-// Check the admin level
-//$access = false;
-//$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
-//$display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
-
 $assess_part_description_text = "";
 
 // Check the admin level
@@ -60,40 +55,40 @@ if ($is_module_admin || $admin_access) {
     if ($POST_OP == "new") {
         $display_block .= "<P>A New student.</P>";
 
-        $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">";
+        $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>";
         $display_block .= "<table>\n";
 
         $display_block .= "<TR>\n";
         $display_block .= "<TD>SID</TD>\n";
-        $display_block .= "<TD><input type=\"text\" name=\"sid\"  required=\"required\" size=10 maxlength=30></TD>\n";
+        $display_block .= "<TD><input type='text' name='sid'  required='required' size=10 maxlength=30></TD>\n";
         $display_block .= "</TR>\n";
 
         $display_block .= "<TR>\n";
-        $display_block .= "<TD>name (format \"Family name, firstname\")</TD>\n";
-        $display_block .= "<TD><input type=\"text\" name=\"name\" required=\"required\" size=30 maxlength=30></TD>\n";
+        $display_block .= "<TD>name (format 'Family name, firstname')</TD>\n";
+        $display_block .= "<TD><input type='text' name='name' required='required' size=30 maxlength=30></TD>\n";
         $display_block .= "</TR>\n";
 
         $display_block .= "<TR>\n";
         $display_block .= "<TD>username</TD>\n";
-        $display_block .= "<TD><input type=\"text\" name=\"username\" required=\"required\" size=9 maxlength=9></TD>\n";
+        $display_block .= "<TD><input type='text' name='username' required='required' size=9 maxlength=9></TD>\n";
         $display_block .= "</TR>\n";
 
         $display_block .= "<TR>\n";
         $display_block .= "<TD>programme</TD>\n";
-        $display_block .= "<TD><input type=\"text\" name=\"programme\" required=\"required\" size=30 maxlength=60></TD>\n";
+        $display_block .= "<TD><input type='text' name='programme' required='required' size=30 maxlength=60></TD>\n";
         $display_block .= "</TR>\n";
 
         $display_block .= "<TR>\n";
         $display_block .= "<TD>Selected</TD>\n";
-        $display_block .= "<TD><input type=\"checkbox\" name=\"sel_chk\" value=\"1\" >(1 or checked = not yet selected a project)</TD>\n";
+        $display_block .= "<TD><input type='checkbox' name='sel_chk' value='1' >(1 or checked = not yet selected a project)</TD>\n";
 
         $display_block .= "</TR>\n";
 
         $display_block .= "</table>\n";
 
-        $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_new\">";
+        $display_block .= "\n<input type='hidden' name='op' value='submit_new'>";
 
-        $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Submit details of this new student.\"></p>";
+        $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton_new' name='submit' value='Submit details of this new student.'></p>";
 
         $display_block .= "</form>";
 
@@ -333,7 +328,7 @@ if ($is_module_admin || $admin_access) {
         }
     }// end of if ($POST_OP == "submint_new")
 
-    $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
 // Get the list of students from the students table
     $query = "select * from $students order by name";
@@ -348,8 +343,8 @@ if ($is_module_admin || $admin_access) {
 
         exit();
     }
-//$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
-    $display_block .= "<TABLE id=\"studentinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
+//$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
+    $display_block .= "<TABLE id='studentinfo' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
     $display_block .= "
     <thead>
       <tr>
@@ -374,19 +369,19 @@ if ($is_module_admin || $admin_access) {
         $sel = stripslashes($recs['sel']);
         $student_count++;
         $display_block .= "<TR>\n";
-        $display_block .= "<TD><input type=\"text\" name=\"sid$student_count\" required=\"required\" readonly value=\"$sid\"  size=9 maxlength=9></TD>";
-        $display_block .= "<TD><input type=\"text\" name=\"name$student_count\" required=\"required\" value=\"$name\"  size=30 maxlength=30></TD>";
-        $display_block .= "<TD><input type=\"text\" name=\"username$student_count\" required=\"required\" value=\"$username\"  size=10 maxlength=20></TD>";
-        $display_block .= "<TD><input type=\"text\" name=\"programme$student_count\" required=\"required\" value=\"$programme\"  size=50 maxlength=60></TD>";
+        $display_block .= "<TD><input type='text' name='sid$student_count' required='required' readonly value='$sid'  size=9 maxlength=9></TD>";
+        $display_block .= "<TD><input type='text' name='name$student_count' required='required' value='$name'  size=30 maxlength=30></TD>";
+        $display_block .= "<TD><input type='text' name='username$student_count' required='required' value='$username'  size=10 maxlength=20></TD>";
+        $display_block .= "<TD><input type='text' name='programme$student_count' required='required' value='$programme'  size=50 maxlength=60></TD>";
 
         $checked = "";
         if ($sel == 1) {
             $checked = "checked";
         }
-        $display_block .= "<TD><input type=\"checkbox\" name=\"sel$student_count\" value=\"1\" $checked></TD>\n";
+        $display_block .= "<TD><input type='checkbox' name='sel$student_count' value='1' $checked></TD>\n";
 
         $checked = "";
-        $display_block .= "<TD><input type=\"checkbox\" name=\"delete$student_count\" value=\"1\" $checked></TD>\n";
+        $display_block .= "<TD><input type='checkbox' name='delete$student_count' value='1' $checked></TD>\n";
 
         $display_block .= "</TR>\n";
 
@@ -395,49 +390,49 @@ if ($is_module_admin || $admin_access) {
     $display_block .= "</tbody>\n";
     $display_block .= "</TABLE>\n";
 
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_edited\">";
-    $display_block .= "\n<input type=\"hidden\" name=\"student_count\" value=\"$student_count\">";
+    $display_block .= "\n<input type='hidden' name='op' value='submit_edited'>";
+    $display_block .= "\n<input type='hidden' name='student_count' value='$student_count'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit changes to student details.\"></p>";
+    $display_block .= "<p><input class='btn btn-success' type='submit' id='submitbutton' name='submit' value='Submit changes to student details.'></p>";
 
     $display_block .= "</form>\n";
 
 //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Make changes by uploading a XLSX/CSV...</H2>\n";
-    $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\" enctype=\"multipart/form-data\">\n";
+    $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id' enctype='multipart/form-data'>\n";
     $display_block .= "<P> You can alternatively upload a XLSX/CSV file to update and <B>add</B> new students (you cannot delete students) </P>";
-    $display_block .= "<P> Create a XLSX/CSV with the headings:\"<B>SID</B>, <B>Name</B>,  <B>Username (or email address)</B>, <B>Programme</B>\" and load here.</P>";
+    $display_block .= "<P> Create a XLSX/CSV with the headings:'<B>SID</B>, <B>Name</B>,  <B>Username (or email address)</B>, <B>Programme</B>' and load here.</P>";
 
-    $display_block .= "<P></P><input name=\"csv\" type=\"file\" id=\"csv\" /></P>";
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"upload_csv\">";
+    $display_block .= "<P></P><input class='btn btn-outline-warning' name='csv' type='file' id='csv' /></P>";
+    $display_block .= "\n<input type='hidden' name='op' value='upload_csv'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_csv\" name=\"submit\" value=\"Upload the selected XLSX/CSV file\"></p>";
+    $display_block .= "<p><input class='btn btn-warning' type='submit' id='submitbutton_csv' name='submit' value='Upload the selected XLSX/CSV file'></p>";
 
     $display_block .= "</form>\n";
 
 //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Add a new student...</H2>\n";
-    $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"new\">";
+    $display_block .= "\n<input type='hidden' name='op' value='new'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Add details of a NEW student.\"></p>";
+    $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton_new' name='submit' value='Add details of a NEW student.'></p>";
 
     $display_block .= "</form>\n";
 
 //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Download Student data to CSV file ...</H2>\n";
-    $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"download_csv\">";
+    $display_block .= "\n<input type='hidden' name='op' value='download_csv'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_download\" name=\"submit\" value=\"Download Student Data to CSV.\"></p>";
+    $display_block .= "<p><input class='btn btn-info' type='submit' id='submitbutton_download' name='submit' value='Download Student Data to CSV.'></p>";
 
     $display_block .= "</form>\n";
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 
 ?>

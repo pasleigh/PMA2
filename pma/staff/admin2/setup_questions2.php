@@ -89,24 +89,24 @@ if($is_module_admin || $admin_access) {
     // Start of functions
     function show_section_questions2($cat, $cat_description, $weight_pc, $factor, $num_questions, $questions, $num_responses, $q_weights, $response_texts, $response_marks, $max_num_questions, $max_num_responses, $is_numeric, $show_cat_feedback_flag)
     {
-        $display_block = "\n\n<div name='section' id=\"section_block$cat\">";
-        $display_block .= "<table id=table$cat class=\"tableSection\">";
+        $display_block = "\n\n<div name='section' id='section_block$cat'>";
+        $display_block .= "<table id=table$cat class='tableSection'>";
         $display_block .= "<tr>\n";
 
         // Display the category title
         $sectionid = "sec" . $cat;
-        $display_block .= "<td><div class=\"feedbackSection\">Section $cat:
-        \n<input  class=\"feedbackSectionQ\" type=\"text\" id=\"$sectionid\" name=\"$sectionid\" value=\"$cat_description\" size=\"60\">
-        \n<input type=\"hidden\" id=\"numqs$cat\" name=\"numqs$cat\" value=\"$num_questions\">
+        $display_block .= "<td><div class='feedbackSection'>Section $cat:
+        \n<input  class='feedbackSectionQ' type='text' id='$sectionid' name='$sectionid' value='$cat_description' size='60'>
+        \n<input type='hidden' id='numqs$cat' name='numqs$cat' value='$num_questions'>
         </div>\n";
-        $display_block .= "<div class=\"feedbackWeights\">Proportion of assessment: <span id=weightpc$cat>
-        \n<input type=\"number\" id=\"weightpc_id$cat\" name=\"weightpc_name$cat\" value=\"$weight_pc\" min=\"0\" max=\"100\" size=\"3\">%. </span>";
+        $display_block .= "<div class='feedbackWeights'>Proportion of assessment: <span id=weightpc$cat>
+        \n<input type='number' id='weightpc_id$cat' name='weightpc_name$cat' value='$weight_pc' min='0' max='100' size='3'>%. </span>";
         $display_block .= "Weight factor <span id=factor$cat>
-        \n<input type=\"number\" id=\"factor_id$cat\" name=\"factor_name$cat\" value=\"$factor\" min=\"0\" max=\"1\" step=\"0.0001\" size=\"4\"></span></div>";
+        \n<input type='number' id='factor_id$cat' name='factor_name$cat' value='$factor' min='0' max='1' step='0.0001' size='4'></span></div>";
         $display_block .= "</td>\n";
         $display_block .= "</tr>";
         $num_qs = $num_questions - 1;
-        $display_block .= "\n<tr><td>Number of questions in this section <input type=\"number\" id=\"new_numqs$cat\" name=\"new_numqs$cat\" value=\"$num_qs\" min=\"1\" max=\"10\" size=6 maxlength=5> (note that questions will be deleted if this number is less than already exists.)</td></tr>\n";
+        $display_block .= "\n<tr><td>Number of questions in this section <input type='number' id='new_numqs$cat' name='new_numqs$cat' value='$num_qs' min='1' max='10' size=6 maxlength=5> (note that questions will be deleted if this number is less than already exists.)</td></tr>\n";
         $display_block .= "<tr>\n<td>";
         for ($q_count = 1; $q_count <= $max_num_questions; $q_count++) {
             $question = $questions[$q_count];
@@ -114,19 +114,19 @@ if($is_module_admin || $admin_access) {
             $question_block_id = "q_block_c$cat" . "_q$q_count";
             $block_visibility = "";
             if ($q_count > $num_questions-1){
-                $block_visibility = "style=\"display: none\"";
+                $block_visibility = "style='display: none'";
             }
-            $display_block .= "<div  id=\"$question_block_id\" $block_visibility>\n";
+            $display_block .= "<div  id='$question_block_id' $block_visibility>\n";
 
-            $display_block .= "<span class=\"feedbackQ\">Question $q_count:\n";
+            $display_block .= "<span class='feedbackQ'>Question $q_count:\n";
             $qid = "q" . $cat . "-" . $q_count;
             $rid = "res" . $cat . "-" . $q_count;
             $qwid = "qw" . $cat . "-" . $q_count;
-            $display_block .= "<span class=\"feedbackQem\">
-           <input class=\"feedbackQem\" type=\"text\" id=\"$qid\" name=\"$qid\" value=\"$question\" size=\"120\">
+            $display_block .= "<span class='feedbackQem'>
+           <input class='feedbackQem' type='text' id='$qid' name='$qid' value='$question' size='120'>
            </span></span><br />\n";
-            $display_block .= "<div class=\"options\">\n";
-            $display_block .= "Number of responses <input type=\"number\" id=\"$rid\" name=\"$rid\" value=\"$num_responses[$q_count]\"  min=\"1\" max=\"11\" size=\"2\"><BR>";
+            $display_block .= "<div class='options'>\n";
+            $display_block .= "Number of responses <input type='number' id='$rid' name='$rid' value='$num_responses[$q_count]'  min='1' max='11' size='2'><BR>";
             // Display this for both types of questions
             //if($is_numeric) {
             $remark = "";
@@ -135,10 +135,10 @@ if($is_module_admin || $admin_access) {
             }else{
                 $remark = "(As your marking response is of phrasal selection type, this value should <em>always</em> be 100.)";
             }
-                $display_block .= "Fraction of mark awarded (%)<input type=\"number\" id=\"$qwid\" name=\"$qwid\" value=\"$q_weights[$q_count]\"  min=\"0\" max=\"100\" step=\"1\" size=\"4\"> $remark<BR>";
+                $display_block .= "Fraction of mark awarded (%)<input type='number' id='$qwid' name='$qwid' value='$q_weights[$q_count]'  min='0' max='100' step='1' size='4'> $remark<BR>";
             //}else{
             //    // same but hidden
-            //    $display_block .= "<input type=\"hidden\" id=\"$qwid\" name=\"$qwid\" value=\"$q_weights[$q_count]\"  min=\"0\" max=\"100\" step=\"1\" size=\"4\">";
+            //    $display_block .= "<input type='hidden' id='$qwid' name='$qwid' value='$q_weights[$q_count]'  min='0' max='100' step='1' size='4'>";
             //}
             for ($r_count = 1; $r_count <= $num_responses[$q_count]; $r_count++) {
                 $pchoice = "q" . $cat . "-" . $q_count;
@@ -155,10 +155,10 @@ if($is_module_admin || $admin_access) {
                     //$ischecked = "checked";
                 }
                 $q_block_id = "qb_id_" . $tchoice;
-                $display_block .= "<span id=\"$q_block_id\">";
-                $display_block .= "\n$r_count: <input type=\"text\" id=\"$tchoice_id\" name=\"$tchoice\" value=\"$response_text\" size=\"60\">";
-                $display_block .= "\n<input type=\"number\" id=\"$mchoice_id\" name=\"$mchoice\" value=\"$response_mark\"  min=\"-1000\" max=\"1000\" size=\"5\">";
-                $display_block .= "\n<input type=\"radio\" id=\"$pchoice_id\" name=\"$rchoice\" value=\"$response_mark\" $ischecked> <BR>\n";
+                $display_block .= "<span id='$q_block_id'>";
+                $display_block .= "\n$r_count: <input type='text' id='$tchoice_id' name='$tchoice' value='$response_text' size='60'>";
+                $display_block .= "\n<input type='number' id='$mchoice_id' name='$mchoice' value='$response_mark'  min='-1000' max='1000' size='5'>";
+                $display_block .= "\n<input type='radio' id='$pchoice_id' name='$rchoice' value='$response_mark' $ischecked> <BR>\n";
                 $display_block .= "</span>";
             }
             // AND THE HIDDEN ONES
@@ -179,12 +179,12 @@ if($is_module_admin || $admin_access) {
                 $q_block_id = "qb_id_" . $tchoice;
                 $block_visibility = "";
                 if ($r_count > $num_responses[$q_count]){
-                    $block_visibility = "style=\"display: none\"";
+                    $block_visibility = "style='display: none'";
                 }
-                $display_block .= "<span id=\"$q_block_id\" $block_visibility>";
-                $display_block .= "\n$r_count: <input type=\"text\" id=\"$tchoice_id\" name=\"$tchoice\" value=\"$response_text\" size=\"60\">";
-                $display_block .= "\n<input type=\"number\" id=\"$mchoice_id\" name=\"$mchoice\" value=\"$response_mark\"  min=\"-1000\" max=\"1000\" size=\"5\">";
-                $display_block .= "\n<input type=\"radio\" id=\"$pchoice_id\" name=\"$rchoice\" value=\"$response_mark\" $ischecked> <BR>\n";
+                $display_block .= "<span id='$q_block_id' $block_visibility>";
+                $display_block .= "\n$r_count: <input type='text' id='$tchoice_id' name='$tchoice' value='$response_text' size='60'>";
+                $display_block .= "\n<input type='number' id='$mchoice_id' name='$mchoice' value='$response_mark'  min='-1000' max='1000' size='5'>";
+                $display_block .= "\n<input type='radio' id='$pchoice_id' name='$rchoice' value='$response_mark' $ischecked> <BR>\n";
                 $display_block .= "</span>";
             }
             $display_block .= "<BR>";
@@ -198,11 +198,11 @@ if($is_module_admin || $admin_access) {
         if($show_cat_feedback_flag == 1){
             $section_feedback = "checked";
         }
-        $display_block .= "<input type=\"checkbox\" id=\"show_cat_feedback$cat\" name=\"show_cat_feedback$cat\" value=\"show_cat_feedback$cat\" $section_feedback> <br><br>\n";
+        $display_block .= "<input type='checkbox' id='show_cat_feedback$cat' name='show_cat_feedback$cat' value='show_cat_feedback$cat' $section_feedback> <br><br>\n";
 
-        $display_block .= "<tr><td><span class=\"feedbackSectionMarkText\">Mark for section $cat:
+        $display_block .= "<tr><td><span class='feedbackSectionMarkText'>Mark for section $cat:
                           <span id=sectionmarktext$cat> </span></span>";
-        $display_block .= "        <span class=\"feedbackSectionMark\" id=sectionmark$cat> </span></td></tr>";
+        $display_block .= "        <span class='feedbackSectionMark' id=sectionmark$cat> </span></td></tr>";
 
         $display_block .= "</table></div>\n";
 
@@ -457,7 +457,7 @@ if($is_module_admin || $admin_access) {
     $display_block .= "<h1>This form allows you to view and edit questions, marks and section weightings.</h1>";
     $display_block .= "<h2>$assesstype_text section of $module_short_description  $module_prefix$module1$module_postfix ($short_code) $year_begin/$year_end</h2>";
     $display_block .= "<p>Questions table: $assessqs_year,  Question Categories: $assess_cats</p>";
-    $display_block .= "<div class=\"feedbackInstructions\">You can use this form <em>play</em> with setting before finally commiting them to the marking system.<BR> \nYou can use it to: \n
+    $display_block .= "<div class='feedbackInstructions'>You can use this form <em>play</em> with setting before finally commiting them to the marking system.<BR> \nYou can use it to: \n
 <OL>\n
 <LI>Change the text of questions (just edit the text in the boxes)</LI>\n
 <LI>Change the text of responses</LI>\n
@@ -469,20 +469,20 @@ if($is_module_admin || $admin_access) {
 <LI>Change the number of Questions in corresponding section (max 10). Change the number then commit the form. The new number of questions will be presented. </LI>\n
 </OL>\n
 
-The  maximum \"Mark for Section\" should be equal to or less than the \"Proportion of assessment\"<BR>
-the \"Weight factor\" is used achieve this while giving <em>sensible</em> numbers to each question.</div><BR>\n";
+The  maximum 'Mark for Section' should be equal to or less than the 'Proportion of assessment'<BR>
+the 'Weight factor' is used achieve this while giving <em>sensible</em> numbers to each question.</div><BR>\n";
 
     //$display_block .= "<h1>^^^^^ WARNING: Currently this form will only allow editing of a maximum of $max_num_responses_editable responses to questions. ^^^^^</h1>";
 
     if( $is_numeric == 1){
-        $display_block .= "<div style=\"border: thin solid black; padding: 5px; background - color: #fceda7 \">";
+        $display_block .= "<div style='border: thin solid black; padding: 5px; background - color: #fceda7 '>";
         $display_block .= "<p>This question is defined as <strong>numeric</strong>. <BR>You should define only <strong>one response</strong> to each question and make that text be an indication to the marker of what to <strong>Look for</strong> when marking.</p>";
         $display_block .= "<p>If you don't want numeric questions then go back to <em>Modify module description split and date</em> link from the <a href='./edit_module_settings.php?pm_id=$pm_id'>Module's admin page</a> to change it.</p>";
         $display_block .= "</div>";
     }
 
     $display_block .= "
-    <div id=\"sticker\">0.0</div>";
+    <div id='sticker'>0.0</div>";
 
     if($debug){
         $debug_call = '&d';
@@ -495,9 +495,9 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
     }
     $display_block .= "<form name='qs' method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$assesspart$debug_call'>\n";
 //This one has the validation
-//$display_block .="<form method=\"post\" onsubmit=\"return validate_form();\" action=\"$_SERVER[PHP_SELF]?module1=$module1&year_begin=$year_begin\" \">\n";
+//$display_block .="<form method='post' onsubmit='return validate_form();' action='$_SERVER[PHP_SELF]?module1=$module1&year_begin=$year_begin' '>\n";
 
-    $display_block .= "\n<P>Number of sections (categories) <input type=\"number\" name=\"new_num_cats\"  id=\"new_num_cats\" value=\"$num_categories\" min=\"1\" max=\"5\" size=6 maxlength=5> (Note that questions will be deleted should this number be less that those shown on this form.)</P>\n";
+    $display_block .= "\n<P>Number of sections (categories) <input type='number' name='new_num_cats'  id='new_num_cats' value='$num_categories' min='1' max='5' size=6 maxlength=5> (Note that questions will be deleted should this number be less that those shown on this form.)</P>\n";
 
 // Get number of categories by counting the rows in $assess_cats
     $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
@@ -512,15 +512,15 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
         exit();
     }
     $num_categories = $results->rowCount();
-//$display_block .="<input type=\"hidden\" name=\"numcats\" value=\"$num_categories\" />";
+//$display_block .="<input type='hidden' name='numcats' value='$num_categories' />";
 
 // enter the max mark and percent of this part for use on the form
-    $display_block .= "<span id=\"markmax_span\">
-\n<input type=\"hidden\" id=\"markmax\" name=\"markmax\" value=\"$mark_max\" size=\"3\"></span>";
+    $display_block .= "<span id='markmax_span'>
+\n<input type='hidden' id='markmax' name='markmax' value='$mark_max' size='3'></span>";
     $display_block .= "<span id=markpc>
-\n<input type=\"hidden\" id=\"markpc_id\" name=\"markpc\" value=\"$mark_pc\" size=\"3\"></span>";
+\n<input type='hidden' id='markpc_id' name='markpc' value='$mark_pc' size='3'></span>";
 //$display_block .= "\n<span id=min_feedback_words>
-//<input type=\"hidden\" id=\"min_feedback_words_id\" name=\"min_feedback_words\" value=\"$min_feedback_words\" size=\"3\"></span>"; 
+//<input type='hidden' id='min_feedback_words_id' name='min_feedback_words' value='$min_feedback_words' size='3'></span>"; 
 
     $max_num_categories = $g_max_num_cats;
     if($max_num_categories > 5){$max_num_categories = 5;}
@@ -641,18 +641,18 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
         $display_block .= "<BR>\n";
     }
 
-    $display_block .= "\n<div class=\"feedbackSection\">Total marks = <span class=\"feedbackTotalMark\" id=totalmarks> </span></div>";
-    //$display_block .= "<BR>\n<input type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all selected\" >";
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"commit\">";
-    $display_block .= "\n<input type=\"hidden\" name=\"nc\" value=\"$num_categories\">";
-    $display_block .= "<p><input type='submit' id='submitbutton' name=\"submit\" value=\"Commit the question changes to database table\"></p>
+    $display_block .= "\n<div class='feedbackSection'>Total marks = <span class='feedbackTotalMark' id=totalmarks> </span></div>";
+    //$display_block .= "<BR>\n<input type='button' id='validate' name='btn_validate' value='Check all selected' >";
+    $display_block .= "\n<input type='hidden' name='op' value='commit'>";
+    $display_block .= "\n<input type='hidden' name='nc' value='$num_categories'>";
+    $display_block .= "<p><input type='submit' id='submitbutton' name='submit' value='Commit the question changes to database table'></p>
 </form>";
 
 // End of main
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 ?>
 <!DOCTYPE HTML>

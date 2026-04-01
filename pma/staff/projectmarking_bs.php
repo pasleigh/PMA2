@@ -495,7 +495,7 @@ if (IsAdmin($db, $this_staff_username)) {
 ?>
 <!DOCTYPE HTML>
 <!--<html manifest="app.manifest">-->
-<html>
+<html lang="en">
 <?php
 (@include_once("$mobile_head_bs")) or die("Cannot find this file to include: $mobile_head_bs<BR>");
 ?>

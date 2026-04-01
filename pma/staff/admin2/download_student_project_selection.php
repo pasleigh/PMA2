@@ -196,7 +196,7 @@ if($is_module_admin || $admin_access) {
 
     }
 
-    $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
     // Display Choice table if a choice has previously been made
     $query = "SELECT * FROM $selection WHERE 1";
@@ -211,8 +211,8 @@ if($is_module_admin || $admin_access) {
         exit();
     }
     $rows = $results->fetchAll();
-//$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
-    $display_block .= "<TABLE id=\"selection\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
+//$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
+    $display_block .= "<TABLE id='selection' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
     $display_block .= "
     <thead>
       <tr>
@@ -257,33 +257,33 @@ if($is_module_admin || $admin_access) {
     $display_block .= "</TABLE>\n";
 
     $display_block .= "<h2>Download this Selection data to CSV file ...</H2>\n";
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"download_selection_csv\">";
+    $display_block .= "\n<input type='hidden' name='op' value='download_selection_csv'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Download Selection Data to CSV.\"></p>";
+    $display_block .= "<p><input class='btn btn-primary'  type='submit' id='submitbutton' name='submit' value='Download Selection Data to CSV.'></p>";
 
     $display_block .= "</form>\n";
 
 //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Download Staff data to CSV file ...</H2>\n";
-    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">";
-    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"download_staff_csv\">";
+    $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>";
+    $display_block .= "\n<input type='hidden' name='op' value='download_staff_csv'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_download_staff\" name=\"submit\" value=\"Download Staff Data to CSV.\"></p>";
+    $display_block .= "<p><input class='btn btn-success' type='submit' id='submitbutton_download_staff' name='submit' value='Download Staff Data to CSV.'></p>";
 
     $display_block .= "</form>\n";
 
 //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Download Project data to CSV file ...</H2>\n";
-    $display_block .= "<form method=\"post\" action=\"upload_download_project_proposals.php?pm_id=$pm_id\">";
-    //$display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"download_projects_csv\">";
+    $display_block .= "<form method='post' action='upload_download_project_proposals.php?pm_id=$pm_id'>";
+    //$display_block .= "\n<input type='hidden' name='op' value='download_projects_csv'>";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_download_projects\" name=\"submit\" value=\"Go to page to download Project Data to CSV.\"></p>";
+    $display_block .= "<p><input class='btn btn-warning' type='submit' id='submitbutton_download_projects' name='submit' value='Go to page to download Project Data to CSV.'></p>";
 
     $display_block .= "</form>\n";
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 
 ?>

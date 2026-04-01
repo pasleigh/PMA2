@@ -61,26 +61,8 @@ if(IsStaff($db,$this_staff_username,$staff_names)) {
     $display_block .= "<input type='hidden' value='$year_begin' id='latest_year'>\n";
 
     // Get a list of all projects for this year
-    //$display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
-
-    //$query = "select * from $projects_setup where year_begin=$year_begin order by id";
-    /*
-    $query = "select * from $projects_setup order by id";
-    try {
-        $results = $db->query($query);
-    } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
-        exit();
-    }
-    */
     $display_block .= "<DIV id='id_module_list'>\n";
     $count = 0;
-    //$rows = $results->fetchAll();
-    //foreach ($rows as $recs)
     {
         $id = $rows['id'];
         $module = $rows['module'];
@@ -118,7 +100,7 @@ if(IsStaff($db,$this_staff_username,$staff_names)) {
     $display_block .= "<p>The <em>Total summed</em> = sum of supervised  + sum of second marked  * 0.1</p>";
 
     $display_block .= "<div id='datatable_div'>";
-    $display_block .= "<table width=\"100%\" cellspacing=\"3\" cellpadding=\"0\" id=\"data-entry\" class='hover compact cell-border'></table>";
+    $display_block .= "<table width='100%' cellspacing='3' cellpadding='0' id='data-entry' class='hover compact cell-border'></table>";
     $display_block .= "</div>";
 
     $display_block .= "<div id='mod_table' style='height: 580px; width:100%; border-style: solid; border-width: 2px; margin-top: 10px; margin-bottom: 10px;  border-color: silver; padding: 5px; display: none;'></div>\n";
@@ -140,6 +122,7 @@ if(IsStaff($db,$this_staff_username,$staff_names)) {
         <span class="navbar-brand">Staff supervision details for a single module/project <?php echo("$year_begin/$year_end_short") ?></span>
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="../" class="nav-link px-2 text-white-50">This year module list</a></li>
+            <li class="nav-item"><a target="_self" href="./edit_module_settings.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module admin page</a></li>
             <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Main admin page</a></li>
         </ul>
     </div>

@@ -158,23 +158,23 @@ if ($POST_OP == "commit") {
 }
 
 $instructions= "<h3>This form is for setting the Overall locked status of a project as well as the Separate Parts</h3>";
-$instructions .="<div class=\"feedbackInstructions\">If you want the programme to be locked you MUST select it.
+$instructions .="<div class='feedbackInstructions'>If you want the programme to be locked you MUST select it.
 If was previously locked and you DO NOT select it <strong>- it will be unlocked</strong>... <BR>and then click the modify button <br />
     </div>";
 
    $display_block .= $changed_message;
 
-   $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+   $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
    $display_block .= "<h1>$module_prefix$module1 $module_short_description </h1>
-             <div align=\"left\">\n";
+             <div align='left'>\n";
              
-   $display_block .= "<table class=\"tableSimple\" >\n";
+   $display_block .= "<table class='tableSimple' >\n";
    
-   $display_block .= "<tr><td colspan=\"2\">$instructions</tr>\n";
+   $display_block .= "<tr><td colspan='2'>$instructions</tr>\n";
 
    $display_block .= "<tr><td><b>Overall locked status:</b>&nbsp; <i>Locked status</i></td><td>";
-   $display_block .= "change (toggle)<INPUT TYPE=\"CHECKBOX\" NAME=\"chkLocked\" VALUE=\"1\" > </td></tr>";
+   $display_block .= "change (toggle)<INPUT TYPE='CHECKBOX' NAME='chkLocked' VALUE='1' > </td></tr>";
 
     // Do all the parts locked status
     $display_block .= "<TR><td><b>Set the locked status for all parts.</b></td><td>(This will lock / unlock all three markers.)</td><tr>\n";
@@ -186,17 +186,17 @@ If was previously locked and you DO NOT select it <strong>- it will be unlocked<
             $checked_status = "checked";
         }
         $locked_part_id = "chkLocked_p$i";
-        $display_block .= "<td>change (toggle)<INPUT TYPE=\"CHECKBOX\" NAME=\"$locked_part_id\" VALUE=\"1\" $checked_status></td><tr>\n";
+        $display_block .= "<td>change (toggle)<INPUT TYPE='CHECKBOX' NAME='$locked_part_id' VALUE='1' $checked_status></td><tr>\n";
     }
 
-    $display_block .="\n<input type=\"hidden\" name=\"op\" value=\"commit\">\n";
+    $display_block .="\n<input type='hidden' name='op' value='commit'>\n";
 
-   $display_block .= "<TR><td colspan=\"2\"><input type=\"submit\" name=\"submit\" value=\"Modify\"></td></TR>\n
+   $display_block .= "<TR><td colspan='2'><input class='btn btn-primary' type='submit' name='submit' value='Save these settings'></td></TR>\n
                                   </form>\n";
 
 } else {
     $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 ?>
 <!DOCTYPE HTML>
