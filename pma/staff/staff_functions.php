@@ -22,14 +22,12 @@ function GetStaffNameFromID($db, $staff_id, $staff_table, $usetitle)
     if ($staff_id == "") {
         return $name;
     }
-    $get_list_query = "select * from $staff_table where staffid=$staff_id";
+    $get_list_query = "select * from $staff_table where staffid=:staff_id";
     try {
-        $get_list_res = $db->query($get_list_query);
+        $get_list_res = $db->prepare($get_list_query);
+        $get_list_res->execute([':staff_id' => $staff_id]);
     } catch (PDOException $ex) {
-        echo("Unable to create staff name list from database. In GetStaffNameFromID. Query: $get_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-
+        error_log("Unable to create staff name list from database. In GetStaffNameFromID: " . $ex->getMessage());
         return $name;
     }
 
@@ -69,14 +67,12 @@ function GetStaffEmailFromID($db, $staff_id, $staff_table)
     if ($staff_id == "") {
         return $name;
     }
-    $get_list_query = "select * from $staff_table where staffid=$staff_id";
+    $get_list_query = "select * from $staff_table where staffid=:staff_id";
     try {
-        $get_list_res = $db->query($get_list_query);
+        $get_list_res = $db->prepare($get_list_query);
+        $get_list_res->execute([':staff_id' => $staff_id]);
     } catch (PDOException $ex) {
-        echo("Unable to create staff name list from database. In GetStaffEmailFromID. Query: $get_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-
+        error_log("Unable to create staff name list from database. In GetStaffEmailFromID: " . $ex->getMessage());
         return $name;
     }
 
@@ -125,13 +121,12 @@ function GetStaffUsernameFromFullname($db, $staff_fullname, $staff_table){
     if ($staff_fullname == "") {
         return $username;
     }
-    $get_list_query = "select * from $staff_table where fullname='$staff_fullname'";
+    $get_list_query = "select * from $staff_table where fullname=:staff_fullname";
     try {
-        $get_list_res = $db->query($get_list_query);
+        $get_list_res = $db->prepare($get_list_query);
+        $get_list_res->execute([':staff_fullname' => $staff_fullname]);
     } catch (PDOException $ex) {
-        echo("Unable to create staff name list from database. In GetStaffNameFromFullname. Query: $get_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        error_log("Unable to create staff name list from database. In GetStaffNameFromFullname: " . $ex->getMessage());
         return $username;
     }
 
@@ -164,13 +159,12 @@ function GetStaffNameFromUsername($db, $staff_username, $staff_table, $usetitle)
     if ($staff_username == "") {
         return $name;
     }
-    $get_list_query = "select * from $staff_table where username='$staff_username'";
+    $get_list_query = "select * from $staff_table where username=:staff_username";
     try {
-        $get_list_res = $db->query($get_list_query);
+        $get_list_res = $db->prepare($get_list_query);
+        $get_list_res->execute([':staff_username' => $staff_username]);
     } catch (PDOException $ex) {
-        echo("Unable to create staff name list from database. In GetStaffNameFromUsername. Query: $get_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        error_log("Unable to create staff name list from database. In GetStaffNameFromUsername: " . $ex->getMessage());
         return $name;
     }
 
@@ -210,14 +204,12 @@ function GetStaffIDFromName($db, $staff_fullname, $staff_table)
     if ($staff_fullname == "") {
         return $staff_id;
     }
-    $get_list_query = "select * from $staff_table where fullname='$staff_fullname'";
+    $get_list_query = "select * from $staff_table where fullname=:staff_fullname";
     try {
-        $get_list_res = $db->query($get_list_query);
+        $get_list_res = $db->prepare($get_list_query);
+        $get_list_res->execute([':staff_fullname' => $staff_fullname]);
     } catch (PDOException $ex) {
-        echo("Unable to create staff name list from database. In GetStaffIDFromName. Query: $get_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-
+        error_log("Unable to create staff name list from database. In GetStaffIDFromName: " . $ex->getMessage());
         return $staff_id;
     }
     $rows = $get_list_res->fetchAll();
@@ -265,19 +257,19 @@ function GetStaffIDFromFamilyNameAndInitial($db, $staff_family_name, $staff_tabl
 
     $staff_family_name_split = explode(" ", $staff_family_name);
 
-    $get_list_query = "select * from $staff_table where familyname LIKE '%{$staff_family_name_split[0]}%'";
+    $params = [':familyname' => '%' . $staff_family_name_split[0] . '%'];
+    $get_list_query = "select * from $staff_table where familyname LIKE :familyname";
 
     if (count($staff_family_name_split) > 1) {
-        $get_list_query .= " AND firstname LIKE '{$staff_family_name_split[1]}%'";
+        $get_list_query .= " AND firstname LIKE :firstname";
+        $params[':firstname'] = $staff_family_name_split[1] . '%';
     }
 
     try {
-        $get_list_res = $db->query($get_list_query);
+        $get_list_res = $db->prepare($get_list_query);
+        $get_list_res->execute($params);
     } catch (PDOException $ex) {
-        echo("Unable to create staff name list from database. In  GetStaffIDFromFamilyNameAndInitial. Query: $get_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-
+        error_log("Unable to create staff name list from database. In GetStaffIDFromFamilyNameAndInitial: " . $ex->getMessage());
         return $staff_id;
     }
     //$num_staff_matches = $get_list_res->rowCount();
@@ -329,20 +321,20 @@ function GetStaffIDFromFamilyNameAndInitial2($db, $staff_family_name, $staff_tab
     // Split the family name as it may contain a trailing initial
     $staff_family_name_split = explode(", ", $staff_family_name);
     
-    $get_list_query = "select * from $staff_table where familyname LIKE '%{$staff_family_name_split[0]}%'";
+    $params = [':familyname' => '%' . $staff_family_name_split[0] . '%'];
+    $get_list_query = "select * from $staff_table where familyname LIKE :familyname";
 
     if (count($staff_family_name_split) > 1) {
         $firstname = trim($staff_family_name_split[1]);
-        $get_list_query .= " AND firstname LIKE '{$firstname}%'";
+        $get_list_query .= " AND firstname LIKE :firstname";
+        $params[':firstname'] = $firstname . '%';
     }
 
     try {
-        $get_list_res = $db->query($get_list_query);
+        $get_list_res = $db->prepare($get_list_query);
+        $get_list_res->execute($params);
     } catch (PDOException $ex) {
-        echo("Unable to create staff name list from database. In  GetStaffIDFromFamilyNameAndInitial. Query: $get_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-
+        error_log("Unable to create staff name list from database. In GetStaffIDFromFamilyNameAndInitial2: " . $ex->getMessage());
         return $staff_id;
     }
 
@@ -401,14 +393,12 @@ function GetStaffIDFromUsername($db, $staff_username, $staff_table)
     if ($staff_username == "") {
         return $staff_id;
     }
-    $get_list_query = "select * from $staff_table where username='$staff_username'";
+    $get_list_query = "select * from $staff_table where username=:staff_username";
     try {
-        $get_list_res = $db->query($get_list_query);
+        $get_list_res = $db->prepare($get_list_query);
+        $get_list_res->execute([':staff_username' => $staff_username]);
     } catch (PDOException $ex) {
-        echo("Unable to create staff name list from database. In GetStaffIDFromUsername. Query: $get_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-
+        error_log("Unable to create staff name list from database. In GetStaffIDFromUsername: " . $ex->getMessage());
         return $staff_id;
     }
 
@@ -447,10 +437,7 @@ function GetStaffSelectID($db, $staff_table, $NameKey, $MatchID)
     try {
         $get_staff_list_res = $db->query($get_staff_list_query);
     } catch (PDOException $ex) {
-        echo("Unable to create staff name list from table. Query: $get_staff_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-
+        error_log("Unable to create staff name list from table: " . $ex->getMessage());
         return $staff_select_block;
     }
 
@@ -492,8 +479,8 @@ function get_staff_list_json($db, $staff_table){
     try {
         $get_staff_list_res = $db->query($get_staff_list_query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        error_log($ex->getMessage());
+        return $staff_array;
     }
 
     $rows = $get_staff_list_res->fetchAll();
@@ -532,10 +519,7 @@ function GetSchoolSelectID($db,  $NameKey, $MatchID)
     try {
         $get_school_list_res = $db->query($get_school_list_query);
     } catch (PDOException $ex) {
-        echo("Unable to create school name list from table. Query: $get_school_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-
+        error_log("Unable to create school name list from table: " . $ex->getMessage());
         return $school_select_block;
     }
 
@@ -576,10 +560,7 @@ function GetSemesterSelectID($db,  $NameKey, $MatchID)
     try {
         $get_semester_list_res = $db->query($get_semester_list_query);
     } catch (PDOException $ex) {
-        echo("Unable to create semester list from table. Query: $get_semester_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-
+        error_log("Unable to create semester list from table: " . $ex->getMessage());
         return $semester_select_block;
     }
 
@@ -622,10 +603,7 @@ function GetStaffSelectIDWithOnChange($db, $staff_table, $NameKey, $MatchID, $On
     try {
         $get_staff_list_res = $db->query($get_staff_list_query);
     } catch (PDOException $ex) {
-        echo("Unable to create staff name list from table. Query: $get_staff_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-
+        error_log("Unable to create staff name list from table: " . $ex->getMessage());
         return $staff_select_block;
     }
 
@@ -666,10 +644,7 @@ function GetAllStaffSelectOptions($db, $staff_table){
     try {
         $get_staff_list_res = $db->query($get_staff_list_query);
     } catch (PDOException $ex) {
-        echo("Unable to create staff name list from table. Query: $get_staff_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-
+        error_log("Unable to create staff name list from table: " . $ex->getMessage());
         return $staff_select_options_block;
     }
 
@@ -704,14 +679,12 @@ function GetAllStaffSelectOptions($db, $staff_table){
  */
 function CompareIDandFullname($db, $staff_table, $StaffID, $StaffName)
 {
-    $get_staff_list_query = "select * from $staff_table where staffid = $StaffID";
+    $get_staff_list_query = "select * from $staff_table where staffid = :staff_id";
     try {
-        $get_staff_list_res = $db->query($get_staff_list_query);
+        $get_staff_list_res = $db->prepare($get_staff_list_query);
+        $get_staff_list_res->execute([':staff_id' => $StaffID]);
     } catch (PDOException $ex) {
-        echo("Unable to create staff name list from table. Query: $get_staff_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-
+        error_log("Unable to create staff name list from table: " . $ex->getMessage());
         return FALSE;
     }
     $recs = $get_staff_list_res->fetch();
@@ -741,15 +714,12 @@ function CountSupervisedProjectsByID($db,$projects_master_name_table,$staffid)
 {
     $num_supervise = 0;
 
-    $query = "select * from $projects_master_name_table where f_supervisor_id = $staffid";
+    $query = "select * from $projects_master_name_table where f_supervisor_id = :staffid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':staffid' => $staffid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
+        error_log("Error in " . __FUNCTION__ . ": " . $ex->getMessage());
         exit();
     }
     $num_supervise = $results->rowCount();
@@ -766,15 +736,12 @@ function CountSupervisedProjectsByID($db,$projects_master_name_table,$staffid)
  */
 function CountSecondMarkedProjectsByID($db,$project_details_table,$staffid){
     $num_second_mark = 0;
-    $query = "select * from $project_details_table where f_assocstaff_id = $staffid";
+    $query = "select * from $project_details_table where f_assocstaff_id = :staffid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':staffid' => $staffid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
+        error_log("Error in " . __FUNCTION__ . ": " . $ex->getMessage());
         exit();
     }
     $num_second_mark = $results->rowCount();
@@ -856,14 +823,14 @@ function convert_smart_quotes($string)
 }
 function IsStaffB($db, $username, $staff_names)
 {
-    $query = "SELECT * FROM $staff_names WHERE username='$username'";
+    $query = "SELECT * FROM $staff_names WHERE username=:username";
 
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':username' => $username]);
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log("Error in IsStaffB: " . $ex->getMessage());
+        return false;
     }
 
     if ($results->rowCount() > 0) {

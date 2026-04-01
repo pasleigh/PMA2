@@ -100,13 +100,13 @@ if($is_module_admin || $admin_access) {
 
             //$display_block .= "Submitting: <BR>\n";
             $postid = "sid$i";
-            $sid = addslashes($_POST[$postid]);
+            $sid = $_POST[$postid];
             $postid = "name$i";
-            $name = addslashes($_POST[$postid]);
+            $name = $_POST[$postid];
             $postid = "username$i";
-            $username = addslashes($_POST[$postid]);
+            $username = $_POST[$postid];
             $postid = "programme$i";
-            $programme = addslashes($_POST[$postid]);
+            $programme = $_POST[$postid];
             //$inactive = $_POST['inactive_select'];
 
             $postid = "sel$i";
@@ -127,22 +127,20 @@ if($is_module_admin || $admin_access) {
 
             //$display_block .= "$sid, $name, $username, $programme, $sel.... <BR>\n";
             if ($delete_chk == 0) {
-                $query = "update $students set name='$name',username='$username',programme='$programme',sel='$sel_chk' where sid=$sid";
+                $query = "update $students set name=:name, username=:username, programme=:programme, sel=:sel_chk where sid=:sid";
+                $params = [':name' => $name, ':username' => $username, ':programme' => $programme, ':sel_chk' => $sel_chk, ':sid' => $sid];
             } else {
                 // Delete entry
-                $query = "DELETE FROM $students WHERE sid=$sid";
+                $query = "DELETE FROM $students WHERE sid=:sid";
+                $params = [':sid' => $sid];
             }
 
-            //$display_block .= $query . "<BR>\n";
-            //mysql_query($query) or die(" Unable to update data to the table $students . <BR>Query: $query");
             try {
-                $results = $db->query($query);
+                $results = $db->prepare($query);
+                $results->execute($params);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo "An Error occured accessing the database in function: $this_function <BR>\n";
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                 exit();
             }
             //$display_block .= "Updated: $i $fullname <br>\n";
@@ -168,24 +166,20 @@ if($is_module_admin || $admin_access) {
         } else {
             $sel = 1;
         }
-        $sid = addslashes($_POST['sid']);
-        $name = addslashes($_POST['name']);
-        $username = addslashes($_POST['username']);
-        $programme = addslashes($_POST['programme']);
-        //$sel = addslashes($_POST['sel']);
+        $sid = $_POST['sid'];
+        $name = $_POST['name'];
+        $username = $_POST['username'];
+        $programme = $_POST['programme'];
+        //$sel = $_POST['sel'];
 
         $display_block .= "$sid, $name, $username, $programme, $sel.... <BR>\n";
-        $query = "REPLACE INTO $students (sid,name,username,programme,sel) VALUES ('$sid','$name','$username','$programme','$sel')  ";
-        //$display_block .= $query . "<BR>\n";
-        //mysql_query($query) or die(" Unable to insert data to the table $students . <BR>Query: $query");
+        $query = "REPLACE INTO $students (sid,name,username,programme,sel) VALUES (:sid, :name, :username, :programme, :sel)";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare($query);
+            $results->execute([':sid' => $sid, ':name' => $name, ':username' => $username, ':programme' => $programme, ':sel' => $sel]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
             exit();
         }
         $display_block .= "<B>Done</B><BR><hr>\n";
@@ -211,20 +205,13 @@ if($is_module_admin || $admin_access) {
                     $username = substr($username, 0, $aruba_pos);
                 }
 
-                $query = "REPLACE INTO $students (sid,name,username,programme) VALUES (";
-                $query .= "'" . addslashes($each_student_entry[$csv_keys[0]]) . "', ";
-                $query .= "'" . addslashes($each_student_entry[$csv_keys[1]]) . "', ";
-                $query .= "'" . addslashes($username) . "', ";
-                $query .= "'" . addslashes($each_student_entry[$csv_keys[3]]) . "') ";
-                //mysql_query($query) or die(" Unable to insert data to the table $students . <BR>Query: $query");
+                $query = "REPLACE INTO $students (sid,name,username,programme) VALUES (:sid, :name, :username, :programme)";
                 try {
-                    $results = $db->query($query);
+                    $results = $db->prepare($query);
+                    $results->execute([':sid' => $each_student_entry[$csv_keys[0]], ':name' => $each_student_entry[$csv_keys[1]], ':username' => $username, ':programme' => $each_student_entry[$csv_keys[3]]]);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo "An Error occured accessing the database in function: $this_function <BR>\n";
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                     exit();
                 }
                 /*while (list($key, $value) = each ($each_member)) {

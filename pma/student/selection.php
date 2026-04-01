@@ -120,15 +120,12 @@ if($is_student_current == false and $is_staff == false){
     // $close_date_diff > 1.0 the close date has passed
     // $open_date_diff < 0.0 opens in the future
 
-    $query = "select * from $projects_setup where id=$pm_id";
+    $query = "select * from $projects_setup where id=:pm_id";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':pm_id' => $pm_id]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
 
@@ -214,28 +211,31 @@ if($is_student_current == false and $is_staff == false){
 
     if($POST_OP == "submit"){
         // enter the selection in to the table
-        $query = "REPLACE INTO $selection VALUES (now(), '$sid', '$student_username', '$student_name', '$new_choices[1]',
-                 '$new_choices[2]', '$new_choices[3]', '$new_choices[4]', '$new_choices[5]')";
+        $query = "REPLACE INTO $selection VALUES (now(), :sid, :username, :name, :choice1,
+                 :choice2, :choice3, :choice4, :choice5)";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare($query);
+            $results->execute([
+                ':sid'     => $sid,
+                ':username'=> $student_username,
+                ':name'    => $student_name,
+                ':choice1' => $new_choices[1],
+                ':choice2' => $new_choices[2],
+                ':choice3' => $new_choices[3],
+                ':choice4' => $new_choices[4],
+                ':choice5' => $new_choices[5],
+            ]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
-            echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
             exit();
         }
 
-        $query = "UPDATE $students SET sel=1 WHERE sid='$sid'";
+        $query = "UPDATE $students SET sel=1 WHERE sid=:sid";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare($query);
+            $results->execute([':sid' => $sid]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
-            echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
             exit();
         }
 
@@ -244,15 +244,12 @@ if($is_student_current == false and $is_staff == false){
     }
 
     // Display Choice table if a choice has previously been made
-    $query = "SELECT * FROM $selection WHERE sid ='$sid'";
+    $query = "SELECT * FROM $selection WHERE sid =:sid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
     $rec = $results->fetch();

@@ -53,14 +53,13 @@ function GetSuperAdminLevel($db, $username)
     // Returns the admin level - 0 if no admin privilidges
     //
     $admin_level = 0;
-    $query = "SELECT * FROM admin_users WHERE username='$username'";
+    $query = "SELECT * FROM admin_users WHERE username=:username";
 
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':username' => $username]);
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log($ex->getMessage());
         return $admin_level;
         //exit();
     }
@@ -86,14 +85,13 @@ function GetProjectAdminLevel($db, $username, $staff_names)
     // Returns the project admin level - 0 if no admin privileges
     //
     $admin_level = 0;
-    $query = "SELECT * FROM $staff_names WHERE username='$username'";
+    $query = "SELECT * FROM $staff_names WHERE username=:username";
 
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':username' => $username]);
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log($ex->getMessage());
         return $admin_level;
         //exit();
     }
@@ -335,18 +333,16 @@ function GetModuleAdminLevelFromPID($db, $username, $pm_id)
     // Returns the project admin level for a module, 0 if no admin privilidges
     //
     $admin_level_module = 0;
-    if($pm_id == 'all'){
-        $query = "SELECT * FROM admin_users_module WHERE username='$username'";
-    }else{
-        $query = "SELECT * FROM admin_users_module WHERE project_id='$pm_id' AND username='$username'";
-    }
-
     try {
-        $results = $db->query($query);
+        if($pm_id == 'all'){
+            $results = $db->prepare("SELECT * FROM admin_users_module WHERE username=:username");
+            $results->execute([':username' => $username]);
+        }else{
+            $results = $db->prepare("SELECT * FROM admin_users_module WHERE project_id=:pm_id AND username=:username");
+            $results->execute([':pm_id' => $pm_id, ':username' => $username]);
+        }
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log($ex->getMessage());
         return $admin_level_module;
         //exit();
     }
@@ -376,14 +372,13 @@ function GetModuleAdminLevelFromShortCode($db, $username, $short_code, $year_beg
     // Returns the project admin level for a module, 0 if no admin privilidges
     //
     $admin_level_module = 0;
-    $query = "SELECT * FROM admin_users_module WHERE short_code='$short_code' AND year_begin='$year_begin' AND username='$username'";
+    $query = "SELECT * FROM admin_users_module WHERE short_code=:short_code AND year_begin=:year_begin AND username=:username";
 
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':short_code' => $short_code, ':year_begin' => $year_begin, ':username' => $username]);
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log($ex->getMessage());
         return $admin_level_module;
         //exit();
     }

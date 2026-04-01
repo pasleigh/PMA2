@@ -30,9 +30,7 @@ try {
     $setup = $db->query($query);
     $results = $setup->fetch();
 } catch (PDOException $ex) {
-    echo "An Error occured accessing the $staff_names2 table<BR>\n";
-    $err_msg = $ex->getMessage();
-    echo("Error message: $err_msg<BR>\n");
+    error_log($ex->getMessage());
     exit();
 }
 //$get_list_res = mysql_query($query) or die(" Unable to create list from $staff_names2 table. Query: $query");
@@ -48,9 +46,7 @@ try {
     $setup = $db->query($query);
     $results = $setup->fetch();
 } catch (PDOException $ex) {
-    echo "An Error occured accessing the $definition table<BR>\n";
-    $err_msg = $ex->getMessage();
-    echo("Error message: $err_msg<BR>\n");
+    error_log($ex->getMessage());
     exit();
 }
 //$get_list_res = mysql_query($query) or die(" Unable to create list from $definition table. Query: $query");
@@ -86,25 +82,25 @@ if ($POST_OP == "create") {
     $new_module_number = trim($_POST['new_module_number']);
     $new_short_desc = $_POST['new_module_short_desc'];
 
-    $get_list = "select * from $projects_setup where short_code='$new_short_name' AND year_begin='$new_year_begin'";
+    $get_list = "SELECT * FROM $projects_setup WHERE short_code=:short_code AND year_begin=:year_begin";
     //$get_list_res = mysql_query($get_list) or die(" Unable to create list from $projects_setup table. Query: $get_list");
-    $results = $db->query($get_list);
+    $stmt = $db->prepare($get_list);
+    $stmt->execute([':short_code' => $new_short_name, ':year_begin' => $new_year_begin]);
+    $results = $stmt;
     $num_entries = $results->rowCount();
     if ($num_entries > 0) {
         echo("<P>This combination of year and short code exists. Year:$new_year_begin Short code:$new_short_name Choose another.</P>");
         exit;
     } else {
         // Save this to the database
-        $action = "INSERT $projects_setup set year_begin='$new_year_begin', year_end='$new_year_end', short_code='$new_short_name',
-                module='$new_module_number', module_prefix='$new_module_prefix', module_short_desc='$new_short_desc'
-                ";
+        $action = "INSERT INTO $projects_setup SET year_begin=:year_begin, year_end=:year_end, short_code=:short_code,
+                module=:module, module_prefix=:module_prefix, module_short_desc=:module_short_desc";
         try {
-            $db->query($action);
+            $stmt = $db->prepare($action);
+            $stmt->execute([':year_begin' => $new_year_begin, ':year_end' => $new_year_end, ':short_code' => $new_short_name,
+                ':module' => $new_module_number, ':module_prefix' => $new_module_prefix, ':module_short_desc' => $new_short_desc]);
         } catch (PDOException $ex) {
-            echo "An Error occured adding the new project data<BR>\n";
-            echo(" Query = $action<BR> \n");
-            $err_msg = $ex->getMessage();
-            echo("Error message: $err_msg<BR>\n");
+            error_log($ex->getMessage());
             exit();
         }
     }
@@ -112,16 +108,13 @@ if ($POST_OP == "create") {
 
     // Save the rest to the setup_projects table
     //Get the id
-    $action = "SELECT * from $projects_setup ";
-    $get_list = "select * from $projects_setup where short_code='$new_short_name' AND year_begin='$new_year_begin'";
+    $get_list = "SELECT * FROM $projects_setup WHERE short_code=:short_code AND year_begin=:year_begin";
     try {
-        $setup = $db->query($get_list);
+        $setup = $db->prepare($get_list);
+        $setup->execute([':short_code' => $new_short_name, ':year_begin' => $new_year_begin]);
         $setup_data = $setup->fetch();
     } catch (PDOException $ex) {
-        echo "An Error occured getting the list from projects_setup<BR>\n";
-        echo(" Query = $get_list<BR>\n");
-        $err_msg = $ex->getMessage();
-        echo("Error message: $err_msg<BR>\n");
+        error_log($ex->getMessage());
         exit();
     }
 
@@ -131,27 +124,24 @@ if ($POST_OP == "create") {
 
     // Put this in the projects_setup_proposals table (keep defaults for everything else)
     // Save this to the database
-    $query = "INSERT $projects_setup_proposals SET proj_id='$pm_id'";
+    $query = "INSERT INTO $projects_setup_proposals SET proj_id=:proj_id";
     try {
-        $db->query($query);
+        $stmt = $db->prepare($query);
+        $stmt->execute([':proj_id' => $pm_id]);
     } catch (PDOException $ex) {
-        echo "An Error occured adding the new project setup proposals<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo("Error message: $err_msg<BR>\n");
+        error_log($ex->getMessage());
         exit();
     }
 
     $new_short_desc = $_POST['new_module_short_desc'];
     $new_num_parts = $_POST['new_num_parts'];
 
-    $action = "update  $projects_setup set num_parts='$new_num_parts', module_short_desc='$new_short_desc' WHERE id='$pm_id'";
+    $action = "UPDATE $projects_setup SET num_parts=:num_parts, module_short_desc=:module_short_desc WHERE id=:id";
     try {
-        $db->query($action);
+        $stmt = $db->prepare($action);
+        $stmt->execute([':num_parts' => $new_num_parts, ':module_short_desc' => $new_short_desc, ':id' => $pm_id]);
     } catch (PDOException $ex) {
-        echo "An Error occured updating projects_setup<BR>\n";
-        echo(" Query = $action<BR>\n");
-        $err_msg = $ex->getMessage();
-        echo("Error message: $err_msg<BR>\n");
+        error_log($ex->getMessage());
         exit();
     }
     //mysql_query($action) or die(" Unable to update new project entry to the table $projects_setup. <BR>/> Query = $action");
@@ -162,15 +152,13 @@ if ($POST_OP == "create") {
     $module_leader_fullname = GetStaffNameFromID($db, $module_leader_id, $staff_names2, 0);
     $min_feedback_words = trim($_POST['min_feedback_words']);
 
-    $action = "update $projects_setup set accept_var='$accept_var', pass_mark='$pass_mark', module_leader='$module_leader_fullname', min_feedback_words='$min_feedback_words' WHERE id='$pm_id'";
+    $action = "UPDATE $projects_setup SET accept_var=:accept_var, pass_mark=:pass_mark, module_leader=:module_leader, min_feedback_words=:min_feedback_words WHERE id=:id";
 
     try {
-        $db->query($action);
+        $stmt = $db->prepare($action);
+        $stmt->execute([':accept_var' => $accept_var, ':pass_mark' => $pass_mark, ':module_leader' => $module_leader_fullname, ':min_feedback_words' => $min_feedback_words, ':id' => $pm_id]);
     } catch (PDOException $ex) {
-        echo "An Error occured updating projects_setup<BR>\n";
-        echo(" Query = $action<BR>\n");
-        $err_msg = $ex->getMessage();
-        echo("Error message: $err_msg<BR>\n");
+        error_log($ex->getMessage());
         exit();
     }
     //mysql_query($action) or die(" Unable to update  project entry to the table $projects_setup. <BR>/> Query = $action");
@@ -192,16 +180,16 @@ if ($POST_OP == "create") {
         $markby_dates_part = $_POST[$p_marking];
         $p_use = "use_p$part";
 
-        $action = "update  $projects_setup set $p_submit='$submit_dates_part', $p_marking='$markby_dates_part', $p_use='1', $p_percent='$weights_part',
-                        $p_num_markers='$num_markers_part', $p_max='$max_marks_part', $p_desc='$descs_part' WHERE id='$pm_id'";
+        $action = "UPDATE $projects_setup SET $p_submit=:submit_date, $p_marking=:marking_date, $p_use='1', $p_percent=:percent,
+                        $p_num_markers=:num_markers, $p_max=:max_marks, $p_desc=:desc WHERE id=:id";
         //mysql_query($action) or die(" Unable to update new project entry to the table $projects_setup. <BR>/> Query = $action");
         try {
-            $db->query($action);
+            $stmt = $db->prepare($action);
+            $stmt->execute([':submit_date' => $submit_dates_part, ':marking_date' => $markby_dates_part,
+                ':percent' => $weights_part, ':num_markers' => $num_markers_part,
+                ':max_marks' => $max_marks_part, ':desc' => $descs_part, ':id' => $pm_id]);
         } catch (PDOException $ex) {
-            echo "An Error occured updating projects_setup<BR>\n";
-            echo(" Query = $action<BR>\n");
-            $err_msg = $ex->getMessage();
-            echo("Error message: $err_msg<BR>\n");
+            error_log($ex->getMessage());
             exit();
         }
     }
@@ -212,15 +200,13 @@ if ($POST_OP == "create") {
     $sel_open = date("Y-m-d", strtotime("+22 day"));//today + 3 weeks and a day
     $sel_close = date("Y-m-d", strtotime("+35 day"));//today + 5 weeks
     $alloc_date = date("Y-m-d", strtotime("+40 day"));//today + 5 weeks + 5 days
-    $action = "update  $projects_setup set staff_close='$staff_close', sel_open='$sel_open', sel_close='$sel_close', alloc_date='$alloc_date' WHERE id='$pm_id'";
+    $action = "UPDATE $projects_setup SET staff_close=:staff_close, sel_open=:sel_open, sel_close=:sel_close, alloc_date=:alloc_date WHERE id=:id";
     //mysql_query($action) or die(" Unable to update dates in new project entry to the table $projects_setup. <BR>/> Query = $action");
     try {
-        $db->query($action);
+        $stmt = $db->prepare($action);
+        $stmt->execute([':staff_close' => $staff_close, ':sel_open' => $sel_open, ':sel_close' => $sel_close, ':alloc_date' => $alloc_date, ':id' => $pm_id]);
     } catch (PDOException $ex) {
-        echo "An Error occured updating dates in projects_setup<BR>\n";
-        echo(" Query = $action<BR>\n");
-        $err_msg = $ex->getMessage();
-        echo("Error message: $err_msg<BR>\n");
+        error_log($ex->getMessage());
         exit();
     }
     $display_block .= "<h2>creating the new database tables...</H2>";
@@ -287,9 +273,7 @@ if ($POST_OP == "create") {
                 try {
                     $db->query($query);
                 } catch (PDOException $ex) {
-                    echo "An Error occured creating table<BR>\n";
-                    $err_msg = $ex->getMessage();
-                    echo("Error message: $err_msg<BR>\n");
+                    error_log($ex->getMessage());
                     exit();
                 }
                 $display_block .= " ... created ...<BR>\n";
@@ -313,9 +297,7 @@ if ($POST_OP == "create") {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            echo "An Error occured creating table<BR>\n";
-            $err_msg = $ex->getMessage();
-            echo("Error message: $err_msg<BR>\n");
+            error_log($ex->getMessage());
             exit();
         }
         $display_block .= " ... created ...<BR>\n";
@@ -337,9 +319,7 @@ if ($POST_OP == "create") {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            echo "An Error occured creating table<BR>\n";
-            $err_msg = $ex->getMessage();
-            echo("Error message: $err_msg<BR>\n");
+            error_log($ex->getMessage());
             exit();
         }
         $display_block .= " ... created ...<BR>\n";
@@ -359,9 +339,7 @@ if ($POST_OP == "create") {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            echo "An Error occured creating table<BR>\n";
-            $err_msg = $ex->getMessage();
-            echo("Error message: $err_msg<BR>\n");
+            error_log($ex->getMessage());
             exit();
         }
         $display_block .= " ... created ...<BR>\n";
@@ -381,9 +359,7 @@ if ($POST_OP == "create") {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            echo "An Error occured creating table<BR>\n";
-            $err_msg = $ex->getMessage();
-            echo("Error message: $err_msg<BR>\n");
+            error_log($ex->getMessage());
             exit();
         }
         $display_block .= " ... created ...<BR>\n";
@@ -404,9 +380,7 @@ if ($POST_OP == "create") {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            echo "An Error occured creating table<BR>\n";
-            $err_msg = $ex->getMessage();
-            echo("Error message: $err_msg<BR>\n");
+            error_log($ex->getMessage());
             exit();
         }
         $display_block .= " ... created ...<BR>\n";
@@ -427,9 +401,7 @@ if ($POST_OP == "create") {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            echo "An Error occured creating table<BR>\n";
-            $err_msg = $ex->getMessage();
-            echo("Error message: $err_msg<BR>\n");
+            error_log($ex->getMessage());
             exit();
         }
         $display_block .= " ... created ...<BR>\n";
@@ -454,9 +426,7 @@ if ($POST_OP == "create") {
             try {
                 $result = $db->query($query);
             } catch (PDOException $ex) {
-                echo "An Error occured check if table exists<BR>\n";
-                $err_msg = $ex->getMessage();
-                echo("Error message: $err_msg<BR>\n");
+                error_log($ex->getMessage());
                 exit();
             }
             //$display_block .="$query<BR>";
@@ -467,9 +437,7 @@ if ($POST_OP == "create") {
             try {
                 $result = $db->query($query);
             } catch (PDOException $ex) {
-                echo "An Error occured copying data from table $table_template to $table<BR>\n";
-                $err_msg = $ex->getMessage();
-                echo("Error message: $err_msg<BR>\n");
+                error_log($ex->getMessage());
                 exit();
             }
         } else {
@@ -510,9 +478,7 @@ if ($POST_OP == "create") {
             try {
                 $result = $db->query($query);
             } catch (PDOException $ex) {
-                echo "An Error occured copying data from table $table_template to $table<BR>\n";
-                $err_msg = $ex->getMessage();
-                echo("Error message: $err_msg<BR>\n");
+                error_log($ex->getMessage());
                 exit();
             }
             $display_block .= "$table ... copied data<BR>\n";
@@ -533,9 +499,7 @@ if ($POST_OP == "create") {
         try {
             $result = $db->query($query);
         } catch (PDOException $ex) {
-            echo "An Error occured creating table<BR>\n";
-            $err_msg = $ex->getMessage();
-            echo("Error message: $err_msg<BR>\n");
+            error_log($ex->getMessage());
             exit();
         }
         $display_block .= "$table ... created<BR>\n";
@@ -545,9 +509,7 @@ if ($POST_OP == "create") {
         try {
             $result = $db->query($query);
         } catch (PDOException $ex) {
-            echo "An Error occured copying data from the table $table_template to $table<BR>\n";
-            $err_msg = $ex->getMessage();
-            echo("Error message: $err_msg<BR>\n");
+            error_log($ex->getMessage());
             exit();
         }
         $display_block .= "$table ... copied data<BR>\n";

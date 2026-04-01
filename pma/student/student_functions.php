@@ -18,13 +18,12 @@ function GetStudentNameFromUsername($db,$student_username,$students)
 {
     $student_name = "";
 
-    $query = "SELECT * FROM $students WHERE username='$student_username'";
+    $query = "SELECT * FROM $students WHERE username=:username";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':username' => $student_username]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $students table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -48,13 +47,12 @@ function GetStudentIDFromUsername($db,$student_username,$students)
 {
     $student_id = "";
 
-    $query = "SELECT * FROM $students WHERE username='$student_username'";
+    $query = "SELECT * FROM $students WHERE username=:username";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':username' => $student_username]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $students table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -77,13 +75,12 @@ function GetStudentProgrammeFromUsername($db,$student_username,$students)
 {
     $student_programme = "";
 
-    $query = "SELECT * FROM $students WHERE username='$student_username'";
+    $query = "SELECT * FROM $students WHERE username=:username";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':username' => $student_username]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $students table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -107,13 +104,12 @@ function GetStudentUsernameFromID($db,$student_id,$students)
 {
     $student_username = "";
 
-    $query = "SELECT * FROM $students WHERE sid='$student_id'";
+    $query = "SELECT * FROM $students WHERE sid=:sid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $student_id]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $students table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -137,13 +133,12 @@ function GetStudentProgrammeFromID($db,$student_id,$students)
 {
     $student_programme = "";
 
-    $query = "SELECT * FROM $students WHERE sid='$student_id'";
+    $query = "SELECT * FROM $students WHERE sid=:sid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $student_id]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $students table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -168,13 +163,12 @@ function isStaff($db, $username)
 {
     $result = false;
 
-    $query = "SELECT * FROM staff_names WHERE username='$username'";
+    $query = "SELECT * FROM staff_names WHERE username=:username";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':username' => $username]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the staff_names table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -199,13 +193,12 @@ function isStudent_on_this_module($db, $pm_id, $student_username, $students)
 {
     $result = false;
 
-    $query = "SELECT * FROM $students WHERE username='$student_username'";
+    $query = "SELECT * FROM $students WHERE username=:username";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':username' => $student_username]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $students table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 

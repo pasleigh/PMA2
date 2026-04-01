@@ -186,13 +186,11 @@ function GetProgramVariantsStaff($db, $projects_setup_proposals_table, $pm_id, &
     // Program variant options
     // Can have up to 7 Variants
     // Get the number for this prog from the database
-    $query = "SELECT * FROM $projects_setup_proposals_table WHERE proj_id='$pm_id'";
+    $query = "SELECT * FROM $projects_setup_proposals_table WHERE proj_id=:pm_id";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':pm_id' => $pm_id]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo("Unable to update data to the table $projects_setup_proposals_table<BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
@@ -224,13 +222,11 @@ function GetProgramVariantFlagsStaff($db, $project_details_table, $master_id)
     // Program variant flags
     // Can have up to 7 Variants
     // Get the number for this prog from the database
-    $query = "SELECT * FROM $project_details_table WHERE master_id='$master_id'";
+    $query = "SELECT * FROM $project_details_table WHERE master_id=:master_id";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':master_id' => $master_id]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo("Unable to update data to the table $project_details_table<BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();

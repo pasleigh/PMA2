@@ -62,10 +62,8 @@ function perform_update_prepared_query($db, $table, $data, $where_data){
         $results = $db->prepare($query);
         $results->execute($all_data);
     }catch (PDOException $ex) {
-        echo("Unable to perform query: $query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-        $results = $err_msg;
+        error_log("Unable to perform update query: " . $ex->getMessage());
+        $results = $ex->getMessage();
     }
     return $results;
 }
@@ -106,10 +104,8 @@ function perform_insert_prepared_query($db, $table, $data){
         $results = $db->prepare($query);
         $results->execute($data);
     }catch (PDOException $ex) {
-        echo("Unable to perform query: $query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-        $results = $err_msg;
+        error_log("Unable to perform insert query: " . $ex->getMessage());
+        $results = $ex->getMessage();
     }
     return $results;
 }
@@ -141,10 +137,8 @@ function perform_select_prepared_query($db, $table, $where_data, $extra){
         $results = $db->prepare($query);
         $results->execute($all_data);
     }catch (PDOException $ex) {
-        echo("Unable to perform query: $query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
-        $results = $err_msg;
+        error_log("Unable to perform select query: " . $ex->getMessage());
+        $results = $ex->getMessage();
     }
     return $results;
 }

@@ -81,14 +81,12 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
             }
 
             // Get the student name from SID
-            $query = "select * from $students_table where sid = $sid";
+            $query = "select * from $students_table where sid = :sid";
             try {
-                $results = $db->query($query);
+                $results = $db->prepare($query);
+                $results->execute([':sid' => $sid]);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo("An Error occured accessing the database in function: $this_function <BR>\n");
                 error_log($ex->getMessage());
-                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
             $recs = $results->fetch();
@@ -102,14 +100,12 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
 
             $feedback_sent = "";
             // Find out if feedback sent to this SID
-            $query = "select * from $feedback_records_table where sid = $sid";
+            $query = "select * from $feedback_records_table where sid = :sid";
             try {
-                $results = $db->query($query);
+                $results = $db->prepare($query);
+                $results->execute([':sid' => $sid]);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo("An Error occured accessing the database in function: $this_function <BR>\n");
                 error_log($ex->getMessage());
-                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
             $num_rows = $results->rowCount();
@@ -161,14 +157,12 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
  * @return void
  */
 function RecordFeedbackSent($db, $sid, $part, $feedback_records_table){
-    $query = "select * from $feedback_records_table where sid = $sid";
+    $query = "select * from $feedback_records_table where sid = :sid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $num_rows = $results->rowCount();
@@ -176,18 +170,16 @@ function RecordFeedbackSent($db, $sid, $part, $feedback_records_table){
     $part_query_string = "sent_p" . $part;
     if($num_rows == 0){
         // Insert
-        $query = "insert $feedback_records_table set SID='$sid', $part_query_string=1";
+        $query = "insert $feedback_records_table set SID=:sid, $part_query_string=1";
     } else {
         // Update
-        $query = "update $feedback_records_table set $part_query_string=1 where SID='$sid'";
+        $query = "update $feedback_records_table set $part_query_string=1 where SID=:sid";
     }
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 }
@@ -213,8 +205,7 @@ SQL;
     try{
         $db->query($query);
     }catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        error_log($ex->getMessage());
     }
 }
 
@@ -344,8 +335,7 @@ SQL;
     try{
         $db->query($query);
     }catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        error_log($ex->getMessage());
     }
 }
 

@@ -168,15 +168,12 @@ function GetProgramVariants($db, $projects_setup_proposals_table, $pm_id, &$num_
     // Program variant options
     // Can have up to 7 Variants
     // Get the number for this prog from the database
-    $query = "SELECT * FROM $projects_setup_proposals_table WHERE proj_id='$pm_id'";
+    $query = "SELECT * FROM $projects_setup_proposals_table WHERE proj_id=:pm_id";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':pm_id' => $pm_id]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo("Unable to update data to the table $projects_setup_proposals_table<BR>\n");
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -206,15 +203,12 @@ function GetProgramVariantFlags($db, $project_details_table, $master_id)
     // Program variant flags
     // Can have up to 7 Variants
     // Get the number for this prog from the database
-    $query = "SELECT * FROM $project_details_table WHERE master_id='$master_id'";
+    $query = "SELECT * FROM $project_details_table WHERE master_id=:master_id";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':master_id' => $master_id]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo("Unable to update data to the table $project_details_table<BR>\n");
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -264,15 +258,12 @@ function GetProgrammeShortName($db, $student_programme_full_name, $students_prog
     //
     $prog_short_name = "Not found";
 
-    $query = "SELECT * FROM $students_programmes_table WHERE prog_full_name='$student_programme_full_name'";
+    $query = "SELECT * FROM $students_programmes_table WHERE prog_full_name=:prog_full_name";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':prog_full_name' => $student_programme_full_name]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo("Unable to update data to the table $students_programmes_table<BR>\n");
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -293,15 +284,12 @@ function GetProgrammeShortName($db, $student_programme_full_name, $students_prog
 function GetProgrammeShortNameIndex($db, $student_programme_full_name, $students_programmes_table){
     $index = -1;
 
-    $query = "SELECT * FROM $students_programmes_table WHERE prog_full_name='$student_programme_full_name'";
+    $query = "SELECT * FROM $students_programmes_table WHERE prog_full_name=:prog_full_name";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':prog_full_name' => $student_programme_full_name]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
-        echo("Unable to update data to the table $students_programmes_table<BR>\n");
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 

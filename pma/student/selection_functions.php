@@ -24,13 +24,12 @@ function IsStaffActive($db, $this_staff_full_name, $staff_names_table = "staff_n
     // there is a module staff_inactive list that is not used yet
     // there is a module staff_names_module list that is not used yet
     // This function should be in some utilities file
-    $query = "SELECT * FROM $staff_names_table WHERE fullname='$this_staff_full_name'";
+    $query = "SELECT * FROM $staff_names_table WHERE fullname=:fullname";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':fullname' => $this_staff_full_name]);
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log($ex->getMessage());
         return $active;
     }
 
@@ -113,13 +112,12 @@ function GetChoiceTable($db,$choices,$master_name,$choice_count = 5, $ranked_cho
             }
             $pid = $choices[$i];
             // Look up the project title and supervisor
-            $query = "SELECT * FROM $master_name WHERE id = '$pid'";
+            $query = "SELECT * FROM $master_name WHERE id = :pid";
             try {
-                $results = $db->query($query);
+                $results = $db->prepare($query);
+                $results->execute([':pid' => $pid]);
             } catch (PDOException $ex) {
-                echo "An Error occured accessing the $master_name table<BR>\n";
                 error_log($ex->getMessage());
-                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
 
@@ -213,9 +211,7 @@ function GetSelectionTable($db,$selection,$choices,$master_name,$project_details
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $master_name table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -463,13 +459,12 @@ function GetSelectionTableUnRanked($db,$selection,$choices,$master_name,$project
 function GetNumProjectsOffered($db, $project_details_table, $pid){
     $num_projects = 0;
 
-    $query = "SELECT * FROM $project_details_table WHERE master_id='$pid'";
+    $query = "SELECT * FROM $project_details_table WHERE master_id=:pid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':pid' => $pid]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $project_details_table table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -492,57 +487,52 @@ function GetNumProjectsOffered($db, $project_details_table, $pid){
 function GetProjectSelectionCount($db, $selection_table, $pid){
     $num_selected = 0;
 
-    $query = "SELECT * FROM $selection_table WHERE choice1='$pid'";
+    $query = "SELECT * FROM $selection_table WHERE choice1=:pid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':pid' => $pid]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $selection_table table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $num_choice1 = $results->rowCount();
 
-    $query = "SELECT * FROM $selection_table WHERE choice2='$pid'";
+    $query = "SELECT * FROM $selection_table WHERE choice2=:pid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':pid' => $pid]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $selection_table table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $num_choice2 = $results->rowCount();
 
-    $query = "SELECT * FROM $selection_table WHERE choice3='$pid'";
+    $query = "SELECT * FROM $selection_table WHERE choice3=:pid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':pid' => $pid]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $selection_table table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $num_choice3 = $results->rowCount();
 
-    $query = "SELECT * FROM $selection_table WHERE choice4='$pid'";
+    $query = "SELECT * FROM $selection_table WHERE choice4=:pid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':pid' => $pid]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $selection_table table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $num_choice4 = $results->rowCount();
 
-    $query = "SELECT * FROM $selection_table WHERE choice5='$pid'";
+    $query = "SELECT * FROM $selection_table WHERE choice5=:pid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':pid' => $pid]);
     } catch (PDOException $ex) {
-        echo "An Error occured accessing the $selection_table table<BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $num_choice5 = $results->rowCount();

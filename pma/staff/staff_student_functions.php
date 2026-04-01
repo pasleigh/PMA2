@@ -17,14 +17,14 @@
  */
 function IsStaff($db, $username, $staff_names)
 {
-    $query = "SELECT * FROM $staff_names WHERE username='$username'";
+    $query = "SELECT * FROM $staff_names WHERE username=:username";
 
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':username' => $username]);
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log("Error in IsStaff: " . $ex->getMessage());
+        return false;
     }
 
     if ($results->rowCount() > 0) {
@@ -46,14 +46,13 @@ function IsStaff($db, $username, $staff_names)
  */
 function IsStudent($db, $username, $students)
 {
-    $query = "SELECT * FROM $students WHERE username='$username'";
+    $query = "SELECT * FROM $students WHERE username=:username";
 
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':username' => $username]);
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log("Error in IsStudent: " . $ex->getMessage());
         return false;
     }
 
@@ -82,16 +81,14 @@ function GetSuperAdminLevel_staff_student($db, $username)
     // Returns the admin level - 0 if no admin privilidges
     //
     $admin_level = 0;
-    $query = "SELECT * FROM admin_users WHERE username='$username'";
+    $query = "SELECT * FROM admin_users WHERE username=:username";
 
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':username' => $username]);
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log("Error in GetSuperAdminLevel_staff_student: " . $ex->getMessage());
         return $admin_level;
-        //exit();
     }
 
     if ($results->rowCount() > 0) {

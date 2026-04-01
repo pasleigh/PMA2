@@ -26,15 +26,12 @@
 function IsMarked($db, $sid, $markstore)
 {
     $isMarked = false;
-    $query = "select * from $markstore where sid=$sid";
+    $query = "select * from $markstore where sid=:sid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
     $num_rows = $results->rowCount();
@@ -58,16 +55,13 @@ function IsMarked($db, $sid, $markstore)
 function GetThisMark($db, $sid, $part, $markstore)
 {
     $thisMark = -1;
-    $query = "select * from $markstore where sid=$sid";
+    $query = "select * from $markstore where sid=:sid";
     //$get_list_res = mysql_query($get_list) or die("Unable to marks list from table $markstore.<BR>Query: $get_list\n");
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
     $num_rows = $results->rowCount();
@@ -93,16 +87,13 @@ function GetThisMark($db, $sid, $part, $markstore)
 function GetTotalForPart($db, $sid, $part, $markstore_totals)
 {
     $total = -1;
-    $query = "select * from $markstore_totals where sid=$sid";
+    $query = "select * from $markstore_totals where sid=:sid";
 
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
     $num_rows = $results->rowCount();
@@ -133,11 +124,7 @@ function CountThirdMarkersRequired($db, $part, $markstore_totals)
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
     $num_rows = $results->rowCount();
@@ -157,15 +144,12 @@ function CountThirdMarkersRequired($db, $part, $markstore_totals)
 function IsThirdMarkerRequired($db, $sid, $part, $markstore_totals)
 {
 
-    $query = "select * from $markstore_totals where SID='$sid'";
+    $query = "select * from $markstore_totals where SID=:sid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
     $num_rows = $results->rowCount();
@@ -198,33 +182,27 @@ function SetThirdMarkerRequired($db, $sid, $part, $markstore_totals)
     $third_marker_entry = "third_marker_req" . $part;
 
     // Need to check if the SID already has an entry or not
-    $query = "select count(SID) from $markstore_totals where SID=$sid";
+    $query = "select count(SID) from $markstore_totals where SID=:sid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
     $get_marks_res = $results->fetch();
 
     if ($get_marks_res[0] == 0) {
-        $query = "insert $markstore_totals set SID='$sid', $third_marker_entry=1";
+        $query = "insert $markstore_totals set SID=:sid, $third_marker_entry=1";
     } else {
-        $query = "update $markstore_totals set $third_marker_entry=1 where SID='$sid'";
+        $query = "update $markstore_totals set $third_marker_entry=1 where SID=:sid";
     }
 
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
 
@@ -257,15 +235,12 @@ function HaveAllMarkersMarked($db, $sid, $part, $num_markers, $markstores, $mark
     }
 
     if ($num_markers == 2) {
-        $query = "select * from $markstore_totals where sid=$sid";
+        $query = "select * from $markstore_totals where sid=:sid";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare($query);
+            $results->execute([':sid' => $sid]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
-            echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
             exit();
         }
         $num_rows = $results->rowCount();
@@ -332,16 +307,13 @@ function SetRecalculatedOverallTotal($db, $sid, $num_parts, $part_percents, $mar
     }
 
     $entry = "total";
-    $query = "update $markstore_totals set $entry=$total where SID='$sid'";
+    $query = "update $markstore_totals set $entry=:total where SID=:sid";
 
     try {
-        $db->query($query);
+        $stmt = $db->prepare($query);
+        $stmt->execute([':total' => $total, ':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
 
@@ -493,15 +465,12 @@ function GetMarkMethodString($db, $sid, $part, $markstore_totals)
 {
     $mark_method_string = "9999";
 
-    $query = "select * from $markstore_totals where sid=$sid";
+    $query = "select * from $markstore_totals where sid=:sid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
     $num_rows = $results->rowCount();
@@ -534,15 +503,12 @@ function GetMarkReasonString($db, $sid, $part, $markstore_totals)
 {
     $mark_reason_string = "";
 
-    $query = "select * from $markstore_totals where sid=$sid";
+    $query = "select * from $markstore_totals where sid=:sid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
     $num_rows = $results->rowCount();
@@ -572,15 +538,12 @@ function GetReturnedMark($db, $sid, $part, $markstore_totals)
 {
     $mark = -1;
 
-    $query = "select * from $markstore_totals where sid=$sid";
+    $query = "select * from $markstore_totals where sid=:sid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
     $num_rows = $results->rowCount();
@@ -639,15 +602,12 @@ function GetMarkMethodAsArray($mark_method)
  */
 function GetMarkerNamesArray($db, $sid, $part, $project_allocated_table, $staff_names)
 {
-    $query = "select * from $project_allocated_table where sid=$sid";
+    $query = "select * from $project_allocated_table where sid=:sid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
 
@@ -692,15 +652,12 @@ function GetMarkerNamesArray($db, $sid, $part, $project_allocated_table, $staff_
  */
 function IsSIDAllocated($db, $sid, $project_allocated_table)
 {
-    $query = "select * from $project_allocated_table where sid=$sid";
+    $query = "select * from $project_allocated_table where sid=:sid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
 
@@ -727,15 +684,12 @@ function IsSIDAllocated($db, $sid, $project_allocated_table)
 function IsSIDActive($db, $sid, $project_allocated_table)
 {
     if (IsSIDAllocated($db, $sid, $project_allocated_table)) {
-        $query = "select * from $project_allocated_table where sid=$sid";
+        $query = "select * from $project_allocated_table where sid=:sid";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare($query);
+            $results->execute([':sid' => $sid]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
-            echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
             exit();
         }
 
@@ -766,15 +720,12 @@ function GetIsNumeric($db, $pm_id, $part, $project_setup_table)
 {
     $isnumeric = 0;
 
-    $query = "select * from $project_setup_table where id=$pm_id";
+    $query = "select * from $project_setup_table where id=:pm_id";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':pm_id' => $pm_id]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
     $num_rows = $results->rowCount();
@@ -809,10 +760,7 @@ function CountAllocationTable($db, $allocation_table)
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo "An Error occured accessing the database in function: $this_function <BR>\n";
                 error_log($ex->getMessage());
-                echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
             $num = $results->rowCount();

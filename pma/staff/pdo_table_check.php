@@ -31,9 +31,8 @@ try {
         echo "$TABLE_NAME doesn't exist in database $dbName";
     }
 } catch (PDOException $ex) {
-    echo "An Error occured!<BR>";
-    $err_msg = $ex->getMessage();
-    echo("$err_msg <BR>");
+    error_log("pdo_table_check error: " . $ex->getMessage());
+    echo "An error occurred checking the table. Please contact the system administrator.<BR>";
 }
 
 $display_block = "";

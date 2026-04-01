@@ -51,14 +51,12 @@ if($is_student_current == false and $is_staff == false){
     $display_block .= "<div>You are $student_name ($student_username)</div>";
     $count_modules = 0;
 
-    $query = "select * from $staff_names2 WHERE staffid='$staffid' ";
+    $query = "select * from $staff_names2 WHERE staffid=:staffid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':staffid' => $staffid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
@@ -80,15 +78,12 @@ if($is_student_current == false and $is_staff == false){
         $display_block .= "<div class='text-center'><div class='btn-group-vertical mt-2'>";
 
         // List projects by this staff
-        $query = "select * from $master_name where f_supervisor_id = $staffid";
+        $query = "select * from $master_name where f_supervisor_id = :staffid";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare($query);
+            $results->execute([':staffid' => $staffid]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
-            echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
             exit();
         }
         $num_supervise = $results->rowCount();

@@ -56,12 +56,11 @@ $master_id = $_REQUEST['p_id'];
 $display_block .= "<H3>View project proposal</H3>";
 $display_block .= "<h3>$module_short_description - $module_prefix$module1$module_postfix - $short_code</h3>";
 
-$query = "select * from $master_name WHERE id='$master_id' ";
+$query = "select * from $master_name WHERE id=:master_id";
 try {
-    $results = $db->query($query);
+    $results = $db->prepare($query);
+    $results->execute([':master_id' => $master_id]);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo("An Error occured accessing the database in function: $this_function <BR>\n");
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();
@@ -72,12 +71,11 @@ $supervisor_name = $f_supervisor;
 $f_supervisor_id = $row['f_supervisor_id'];
 $f_title = $row['f_title'];
 
-$query = "select * from $project_details WHERE master_id='$master_id' ";
+$query = "select * from $project_details WHERE master_id=:master_id";
 try {
-    $results = $db->query($query);
+    $results = $db->prepare($query);
+    $results->execute([':master_id' => $master_id]);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo("An Error occured accessing the database in function: $this_function <BR>\n");
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();

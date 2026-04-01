@@ -67,12 +67,11 @@ if ($POST_OP == "") {
         $display_block .= "<a href='list_staff_projects.php?pm_id=$pm_id'> staff project list</a></P>";
     } else {
         // get master_info
-        $query = "select * from $master_name where id = $proj_id";
+        $query = "select * from $master_name where id = :proj_id";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare($query);
+            $results->execute([':proj_id' => $proj_id]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
@@ -84,12 +83,11 @@ if ($POST_OP == "") {
         $f_supervisor_id = stripslashes($recs['f_supervisor_id']);
         $display_name = $f_title . " - " . $f_supervisor_name;
 
-        $query = "select * from $project_details WHERE master_id='$proj_id' ";
+        $query = "select * from $project_details WHERE master_id=:proj_id";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare($query);
+            $results->execute([':proj_id' => $proj_id]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
@@ -161,12 +159,11 @@ if ($POST_OP == "") {
         //exit;
     } else {
         // get master_info
-        $query = "select * from $master_name where id = $proj_id";
+        $query = "select * from $master_name where id = :proj_id";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare($query);
+            $results->execute([':proj_id' => $proj_id]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
@@ -179,23 +176,21 @@ if ($POST_OP == "") {
         $display_name = $f_title . " - " . $f_supervisor_name;
 
         // delete
-        $query = "delete from $master_name where id = $proj_id";
+        $query = "delete from $master_name where id = :proj_id";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare($query);
+            $results->execute([':proj_id' => $proj_id]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
 
-        $query = "delete from $project_details where master_id = $proj_id";
+        $query = "delete from $project_details where master_id = :proj_id";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare($query);
+            $results->execute([':proj_id' => $proj_id]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();

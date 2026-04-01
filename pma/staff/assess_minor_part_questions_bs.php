@@ -112,11 +112,8 @@ $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo "An Error occured accessing the database in function: $this_function <BR>\n";
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
     exit();
 }
 
@@ -140,11 +137,8 @@ $query = "select * from $project_allocated where projectid = $project_id";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo "An Error occured accessing the database in function: $this_function <BR>\n";
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
     exit();
 }
 $recs = $results->fetch();
@@ -171,11 +165,8 @@ $query = "select * from $students where sid = $sid";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo "An Error occured accessing the database in function: $this_function <BR>\n";
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
     exit();
 }
 $recs = $results->fetch();
@@ -189,11 +180,8 @@ $query = "select * from $markstore where sid = $sid";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo "An Error occured accessing the database in function: $this_function <BR>\n";
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
     exit();
 }
 
@@ -221,8 +209,6 @@ if ($POST_OP == "commit") {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -286,8 +272,6 @@ if ($POST_OP == "commit") {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -353,8 +337,6 @@ if ($POST_OP == "commit") {
         try {
             //$results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -367,11 +349,8 @@ if ($POST_OP == "commit") {
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo "An Error occured accessing the database in function: $this_function <BR>\n";
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                 exit();
             }
 
@@ -384,11 +363,8 @@ if ($POST_OP == "commit") {
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo "An Error occured accessing the database in function: $this_function <BR>\n";
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                 exit();
             }
         }
@@ -402,12 +378,11 @@ if ($POST_OP == "commit") {
         $overall_feedback_text = convert_smart_quotes($overall_feedback_text);
         $overall_feedback_text = addslashes($overall_feedback_text);
         // Push it to the db
-        $query = "UPDATE $markstore SET OverallFeedback='$overall_feedback_text' WHERE SID='$sid'";
+        $query = "UPDATE $markstore SET OverallFeedback=:feedback WHERE SID=:sid";
+        $stmt = $db->prepare($query);
         try {
-            $results = $db->query($query);
+            $stmt->execute([':feedback' => $overall_feedback_text, ':sid' => $sid]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -522,8 +497,6 @@ if ($POST_OP == "commit") {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 

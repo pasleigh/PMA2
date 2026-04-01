@@ -38,8 +38,6 @@ $query = "select year_begin, dayname(staff_close), dayofmonth(staff_close), mont
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo("An Error occured accessing the database in function: $this_function <BR>\n");
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();
@@ -62,12 +60,11 @@ if ($nowarray[0] > $close && !IsAdmin($db, $this_staff_username) && !IsProjectAd
 $display_block = "";
 $module_ref_block = "<h3>$module_short_description - $module_prefix$module1$module_postfix - $short_code</h3>";
 
-$query = "select * from $staff_names2 WHERE staffid='$staffid' ";
+$query = "select * from $staff_names2 WHERE staffid=:staffid";
 try {
-    $results = $db->query($query);
+    $results = $db->prepare($query);
+    $results->execute([':staffid' => $staffid]);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo("An Error occured accessing the database in function: $this_function <BR>\n");
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();
@@ -91,15 +88,13 @@ if ($results->rowCount() < 1) {
     $display_block .= "<div class='d-grid gap-2 col-md-6'>";
 
     // List projects by this staff
-    $query = "select * from $master_name where f_supervisor_id = $staffid";
+    $query = "select * from $master_name where f_supervisor_id = :staffid";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':staffid' => $staffid]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
     $num_supervise = $results->rowCount();

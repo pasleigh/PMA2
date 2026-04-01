@@ -90,52 +90,34 @@ if ($access) {
                     $school = $worksheet->getCell([$col, $row])->getValue();
 
                     // Does this mark exist (it should always exist unless this is a new setup)
-                    $query = "select * from $assessment_criteria_table where mark='$mark'";
+                    $query = "select * from $assessment_criteria_table where mark=:mark";
                     try {
-                        $results = $db->query($query);
+                        $results = $db->prepare($query);
+                        $results->execute([':mark' => $mark]);
                     } catch (PDOException $ex) {
-                        $this_function = __FUNCTION__;
-                        echo "An Error occured accessing the database in function: $this_function <BR>\n";
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                         exit();
                     }
                     $num = $results->rowCount();
 
                     // REPLACE does a UPDATE or INSERT (Actually if exists it does a delete)
                     if ($num == 0) {
-                        $query = "INSERT INTO $assessment_criteria_table (mark,class,grade_text,gpa,descriptor_university,descriptor_school) VALUES (";
-                        $query .= "'" . addslashes($mark) . "', ";
-                        $query .= "'" . addslashes($class) . "', ";
-                        $query .= "'" . addslashes($grade) . "', ";
-                        $query .= "'" . addslashes($gpa) . "', ";
-                        $query .= "'" . addslashes($university) . "', ";
-                        $query .= "'" . addslashes($school) . "') ";
-                        //mysql_query($query) or die(" Unable to insert data to the table $assessment_criteria_table . <BR>Query: $query");
+                        $query = "INSERT INTO $assessment_criteria_table (mark,class,grade_text,gpa,descriptor_university,descriptor_school) VALUES (:mark, :class, :grade, :gpa, :university, :school)";
                         try {
-                            $results = $db->query($query);
+                            $results = $db->prepare($query);
+                            $results->execute([':mark' => $mark, ':class' => $class, ':grade' => $grade, ':gpa' => $gpa, ':university' => $university, ':school' => $school]);
                         } catch (PDOException $ex) {
-                            $this_function = __FUNCTION__;
-                            echo("An Error occured accessing the database in function: $this_function <BR>\n");
                             error_log($ex->getMessage());
                             echo "A database error occurred. Please contact the system administrator.<BR>\n";
                             exit();
                         }
                     } else {
-                        $query = "UPDATE $assessment_criteria_table SET ";
-                        //$query .= "sid='" . addslashes($sid) . "', ";
-                        $query .= "class='" . addslashes($class) . "', ";
-                        $query .= "grade_text='" . addslashes($grade) . "', ";
-                        $query .= "gpa='" . addslashes($gpa) . "', ";
-                        $query .= "descriptor_university='" . addslashes($university) . "', ";
-                        $query .= "descriptor_school='" . addslashes($school) . "' WHERE mark=$mark ";
-                        //mysql_query($query) or die(" Unable to insert data to the table $assessment_criteria_table . <BR>Query: $query");
+                        $query = "UPDATE $assessment_criteria_table SET class=:class, grade_text=:grade, gpa=:gpa, descriptor_university=:university, descriptor_school=:school WHERE mark=:mark";
                         try {
-                            $results = $db->query($query);
+                            $results = $db->prepare($query);
+                            $results->execute([':class' => $class, ':grade' => $grade, ':gpa' => $gpa, ':university' => $university, ':school' => $school, ':mark' => $mark]);
                         } catch (PDOException $ex) {
-                            $this_function = __FUNCTION__;
-                            echo("An Error occured accessing the database in function: $this_function <BR>\n");
                             error_log($ex->getMessage());
                             echo "A database error occurred. Please contact the system administrator.<BR>\n";
                             exit();
@@ -153,8 +135,6 @@ if ($access) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();

@@ -43,9 +43,7 @@ $query = "select * from $projects_setup ORDER BY year_begin DESC, module";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    echo "An Error occured accessing the $projects_setup table<BR>\n";
-    echo(" Query = $query<BR> \n");
-    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+    error_log($ex->getMessage());
     exit();
 }
 $res = $results->fetchAll();
@@ -80,14 +78,12 @@ foreach ($res as $rec) {
     $students = $prefix . "students_" . $short_code_lc . "_" . $year_begin;
 
     // Get the details of this project pm_id
-    $query = "SELECT * FROM $students WHERE username='$student_username'";
+    $query = "SELECT * FROM $students WHERE username=:username";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':username' => $student_username]);
     } catch (PDOException $ex) {
-        $label = "An Error occured accessing the $students table<BR>\n";
-        //echo(" Query = $query<BR> \n");
-        //echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-        error_log('PMA database error' . $label . ': ' . $ex->getMessage());
+        error_log($ex->getMessage());
         //exit();
     }
 

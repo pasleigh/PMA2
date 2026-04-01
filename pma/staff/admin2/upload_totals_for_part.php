@@ -86,12 +86,11 @@ if($is_module_admin || $admin_access) {
 
                 if ($csv_part_num == $radio_part_number) {
                     // Put this in the totals marksheet
-                    $query = "select * from $markstore_totals WHERE sid=$sid";
+                    $query = "select * from $markstore_totals WHERE sid=:sid";
                     try {
-                        $results = $db->query($query);
+                        $results = $db->prepare($query);
+                        $results->execute([':sid' => $sid]);
                     } catch (PDOException $ex) {
-                        $this_function = __FUNCTION__;
-                        echo("An Error occured accessing the database in function: $this_function <BR>\n");
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
                         exit();
@@ -102,29 +101,21 @@ if($is_module_admin || $admin_access) {
                     $part_header = "retmark" . $radio_part_number;
                     // REPLACE does a UPDATE or INSERT (Actually if exists it does a delete)
                     if ($num == 0) {
-                        $query = "INSERT INTO $markstore_totals (SID,$part_header) VALUES (";
-                        $query .= "'" . addslashes($sid) . "', ";
-                        $query .= "'" . addslashes($part_total) . "') ";
-                        echo("$query<BR>");
+                        $query = "INSERT INTO $markstore_totals (SID,$part_header) VALUES (:sid, :part_total)";
                         try {
-                            $results = $db->query($query);
+                            $results = $db->prepare($query);
+                            $results->execute([':sid' => $sid, ':part_total' => $part_total]);
                         } catch (PDOException $ex) {
-                            $this_function = __FUNCTION__;
-                            echo("An Error occured accessing the database in function: $this_function <BR>\n");
                             error_log($ex->getMessage());
                             echo "A database error occurred. Please contact the system administrator.<BR>\n";
                             exit();
                         }
                     } else {
-                        $query = "UPDATE $markstore_totals SET ";
-                        //$query .= "sid='" . addslashes($sid) . "', ";
-                        $query .= "$part_header='" . addslashes($part_total) . "' WHERE sid=$sid ";
-                        echo("$query<BR>");
+                        $query = "UPDATE $markstore_totals SET $part_header=:part_total WHERE sid=:sid";
                         try {
-                            $results = $db->query($query);
+                            $results = $db->prepare($query);
+                            $results->execute([':part_total' => $part_total, ':sid' => $sid]);
                         } catch (PDOException $ex) {
-                            $this_function = __FUNCTION__;
-                            echo("An Error occured accessing the database in function: $this_function <BR>\n");
                             error_log($ex->getMessage());
                             echo "A database error occurred. Please contact the system administrator.<BR>\n";
                             exit();
@@ -132,12 +123,11 @@ if($is_module_admin || $admin_access) {
                     }
 
                     // Put this in the part marksheet, under marker 1
-                    $query = "select * from $markstore_part WHERE sid=$sid";
+                    $query = "select * from $markstore_part WHERE sid=:sid";
                     try {
-                        $results = $db->query($query);
+                        $results = $db->prepare($query);
+                        $results->execute([':sid' => $sid]);
                     } catch (PDOException $ex) {
-                        $this_function = __FUNCTION__;
-                        echo("An Error occured accessing the database in function: $this_function <BR>\n");
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
                         exit();
@@ -150,30 +140,21 @@ if($is_module_admin || $admin_access) {
                     $feedback_text .= "Feedback will be provided separately.";
                     // REPLACE does a UPDATE or INSERT (Actually if exists it does a delete)
                     if ($num == 0) {
-                        $query = "INSERT INTO $markstore_part (SID,C1Feedback,$part_header) VALUES (";
-                        $query .= "'" . addslashes($sid) . "', ";
-                        $query .= "'" . addslashes($feedback_text) . "', ";
-                        $query .= "'" . addslashes($part_total) . "') ";
-                        echo("$query<BR>");
+                        $query = "INSERT INTO $markstore_part (SID,C1Feedback,$part_header) VALUES (:sid, :feedback_text, :part_total)";
                         try {
-                            $results = $db->query($query);
+                            $results = $db->prepare($query);
+                            $results->execute([':sid' => $sid, ':feedback_text' => $feedback_text, ':part_total' => $part_total]);
                         } catch (PDOException $ex) {
-                            $this_function = __FUNCTION__;
-                            echo("An Error occured accessing the database in function: $this_function <BR>\n");
                             error_log($ex->getMessage());
                             echo "A database error occurred. Please contact the system administrator.<BR>\n";
                             exit();
                         }
                     } else {
-                        $query = "UPDATE $markstore_part SET ";
-                        $query .= "C1Feedback='" . addslashes($feedback_text) . "', ";
-                        $query .= "$part_header='" . addslashes($part_total) . "' WHERE sid=$sid ";
-                        echo("$query<BR>");
+                        $query = "UPDATE $markstore_part SET C1Feedback=:feedback_text, $part_header=:part_total WHERE sid=:sid";
                         try {
-                            $results = $db->query($query);
+                            $results = $db->prepare($query);
+                            $results->execute([':feedback_text' => $feedback_text, ':part_total' => $part_total, ':sid' => $sid]);
                         } catch (PDOException $ex) {
-                            $this_function = __FUNCTION__;
-                            echo("An Error occured accessing the database in function: $this_function <BR>\n");
                             error_log($ex->getMessage());
                             echo "A database error occurred. Please contact the system administrator.<BR>\n";
                             exit();
@@ -186,12 +167,12 @@ if($is_module_admin || $admin_access) {
 
                     }*/
                 } else {
-                    echo("Part numbers do not match in the CSV file and the radio button. for $sid, $student_name <BR\n");
+                    error_log("Part numbers do not match in the CSV file and the radio button. for $sid, $student_name");
                 }
 
             }
         } else {
-            echo("You must select a part number by clicking the appropriate radio button. <BR>\n");
+            error_log("You must select a part number by clicking the appropriate radio button.");
         }
     }// end of if ($POST_OP == "upload_csv")
 
@@ -202,8 +183,6 @@ if($is_module_admin || $admin_access) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
@@ -235,12 +214,11 @@ if($is_module_admin || $admin_access) {
         $retmark4 = $recs['retmark4'];
         $retmark5 = $recs['retmark5'];
         $total_mark = $recs['total'];
-        $query = "select * from $students where sid=$sid";
+        $query = "select * from $students where sid=:sid";
         try {
-            $results = $db->query($query);
+            $results = $db->prepare($query);
+            $results->execute([':sid' => $sid]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();

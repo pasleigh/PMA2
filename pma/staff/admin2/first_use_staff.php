@@ -50,18 +50,12 @@ try{
                     $full_file_name = ".$header_images_dir$file_name";
                     $img_file = file_get_contents($full_file_name);
                     $img_file_base64 = base64_encode($img_file);
-                    $query = "INSERT INTO $header_images_table (header_image, filename) VALUES ('$img_file_base64','$file_name')";
+                    $query = "INSERT INTO $header_images_table (header_image, filename) VALUES (:header_image, :filename)";
                     try {
-                        $result = $db->query($query);
+                        $stmt = $db->prepare($query);
+                        $stmt->execute([':header_image' => $img_file_base64, ':filename' => $file_name]);
                     } catch (PDOException $ex) {
-                        $this_function = __FUNCTION__;
-                        $this_file = __FILE__;
-                        $this_line = __LINE__;
-                        echo "An Error occured accessing the database in function: $this_function<BR>\n";
-                        echo "File: $this_file  near line: $this_line<BR>\n";
-                        echo "An Error occured!<BR>";
-                        $err_msg = $ex->getMessage();
-                        echo("$err_msg <BR>");
+                        error_log($ex->getMessage());
                         exit();
                     }
                 }
@@ -327,13 +321,16 @@ if ($POST_OP == "") {
         $initial_data_query = "INSERT INTO `$definition_table_name` ( `school_short_name`, `school_title`, `default_module_prefix`, `header_image_name`, `running_title`) VALUES
                 ($school_short_name', '$school_title', '$school_module_code', '$header_image', '$school_running_title');";
     */
-    $initial_data_query = "UPDATE $definition_table_name SET school_short_name='$school_short_name', school_title='$school_title',
-                              default_module_prefix='$school_module_code',
-                              header_image_name='$school_header_image_name', running_title='$school_running_title', header_image_id='$school_header_image_id'
+    $initial_data_query = "UPDATE $definition_table_name SET school_short_name=:school_short_name, school_title=:school_title,
+                              default_module_prefix=:school_module_code,
+                              header_image_name=:header_image_name, running_title=:running_title, header_image_id=:header_image_id
                               WHERE id=1";
     //$display_block .= $query;
     try {
-        $db->query($initial_data_query);
+        $stmt = $db->prepare($initial_data_query);
+        $stmt->execute([':school_short_name' => $school_short_name, ':school_title' => $school_title,
+            ':school_module_code' => $school_module_code, ':header_image_name' => $school_header_image_name,
+            ':running_title' => $school_running_title, ':header_image_id' => $school_header_image_id]);
 
         $display_block .= "Submitted: <BR><BR>\n";
         $display_block .= "School short name: $school_short_name<BR>\n";
@@ -342,12 +339,6 @@ if ($POST_OP == "") {
         $display_block .= "Default module code: $school_module_code<BR>\n";
         $display_block .= "header image file: $school_header_image_name<BR>\n";
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        $this_file = __FILE__;
-        $this_line = __LINE__;
-        echo "An Error occured accessing the database in function: $this_function<BR>\n";
-        echo "File: $this_file  near line: $this_line<BR>\n";
-        echo(" Query = $initial_data_query<BR> \n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
@@ -364,10 +355,13 @@ if ($POST_OP == "") {
     $room = $_POST['roomX'];
     $inactive = 0;
 
-    $query = "INSERT INTO $staff_names_table (initials,title,firstname,familyname,fullname,email,username,room,inactive,admin_level) VALUES ('$initials','$title','$firstname','$familyname','$fullname','$email','$username','$room','$inactive',3)  ";
+    $query = "INSERT INTO $staff_names_table (initials,title,firstname,familyname,fullname,email,username,room,inactive,admin_level) VALUES (:initials,:title,:firstname,:familyname,:fullname,:email,:username,:room,:inactive,3)";
     //$display_block .= $query;
     try {
-        $db->query($query);
+        $stmt = $db->prepare($query);
+        $stmt->execute([':initials' => $initials, ':title' => $title, ':firstname' => $firstname,
+            ':familyname' => $familyname, ':fullname' => $fullname, ':email' => $email,
+            ':username' => $username, ':room' => $room, ':inactive' => $inactive]);
         $display_block .= "Submitted: <BR><BR>\n";
 
         $display_block .= "Title: $title <BR>\n";
@@ -380,20 +374,18 @@ if ($POST_OP == "") {
         $display_block .= "Room: $room<BR>\n";
         $display_block .= "Inactive flag: $inactive  <BR>\n";
     } catch (PDOException $ex) {
-        echo "An Error occured!<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo("$err_msg <BR>\n");
+        error_log($ex->getMessage());
     }
 
     // And make this user a super admin
-    $query = "INSERT INTO $admin_users_table (firstname,familyname,fullname,email,username,admin_level) VALUES ('$firstname','$familyname','$fullname','$email','$username','3')  ";
+    $query = "INSERT INTO $admin_users_table (firstname,familyname,fullname,email,username,admin_level) VALUES (:firstname,:familyname,:fullname,:email,:username,'3')";
     //$display_block .= $query;
     try {
-        $db->query($query);
+        $stmt = $db->prepare($query);
+        $stmt->execute([':firstname' => $firstname, ':familyname' => $familyname, ':fullname' => $fullname,
+            ':email' => $email, ':username' => $username]);
     } catch (PDOException $ex) {
-        echo "An Error occured!<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo("$err_msg <BR>\n");
+        error_log($ex->getMessage());
     }
 
     $display_block .= "<BR><hr>\n";

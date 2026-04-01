@@ -55,9 +55,7 @@ function GetSuperAdminLevel($db, $username)
         $results = $db->prepare("SELECT * FROM admin_users WHERE username = ?");
         $results->execute([$username]);
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log($ex->getMessage());
         return $admin_level;
     }
 
@@ -86,9 +84,7 @@ function GetProjectAdminLevel($db, $username, $staff_names)
         $results = $db->prepare("SELECT * FROM $staff_names WHERE username = ?");
         $results->execute([$username]);
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log($ex->getMessage());
         return $admin_level;
     }
 
@@ -157,9 +153,7 @@ function GetModuleAdminLevelFromPID($db, $username, $pm_id)
             $results->execute([$pm_id, $username]);
         }
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log($ex->getMessage());
         return $admin_level_module;
     }
 
@@ -192,9 +186,7 @@ function GetModuleAdminLevelFromShortCode($db, $username, $short_code, $year_beg
         $results = $db->prepare("SELECT * FROM admin_users_module WHERE short_code = ? AND year_begin = ? AND username = ?");
         $results->execute([$short_code, $year_begin, $username]);
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        error_log($ex->getMessage());
         return $admin_level_module;
     }
 

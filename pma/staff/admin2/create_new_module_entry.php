@@ -48,9 +48,11 @@ if ($POST_OP == "create"){
     $new_module_number = trim($_POST['new_module_number']);
     $new_short_desc = $_POST['new_module_short_desc'];
 
-    $get_list = "select * from $projects_setup where short_code='$new_short_name' AND year_begin='$new_year_begin'";
+    $get_list = "SELECT * FROM $projects_setup WHERE short_code=:short_code AND year_begin=:year_begin";
     //$get_list_res = mysql_query($get_list) or die(" Unable to create list from $projects_setup table. Query: $get_list");
-    $results = $db->query($get_list);
+    $stmt = $db->prepare($get_list);
+    $stmt->execute([':short_code' => $new_short_name, ':year_begin' => $new_year_begin]);
+    $results = $stmt;
     $num_entries = $results->rowCount();
     if ($num_entries > 0) {
         echo("<P>This combination of year and short code exists. Year:$new_year_begin Short code:$new_short_name Choose another.</P>");

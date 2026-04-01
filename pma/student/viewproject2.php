@@ -62,14 +62,12 @@ if($is_student_current == false and $is_staff == false){
     $display_block .= "<div style='font-size: x-large; font-weight: bold; text-align: center'>View project proposal</div>";
     $display_block .= "<div style='font-size: large; font-weight: bold; text-align: center'>$module_short_description - $module_prefix$module1$module_postfix - $short_code, $year_begin/$year_end_short</div>";
 
-    $query = "select * from $master_name WHERE id='$master_id' ";
+    $query = "select * from $master_name WHERE id=:master_id";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':master_id' => $master_id]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $row = $results->fetch();
@@ -78,14 +76,12 @@ if($is_student_current == false and $is_staff == false){
     $f_supervisor_id = $row['f_supervisor_id'];
     $f_title = $row['f_title'];
 
-    $query = "select * from $project_details WHERE master_id='$master_id' ";
+    $query = "select * from $project_details WHERE master_id=:master_id";
     try {
-        $results = $db->query($query);
+        $results = $db->prepare($query);
+        $results->execute([':master_id' => $master_id]);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
     $row = $results->fetch();
