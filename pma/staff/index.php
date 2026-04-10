@@ -6,6 +6,16 @@ $debug = false;
 if (array_key_exists('debug', $_GET)) {
     $debug = true;
 }
+if($debug){
+    echo("<BR><BR><BR><BR><BR><BR>");
+    echo("<PRE>");
+    echo("Cookies");
+    print_r($_COOKIE);
+    echo("Session");
+    print_r($_SESSION);
+    echo("</PRE>");
+}
+
 
 $num_cookie_days = 30;
 if (isset($_SERVER['REMOTE_USER'])) {

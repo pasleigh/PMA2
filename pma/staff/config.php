@@ -4,7 +4,6 @@
 $school = $_SESSION['PMA_SCHOOL'] ?? ($_COOKIE['PMA_SCHOOL'] ?? '');
 
 include($STAFF_DIR_VAL . '/../config_main.php');
-//include("$STAFF_DIR_VAL/../config_main_test.php");
 
 if($debug){
     echo("__ADMIN_DIR__ ".__ADMIN_DIR__."<BR>");

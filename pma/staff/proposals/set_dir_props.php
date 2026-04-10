@@ -7,15 +7,3 @@
     $BASE_DIR_VAL    = dirname(dirname(__DIR__));
     $STUDENT_DIR_VAL = dirname(dirname(__DIR__)) . '/student';
     $ADMIN_DIR_VAL   = dirname(__DIR__) . '/admin2';
-/*
-
-   }else{
-    // This won't work on the app server or any that has a symlink for the config.php file
-    // that means php sees a different file path for that file
-    $BASE_DIR_VAL  = "../..";
-    $STAFF_DIR_VAL = "..";
-    $STUDENT_DIR_VAL = "../../student";
-    $ADMIN_DIR_VAL = $STAFF_DIR_VAL . "/admin2";
-    $PROPS_DIR_VAL = ".";
-}
-*/

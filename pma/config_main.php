@@ -114,17 +114,35 @@ if (!defined('PMA_TMP_DIR')) {
     unset($_pma_env_tmp);
 }
 
+$PMA_SCHOOL_COOKIE_NAME = 'PMA_SCHOOL';
 if($dbName){
+    // Has the school changed?
+    /*
+    if (isset($_COOKIE[$PMA_SCHOOL_COOKIE_NAME])) {
+        // Exists
+        // Is it different to the school
+        if($_COOKIE[$PMA_SCHOOL_COOKIE_NAME] !== $school){
+            // It is different, so user wants to change school, clear it
+            // Unset the cookie value in PHP
+            unset($_COOKIE[$PMA_SCHOOL_COOKIE_NAME]);
+            // Set the cookie with an expiration time in the past
+            setcookie($PMA_SCHOOL_COOKIE_NAME, '', time() - 3600, '/');
+        }
+    }
+    */
    $num_days = 30;
-   setcookie('PMA_SCHOOL', $school, [
+   setcookie($PMA_SCHOOL_COOKIE_NAME, $school, [
        'expires'  => time() + (86400 * $num_days),
        'path'     => '/',
        'secure'   => true,
        'httponly' => true,
        'samesite' => 'Lax',
    ]);
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
    if (session_status() !== PHP_SESSION_NONE) {
-       $_SESSION['PMA_SCHOOL'] = $school;
+       $_SESSION[$PMA_SCHOOL_COOKIE_NAME] = $school;
    }
 }
 
@@ -135,8 +153,11 @@ if($debug){
     echo("__PROPS_DIR__ ".__PROPS_DIR__."<BR>");
     echo("DB_SCHOOL ".DB_SCHOOL."<BR>");
     echo("db_name ".$dbName."<BR>");
+    echo("Session status: ".session_status()."<BR>");
     echo("<PRE>");
+    echo("Cookies");
     print_r($_COOKIE);
+    echo("Session");
     print_r($_SESSION);
     echo("</PRE>");
 }

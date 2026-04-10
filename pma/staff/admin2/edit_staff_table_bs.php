@@ -30,6 +30,8 @@ error_reporting(E_ALL ^ E_NOTICE);
 if ($access) {
     $staff_names_table = $staff_names_default;
 
+    $csrf_token = generate_csrf_token();
+
     $column = 'school_short_name';
     if(!doesColumnExists($db, $column, $staff_names_table) ) {
         // Add this column
@@ -592,7 +594,7 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
     function setup_staff_table(){
         //$('#allCityDataTable').empty();
         var all_staff = <?php echo json_encode($staff_array); ?>;
-        console.log(all_staff);
+        //console.log(all_staff);
 
         $('#allStaffDataTable').DataTable(
             {
@@ -753,6 +755,11 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
                 form.appendChild(hiddenField);
             }
         }
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'csrf_token';
+        hiddenField.value = '<?php echo($csrf_token); ?>';
+        form.appendChild(hiddenField);
 
         document.body.appendChild(form);
         form.submit();
