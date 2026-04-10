@@ -134,8 +134,10 @@ if($debug){
     echo("__STUDENT_DIR__ ".__STUDENT_DIR__."<BR>");
     echo("__PROPS_DIR__ ".__PROPS_DIR__."<BR>");
     echo("DB_SCHOOL ".DB_SCHOOL."<BR>");
+    echo("db_name ".$dbName."<BR>");
     echo("<PRE>");
     print_r($_COOKIE);
+    print_r($_SESSION);
     echo("</PRE>");
 }
 

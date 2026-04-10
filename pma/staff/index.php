@@ -109,7 +109,7 @@ if ($access) {
 
 }
 
-
+$admin_link = date('l jS \of F Y, h:i A');
 $admin_link = "<a href='#'> $admin_link</a>";
 if (IsAdmin($db, $staff_username)) {
     $admin_link = "<a href='./admin2/' target='_top'><span class=\"glyphicon glyphicon-cog\"></span> Super Admin</a>";
