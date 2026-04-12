@@ -1,12 +1,11 @@
 <?php
 //directory to the staff directory
-//if (array_key_exists('BASE_DIR', $_COOKIE)) {
-    if (session_status() === PHP_SESSION_NONE) { session_start(); }
-    $STUDENT_DIR_VAL = __DIR__;
-    $BASE_DIR_VAL    = dirname(__DIR__);
-    $STAFF_DIR_VAL   = dirname(__DIR__) . '/staff';
-    $ADMIN_DIR_VAL   = dirname(__DIR__) . '/staff/admin2';
-    $PROPS_DIR_VAL   = dirname(__DIR__) . '/staff/proposals';
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
+$STUDENT_DIR_VAL = __DIR__;
+$BASE_DIR_VAL    = dirname(__DIR__);
+$STAFF_DIR_VAL   = dirname(__DIR__) . '/staff';
+$ADMIN_DIR_VAL   = dirname(__DIR__) . '/staff/admin2';
+$PROPS_DIR_VAL   = dirname(__DIR__) . '/staff/proposals';
 
 
 if (!function_exists('get_server_username')) {

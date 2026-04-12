@@ -4,10 +4,6 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 //error_reporting(E_ALL);
 
-$debug = false;
-if (array_key_exists('debug', $_GET)) {
-    $debug = true;
-}
 
 $rel_dir = "staff";
 (@include_once("./staff/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");

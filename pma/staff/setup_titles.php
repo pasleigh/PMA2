@@ -15,19 +15,13 @@ $_cookie_opts = [
     'httponly' => true,
     'samesite' => 'Lax',
 ];
-setcookie('BASE_DIR',    __BASE_DIR__,    $_cookie_opts);
-setcookie('ADMIN_DIR',   __ADMIN_DIR__,   $_cookie_opts);
-setcookie('STAFF_DIR',   __STAFF_DIR__,   $_cookie_opts);
-setcookie('STUDENT_DIR', __STUDENT_DIR__, $_cookie_opts);
-setcookie('PROPS_DIR',   __PROPS_DIR__,   $_cookie_opts);
+//setcookie('BASE_DIR',    __BASE_DIR__,    $_cookie_opts);
+//setcookie('ADMIN_DIR',   __ADMIN_DIR__,   $_cookie_opts);
+//setcookie('STAFF_DIR',   __STAFF_DIR__,   $_cookie_opts);
+//setcookie('STUDENT_DIR', __STUDENT_DIR__, $_cookie_opts);
+//setcookie('PROPS_DIR',   __PROPS_DIR__,   $_cookie_opts);
 
-if($debug){
-    echo '<pre>';
-    echo 'setup_titles<BR>';
-    echo '$_COOKIE<BR>';
-    print_r($_COOKIE);
-    echo '</pre>';
-}
+
 $setup_titles = "setup_titles.php";
 
 date_default_timezone_set('Europe/London');

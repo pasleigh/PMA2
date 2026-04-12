@@ -37,21 +37,6 @@ if($is_module_admin || $admin_access) {
     }
     $assesspart = $_GET['part'];
 
-    $debug = false;
-    if (array_key_exists('d', $_GET) == true || array_key_exists('debug', $_GET) == true ) {
-        $debug = true;
-    }
-
-    // double debug - shows all of the _REQUEST array
-    $ddebug = false;
-    if (array_key_exists('dd', $_GET) == true || array_key_exists('ddebug', $_GET) == true ) {
-        $ddebug = true;
-        $debug = true;
-    }
-
-    if($debug){
-        echo("Assessment part = $assesspart<BR>\n");
-    }
 
     $display_block .= "<h1>Be careful you are about to delete existing questions and replace them with others.</h1>";
 
@@ -74,13 +59,6 @@ if($is_module_admin || $admin_access) {
     }
     $assessqs_cats_new_table = $_REQUEST['assessqs_cats_new'];
 
-    if($ddebug) {
-        echo("All of the _REQUEST variables<BR>");
-        foreach ($_REQUEST as $key => $value) {
-            echo "{$key} = {$value}<BR>\r\n";
-        }
-        echo("End of the _REQUEST variables<BR><BR>");
-    }
 
     // definitions for each part
     // Questions table
@@ -146,16 +124,7 @@ if($is_module_admin || $admin_access) {
         $assessqs_new_table = $assessqs_tables[$MatchID];
         $assessqs_cats_new_table = $assessqs_cats_tables[$MatchID];
 
-        if($debug){
-            $debug_call = '&d';
-        }else{
-            $debug_call = '';
-        }
-        if($ddebug){
-            // double debug - shows all ofthe _REQUEST array
-            $debug_call = '&dd';
-        }
-        $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$assesspart$debug_call'>\n";
+        $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$assesspart'>\n";
 
         $display_block .= "\n<input type='hidden' name='assessqs_new' value='$assessqs_new_table'>\n";
         $display_block .= "\n<input type='hidden' name='assessqs_cats_new' value='$assessqs_cats_new_table'>\n";
@@ -244,16 +213,8 @@ if($is_module_admin || $admin_access) {
             }
 
     }else{
-        if($debug){
-            $debug_call = '&d';
-        }else{
-            $debug_call = '';
-        }
-        if($ddebug){
-            // double debug - shows all ofthe _REQUEST array
-            $debug_call = '&dd';
-        }
-        $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$assesspart$debug_call'>\n";
+
+        $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$assesspart'>\n";
         $display_block .= $select_block;
         $display_block .= "\n<input type='hidden' name='op' value='delete_project'>";
         $display_block .= "<p><input class='btn btn-primary mt-3'  type='submit' id='submitbutton' name='submit' value='Proceed to replace the existing questions with those from the selected -  YOU ACKNOWLEDGE THAT EXISTING QUESTION DATA WILL BE OVERWRITTEN.'></p>";

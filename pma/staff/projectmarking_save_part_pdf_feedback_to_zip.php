@@ -37,7 +37,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$debug_write = false;
 function download_link($file_to_download, $saveas_filename){
     $html = "<BR>\n";
     $self_link = htmlspecialchars($_SERVER['PHP_SELF']);

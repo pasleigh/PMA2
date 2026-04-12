@@ -53,21 +53,8 @@ if($is_module_admin || $admin_access) {
     }
     $assesspart = $_GET['part'];
 
-    $debug = false;
-    if (array_key_exists('d', $_GET) == true || array_key_exists('debug', $_GET) == true ) {
-        $debug = true;
-    }
 
-    // double debug - shows all ofthe _REQUEST array and new table dump
-    $ddebug = false;
-    if (array_key_exists('dd', $_GET) == true || array_key_exists('ddebug', $_GET) == true ) {
-        $ddebug = true;
-        $debug = true;
-    }
 
-    if($debug){
-        echo("Assessment part = $assesspart<BR>\n");
-    }
 
 // if the form was submitted then enter it all into the database
 
@@ -77,14 +64,6 @@ if($is_module_admin || $admin_access) {
         $POST_OP = "";
     }
 
-    if($ddebug) {
-        echo("All of the _REQUEST variables<BR>");
-        echo("The number of _REQUEST variables is: " . sizeof($_REQUEST) . "<BR>\n");
-        foreach ($_REQUEST as $key => $value) {
-            echo "{$key} = {$value}<BR>\r\n";
-        }
-        echo("End of the _REQUEST variables<BR><BR>");
-    }
 
     // Start of functions
     function show_section_questions2($cat, $cat_description, $weight_pc, $factor, $num_questions, $questions, $num_responses, $q_weights, $response_texts, $response_marks, $max_num_questions, $max_num_responses, $is_numeric, $show_cat_feedback_flag)
@@ -221,13 +200,6 @@ if($is_module_admin || $admin_access) {
     $mark_pc = $p_percent[$assesspart];
     $is_numeric = $p_numeric[$assesspart];
 
-    if($debug) {
-        echo("Assess_cats table = $assess_cats<BR>\n");
-        echo("Assessqs_year table = $assessqs_year<BR>\n");
-        echo("Assesstype_text table = $assesstype_text<BR>\n");
-        echo("max mark for this part = $mark_max<BR>");
-        echo("percent of final assesment = $mark_pc<BR>");
-    }
 
     // Get number of categories by counting the rows in $assess_cats
     $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
@@ -248,9 +220,7 @@ if($is_module_admin || $admin_access) {
 
         $num_categories = $_POST["new_num_cats"];
         // the insert to the database code goes here
-        if($debug) {
-            echo("num cats = $num_categories<BR>");
-        }
+
         // Get the  data from the form
 
         for ($cat = 1; $cat <= $num_categories; $cat++) {
@@ -261,11 +231,6 @@ if($is_module_admin || $admin_access) {
             $id = "factor_name" . $cat;
             $a_section_factor[$cat] = $_POST[$id];
 
-            if($debug) {
-                echo("Section: $cat : $a_section_q[$cat]<BR>\n");
-                echo("  weight: $a_section_weight[$cat]<BR>\n");
-                echo("  factor: $a_section_factor[$cat]<BR>\n");
-            }
             $id = "numqs" . $cat;
             $numqs = $_POST[$id];
 
@@ -315,19 +280,7 @@ if($is_module_admin || $admin_access) {
             $a_section_feedback[$cat] = $show_feedback_flag;
         }
 
-        if($debug) {
-            print_r3("a_section_q", $a_section_q);
-            print_r3("a_questions", $a_questions);
-            print_r3("a_section_weight", $a_section_weight);
-            print_r3("a_section_factor", $a_section_factor);
-            print_r3("a_section_feedback", $a_section_feedback);
-            print_r3("a_num_questions", $a_num_questions);
-            print_r3("a_num_responses", $a_num_responses);
-            print_r3("a_q_weights", $a_q_weights);
-            print_r3("a_question_texts", $a_question_texts);
-            print_r3("a_question_marks", $a_question_marks);
 
-        }
 
         // Delete the data in the two table and then add the new data
         $query = "TRUNCATE $assess_cats";
@@ -367,9 +320,7 @@ if($is_module_admin || $admin_access) {
                          factor='$a_section_factor[$cat]',
                          get_feedback='$a_section_feedback[$cat]'
                          ;";
-            if($debug){
-                echo("$query <BR>");
-            };
+
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
@@ -395,9 +346,7 @@ if($is_module_admin || $admin_access) {
                     $query .= ", text$r='$question_text', mark$r='$question_mark' ";
                 }
                 $query .= ";";
-                if($debug){
-                    echo("$query <BR>");
-                };
+
                 try {
                     $results = $db->query($query);
                 } catch (PDOException $ex) {
@@ -417,9 +366,7 @@ if($is_module_admin || $admin_access) {
             $query .= ", qid='$last_num'";
             $query .= ", question='Feedback Comments:'";
             $query .= ", entries='0'";
-            if($debug){
-                echo("$query <BR>");
-            };
+
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
@@ -432,22 +379,7 @@ if($is_module_admin || $admin_access) {
             }
         }
 
-        if($ddebug){
-            echo("<BR><b>Dump of the questions table $assessqs_year</B><BR>");
-            echo("<PRE>");
-            $query = "SELECT * FROM $assessqs_year";
-            $results = $db->query($query)->fetchAll();
-            var_export($results);
-            echo("</PRE>");
 
-            echo("<BR><B>Dump of the question sections (cats) table $assess_cats</B><BR>");
-            echo("<PRE>");
-            $query = "SELECT * FROM $assess_cats";
-            $results = $db->query($query)->fetchAll();
-            var_export($results);
-            echo("</PRE>");
-
-        }
         $display_block .= "<h2>Done ... carry on making changes if you like</H2>";
 
     }// end of if ($POST_OP == "commit")
@@ -484,16 +416,8 @@ the 'Weight factor' is used achieve this while giving <em>sensible</em> numbers 
     $display_block .= "
     <div id='sticker'>0.0</div>";
 
-    if($debug){
-        $debug_call = '&d';
-    }else{
-        $debug_call = '';
-    }
-    if($ddebug){
-        // double debug - shows all ofthe _REQUEST array
-        $debug_call = '&dd';
-    }
-    $display_block .= "<form name='qs' method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$assesspart$debug_call'>\n";
+
+    $display_block .= "<form name='qs' method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$assesspart'>\n";
 //This one has the validation
 //$display_block .="<form method='post' onsubmit='return validate_form();' action='$_SERVER[PHP_SELF]?module1=$module1&year_begin=$year_begin' '>\n";
 

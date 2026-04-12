@@ -14,7 +14,7 @@
 (@include_once("./show_minor_part_feedback_form.php")) or die("Cannot include show_minor_part_feedback<BR>");
 (@include_once("./markstore_functions.php")) or die("Cannot include markstore_function.php<BR>");
 
-
+$debug_write = false;
 $staff_username = "unknown";
 if(array_key_exists('REMOTE_USER',$_SERVER)){
     $staff_username = get_server_username();
@@ -35,7 +35,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$debug_write = false;
 function download_link($file_to_download, $saveas_filename){
     $html = "<BR>\n";
     $self_link = htmlspecialchars($_SERVER['PHP_SELF']);
@@ -358,18 +357,7 @@ if ($saving == 2) {
             echo("file: $zip_file_name_tempnam could not be found<BR>");
         }
     }
-    #echo("<a href=\"$archiveName\" download=\"$zip_filename\">Download zip of all pdfs</a><BR>");
-    #header("Pragma: public");
-    #header("Expires: 0");
-    #header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-    #header("Cache-Control: private",false);
-    #header("Content-Type: application/zip");
-    #header("Content-Disposition: attachment; filename=".$archiveName );
-    #header("Content-Transfer-Encoding: binary");
-    #header("Content-Length: ".filesize($archiveName));
-    #readfile("$archiveName");
 
-    //download_zip($zip_file_name_tempnam,$zip_filename);
 
 }
 $end_time = microtime(true);

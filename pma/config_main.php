@@ -70,7 +70,7 @@ switch ($school) {
     $password   = $_creds['env']['pass'];
     break;
   default:
-    echo("School not defined. <BR>Go to the <A href='../index_pma.html'>index</A>");
+    echo("The School is not defined. <BR>Go to the <A href='../index_pma.html'>index</A>");
     exit();
 }
 
@@ -131,6 +131,7 @@ if($dbName){
     }
     */
    $num_days = 30;
+   /*
    setcookie($PMA_SCHOOL_COOKIE_NAME, $school, [
        'expires'  => time() + (86400 * $num_days),
        'path'     => '/',
@@ -138,6 +139,8 @@ if($dbName){
        'httponly' => true,
        'samesite' => 'Lax',
    ]);
+   */
+
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
@@ -146,19 +149,5 @@ if($dbName){
    }
 }
 
-if($debug){
-    echo("__ADMIN_DIR__ ".__ADMIN_DIR__."<BR>");
-    echo("__STAFF_DIR__ ".__STAFF_DIR__."<BR>");
-    echo("__STUDENT_DIR__ ".__STUDENT_DIR__."<BR>");
-    echo("__PROPS_DIR__ ".__PROPS_DIR__."<BR>");
-    echo("DB_SCHOOL ".DB_SCHOOL."<BR>");
-    echo("db_name ".$dbName."<BR>");
-    echo("Session status: ".session_status()."<BR>");
-    echo("<PRE>");
-    echo("Cookies");
-    print_r($_COOKIE);
-    echo("Session");
-    print_r($_SESSION);
-    echo("</PRE>");
-}
+
 
