@@ -180,7 +180,7 @@ function admin_functions_block($db,$pm_id,$project_allocated,$num_parts,$p_descr
     $admin_func_block .= "<UL>";
     for ($i = 1; $i <= $num_parts; $i++) {
         $p_desc = $p_description[$i];
-        $admin_func_block .= "<LI><a href=\"" . $locationdir . "admin2/setup_questions2.php?pm_id=$pm_id&part=$i\">Setup Part $i ($p_desc) questions for $year_begin-$year_end</a></LI>\n";
+        $admin_func_block .= "<LI><a href=\"" . $locationdir . "admin2/setup_questions3.php?pm_id=$pm_id&part=$i\">Setup Part $i ($p_desc) questions for $year_begin-$year_end</a></LI>\n";
     }
     $admin_func_block .= "</UL>";
 
@@ -188,7 +188,7 @@ function admin_functions_block($db,$pm_id,$project_allocated,$num_parts,$p_descr
     $admin_func_block .= "<UL>";
     for ($i = 1; $i <= $num_parts; $i++) {
         $p_desc = $p_description[$i];
-        $admin_func_block .= "<LI><a href=\"" . $locationdir . "admin2/setup_questions2_copy.php?pm_id=$pm_id&part=$i\">Replace Part $i ($p_desc) questions for $year_begin-$year_end</a></LI>\n";
+        $admin_func_block .= "<LI><a href=\"" . $locationdir . "admin2/setup_questions3_copy.php?pm_id=$pm_id&part=$i\">Replace Part $i ($p_desc) questions for $year_begin-$year_end</a></LI>\n";
     }
     $admin_func_block .= "</UL>";
 
