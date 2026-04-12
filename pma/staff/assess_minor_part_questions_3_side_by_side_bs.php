@@ -1,34 +1,34 @@
 <?php
 ob_start(); // Buffer all output — required so mPDF can set Content-Type headers even if something echoes earlier
 // Turn off all error reporting
-(@include_once("./set_dir_staff.php")) OR die("Cannot find this file to include: set_dir_staff.php<BR>");
-(@include_once("./config.php")) OR die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
-(@include_once("./setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("./connect_pdo.php")) OR die("Cannot connect to the database<BR>");
+(@include_once('./set_dir_staff.php')) or die('Cannot find this file to include: set_dir_staff.php<BR>');
+(@include_once('./config.php')) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
+(@include_once('./setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('./connect_pdo.php')) or die('Cannot connect to the database<BR>');
 
 //if (array_key_exists('pm_id', $_REQUEST)==false){ $_REQUEST['pm_id']=null; }
 //$pm_id=$_REQUEST['pm_id'];
 
-(@include_once("./setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("./staff_functions.php")) OR die("Cannot include staff_function.php<BR>");
-(@include_once("./show_feedback_form.php")) OR die("Cannot include show_feedback<BR>");
-(@include_once("./show_minor_part_feedback_form.php")) OR die("Cannot include show_minor_part_feedback<BR>");
-(@include_once("./admin2/admin_functions.php")) OR die("Cannot include admin functions<BR>");
-(@include_once("./show_mark_questions2_bs.php")) OR die("Cannot include show_mark_questions2<BR>");
-(@include_once("./markstore_functions.php")) OR die("Cannot include markstore_function.php<BR>");
-(@include_once("./pdo_query_functions.php")) OR die("Cannot include pdo_query_functions<BR>");
-(@include_once("./staff_functions.php")) OR die("Cannot include staff_function.php<BR>");
+(@include_once('./setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./staff_functions.php')) or die('Cannot include staff_function.php<BR>');
+(@include_once('./show_feedback_form.php')) or die('Cannot include show_feedback<BR>');
+(@include_once('./show_minor_part_feedback_form.php')) or die('Cannot include show_minor_part_feedback<BR>');
+(@include_once('./admin2/admin_functions.php')) or die('Cannot include admin functions<BR>');
+(@include_once('./show_mark_questions2_bs.php')) or die('Cannot include show_mark_questions2<BR>');
+(@include_once('./markstore_functions.php')) or die('Cannot include markstore_function.php<BR>');
+(@include_once('./pdo_query_functions.php')) or die('Cannot include pdo_query_functions<BR>');
+(@include_once('./staff_functions.php')) or die('Cannot include staff_function.php<BR>');
 
-$staff_username = "unknown";
-if(array_key_exists('REMOTE_USER',$_SERVER)){
+$staff_username = 'unknown';
+if (array_key_exists('REMOTE_USER', $_SERVER)) {
     $staff_username = get_server_username();
-}else{
-    if(isset($_SESSION['USERNAME'])){
+} else {
+    if (isset($_SESSION['USERNAME'])) {
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaffB($db, $staff_username, $staff_names) == false){
-    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+if (IsStaffB($db, $staff_username, $staff_names) == false) {
+    echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
     exit();
 }
@@ -67,9 +67,9 @@ if (array_key_exists('o_f', $_GET) == false) {
 }
 //$module1 = $_GET['module1'];
 //$year_begin = $_GET['year_begin'];
-$display_block = "";
-$sid = $_GET["sid"];
-$project_id = $_GET["pid"];
+$display_block = '';
+$sid = $_GET['sid'];
+$project_id = $_GET['pid'];
 $assesspart = $_GET['part'];
 $who = $_GET['who'];
 $marker_id = $_GET['marker_id'];
@@ -82,10 +82,10 @@ $show_overall_feedback_flag = $_GET['o_f'];
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
-    $POST_OP = "";
+    $POST_OP = '';
 }
 if (isset($_POST['disagree'])) {
-    $POST_OP = "disagree";
+    $POST_OP = 'disagree';
 }
 if (array_key_exists('agreed', $_POST)) {
     $agreed_combination = $_POST['agreed'];
@@ -94,15 +94,15 @@ if (array_key_exists('agreed', $_POST)) {
     $reason_text = htmlentities($reason_text);
     $reason_text = addslashes($reason_text);
 } else {
-    $agreed_combination = "9999";
+    $agreed_combination = '9999';
     $overwritten_mark = -1;
-    $reason_text = "";
+    $reason_text = '';
 
     $agreed_combination = GetMarkMethodString($db, $sid, $assesspart, $markstore_totals);
     $marker_contrib = GetMarkMethodAsArray($agreed_combination);
-    if($marker_contrib[4] == 1){
+    if ($marker_contrib[4] == 1) {
         // Get the mark
-        $overwritten_mark =GetReturnedMark($db, $sid, $assesspart, $markstore_totals);
+        $overwritten_mark = GetReturnedMark($db, $sid, $assesspart, $markstore_totals);
     }
     $reason_text = GetMarkReasonString($db, $sid, $assesspart, $markstore_totals);
 }
@@ -111,11 +111,11 @@ $marker_contrib = GetMarkMethodAsArray($agreed_combination);
 
 // Check all the POST values
 // Check if feedback text is base64 encoded, and decode as necessary
-foreach ($_POST as $key => $value){
-    if(str_contains($key, "feedback")){
+foreach ($_POST as $key => $value) {
+    if (str_contains($key, 'feedback')) {
         // decode, returns "false" if it is NOT a base 64 string
         $decoded_value = base64_decode($value, true);
-        if($decoded_value !== false){
+        if ($decoded_value !== false) {
             // use the decoded string
             // replace the $_POST value
             $_POST[$key] = $decoded_value;
@@ -123,14 +123,14 @@ foreach ($_POST as $key => $value){
     }
 }
 
-$project_marking_page = "projectmarking_bs.php";
+$project_marking_page = 'projectmarking_bs.php';
 
 // definitions for each part
 // Questions table
 $assessqs_year = $assessqs[$assesspart];
 // Questions categories table
 $assess_cats = $assessqs_cats[$assesspart];
-// description 
+// description
 $assesstype_text = $p_description[$assesspart];
 // markbook
 $who = 1;
@@ -158,8 +158,8 @@ try {
 
 $num_categories = $results->rowCount();
 
-$marker1 = " (marker)";
-$marker2 = " (marker)";
+$marker1 = ' (marker)';
+$marker2 = ' (marker)';
 
 //
 // Get title and supervisor
@@ -179,7 +179,7 @@ try {
 $recs = $results->fetch();
 
 $master_id = $recs['masterid'];
-if($master_id != null) {
+if ($master_id != null) {
     $master_id = stripslashes($master_id);
 }
 $title = stripslashes($recs['title']);
@@ -187,25 +187,25 @@ $supervisor_id = stripslashes($recs['supervisor_id']);
 $second_marker_id = stripslashes($recs['second_marker_id']);
 $student_inactive = $recs['inactive'];
 
-$supervisor = GetStaffNameFromID($db, $supervisor_id, $staff2, NULL);
+$supervisor = GetStaffNameFromID($db, $supervisor_id, $staff2, null);
 
 $i = $assesspart;
 $j = 1;
-$marker_entry = "marker_p$i" . "m$j" . "_id";
+$marker_entry = "marker_p$i" . "m$j" . '_id';
 $marker_id = $recs[$marker_entry];
-$marker_name = GetStaffNameFromID($db, $marker_id, $staff2, NULL);//. " ($marker_entry, $marker_id)";
+$marker_name = GetStaffNameFromID($db, $marker_id, $staff2, null);//. " ($marker_entry, $marker_id)";
 $marker_names[$j] = $marker_name;
 
 $j = 2;
-$marker_entry = "marker_p$i" . "m$j" . "_id";
+$marker_entry = "marker_p$i" . "m$j" . '_id';
 $second_marker_id = $recs[$marker_entry];
-$second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff2, NULL);
+$second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff2, null);
 $marker_names[$j] = $second_marker_name;
 
 $j = 3;
-$marker_entry = "marker_p$i" . "m$j" . "_id";
+$marker_entry = "marker_p$i" . "m$j" . '_id';
 $third_marker_id = $recs[$marker_entry];
-$third_marker_name = GetStaffNameFromID($db, $third_marker_id, $staff2, NULL);//. " ($marker_entry, $marker_id)";
+$third_marker_name = GetStaffNameFromID($db, $third_marker_id, $staff2, null);//. " ($marker_entry, $marker_id)";
 $marker_names[$j] = $third_marker_name;
 
 //
@@ -246,10 +246,10 @@ try {
     exit();
 }
 $recs = $results->fetch();
-if($recs) {
+if ($recs) {
     $mark1 = $recs['total'];
     $locked = $recs['locked'];
-}else{
+} else {
     $mark1 = 0;
     $locked = 0;
 }
@@ -270,10 +270,10 @@ try {
 }
 $recs = $results->fetch();
 
-if($recs) {
+if ($recs) {
     $mark2 = $recs['total'];
     $locked = $recs['locked'];
-}else{
+} else {
     $mark2 = 0;
     $locked = 0;
 }
@@ -293,16 +293,16 @@ try {
     exit();
 }
 $recs = $results->fetch();
-if($recs){
+if ($recs) {
     $mark3 = $recs['total'];
     $locked = $recs['locked'];
-}else{
+} else {
     $mark3 = 0;
     $locked = 0;
 }
 
-if ($POST_OP == "commit") {
-    $display_block .= "<h2>Submitting the changes to the database ...</H2>";
+if ($POST_OP == 'commit') {
+    $display_block .= '<h2>Submitting the changes to the database ...</H2>';
 
     // Get the data from the form
     for ($who = 1; $who <= 3; $who++) {
@@ -327,9 +327,9 @@ if ($POST_OP == "commit") {
 
             $weight_pc = $cat_data['weight_percent'];
             $factor = $cat_data['factor'];
-            if(array_key_exists('get_feedback',$cat_data)==false){
+            if (array_key_exists('get_feedback', $cat_data) == false) {
                 $show_cat_feedback = 1;
-            }else{
+            } else {
                 $show_cat_feedback = $cat_data['get_feedback'];
             }
             //$id = "sec" . $who . $cat;
@@ -344,18 +344,18 @@ if ($POST_OP == "commit") {
                 $rmarks[$i] = 0;
             }
 
-            $id = "numqs" . $who . $cat;
+            $id = 'numqs' . $who . $cat;
             $numqs = $_POST[$id];
             $marktot = 0.0;
-            $mark_query_string = "";
-            $marks_array = array();
+            $mark_query_string = '';
+            $marks_array = [];
             for ($i = 1; $i < $numqs; $i++) {
                 //$id = "q$who$cat-$i";
                 //$question = addslashes($_POST[$id]);
 
                 $q_weight = 1.0;
                 $is_numeric_name = $is_numeric;//$_POST['is_numeric_name'];
-                if($is_numeric_name = 1) {
+                if ($is_numeric_name = 1) {
                     $id = "qw$who$cat-$i";
                     $q_weight_pc = $_POST[$id];
                     $q_weight = $q_weight_pc * 0.01;
@@ -371,14 +371,14 @@ if ($POST_OP == "commit") {
                 $key = "C$cat" . "Q$i";
                 $marks_array[$key] = $rmark_w;
             }
-            $id = "feedback" . $who . $cat;
-            if(array_key_exists($id,$_POST) and $show_cat_feedback == 1) {
+            $id = 'feedback' . $who . $cat;
+            if (array_key_exists($id, $_POST) and $show_cat_feedback == 1) {
                 $feedback_text = $_POST[$id];
                 $feedback_text = convert_smart_quotes($feedback_text);
                 $feedbacks[$cat] = addslashes($feedback_text);
                 $mark_query_string .= "C$cat" . "Feedback='$feedbacks[$cat]',";
-            }else{
-                $feedback_text = "";
+            } else {
+                $feedback_text = '';
             }
 
             $marktot = $marktot * $factor;
@@ -414,20 +414,20 @@ if ($POST_OP == "commit") {
 
             if ($get_marks_res[0] == 0) {
                 $query = "insert $markstore set SID='$sid', $mark_query_string
-                         C$cat" . "total" . "=$marktot, total=$mark_total_all_cats
+                         C$cat" . 'total' . "=$marktot, total=$mark_total_all_cats
                          ";
 
-                $CXtotal = "C$cat" . "total";
-                $Ctotal = "total";
+                $CXtotal = "C$cat" . 'total';
+                $Ctotal = 'total';
                 //$CXFeedback = "C$cat" . "Feedback";
                 $query2 = "INSERT $markstore SET SID=:sid, $CXtotal=:cat_total, total=:all_cats_total";
 
-                $data =array(
+                $data = [
                     $CXtotal => $marktot,
                     $Ctotal => $mark_total_all_cats,
                     //$CXFeedback => $feedback_text,
                     'sid' => $sid
-                );
+                ];
                 // tag on the marks
                 foreach ($marks_array as $key => $value) {
                     $data[$key] = $value;
@@ -435,25 +435,25 @@ if ($POST_OP == "commit") {
                 $results = perform_insert_prepared_query($db, $markstore, $data);
             } else {
                 $query = "update $markstore set $mark_query_string
-                         C$cat" . "total" . "=$marktot, total=$mark_total_all_cats
+                         C$cat" . 'total' . "=$marktot, total=$mark_total_all_cats
                          where SID='$sid'";
 
-                $CXtotal = "C$cat" . "total";
-                $Ctotal = "total";
+                $CXtotal = "C$cat" . 'total';
+                $Ctotal = 'total';
                 //$CXFeedback = "C$cat" . "Feedback";
                 $query2 = "UPDATE $markstore SET $CXtotal=:cat_total, total=:all_cats_total WHERE SID=:sid ";
-                $data =array(
+                $data = [
                     $CXtotal => $marktot,
                     $Ctotal => $mark_total_all_cats,
                     //$CXFeedback => $feedback_text
-                );
+                ];
                 // tag on the marks
                 foreach ($marks_array as $key => $value) {
                     $data[$key] = $value;
                 }
-                $where_data =array(
+                $where_data = [
                     'sid' => $sid
-                );
+                ];
                 $results = perform_update_prepared_query($db, $markstore, $data, $where_data);
             }
             //mysql_query($action) or die(" Unable to add mark data to the table $markstore. <BR /> Query = $action");
@@ -467,14 +467,13 @@ if ($POST_OP == "commit") {
 
                 exit();
             }
-
         }// $cat
         $mark_total[$who] = $mark_total_all_cats;
         $tot = $mark_total[$who];
 
         $overall_feedback_id = "overall_feedback$who";
 
-        if(array_key_exists($overall_feedback_id,$_POST) and $show_overall_feedback_flag == 1){
+        if (array_key_exists($overall_feedback_id, $_POST) and $show_overall_feedback_flag == 1) {
             $overall_feedback_text = $_POST[$overall_feedback_id];
             $overall_feedback_text = convert_smart_quotes($overall_feedback_text);
             $overall_feedback_text = addslashes($overall_feedback_text);
@@ -509,7 +508,7 @@ if ($POST_OP == "commit") {
         //
         $mark_agreed_total = $overwritten_mark;
     }
-    $mark_agreed_total_s = sprintf("%5.2f", (float)$mark_agreed_total);
+    $mark_agreed_total_s = sprintf('%5.2f', (float) $mark_agreed_total);
 
     // Enter the marks in markstore totals
     $query = "select locked from $markstore_totals where SID='$sid'";
@@ -543,7 +542,6 @@ if ($POST_OP == "commit") {
 
             exit();
         }
-
     } else {
         $query = "insert $markstore_totals set SID='$sid', retmark$assesspart=$mark_agreed_total,  locked=0, mark_method$assesspart='$agreed_combination', mark_reason$assesspart='$reason_text' ";
         //mysql_query($action) or die(" Unable to add mark data to the database $markstore_totals. <BR>Query: $action");
@@ -557,11 +555,10 @@ if ($POST_OP == "commit") {
 
             exit();
         }
-
     }
 
     for ($who = 1; $who <= 3; $who++) {
-        $mark_total_s[$who] = sprintf("%5.1f", $mark_total[$who]);
+        $mark_total_s[$who] = sprintf('%5.1f', $mark_total[$who]);
     }
 
     $display_block = "<div class='container'>";
@@ -609,18 +606,16 @@ if ($POST_OP == "commit") {
         or
         <a target = \"_self\" href = \"./$project_marking_page?pm_id=$pm_id&user=1\" style = \"color: dimgray;\" > User marking list</a >
         </span>\n";
-    $display_block .= "</div>";// close class='container-fluid'
-} else if ($POST_OP == "disagree") {// end of if ($POST_OP == "commit")
-    $display_block .= "<h2>Markers cannot agree - setting-up requirement for third marker ...</H2>";
+    $display_block .= '</div>';// close class='container-fluid'
+} elseif ($POST_OP == 'disagree') {// end of if ($POST_OP == "commit")
+    $display_block .= '<h2>Markers cannot agree - setting-up requirement for third marker ...</H2>';
     $display_block .= SetThirdMarkerRequired($db, $sid, $assesspart, $markstore_totals);
     $display_block .= "<span><BR><a target=\"_self\" href=\"./$project_marking_page?pm_id=$pm_id#$username\" style=\"color: dimgray;\">Back to marking list</a></span>\n";
-
 } else {// end of if ($POST_OP == "disagree")
-
     //$locked=1;
     if ($locked == 1 || $force_pdf == 1) {
         //$display_block = "<h1>Project Report Mark Sheet (<span class=\"red\">Marked and Locked</span>)</h1>";
-        $display_block = " ";
+        $display_block = ' ';
         //$display_block .= show_minor_part_feedback_form($sid,$markstore,$assessqs_year,$student_name,$username,$title,$supervisor,$second_marker_name,$project_id,$level,$assesstype_text,$assess_cats,$mark_max,$mark_pc);
         //$display_block .= show_feedback_form($sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs_year,$student_name,$username,$title,$supervisor,$second_marker_name,$marker_name,$project_id,$assesstype_text,$assess_cats,$mark_max,$mark_pc,$programme,$assesspart,$assesstype_text, $module_short_description, $is_numeric);
         $current_mark = GetTotalForPart($db, $sid, $assesspart, $markstore_totals);
@@ -637,13 +632,14 @@ if ($POST_OP == "commit") {
         } else {
             $display_block .= show_feedback_form3($db, $sid, $markstore_list[1], $markstore_list[2], $markstore_list[3], $markstore_totals, $assessqs_year, $student_name, $username, $title, $supervisor, $second_marker_name, $third_marker_name, $project_id, $assesstype_text, $assess_cats, $mark_max, $mark_pc, $programme, $assesspart, $assesstype_text, $module_short_description, $is_numeric);
         }
-        if($show_overall_feedback_flag == 1) {
+        if ($show_overall_feedback_flag == 1) {
             if ($num_markstores == 2) {
                 $display_block .= show_overall_feedback_form2($db, $sid, $markstore_list[1], $markstore_list[2], $markstore3, $assesstype_text, $min_feedback_words);
-            }else{
+            } else {
                 $display_block .= show_overall_feedback_form3($db, $sid, $markstore_list[1], $markstore_list[2], $markstore_list[3], $assesstype_text, $min_feedback_words);
-            }}
-        $POST_OP = "donothing";
+            }
+        }
+        $POST_OP = 'donothing';
 
         if ($topdf > 0 || $force_pdf == 1) {
             ob_end_clean(); // Discard any buffered HTML so mPDF can send PDF headers cleanly
@@ -658,31 +654,29 @@ if ($POST_OP == "commit") {
             if ($topdf == 1 || $topdf == 2) {
                 $mpdf->Output($safe_filename, 'D');
                 exit();
-            } else if ($topdf == 3) {
+            } elseif ($topdf == 3) {
                 // Email to student
                 // Done in file projectmarking_civl_email_feedback.php
             }
         }
         $display_block .= "<a href=\"$_SERVER[PHP_SELF]?sid=$sid&pid=$project_id&module1=$module1&year_begin=$year_begin&assesstype=$assesstype&topdf=1&force_pdf=1&isnumeric=$is_numeric&o_f=$show_overall_feedback_flag\">Save to PDF</A><BR />";
-
     } else {// end of if locked
-
         // No need to have an else as the rest is always done.
-        $forwhom = "the supervisor only: " . $supervisor;
+        $forwhom = 'the supervisor only: ' . $supervisor;
         if ($who == 1) {
-            $forwhom = "the supervisor : " . $supervisor;
-        } else if ($who == 2) {
-            $forwhom = "the second marker : " . $second_marker_name;
-        } else if ($who == 3) {
-            $forwhom = "both the subervisor: " . $supervisor . " and second marker : " . $second_marker_name;
+            $forwhom = 'the supervisor : ' . $supervisor;
+        } elseif ($who == 2) {
+            $forwhom = 'the second marker : ' . $second_marker_name;
+        } elseif ($who == 3) {
+            $forwhom = 'both the subervisor: ' . $supervisor . ' and second marker : ' . $second_marker_name;
         }
 
-        $instructions = "<h4>This form is for comparing marks from THREE markers - only when the orginal two could not agree.</h4>";
+        $instructions = '<h4>This form is for comparing marks from THREE markers - only when the orginal two could not agree.</h4>';
         $instructions .= "\n<h6>\nThis form should be used to compare the three markers' responses to the questions and to ensure that the final mark is acceptable for the <em>$assesstype_text</em>.</h6> \n";
-        $final_total_diff = sprintf("%5.1f", max(abs($mark1 - $mark2), abs($mark1 - $mark3), abs($mark2 - $mark3)));
-        $mark1_s = sprintf("%5.1f", $mark1);
-        $mark2_s = sprintf("%5.1f", $mark2);
-        $mark3_s = sprintf("%5.1f", $mark3);
+        $final_total_diff = sprintf('%5.1f', max(abs($mark1 - $mark2), abs($mark1 - $mark3), abs($mark2 - $mark3)));
+        $mark1_s = sprintf('%5.1f', $mark1);
+        $mark2_s = sprintf('%5.1f', $mark2);
+        $mark3_s = sprintf('%5.1f', $mark3);
         //$instructions .= "<BR>1st Marker mark: $mark1_s% ";
         //$instructions .= "<BR>2nd Marker mark: $mark2_s% ";
         //$instructions .= "<BR>3rd Marker mark: $mark3_s% ";
@@ -730,8 +724,8 @@ if ($POST_OP == "commit") {
 
         $display_block .= "<div class='row'><div class='col-sm-2'><strong>Current agreed mark:</strong></div><div class='col-sm-6'>$current_mark &nbsp;($agreed_combination)</div></div>";
 
-        $display_block .= "</div>";// close of card-body
-        $display_block .= "</div>";// close of card
+        $display_block .= '</div>';// close of card-body
+        $display_block .= '</div>';// close of card
 
         $display_block .= "<div style='z-index: 100;' id=\"sticker_1\">0.0</div>";
         $display_block .= "<div style='z-index: 100;' id=\"sticker_2\">0.0</div>";
@@ -784,9 +778,9 @@ if ($POST_OP == "commit") {
                 $description = $cat_data['description'];
                 $weight_pc = $cat_data['weight_percent'];
                 $factor = $cat_data['factor'];
-                if(array_key_exists('get_feedback',$cat_data)==false){
+                if (array_key_exists('get_feedback', $cat_data) == false) {
                     $show_cat_feedback = 1;
-                }else{
+                } else {
                     $show_cat_feedback = $cat_data['get_feedback'];
                 }
                 // Get the questions for this category
@@ -820,16 +814,16 @@ if ($POST_OP == "commit") {
                     $questions[$q_count] = $qs_list['question'];
                     $num_entries[$q_count] = $qs_list['entries'];
                     $q_weight = $qs_list['weight'];
-                    if(!is_numeric($q_weight)){
+                    if (!is_numeric($q_weight)) {
                         $q_weight = 100;
                     }
                     $q_weights[$q_count] = $q_weight;
 
                     for ($r_count = 1; $r_count <= $num_entries[$q_count]; $r_count++) {
-                        $r_text = "text" . $r_count;
+                        $r_text = 'text' . $r_count;
                         $response_texts[$q_count][$r_count] = $qs_list[$r_text];
                         $value = $response_texts[$q_count][$r_count];
-                        $r_mark = "mark" . $r_count;
+                        $r_mark = 'mark' . $r_count;
                         $response_marks[$q_count][$r_count] = $qs_list[$r_mark];
                         //$display_block .= "[q_count][r_count] = [$q_count][$r_count]<BR>";
                     }
@@ -838,7 +832,7 @@ if ($POST_OP == "commit") {
                 $markstore = $markstores[$assesspart][$whois];
 
                 if ($is_numeric == 1) {
-                    $display_block .= show_mark_questions_numeric2_bs($db, $cat, $description, $weight_pc, $factor, $show_cat_feedback, $num_questions,  $questions, $num_entries, $q_weights,$response_texts, $response_marks, $markstore, $sid, $whois, $min_feedback_words);
+                    $display_block .= show_mark_questions_numeric2_bs($db, $cat, $description, $weight_pc, $factor, $show_cat_feedback, $num_questions, $questions, $num_entries, $q_weights, $response_texts, $response_marks, $markstore, $sid, $whois, $min_feedback_words);
                 } else {
                     $display_block .= show_mark_questions2_bs($db, $cat, $description, $weight_pc, $factor, $show_cat_feedback, $num_questions, $questions, $num_entries, $response_texts, $response_marks, $markstore, $sid, $whois, $min_feedback_words);
                 }
@@ -846,12 +840,12 @@ if ($POST_OP == "commit") {
                 $display_block .= "<BR>\n";
             }
             //$show_overall_feedback_flag = 1;
-            if($show_overall_feedback_flag == 1) {
+            if ($show_overall_feedback_flag == 1) {
                 $display_block .= show_overall_feedback2_bs($db, $assesstype_text, $markstore, $sid, $whois, $min_feedback_words);
             }
 
             // Right Display block
-           // $display_block .= "</div>\n"; // End of left / right cell
+            // $display_block .= "</div>\n"; // End of left / right cell
             //if($whois < 3){
             //    $marker_num = $whois+1;
             //    $display_block .= "<div class=\"cell\" id=\"cell3\">\n<span class=\"markerName\">$marker_num $second_marker_name</span> <BR>";
@@ -859,7 +853,7 @@ if ($POST_OP == "commit") {
             // Right Display block
             $display_block .= "</div>\n"; // End of left / right col-6
             if ($whois < 3) {
-                $next_marker_name = $marker_names[$whois+1];
+                $next_marker_name = $marker_names[$whois + 1];
                 $display_block .= "<div class='col-4'>\n<span class=\"markerName\">$next_marker_name</span> <BR>";
             }
         } // $whois
@@ -867,18 +861,18 @@ if ($POST_OP == "commit") {
 
         $display_block .= "</div>\n<!-- end of container -->\n"; // End of container
 
-/*
-        $display_block .= "<div class='row feedbackSection'>";
-        $display_block .= "<div class='col-2'>$assesstype_text marks:</div>";
-        $display_block .= "<div class='col-2'>First Marker: <span class='feedbackTotalMark' id='totalmarks1'> </span></div>";
-        $display_block .= "<div class='col-2'>Second Marker: <span class='feedbackTotalMark' id='totalmarks2'> </span></div>";
-        $display_block .= "<div class='col-2'>Second Marker: <span class='feedbackTotalMark' id='totalmarks3'> </span></div>";
-        $display_block .= "<div class='col-4 feedbackSection'>Maximum difference: <span class='feedbackTotalMark' id='totalmarksdiff'> </span></div>";
-        $display_block .= "</div>"; // close row
-        $display_block .= "\n<span class=\"combinationAgreed\">\n(This is $mark_pc% of the module mark)\n</span>\n</div><BR>\n";
-*/
-        $is_checked = "checked";
-        $is_checked = "";
+        /*
+                $display_block .= "<div class='row feedbackSection'>";
+                $display_block .= "<div class='col-2'>$assesstype_text marks:</div>";
+                $display_block .= "<div class='col-2'>First Marker: <span class='feedbackTotalMark' id='totalmarks1'> </span></div>";
+                $display_block .= "<div class='col-2'>Second Marker: <span class='feedbackTotalMark' id='totalmarks2'> </span></div>";
+                $display_block .= "<div class='col-2'>Second Marker: <span class='feedbackTotalMark' id='totalmarks3'> </span></div>";
+                $display_block .= "<div class='col-4 feedbackSection'>Maximum difference: <span class='feedbackTotalMark' id='totalmarksdiff'> </span></div>";
+                $display_block .= "</div>"; // close row
+                $display_block .= "\n<span class=\"combinationAgreed\">\n(This is $mark_pc% of the module mark)\n</span>\n</div><BR>\n";
+        */
+        $is_checked = 'checked';
+        $is_checked = '';
 
         $display_block .= "<div class='card mb-3 border-danger text-bg-light'>\n";
         $display_block .= "<div class='card-header'><h5>Options for three markers of the Report :</h5></div>\n";
@@ -889,7 +883,7 @@ if ($POST_OP == "commit") {
         $display_block .= "<div class='col-2'>Second Marker: <span class='feedbackTotalMark' id='totalmarks2'> </span></div>";
         $display_block .= "<div class='col-2'>Second Marker: <span class='feedbackTotalMark' id='totalmarks3'> </span></div>";
         $display_block .= "<div class='col-4' style='color:#0c4128'>Maximum difference: <span class='feedbackTotalMark' id='totalmarksdiff'> </span></div>";
-        $display_block .= "</div>"; // close row
+        $display_block .= '</div>'; // close row
         $display_block .= "<p><span class='combinationAgreed'>\n(This is $mark_pc% of the module mark)\n</span>\n</p>\n";
 
         $display_block .= "<div class='row combinationHeader'>";
@@ -897,7 +891,7 @@ if ($POST_OP == "commit") {
         $display_block .= "<div class='col-2'>Difference</div>";
         $display_block .= "<div class='col-2'>Mean</div>";
         $display_block .= "<div class='col-2'>Select</div>";
-        $display_block .= "</div>"; // close row
+        $display_block .= '</div>'; // close row
 
         // 1 & 2
         $display_block .= "<div class='row combinationAgreed'>";
@@ -905,13 +899,13 @@ if ($POST_OP == "commit") {
         $display_block .= "<div class='col-2'><span class='feedbackTotalMarkX' id=diff1> </span></div>";
         $display_block .= "<div class='col-2'><span class='feedbackTotalMarkX' id=mean1> </span></div>";
         if (($marker_contrib[1] == 1) && ($marker_contrib[2] == 1)) {
-            $is_checked = "checked";
+            $is_checked = 'checked';
         } else {
-            $is_checked = "";
+            $is_checked = '';
         }
-        $select_block   = "<input type='radio' id='idagreed1' name='agreed' value='0011' $is_checked>";
+        $select_block = "<input type='radio' id='idagreed1' name='agreed' value='0011' $is_checked>";
         $display_block .= "<div class='col-2'>$select_block</div>";
-        $display_block .= "</div>"; // close row
+        $display_block .= '</div>'; // close row
 
         // 1 & 3
         $display_block .= "<div class='row combinationAgreed'>";
@@ -919,13 +913,13 @@ if ($POST_OP == "commit") {
         $display_block .= "<div class='col-2'><span class='feedbackTotalMarkX' id=diff2> </span></div>";
         $display_block .= "<div class='col-2'><span class='feedbackTotalMarkX' id=mean2> </span></div>";
         if (($marker_contrib[1] == 1) && ($marker_contrib[3] == 1)) {
-            $is_checked = "checked";
+            $is_checked = 'checked';
         } else {
-            $is_checked = "";
+            $is_checked = '';
         }
-        $select_block   = "<input type='radio' id='idagreed2' name='agreed' value='0101' $is_checked>";
+        $select_block = "<input type='radio' id='idagreed2' name='agreed' value='0101' $is_checked>";
         $display_block .= "<div class='col-2'>$select_block</div>";
-        $display_block .= "</div>"; // close row
+        $display_block .= '</div>'; // close row
 
         // 2 & 3
         $display_block .= "<div class='row combinationAgreed'>";
@@ -933,13 +927,13 @@ if ($POST_OP == "commit") {
         $display_block .= "<div class='col-2'><span class='feedbackTotalMarkX' id=diff3> </span></div>";
         $display_block .= "<div class='col-2'><span class='feedbackTotalMarkX' id=mean3> </span></div>";
         if (($marker_contrib[2] == 1) && ($marker_contrib[3] == 1)) {
-            $is_checked = "checked";
+            $is_checked = 'checked';
         } else {
-            $is_checked = "";
+            $is_checked = '';
         }
-        $select_block   = "<input type='radio' id='idagreed3' name='agreed' value='0110' $is_checked>";
+        $select_block = "<input type='radio' id='idagreed3' name='agreed' value='0110' $is_checked>";
         $display_block .= "<div class='col-2'>$select_block</div>";
-        $display_block .= "</div>"; // close row
+        $display_block .= '</div>'; // close row
 
         // 1 & 2 & 3
         $display_block .= "<div class='row combinationAgreed'>";
@@ -947,20 +941,20 @@ if ($POST_OP == "commit") {
         $display_block .= "<div class='col-2'><span class='feedbackTotalMarkX' id=diff4> </span></div>";
         $display_block .= "<div class='col-2'><span class='feedbackTotalMarkX' id=mean4> </span></div>";
         if (($marker_contrib[1] == 1) && ($marker_contrib[2] == 1) && ($marker_contrib[3] == 1)) {
-            $is_checked = "checked";
+            $is_checked = 'checked';
         } else {
-            $is_checked = "";
+            $is_checked = '';
         }
-        $select_block   = "<input type='radio' id='idagreed4' name='agreed' value='0111' $is_checked>";
+        $select_block = "<input type='radio' id='idagreed4' name='agreed' value='0111' $is_checked>";
         $display_block .= "<div class='col-2'>$select_block</div>";
-        $display_block .= "</div>"; // close row
+        $display_block .= '</div>'; // close row
 
         // Overwrite
         if ($marker_contrib[4] == 1) {
-            $is_checked = "checked";
+            $is_checked = 'checked';
             $overwrite_value = $current_mark;
         } else {
-            $is_checked = "";
+            $is_checked = '';
             $overwrite_value = 0;
         }
         $display_block .= "<div class='row combinationAgreed'>";
@@ -969,13 +963,13 @@ if ($POST_OP == "commit") {
         $overwrite_block = "\n<input type='number' id='idoverwritten' name='overwritten' value='$overwrite_value' min='0' max='100' step='0.1'> \n";
         $display_block .= "<div class='col-2'>$overwrite_block</div>";
         if ($marker_contrib[4] == 1) {
-            $is_checked = "checked";
+            $is_checked = 'checked';
         } else {
-            $is_checked = "";
+            $is_checked = '';
         }
-        $select_block   = "<input type='radio' id='idagreed4' name='agreed' value='1000' $is_checked>";
+        $select_block = "<input type='radio' id='idagreed4' name='agreed' value='1000' $is_checked>";
         $display_block .= "<div class='col-2'>$select_block</div>";
-        $display_block .= "</div>"; // close row
+        $display_block .= '</div>'; // close row
 
         $display_block .= "<label for='reason_textarea' class='form-label'><h5>Reason for the decision:</h5></label>\n";
         $display_block .= "<textarea class='form-control' id='reasontext' name='reasontext' rows='5' placeholder='Please give a reason for the decision made in awarding the marks based on three markers.'>$reason_text</textarea>\n";
@@ -983,21 +977,21 @@ if ($POST_OP == "commit") {
         $display_block .= "</div>\n";
 
         //$display_block .= "<P><a href=\"$_SERVER[PHP_SELF]?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$is_numeric&o_f=$show_overall_feedback_flag\">Show the PDF feedback sheet that the student will see</A></P>\n";
-        $display_block .= "</div>";
+        $display_block .= '</div>';
 
         //$display_block .= "<div class='container-fluid'>";
         $display_block .= "<div class='row mt-3'>";
         $display_block .= "  <div class='col-sm-3'>";
         $display_block .= "    <input class='btn btn-sm btn-outline-secondary' type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all responses completed\" >\n";
-        $display_block .= "  </div>";
+        $display_block .= '  </div>';
         $display_block .= "  <div class='col-sm-3'></div>";
 
         $display_block .= "  <div class='col-sm-6'>";
         $display_block .= "    <span id='show_pdf_id'>";
         $display_block .= "      <A class='btn btn-sm btn-info float-end' target='_blank' href='$_SERVER[PHP_SELF]?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$is_numeric&o_f=$show_overall_feedback_flag'>Show the PDF feedback sheet that the student will see</A>";
-        $display_block .= "    </span>";
-        $display_block .= "  </div>";
-        $display_block .= "</div>";
+        $display_block .= '    </span>';
+        $display_block .= '  </div>';
+        $display_block .= '</div>';
         //$display_block .= "</div>";
 
         //$display_block .= "<div class='row mt-3'>";
@@ -1019,32 +1013,30 @@ if ($POST_OP == "commit") {
         //$display_block .= "<div class='row mb-5'>\n";
         //$display_block .= "<input class='btn btn-lg btn-warning' type='submit' id='submitbutton' name='submit' value='Submit the selected combination of marks to the database' >\n";
         //$display_block .= "</div>\n";
-        $display_block .= "</form>";
+        $display_block .= '</form>';
 
         //$display_block .= "\n<p><span class=\"feedbackSectionMark\" id=\"submittext\">The difference is too great. (> $accept_var%). Correct this to display the Submit button.\n</span></p>\n";
-
     }
-
 }
 // End of main
-$admin_link_text = "";
-$show_admin_link = "none";
-$admin_link = "";
+$admin_link_text = '';
+$show_admin_link = 'none';
+$admin_link = '';
 if (IsAdmin($db, $this_staff_username)) {
-    $admin_link = "./admin2/";
-    $admin_link_text = "Super Admin";
-    $show_admin_link = "block";
-} else if (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
-    $admin_link = "./admin2/";
-    $admin_link_text = "Admin";
-    $show_admin_link = "block";
+    $admin_link = './admin2/';
+    $admin_link_text = 'Super Admin';
+    $show_admin_link = 'block';
+} elseif (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
+    $admin_link = './admin2/';
+    $admin_link_text = 'Admin';
+    $show_admin_link = 'block';
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <?php
-(@include_once("$mobile_head_bs")) OR die("Cannot find this file to include: $desktop_head<BR>");
+(@include_once("$mobile_head_bs")) or die("Cannot find this file to include: $desktop_head<BR>");
 ?>
 
 <script type="text/javascript">
@@ -1303,7 +1295,7 @@ if (IsAdmin($db, $this_staff_username)) {
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">
     <div class="container">
-        <span class="navbar-brand">Modify individual project details :- <?PHP echo("$module_short_description  $module_prefix$module1  $year_begin/$year_end") ?></span>
+        <span class="navbar-brand">Modify individual project details :- <?php echo("$module_short_description  $module_prefix$module1  $year_begin/$year_end") ?></span>
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="./<?php echo("$project_marking_page?pm_id=$pm_id") ?>" class="nav-link px-2 text-white-50">Back to marking list</a></li>
             <li class="nav-item"><a href="./index.php" class="nav-link px-2 text-white-50">This year module list</a></li>

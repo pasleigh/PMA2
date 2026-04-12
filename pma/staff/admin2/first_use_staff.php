@@ -2,18 +2,22 @@
 $first_use = true;
 
 $debug = false;
-if (array_key_exists('d', $_GET) == true || array_key_exists('debug', $_GET) == true ) {
+if (array_key_exists('d', $_GET) == true || array_key_exists('debug', $_GET) == true) {
     $debug = true;
 }
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-if($debug){echo("titles stetup<BR>");}
-(@include_once("$STAFF_DIR_VAL/setup_tables.php")) OR die("Cannot find this file to include: setup_tables.php<BR>");
-if($debug){echo("tables stetup<BR>");}
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_titles.php")) or die('Cannot find this file to include: setup_titles.php<BR>');
+if ($debug) {
+    echo('titles stetup<BR>');
+}
+(@include_once("$STAFF_DIR_VAL/setup_tables.php")) or die('Cannot find this file to include: setup_tables.php<BR>');
+if ($debug) {
+    echo('tables stetup<BR>');
+}
 
-(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) OR die("Cannot find this file to include: connect_pdo.php<BR>");
-(@include_once("$STAFF_DIR_VAL/table_functions.php")) OR die("Cannot include table_functions.php<BR>");
+(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) or die('Cannot find this file to include: connect_pdo.php<BR>');
+(@include_once("$STAFF_DIR_VAL/table_functions.php")) or die('Cannot include table_functions.php<BR>');
 
 if (array_key_exists('op', $_POST) == false) {
     $_POST['op'] = null;
@@ -22,31 +26,37 @@ if (array_key_exists('op', $_POST) == false) {
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
-    $POST_OP = "";
+    $POST_OP = '';
 }
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
 //}
 
-$display_block = "";
+$display_block = '';
 
 // Check that the images have been loaded
 $query = "SELECT COUNT(*) FROM $header_images_table";
-if($debug){echo("Query: $query<BR>");}
+if ($debug) {
+    echo("Query: $query<BR>");
+}
 
-try{
+try {
     $row_count = $db->query($query)->fetchColumn();
-    if($row_count == 0){
+    if ($row_count == 0) {
         // Load the images from disc
         $header_images_dir = '/../images/';
         $header_images_full_dir = dirname(realpath(__FILE__)) . $header_images_dir;
-        if($debug){echo("image file dir: $header_images_full_dir<BR>");}
+        if ($debug) {
+            echo("image file dir: $header_images_full_dir<BR>");
+        }
         $handle = opendir($header_images_full_dir);
         while ($file_name = readdir($handle)) {
-            if($debug){echo("image file: $file_name<BR>");}
+            if ($debug) {
+                echo("image file: $file_name<BR>");
+            }
             if ($file_name !== '.' && $file_name !== '..') {
-                if (strpos($file_name, 'header.png')){
+                if (strpos($file_name, 'header.png')) {
                     $full_file_name = ".$header_images_dir$file_name";
                     $img_file = file_get_contents($full_file_name);
                     $img_file_base64 = base64_encode($img_file);
@@ -62,7 +72,7 @@ try{
             }
         }
     }
-}catch (PDOException $ex) {
+} catch (PDOException $ex) {
     $this_function = __FUNCTION__;
     $this_file = __FILE__;
     $this_line = __LINE__;
@@ -73,10 +83,10 @@ try{
     exit();
 }
 // Does the definition table exist?
-$definition_table_name = "definition";
-try{
+$definition_table_name = 'definition';
+try {
     $db->query("DESCRIBE $definition_table_name");
-}catch (PDOException $ex) {
+} catch (PDOException $ex) {
     //
     // Create it
     $create_table_query = "
@@ -116,10 +126,10 @@ try{
 
     // Probably the header image table does not exist
     // Check
-    $table_name = "header_images";
-    try{
+    $table_name = 'header_images';
+    try {
         $db->query("DESCRIBE $table_name");
-    }   catch (PDOException $ex) {     // Does not exist
+    } catch (PDOException $ex) {     // Does not exist
         // Create it
         create_header_images_table_structure($db);
         $display_block .= "$table_name table created<BR>\n";
@@ -127,10 +137,10 @@ try{
 
     // Probably the projects_setup file does not exist
     // Check
-    $table_name = "projects_setup";
-    try{
+    $table_name = 'projects_setup';
+    try {
         $db->query("DESCRIBE $table_name");
-    }   catch (PDOException $ex) {     // Does not exist
+    } catch (PDOException $ex) {     // Does not exist
         // Create it
         create_projects_setup_table_structure($db);
         $display_block .= "$table_name table created<BR>\n";
@@ -138,10 +148,10 @@ try{
 
     // Probably the staff_names table does not exist
     // Check
-    $table_name = "staff_names";
-    try{
+    $table_name = 'staff_names';
+    try {
         $db->query("DESCRIBE $table_name");
-    }   catch (PDOException $ex) {     // Does not exist
+    } catch (PDOException $ex) {     // Does not exist
         // Does not exist
         // Create it
         create_staff_names_table_structure($db);
@@ -163,17 +173,16 @@ try{
 
     create_admin_users_module_table_structure($db);
     $display_block .= "Admin users module table created<BR>\n";
-
 }
 
-$display_block .= "<h1>Edit details for your School and yourself - the first member of staff to be entered in the database</h1>";
-$staff_names_table = "staff_names";
-$admin_users_table = "admin_users";
+$display_block .= '<h1>Edit details for your School and yourself - the first member of staff to be entered in the database</h1>';
+$staff_names_table = 'staff_names';
+$admin_users_table = 'admin_users';
 
 //$display_block = "<P>Database definitions table: $definition_table_name</P>";
 
-if ($POST_OP == "") {
-    $display_block .= "<h2>School details</h2>";
+if ($POST_OP == '') {
+    $display_block .= '<h2>School details</h2>';
 
     $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">";
 
@@ -224,15 +233,16 @@ if ($POST_OP == "") {
             $header_image_id = $recs['id'];
             $header_image_filename = $recs['filename'];
             //$img_file_base64 = base64_encode($header_image);
-            $checked = "";
-            if($school_header_image_id == $header_image_id){$checked = "checked";}
+            $checked = '';
+            if ($school_header_image_id == $header_image_id) {
+                $checked = 'checked';
+            }
             $display_block .= "<div>\n<input type='radio' name='header_image_selected' value='$header_image_filename|$header_image_id' $checked> id = $header_image_id\n";
             //$display_block .= '<img src="data:image/png;base64,' . $header_image .'" style="border-style: solid; border-width: 1px;" />';
-            $display_block .= '<img src="../images/' . $header_images[$i] .'" style="border-style: solid; border-width: 1px;" />';
+            $display_block .= '<img src="../images/' . $header_images[$i] . '" style="border-style: solid; border-width: 1px;" />';
             $display_block .= '</div><BR>';
             $i++;
         }
-
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database table  $definition_table_name in function: $this_function <BR>\n";
@@ -245,16 +255,16 @@ if ($POST_OP == "") {
     $display_block .= "</TR>\n";
     $display_block .= "</table>\n";
 
-    $display_block .= "<h2>Your details</h2>";
+    $display_block .= '<h2>Your details</h2>';
 
     $display_block .= "<table>\n";
 
     $display_block .= "<TR>\n";
     $display_block .= "<TD>Title</TD>\n";
     $display_block .= "<TD><select name=\"title_select\">\n";
-    $selected = "selected";
+    $selected = 'selected';
     $display_block .= "<option value=\"Prof\" $selected>Prof</option>\n";
-    $selected = "";
+    $selected = '';
     $display_block .= "<option value=\"Dr\" $selected>Dr</option>\n";
     $display_block .= "<option value=\"Mrs\" $selected>Mrs</option>\n";
     $display_block .= "<option value=\"Ms\" $selected>Ms</option>\n";
@@ -300,20 +310,19 @@ if ($POST_OP == "") {
 
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_new\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Submit these details.\"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton_new" name="submit" value="Submit these details."></p>';
 
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 
     $display_block .= "<hr>\n";
-} elseif ($POST_OP == "submit_new") {
-
+} elseif ($POST_OP == 'submit_new') {
     $school_title = $_POST['school_title'];
     $school_module_code = $_POST['school_module_code'];
     $school_short_name = $_POST['school_short_name'];
     $school_running_title = $_POST['school_running_title'];
 
     $header_image_selected = $_POST['header_image_selected'];
-    $header_image_info = explode("|",$header_image_selected);
+    $header_image_info = explode('|', $header_image_selected);
     $school_header_image_name = $header_image_info[0];
     $school_header_image_id = $header_image_info[1];
 
@@ -397,7 +406,7 @@ if ($POST_OP == "") {
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

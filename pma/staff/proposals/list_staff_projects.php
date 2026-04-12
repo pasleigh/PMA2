@@ -1,38 +1,40 @@
 <?php
 
 // connect to the datbase
-(@include_once("./set_dir_props.php")) OR die("Cannot find this file to include: set_dir_props.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables");
-(@include_once("../staff_functions.php")) OR die("Cannot setup database tables");
+(@include_once('./set_dir_props.php')) or die('Cannot find this file to include: set_dir_props.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables');
+(@include_once('../staff_functions.php')) or die('Cannot setup database tables');
 
-(@include_once("../admin2/utility_functions.php")) OR die("Cannot include utility_functions.php");
-(@include_once("../admin2/adminusers.php")) OR die("Cannot setup admin users");
-(@include_once("../staff_student_functions.php")) OR die("Cannot find staff_student_functions.php");
+(@include_once('../admin2/utility_functions.php')) or die('Cannot include utility_functions.php');
+(@include_once('../admin2/adminusers.php')) or die('Cannot setup admin users');
+(@include_once('../staff_student_functions.php')) or die('Cannot find staff_student_functions.php');
 
-$staff_username = "unknown";
-if(array_key_exists('REMOTE_USER',$_SERVER)){
+$staff_username = 'unknown';
+if (array_key_exists('REMOTE_USER', $_SERVER)) {
     $staff_username = get_server_username();
-}else{
-    if(isset($_SESSION['USERNAME'])){
+} else {
+    if (isset($_SESSION['USERNAME'])) {
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaff($db, $staff_username, $staff_names) == false){
-    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+if (IsStaff($db, $staff_username, $staff_names) == false) {
+    echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='../..'>Return to the home page</a>.</P>";
     exit();
 }
 
-if (array_key_exists('stid', $_REQUEST)==false){ $_REQUEST['stid'] = null; }
+if (array_key_exists('stid', $_REQUEST) == false) {
+    $_REQUEST['stid'] = null;
+}
 $stid = $_REQUEST['stid'];
 $staffid = $stid;
 
 //
 // Check the date for editiing has not passed
-// 
+//
 $query = "select year_begin, dayname(staff_close), dayofmonth(staff_close), monthname(staff_close), month(staff_close), year(staff_close) from $projects_setup where module=$module1 and year_begin=$year_begin";
 //$get_setup_list = mysql_query($get_setup) or die(" Unable to get database configuration.");
 try {
@@ -42,22 +44,22 @@ try {
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();
 }
-$setup_data = $results->fetch();;
+$setup_data = $results->fetch();
 
 $nowarray = getdate();
 $close = mktime(17, 0, 0, $setup_data['month(staff_close)'], $setup_data['dayofmonth(staff_close)'], $setup_data['year(staff_close)']);
-$cldate = "5pm, " . $setup_data['dayname(staff_close)'] . " " . $setup_data['dayofmonth(staff_close)'] . " " . $setup_data['monthname(staff_close)'] . " " . $setup_data['year(staff_close)'];
+$cldate = '5pm, ' . $setup_data['dayname(staff_close)'] . ' ' . $setup_data['dayofmonth(staff_close)'] . ' ' . $setup_data['monthname(staff_close)'] . ' ' . $setup_data['year(staff_close)'];
 if ($nowarray[0] > $close && !IsAdmin($db, $this_staff_username) && !IsProjectAdmin($db, $this_staff_username, $staff_names)) {
-    $display_block = "<H1>The deadline for entering project proposals has passed.</H1>";
+    $display_block = '<H1>The deadline for entering project proposals has passed.</H1>';
     echo($display_block);
-   exit;
+    exit;
 }
 
 //
 // Display the list of projects for this staff
 //
 //$display_block = "<H3>Display and edit project proposals</H3>";
-$display_block = "";
+$display_block = '';
 $module_ref_block = "<h3>$module_short_description - $module_prefix$module1$module_postfix - $short_code</h3>";
 
 $query = "select * from $staff_names2 WHERE staffid=:staffid";
@@ -71,8 +73,8 @@ try {
 }
 
 if ($results->rowCount() < 1) {
-   //no records
-   $display_block .= "<p><em>Sorry, there are no staff in the database with this id $stid</em></p>";
+    //no records
+    $display_block .= "<p><em>Sorry, there are no staff in the database with this id $stid</em></p>";
     $display_block .= "$module_ref_block";
 } else {
     //has records
@@ -110,7 +112,6 @@ if ($results->rowCount() < 1) {
         $display_block .= "<a href='modproject2.php?pm_id=$pm_id&p_id=$master_id' class='btn btn-primary'>$count: ($master_id) $project_title</a>\n";
 
         $count++;
-
     }
     $display_block .= "</div>\n";
 }
@@ -122,7 +123,7 @@ $display_block .= "</div>\n";
 ?>
 <!DOCTYPE HTML>
 <html>
-<?php (@include_once("./mobile_head_bs.php")) OR die("Cannot find this file to include: mobile_head_bs.php<BR>"); ?>
+<?php (@include_once('./mobile_head_bs.php')) or die('Cannot find this file to include: mobile_head_bs.php<BR>'); ?>
 <body class="bg-dark text-white">
 
 <nav class="navbar navbar-expand-sm fixed-top navbar-dark text-white bg-secondary">

@@ -1,21 +1,21 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: cenpas
  * Date: 19/02/2018
  * Time: 10:39
  */
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_titles.php")) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) or die('Cannot connect to the database<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_tables.php")) or die('Cannot setup database tables<BR>');
+(@include_once("$STAFF_DIR_VAL/markstore_functions.php")) or die('Cannot get markstore functions<BR>');
+(@include_once('./utility_functions.php')) or die('Cannot get utility_functions<BR>');
 
-(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("$STAFF_DIR_VAL/markstore_functions.php")) OR die("Cannot get markstore functions<BR>");
-(@include_once("./utility_functions.php")) OR die("Cannot get utility_functions<BR>");
-
-if(isset($_POST['get_year_begin'])) {
+if (isset($_POST['get_year_begin'])) {
     $year_begin = $_POST['get_year_begin'];
     $year_end = $_POST['get_year_end'];
 
@@ -33,12 +33,12 @@ if(isset($_POST['get_year_begin'])) {
     }
     $count = 0;
     $rows = $results->fetchAll();
-    $module_allocation_tables = array();
-    $modules = array();
-    $ids = array();
-    $modules_desc = array();
-    $staff_id_name = array();
-    $staff_supervision = array();
+    $module_allocation_tables = [];
+    $modules = [];
+    $ids = [];
+    $modules_desc = [];
+    $staff_id_name = [];
+    $staff_supervision = [];
     foreach ($rows as $recs) {
         $id = $recs['id'];
         $module = $recs['module'];
@@ -48,8 +48,8 @@ if(isset($_POST['get_year_begin'])) {
         $short_code_lc = strtolower($short_code);
         $my_key = "chk_id$count";
 
-        $prefix = "";
-        $module_allocated_table = $prefix . "allocated_" . $short_code_lc . "_" . $year_begin;
+        $prefix = '';
+        $module_allocated_table = $prefix . 'allocated_' . $short_code_lc . '_' . $year_begin;
 
         $modules[] = "$module_prefix$module";// $module_short_desc: $short_code ";
         $modules_desc["$id"] = $module_short_desc;
@@ -87,7 +87,7 @@ if(isset($_POST['get_year_begin'])) {
         $mod_admin_level = stripslashes($recs['admin_level']);
         $staff_count++;
 
-        $staff_id_name["$staffid"] = array($fulllname, $familyname, $firstname, $inactive);
+        $staff_id_name["$staffid"] = [$fulllname, $familyname, $firstname, $inactive];
         // Now get all of the super and second supervisions that this staff is doing on each module
         for ($i = 0; $i < sizeof($ids); $i++) {
             $module_id = $ids[$i];
@@ -117,13 +117,11 @@ if(isset($_POST['get_year_begin'])) {
                 exit();
             }
             $second_marker_count = $results->rowCount();
-            $staff_supervision["$staffid"]["$module_id"] = array($supervisor_count, $second_marker_count);
+            $staff_supervision["$staffid"]["$module_id"] = [$supervisor_count, $second_marker_count];
         }
-
     }
-    $module_data = array('modules'=>$modules, 'ids'=>$ids, 'modules_desc'=>$modules_desc, 'staff_id_name'=>$staff_id_name, 'staff_supervision'=>$staff_supervision);
+    $module_data = ['modules' => $modules, 'ids' => $ids, 'modules_desc' => $modules_desc, 'staff_id_name' => $staff_id_name, 'staff_supervision' => $staff_supervision];
 
     echo json_encode($module_data);
-
 }
 exit;

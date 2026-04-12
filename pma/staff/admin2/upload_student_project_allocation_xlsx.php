@@ -1,23 +1,23 @@
 <?php
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
 
-(@include_once("./utility_functions.php")) OR die("Cannot read utility_functions file<BR>");
-(@include_once("../markstore_functions.php")) OR die("Cannot read markstore_functions file<BR>");
-(@include_once("../staff_functions.php")) OR die("Cannot read markstore_functions file<BR>");
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('./utility_functions.php')) or die('Cannot read utility_functions file<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot read markstore_functions file<BR>');
+(@include_once('../staff_functions.php')) or die('Cannot read markstore_functions file<BR>');
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
+
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
-$assess_part_description_text = "";
+$assess_part_description_text = '';
 
 // Check the admin level
 $admin_access = false;
@@ -34,8 +34,7 @@ if ($is_module_admin) {
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
 if ($is_module_admin || $admin_access) {
-
-    $display_block .= "<h1>Upload Student Project Allocation</h1>";
+    $display_block .= '<h1>Upload Student Project Allocation</h1>';
     $display_block .= "<h2>Database table to be updated '$project_allocated'</h2>";
 
     if (array_key_exists('op', $_POST) == false) {
@@ -45,13 +44,13 @@ if ($is_module_admin || $admin_access) {
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
-        $POST_OP = "";
+        $POST_OP = '';
     }
 
-//if ($access) {
-// see all the POST values
-//foreach ($_POST as $key => $value){
-//}
+    //if ($access) {
+    // see all the POST values
+    //foreach ($_POST as $key => $value){
+    //}
     //$allowed_tyle_ext = array('csv', 'CSV');
 
     $sid_col = 1;
@@ -60,10 +59,9 @@ if ($is_module_admin || $admin_access) {
     $supervisor_col = 4;
     $second_marker_col = 5;
 
-    $data_array = array();
+    $data_array = [];
 
-    if ($POST_OP == "upload_csv") {
-
+    if ($POST_OP == 'upload_csv') {
         $xlsx_file_name = $_FILES['csv']['name'];
         $ext = pathinfo($xlsx_file_name, PATHINFO_EXTENSION);
         $xlsx_file_size = $_FILES['csv']['size'];
@@ -78,7 +76,7 @@ if ($is_module_admin || $admin_access) {
         $file_info .= "File read earror message $xlsx_file_error<BR>";
 
         if (!$xlsx_file_error) {
-            if ($xlsx_file_name != "") {
+            if ($xlsx_file_name != '') {
                 $PHP_EXCEL_filetype = IOFactory::identify($xlsx_file_tmp);
                 $file_info .= "PHPExcel file type: $PHP_EXCEL_filetype<BR>";
 
@@ -92,8 +90,8 @@ if ($is_module_admin || $admin_access) {
                 $highestColIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestCol);
                 $nrColumns = ord($highestCol) - 64;
 
-                for($row = 2; $row <= $highestRow ; $row++) {
-                    $data_array = array();
+                for ($row = 2; $row <= $highestRow ; $row++) {
+                    $data_array = [];
 
                     $col = $sid_col;
                     $sid = $worksheet->getCell([$col, $row])->getValue();
@@ -190,16 +188,13 @@ if ($is_module_admin || $admin_access) {
                         exit();
                     }
                 }
-
-        }else{
-            $display_block .= "<H3 style='color: red; background-color: #f1c40f'>You need to browse and select a XLSX/CSV file to upload.</H3>";
+            } else {
+                $display_block .= "<H3 style='color: red; background-color: #f1c40f'>You need to browse and select a XLSX/CSV file to upload.</H3>";
+            }
         }
-        }
-
     }// end of if ($POST_OP == "upload_csv")
 
-    if ($POST_OP == "upload_detailed_csv") {
-
+    if ($POST_OP == 'upload_detailed_csv') {
         $xlsx_file_name = $_FILES['csv']['name'];
         $ext = pathinfo($xlsx_file_name, PATHINFO_EXTENSION);
         $xlsx_file_size = $_FILES['csv']['size'];
@@ -214,7 +209,7 @@ if ($is_module_admin || $admin_access) {
         $file_info .= "File read earror message $xlsx_file_error<BR>";
 
         if (!$xlsx_file_error) {
-            if ($xlsx_file_name != "") {
+            if ($xlsx_file_name != '') {
                 $PHP_EXCEL_filetype = IOFactory::identify($xlsx_file_tmp);
                 $file_info .= "PHPExcel file type: $PHP_EXCEL_filetype<BR>";
 
@@ -228,8 +223,8 @@ if ($is_module_admin || $admin_access) {
                 $highestColIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestCol);
                 $nrColumns = ord($highestCol) - 64;
 
-                for($row = 2; $row <= $highestRow ; $row++) {
-                    $data_array = array();
+                for ($row = 2; $row <= $highestRow ; $row++) {
+                    $data_array = [];
 
                     $col = $sid_col;
                     $sid = $worksheet->getCell([$col, $row])->getValue();
@@ -239,9 +234,9 @@ if ($is_module_admin || $admin_access) {
                     $title = $worksheet->getCell([$col, $row])->getValue();
 
                     for ($i = 0; $i <= $num_parts; $i++) {
-                        $col = $supervisor_col + $i*2;
+                        $col = $supervisor_col + $i * 2;
                         $supervisor_family_name = $worksheet->getCell([$col, $row])->getValue();
-                        $col = $second_marker_col + $i*2;
+                        $col = $second_marker_col + $i * 2;
                         $second_marker_family_name = $worksheet->getCell([$col, $row])->getValue();
                         $supervisor_ida[$i] = GetStaffIDFromFamilyNameAndInitial2($db, $supervisor_family_name, $staff_names2);
                         $second_marker_ida[$i] = GetStaffIDFromFamilyNameAndInitial2($db, $second_marker_family_name, $staff_names2);
@@ -285,8 +280,8 @@ if ($is_module_admin || $admin_access) {
                     }
 
                     for ($i = 1; $i <= $num_parts; $i++) {
-                        $m1_entry = "marker_p$i" . "m1_id";
-                        $m2_entry = "marker_p$i" . "m2_id";
+                        $m1_entry = "marker_p$i" . 'm1_id';
+                        $m2_entry = "marker_p$i" . 'm2_id';
                         $marker1_id = $supervisor_ida[$i];
                         $marker2_id = $second_marker_ida[$i];
                         $query = "UPDATE $project_allocated SET `$m1_entry`=:marker1_id, `$m2_entry`=:marker2_id WHERE sid=:sid";
@@ -301,11 +296,10 @@ if ($is_module_admin || $admin_access) {
                         }
                     }
                 }
-            }else{
+            } else {
                 $display_block .= "<H3 style='color: red; background-color: #f1c40f'>You need to browse and select a XLSX/CSV file to upload.</H3>";
             }
         }
-
     }// end of if ($POST_OP == "upload_detailed_csv")
 
     $num = CountAllocationTable($db, $project_allocated);
@@ -323,7 +317,7 @@ if ($is_module_admin || $admin_access) {
         }
         $rows = $results->fetchAll();
         $display_block .= "<TABLE id='studentallocation' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
-        $display_block .= "
+        $display_block .= '
     <thead>
       <tr>
         <th>Project ID</th>
@@ -343,7 +337,7 @@ if ($is_module_admin || $admin_access) {
         <th>P5 marker</th>
         <th>P5 2nd marker</th>
       </tr>
-    </thead>";
+    </thead>';
         $display_block .= "<tbody>\n";
         $student_count = 0;
         foreach ($rows as $recs) {
@@ -351,9 +345,9 @@ if ($is_module_admin || $admin_access) {
             $sid = $recs['sid'];
             $title = $recs['title'];
             $supervisor_id = $recs['supervisor_id'];
-            $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_names2, NULL);
+            $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_names2, null);
             $second_marker_id = $recs['second_marker_id'];
-            $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_names2, NULL);
+            $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_names2, null);
 
             $s_get_list_query = "select * from $students where sid=:sid";
             try {
@@ -366,8 +360,8 @@ if ($is_module_admin || $admin_access) {
                 exit();
             }
             $s_recs = $results->fetch();
-            $student_name = "";
-            if($s_recs){
+            $student_name = '';
+            if ($s_recs) {
                 $student_name = stripslashes($s_recs['name']);
             }
 
@@ -381,18 +375,16 @@ if ($is_module_admin || $admin_access) {
             $display_block .= "<TD><input type='text' name='second_marker$student_count' value='$second_marker_name'  size=20 maxlength=30 readonly></TD>";
 
             for ($i = 1; $i <= 5; $i++) {
-                $m1_entry = "marker_p$i" . "m1_id";
-                $m2_entry = "marker_p$i" . "m2_id";
+                $m1_entry = "marker_p$i" . 'm1_id';
+                $m2_entry = "marker_p$i" . 'm2_id';
                 $marker1_id = $recs[$m1_entry];
                 $marker2_id = $recs[$m2_entry];
-                $marker1_name = GetStaffNameFromID($db, $marker1_id, $staff_names2, NULL);
-                $marker2_name = GetStaffNameFromID($db, $marker2_id, $staff_names2, NULL);
+                $marker1_name = GetStaffNameFromID($db, $marker1_id, $staff_names2, null);
+                $marker2_name = GetStaffNameFromID($db, $marker2_id, $staff_names2, null);
                 $display_block .= "<TD style='font-size: small;'>$marker1_name</TD>";
                 $display_block .= "<TD style='font-size: small;'>$marker2_name</TD>";
-
             }
             $display_block .= "</TR>\n";
-
         }
         $display_block .= "</tbody>\n";
         $display_block .= "</TABLE>\n";
@@ -406,7 +398,7 @@ if ($is_module_admin || $admin_access) {
     $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id' enctype='multipart/form-data'>\n";
     $display_block .= "<P> You can alternatively upload a XLSX/CSV file to update and <B>add</B> students' allocations (you cannot delete students) </P>";
     $display_block .= "<P> Create a XLSX/CSV with the headings:<B>SID</B>,<B>Project ID</B>, <B>Title</B>,  <B>Supervisor Surname (plus ', Initial' [e.g. Smith, A] if necessary)</B>, <B>Second marker Surname (plus ', Initial' if necessary)</B> and load here.</P>";
-    $display_block .= "<P>(The Project ID is not used, but must exist in the file.)</P>";
+    $display_block .= '<P>(The Project ID is not used, but must exist in the file.)</P>';
     $display_block .= "<P></P><input class='btn btn-outline-primary' name='csv' type='file' id='csv' /></P>";
     $display_block .= "\n<input type='hidden' name='op' value='upload_csv'>";
 
@@ -417,9 +409,9 @@ if ($is_module_admin || $admin_access) {
     $display_block .= "<hr><h2>Upload a detailed XLSX/CSV... (with different marker for each part)</H2>\n";
     $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id' enctype='multipart/form-data'>\n";
     $display_block .= "<P> You can alternatively upload a XLSX/CSV file to update and <B>add</B> students' allocations (you cannot delete students) </P>";
-    $display_block .= "<P> The detailed breakdown of the imported allocation of markers will be show on this page ... you cannot edit them.</P>";
+    $display_block .= '<P> The detailed breakdown of the imported allocation of markers will be show on this page ... you cannot edit them.</P>';
     $display_block .= "<P> Create a XLSX/CSV with the headings:<B>SID</B>, <B>Project ID</B>, <B>Title</B>,  <B>Supervisor Surname (plus ', Initial' [e.g. Smith, A] if necessary)</B>, <B>Second marker Surname (plus ', Initial' if necessary)</B>, <B>P1M1</B>, <B>P1M2</B>, <B>P2M1</B>, <B>P2M2</B>, <B>P3M1</B>, <B>P3M2</B>, <B>P4M1</B>, <B>P4M2</B>, <B>P5M1</B>, <B>P5M2</B>. These are the repeated pairs of markers' surnames for each part -  (NOTE you need BOTH the first and second marker - even if a part does not have a second marker) (You only need upto the number of parts i.e. if there are 2 parts, you will need 6 columns of staff names).</P>";
-    $display_block .= "<P>(The Project ID is not used, but must exist in the file.)</P>";
+    $display_block .= '<P>(The Project ID is not used, but must exist in the file.)</P>';
 
     $display_block .= "<P></P><input class='btn btn-outline-success' name='csv' type='file' id='csv' /></P>";
     $display_block .= "\n<input type='hidden' name='op' value='upload_detailed_csv'>";
@@ -428,14 +420,14 @@ if ($is_module_admin || $admin_access) {
 
     $display_block .= "</form>\n";
 } else {
-    $display_block .= "You do not have the appropriate admin level<BR>";
+    $display_block .= 'You do not have the appropriate admin level<BR>';
     $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

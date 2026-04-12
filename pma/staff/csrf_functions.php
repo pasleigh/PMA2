@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CSRF token helpers.
  * Requires an active PHP session (session_start() must have been called first).
@@ -65,7 +66,7 @@ function csrf_token_field(): string {
 function require_valid_csrf(): void {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && !validate_csrf_token()) {
         http_response_code(403);
-        die("Security error: invalid or missing CSRF token. Please go back and try again.");
+        die('Security error: invalid or missing CSRF token. Please go back and try again.');
     }
 }
 

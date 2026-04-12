@@ -1,6 +1,6 @@
-<?PHP
-$protocol = isset($_SERVER["HTTPS"]) ? 'https' : 'http';
-$location = "../..";
+<?php
+$protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
+$location = '../..';
 ?>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>

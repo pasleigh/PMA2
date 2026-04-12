@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Database table creation, population, and HTML rendering helpers.
  *
@@ -21,7 +22,7 @@
  * @param int    $part                   Assessment part number.
  * @return string HTML table string.
  */
-function GetStudentListTable($db,$project_allocated, $students_table, $staff_table, $feedback_records_table, $part){
+function GetStudentListTable($db, $project_allocated, $students_table, $staff_table, $feedback_records_table, $part) {
     $select_all_block = "<div>Select/De-select all<input type=\"checkbox\" id=\"select-all\" name=\"selectAll\" checked value=\"\"/></div>\n";
     $display_block = "\n";
     $display_block = "<div id=\"students_select_table\">\n";
@@ -55,9 +56,9 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
         exit();
     }
     $rows = $results->fetchAll();
-    foreach ($rows as $recs ) {
+    foreach ($rows as $recs) {
         $project_id = $recs['projectid'];
-        # $project_master_id = $recs['masterid'];
+        // $project_master_id = $recs['masterid'];
         $sid = $recs['sid'];
         $inactive = $recs['inactive'];
         $supervisor_id = $recs['supervisor_id'];
@@ -65,18 +66,17 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
         $project_title = $recs['title'];
 
         if ($inactive != 1) {
-
-            $markers = array();
-            $markers_id = array();
+            $markers = [];
+            $markers_id = [];
             for ($i = 1; $i <= 5; $i++) {
-                $markers[$i] = array();
-                $markers_id[$i] = array();
+                $markers[$i] = [];
+                $markers_id[$i] = [];
                 for ($j = 1; $j <= 3; $j++) {
-                    $marker_entry = "marker_p$i" . "m$j" . "_id";
+                    $marker_entry = "marker_p$i" . "m$j" . '_id';
                     $marker_id = $recs[$marker_entry];
                     $markers_id[$i][$j] = $marker_id;
-                    $markers[$i][$j] = GetStaffNameFromID($db, $marker_id, $staff_table, NULL);
-                    # $name = $markers_id[$i][$j];
+                    $markers[$i][$j] = GetStaffNameFromID($db, $marker_id, $staff_table, null);
+                    // $name = $markers_id[$i][$j];
                 }
             }
 
@@ -90,15 +90,15 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
                 exit();
             }
             $recs = $results->fetch();
-            $student_name = $username = "";
-            if($recs){
+            $student_name = $username = '';
+            if ($recs) {
                 $student_name = $recs['name'];
                 $username = $recs['username'];
             }
-            # $programme = $recs['programme'];
-            # $sel = $recs['sel'];
+            // $programme = $recs['programme'];
+            // $sel = $recs['sel'];
 
-            $feedback_sent = "";
+            $feedback_sent = '';
             // Find out if feedback sent to this SID
             $query = "select * from $feedback_records_table where sid = :sid";
             try {
@@ -109,18 +109,18 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
                 exit();
             }
             $num_rows = $results->rowCount();
-            if($num_rows == 0){
-                $feedback_sent = "Not Sent";
-            }else if(is_null($part)){
-                $feedback_sent = "Not Sent";
-            }else{
+            if ($num_rows == 0) {
+                $feedback_sent = 'Not Sent';
+            } elseif (is_null($part)) {
+                $feedback_sent = 'Not Sent';
+            } else {
                 $recs = $results->fetch();
-                $key = "sent_p" . $part;
+                $key = 'sent_p' . $part;
                 $val = $recs[$key];
-                if($val != 0){
-                    $feedback_sent = "Sent";
-                }else{
-                    $feedback_sent = "Not Sent";
+                if ($val != 0) {
+                    $feedback_sent = 'Sent';
+                } else {
+                    $feedback_sent = 'Not Sent';
                 }
             }
 
@@ -130,9 +130,9 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
             $display_block .= "  <td>$username</td>\n";
             $display_block .= "  <td>$project_id</td>\n";
             $display_block .= "  <td>$project_title</td>\n";
-            $supervisor_name = GetStaffNameFromID($db,$supervisor_id, $staff_table, NULL);
+            $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_table, null);
             $display_block .= "  <td>$supervisor_name</td>\n";
-            $second_marker_name = GetStaffNameFromID($db,$second_marker_id, $staff_table, NULL);
+            $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_table, null);
             $display_block .= "  <td>$second_marker_name</td>\n";
             $display_block .= "  <td style=\"text-align: center;\"><input type=\"checkbox\" name=\"check_$sid\" checked></td>\n";
             $display_block .= "  <td>$feedback_sent</td>\n";
@@ -156,7 +156,7 @@ function GetStudentListTable($db,$project_allocated, $students_table, $staff_tab
  * @param string $feedback_records_table Feedback records table name.
  * @return void
  */
-function RecordFeedbackSent($db, $sid, $part, $feedback_records_table){
+function RecordFeedbackSent($db, $sid, $part, $feedback_records_table) {
     $query = "select * from $feedback_records_table where sid = :sid";
     try {
         $results = $db->prepare($query);
@@ -167,8 +167,8 @@ function RecordFeedbackSent($db, $sid, $part, $feedback_records_table){
     }
     $num_rows = $results->rowCount();
 
-    $part_query_string = "sent_p" . $part;
-    if($num_rows == 0){
+    $part_query_string = 'sent_p' . $part;
+    if ($num_rows == 0) {
         // Insert
         $query = "insert $feedback_records_table set SID=:sid, $part_query_string=1";
     } else {
@@ -190,7 +190,7 @@ function RecordFeedbackSent($db, $sid, $part, $feedback_records_table){
  * @param PDO $db Active PDO connection.
  * @return void
  */
-function create_header_images_table_structure($db){
+function create_header_images_table_structure($db) {
     $query = <<<SQL
     --
     -- Table structure for table `header_images`
@@ -202,9 +202,9 @@ function create_header_images_table_structure($db){
       PRIMARY KEY (`id`)
     ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 SQL;
-    try{
+    try {
         $db->query($query);
-    }catch (PDOException $ex) {
+    } catch (PDOException $ex) {
         error_log($ex->getMessage());
     }
 }
@@ -218,8 +218,7 @@ SQL;
  * @param PDO $db Active PDO connection.
  * @return void
  */
-function create_projects_setup_table_structure($db){
-
+function create_projects_setup_table_structure($db) {
     $query = <<<SQL
     --
     -- Table structure for table `projects_setup`
@@ -332,9 +331,9 @@ function create_projects_setup_table_structure($db){
     ) ENGINE = InnoDB;
 
 SQL;
-    try{
+    try {
         $db->query($query);
-    }catch (PDOException $ex) {
+    } catch (PDOException $ex) {
         error_log($ex->getMessage());
     }
 }
@@ -345,8 +344,7 @@ SQL;
  * @param PDO $db Active PDO connection.
  * @return void
  */
-function create_admin_users_table_structure($db){
-
+function create_admin_users_table_structure($db) {
     $query = <<<SQL
     --
     -- Table structure for table `admin_users`
@@ -364,13 +362,12 @@ function create_admin_users_table_structure($db){
     ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 SQL;
-    try{
+    try {
         $db->query($query);
-    }catch (PDOException $ex) {
+    } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
-
 }
 
 /**
@@ -379,8 +376,7 @@ SQL;
  * @param PDO $db Active PDO connection.
  * @return void
  */
-function create_admin_users_module_table_structure($db){
-
+function create_admin_users_module_table_structure($db) {
     $query = <<<SQL
     --
     -- Table structure for table `admin_users_module`
@@ -399,9 +395,9 @@ function create_admin_users_module_table_structure($db){
     ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 SQL;
-    try{
+    try {
         $db->query($query);
-    }catch (PDOException $ex) {
+    } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -415,8 +411,7 @@ SQL;
  * @param PDO $db Active PDO connection.
  * @return void
  */
-function create_staff_names_table_structure($db){
-
+function create_staff_names_table_structure($db) {
     $query = <<<SQL
     --
     -- Table structure for table `staff_names`
@@ -440,9 +435,9 @@ function create_staff_names_table_structure($db){
     ALTER TABLE `staff_names` ADD UNIQUE KEY `username` (`username`);
 
 SQL;
-    try{
+    try {
         $db->query($query);
-    }catch (PDOException $ex) {
+    } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -457,8 +452,7 @@ SQL;
  * @param PDO $db Active PDO connection.
  * @return void
  */
-function create_assessqs_cats_templates_egs($db)
-{
+function create_assessqs_cats_templates_egs($db) {
     $query = <<<SQL
 
 -- --------------------------------------------------------
@@ -623,9 +617,9 @@ INSERT INTO `assessqs_cats_template_report_icme` (`cat`, `description`, `weight_
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 SQL;
-    try{
+    try {
         $db->query($query);
-    }catch (PDOException $ex) {
+    } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -639,8 +633,7 @@ SQL;
  * @param PDO $db Active PDO connection.
  * @return void
  */
-function create_assessqs_templates_egs($db)
-{
+function create_assessqs_templates_egs($db) {
     $query = <<<SQL
 
 -- --------------------------------------------------------
@@ -1053,13 +1046,12 @@ INSERT INTO `assessqs_template_report_icme` (`qid`, `cat`, `question`, `entries`
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 SQL;
-    try{
+    try {
         $db->query($query);
-    }catch (PDOException $ex) {
+    } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
-
 }
 
 /**
@@ -1072,8 +1064,7 @@ SQL;
  * @param string $dash_projects_setup Table name for this module's setup.
  * @return void
  */
-function create_dash_projects_setup_table($db, $dash_projects_setup)
-{
+function create_dash_projects_setup_table($db, $dash_projects_setup) {
     $query = <<<SQL
 --
 -- Table structure for table `assessment_criteria_flags`
@@ -1113,8 +1104,7 @@ SQL;
  * @param string $dash_projects_setup Table name for this module's setup.
  * @return void
  */
-function update_dash_projects_setup_tables($db, $dash_projects_setup)
-{
+function update_dash_projects_setup_tables($db, $dash_projects_setup) {
     // Check that the id=0 is there . Thi sis the ON/OFF switch: staff, student .NE. 0
     $id = 0;
     $query = "SELECT * FROM $dash_projects_setup WHERE id=$id";
@@ -1130,12 +1120,12 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     }
     $num_rows = $results->rowCount();
 
-    if ($num_rows == 0){
+    if ($num_rows == 0) {
         // Need to create this row
-        $prefix = "notused_";
-        $description = "Switch to show Dash buttons or not";
-        $title = "DASH";
-        $subtitle = "Tools for viewing marks work and feeding back";
+        $prefix = 'notused_';
+        $description = 'Switch to show Dash buttons or not';
+        $title = 'DASH';
+        $subtitle = 'Tools for viewing marks work and feeding back';
         $visible = 0; // Not uesed
         $active = 0; // Not Used
         $staff = 0; // Initially not visible
@@ -1168,10 +1158,10 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     $num_rows = $results->rowCount();
 
     if ($num_rows == 0) {
-        $prefix = "peg_";
-        $description = "Workload modelling for all activities";
-        $title = "PEGA";
-        $subtitle = "Workload mapping";
+        $prefix = 'peg_';
+        $description = 'Workload modelling for all activities';
+        $title = 'PEGA';
+        $subtitle = 'Workload mapping';
         $visible = 0;
         $active = 0;
         $staff = 0;
@@ -1204,10 +1194,10 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     $num_rows = $results->rowCount();
 
     if ($num_rows == 0) {
-        $prefix = "ha_";
-        $description = "How am I doing?";
-        $title = "HAMID";
-        $subtitle = "Reflect on assessment performance";
+        $prefix = 'ha_';
+        $description = 'How am I doing?';
+        $title = 'HAMID';
+        $subtitle = 'Reflect on assessment performance';
         $visible = 0;
         $active = 0;
         $staff = 0;
@@ -1240,10 +1230,10 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     $num_rows = $results->rowCount();
 
     if ($num_rows == 0) {
-        $prefix = "di_";
-        $description = "Mark Distribution Charts";
-        $title = "DIST";
-        $subtitle = "Create distribution graphics of assessment marks";
+        $prefix = 'di_';
+        $description = 'Mark Distribution Charts';
+        $title = 'DIST';
+        $subtitle = 'Create distribution graphics of assessment marks';
         $visible = 0;
         $active = 0;
         $staff = 0;
@@ -1276,10 +1266,10 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     $num_rows = $results->rowCount();
 
     if ($num_rows == 0) {
-        $prefix = "cwt_";
-        $description = "Check what coursework is coming up";
-        $title = "CWT";
-        $subtitle = "Coursework Timetables and Graphics";
+        $prefix = 'cwt_';
+        $description = 'Check what coursework is coming up';
+        $title = 'CWT';
+        $subtitle = 'Coursework Timetables and Graphics';
         $visible = 0;
         $active = 0;
         $staff = 0;
@@ -1312,10 +1302,10 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     $num_rows = $results->rowCount();
 
     if ($num_rows == 0) {
-        $prefix = "kmap_";
-        $description = "Collect, Collate and Map  Key Assessment Information";
-        $title = "KAI";
-        $subtitle = "Key Assessment Information";
+        $prefix = 'kmap_';
+        $description = 'Collect, Collate and Map  Key Assessment Information';
+        $title = 'KAI';
+        $subtitle = 'Key Assessment Information';
         $visible = 0;
         $active = 0;
         $staff = 0;
@@ -1348,10 +1338,10 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
     $num_rows = $results->rowCount();
 
     if ($num_rows == 0) {
-        $prefix = "peer_";
-        $description = "Peer assessment";
-        $title = "PEER";
-        $subtitle = "Assessment of peers in group-work";
+        $prefix = 'peer_';
+        $description = 'Peer assessment';
+        $title = 'PEER';
+        $subtitle = 'Assessment of peers in group-work';
         $visible = 0;
         $active = 0;
         $staff = 0;
@@ -1376,8 +1366,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup)
  * @param PDO $db Active PDO connection.
  * @return void
  */
-function create_assessment_criteria_tables($db)
-{
+function create_assessment_criteria_tables($db) {
     $query = <<<SQL
 --
 -- Table structure for table `assessment_criteria_flags`
@@ -1414,14 +1403,14 @@ SQL;
 
     // Empty these just in case
     try {
-        $query = "TRUNCATE `assessment_criteria`";
+        $query = 'TRUNCATE `assessment_criteria`';
         $db->query($query);
     } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
     try {
-        $query = "TRUNCATE `assessment_criteria_flags`";
+        $query = 'TRUNCATE `assessment_criteria_flags`';
         $db->query($query);
     } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
@@ -1439,8 +1428,7 @@ SQL;
  * @param PDO $db Active PDO connection.
  * @return void
  */
-function populate_assessment_criteria_tables($db){
-
+function populate_assessment_criteria_tables($db) {
     $query = <<<SQL1
 INSERT INTO `assessment_criteria_flags` (`id`, `visible_flag`, `class_flag`, `grade_text_flag`, `gpa_flag`, `descriptor_university_flag`, `descriptor_school_flag`) VALUES
 (0, 1, 1, 1, 1, 1, 1);
@@ -1576,8 +1564,7 @@ SQL2;
  * @param string $feedback_records_table_name Table name to create.
  * @return void
  */
-function create_feedback_records_table_structure($db, $feedback_records_table_name){
-
+function create_feedback_records_table_structure($db, $feedback_records_table_name) {
     $query = <<<SQL
     --
     -- Table structure for table `feedback records`
@@ -1595,13 +1582,12 @@ function create_feedback_records_table_structure($db, $feedback_records_table_na
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 SQL;
-    try{
+    try {
         $db->query($query);
-    }catch (PDOException $ex) {
+    } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
-
 }
 
 /**
@@ -1611,8 +1597,7 @@ SQL;
  * @param string $project_area_table_name Table name to create.
  * @return void
  */
-function create_project_areas_table_structure($db, $project_area_table_name){
-
+function create_project_areas_table_structure($db, $project_area_table_name) {
     $query = <<<SQL
     --
     -- Table structure for table `project_areas`
@@ -1626,9 +1611,9 @@ function create_project_areas_table_structure($db, $project_area_table_name){
     ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 SQL;
-    try{
+    try {
         $db->query($query);
-    }catch (PDOException $ex) {
+    } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -1647,19 +1632,17 @@ SQL;
  */
 function doesColumnExists($db, $column, $table) {
     try {
-
-        if (empty ($table) || empty ($column)) {
+        if (empty($table) || empty($column)) {
             return false;
         }
         $stmt = $db->prepare("SHOW COLUMNS FROM $table LIKE :column");
-        $stmt->execute(array("column" => $column));
+        $stmt->execute(['column' => $column]);
         $row = $stmt->fetchColumn();
         if ($row != false) {
             return true;
         } else {
             return false;
         }
-
     } catch (PDOException $e) {
         return false;
     }

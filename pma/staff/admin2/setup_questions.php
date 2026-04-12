@@ -2,17 +2,17 @@
 // Turn off all error reporting
 
 // connect to the datbase
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("../show_feedback_form.php")) OR die("Cannot get show_feedback_form.php<BR>");
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('../show_feedback_form.php')) or die('Cannot get show_feedback_form.php<BR>');
 
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // Check the admin level
@@ -21,36 +21,34 @@ $access = access_check_response($db, $this_staff_username, $this_staff_full_name
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
 if ($access) {
-
     if (array_key_exists('part', $_GET) == false) {
         $_GET['part'] = null;
     }
     $assesspart = $_GET['part'];
 
-//if (array_key_exists('module1', $_GET)==false){ $_GET['module1']=null; }
-//if (array_key_exists('year_begin', $_GET)==false){ $_GET['year_begin']=null; }
-//$module1 = $_GET['module1'];
-//$year_begin = $_GET['year_begin'];
+    //if (array_key_exists('module1', $_GET)==false){ $_GET['module1']=null; }
+    //if (array_key_exists('year_begin', $_GET)==false){ $_GET['year_begin']=null; }
+    //$module1 = $_GET['module1'];
+    //$year_begin = $_GET['year_begin'];
 
-// if the form was submitted then enter it all into the database
+    // if the form was submitted then enter it all into the database
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
-        $POST_OP = "";
+        $POST_OP = '';
     }
-// see all the POST values
+    // see all the POST values
 
-//foreach ($_POST as $key => $value){
-//}
+    //foreach ($_POST as $key => $value){
+    //}
     // Start of functions
-    function show_section_questions($cat, $cat_description, $weight_pc, $factor, $num_questions, $questions, $num_responses, $response_texts, $response_marks)
-    {
+    function show_section_questions($cat, $cat_description, $weight_pc, $factor, $num_questions, $questions, $num_responses, $response_texts, $response_marks) {
         $display_block = "\n\n<span id=section>";
         $display_block .= "<table id=table$cat class=\"tableSection\">";
         $display_block .= "<tr>\n";
 
         // Display the category title
-        $sectionid = "sec" . $cat;
+        $sectionid = 'sec' . $cat;
         $display_block .= "<td><div class=\"feedbackSection\">Section $cat:
         \n<input  class=\"feedbackSectionQ\" type=\"text\" id=\"$sectionid\" name=\"$sectionid\" value=\"$cat_description\" size=\"60\">
         \n<input type=\"hidden\" id=\"numqs$cat\" name=\"numqs$cat\" value=\"$num_questions\">
@@ -60,7 +58,7 @@ if ($access) {
         $display_block .= "Weight factor <span id=factor$cat>
         \n<input type=\"number\" id=\"factor_id$cat\" name=\"factor_name$cat\" value=\"$factor\" min=\"0\" max=\"1\" step=\"0.001\" size=\"4\"></span></div>";
         $display_block .= "</td>\n";
-        $display_block .= "</tr>";
+        $display_block .= '</tr>';
         $num_qs = $num_questions - 1;
         $display_block .= "\n<tr><td>Number of questions in this section <input type=\"number\" name=\"new_numqs$cat\" value=\"$num_qs\" min=\"1\" max=\"10\" size=6 maxlength=5> (note that questions will be deleted if this number is less than already exists.)</td></tr>\n";
         $display_block .= "<tr>\n<td>";
@@ -68,32 +66,32 @@ if ($access) {
             $question = $questions[$q_count];
 
             $display_block .= "<span class=\"feedbackQ\">Question $q_count:\n";
-            $qid = "q" . $cat . "-" . $q_count;
-            $rid = "res" . $cat . "-" . $q_count;
+            $qid = 'q' . $cat . '-' . $q_count;
+            $rid = 'res' . $cat . '-' . $q_count;
             $display_block .= "<span class=\"feedbackQem\">
            <input class=\"feedbackQem\" type=\"text\" id=\"$qid\" name=\"$qid\" value=\"$question\" size=\"120\">
            </span></span><br />\n";
             $display_block .= "<div class=\"options\">\n";
             $display_block .= "Number of responses <input type=\"number\" id=\"$rid\" name=\"$rid\" value=\"$num_responses[$q_count]\"  min=\"3\" max=\"11\" size=\"2\"><BR>";
             for ($r_count = 1; $r_count <= $num_responses[$q_count]; $r_count++) {
-                $pchoice = "q" . $cat . "-" . $q_count;
-                $pchoice_id = "id" . $pchoice . $r_count;
-                $mchoice = "m" . $cat . "-" . $q_count . $r_count;
-                $mchoice_id = "id" . $mchoice;
-                $tchoice = "t" . $cat . "-" . $q_count . $r_count;
-                $tchoice_id = "id" . $tchoice;
-                $rchoice = "r" . $cat . "-" . $q_count;
+                $pchoice = 'q' . $cat . '-' . $q_count;
+                $pchoice_id = 'id' . $pchoice . $r_count;
+                $mchoice = 'm' . $cat . '-' . $q_count . $r_count;
+                $mchoice_id = 'id' . $mchoice;
+                $tchoice = 't' . $cat . '-' . $q_count . $r_count;
+                $tchoice_id = 'id' . $tchoice;
+                $rchoice = 'r' . $cat . '-' . $q_count;
                 $response_text = $response_texts[$q_count][$r_count];
                 $response_mark = $response_marks[$q_count][$r_count];
-                $ischecked = "";
+                $ischecked = '';
                 if ($r_count == $num_responses[$q_count]) {
-                    $ischecked = "checked";
+                    $ischecked = 'checked';
                 }
                 $display_block .= "\n<input type=\"text\" id=\"$tchoice_id\" name=\"$tchoice\" value=\"$response_text\" size=\"60\">";
                 $display_block .= "\n<input type=\"number\" id=\"$mchoice_id\" name=\"$mchoice\" value=\"$response_mark\"  min=\"-1000\" max=\"1000\" size=\"5\">";
                 $display_block .= "\n<input type=\"radio\" id=\"$pchoice_id\" name=\"$rchoice\" value=\"$response_mark\" $ischecked> <BR>\n";
             }
-            $display_block .= "<BR>";
+            $display_block .= '<BR>';
             $display_block .= "</DIV>\n";
         }
         $display_block .= "</td>\n</tr>\n";
@@ -106,18 +104,18 @@ if ($access) {
         return $display_block;
     }// end of show_section_questions()
 
-// definitions for each part
-// Questions table
+    // definitions for each part
+    // Questions table
     $assessqs_year = $assessqs[$assesspart];
-// Questions categories table
+    // Questions categories table
     $assess_cats = $assessqs_cats[$assesspart];
-// description 
+    // description
     $assesstype_text = $p_description[$assesspart];
-// markbook
+    // markbook
     $mark_max = $p_max[$assesspart];
     $mark_pc = $p_percent[$assesspart];
-    
-// Get number of categories by counting the rows in $assess_cats
+
+    // Get number of categories by counting the rows in $assess_cats
     $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
     try {
         $results = $db->query($query);
@@ -131,24 +129,24 @@ if ($access) {
     }
     $num_categories = $results->rowCount();
 
-    if ($POST_OP == "commit") {
-        $display_block .= "<h2>Submitting the changes to the database ...</H2>";
+    if ($POST_OP == 'commit') {
+        $display_block .= '<h2>Submitting the changes to the database ...</H2>';
 
-        $num_categories = $_POST["new_num_cats"];
+        $num_categories = $_POST['new_num_cats'];
         // the insert to the database code goes here
         // write the categories
         // get the categories
 
         // Get the  data from the form
         for ($cat = 1; $cat <= $num_categories; $cat++) {
-            $id = "sec" . $cat;
+            $id = 'sec' . $cat;
             $section_q[$cat] = addslashes($_POST[$id]);
-            $id = "weightpc_name" . $cat;
+            $id = 'weightpc_name' . $cat;
             $section_weight[$cat] = $_POST[$id];
-            $id = "factor_name" . $cat;
+            $id = 'factor_name' . $cat;
             $section_factor[$cat] = $_POST[$id];
 
-            $id = "numqs" . $cat;
+            $id = 'numqs' . $cat;
             $numqs = $_POST[$id];
 
             $id = "new_numqs$cat";
@@ -162,7 +160,7 @@ if ($access) {
                 //$rmark = $_POST[$id];
                 $id = "res$cat-$i";
                 $num_entries = $_POST[$id];
-                $query_entry = "";
+                $query_entry = '';
                 for ($r = 1; $r <= $num_entries; $r++) {
                     $id = "t$cat-$i$r";
                     $text[$r] = addslashes($_POST[$id]);
@@ -205,7 +203,6 @@ if ($access) {
 
                     exit();
                 }
-
             }
 
             if ($new_numqs != $numqs) {
@@ -280,16 +277,14 @@ if ($access) {
                     }
                 }
             }
-
         }
 
-        $display_block .= "<h2>Done ... carry on making changes if you like</H2>";
-
+        $display_block .= '<h2>Done ... carry on making changes if you like</H2>';
     }// end of if ($POST_OP == "commit")
 
-// No need to have an else as the rest is always done.
+    // No need to have an else as the rest is always done.
 
-    $display_block .= "<h1>This form allows you to view and edit questions, marks and section weightings.</h1>";
+    $display_block .= '<h1>This form allows you to view and edit questions, marks and section weightings.</h1>';
     $display_block .= "<h2>$assesstype_text section of module $module1, beginning year $year_begin</h2>";
     $display_block .= "<p>Questions table: $assessqs_year,  Question Categories: $assess_cats</p>";
     $display_block .= "<div class=\"feedbackInstructions\">You can use this form <em>play</em> with setting before finally commiting them to the marking system.<BR> \nYou can use it to: \n
@@ -307,16 +302,16 @@ if ($access) {
 The  maximum \"Mark for Section\" should be equal to or less than the \"Proportion of assessment\"<BR>
 the \"Weight factor\" is used achieve this while giving <em>sensible</em> numbers to each question.</div><BR>\n";
 
-    $display_block .= "
-    <div id=\"sticker\">0.0</div>";
+    $display_block .= '
+    <div id="sticker">0.0</div>';
 
     $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$assesspart\" \">\n";
-//This one has the validation
-//$display_block .="<form method=\"post\" onsubmit=\"return validate_form();\" action=\"$_SERVER[PHP_SELF]?module1=$module1&year_begin=$year_begin\" \">\n";
+    //This one has the validation
+    //$display_block .="<form method=\"post\" onsubmit=\"return validate_form();\" action=\"$_SERVER[PHP_SELF]?module1=$module1&year_begin=$year_begin\" \">\n";
 
     $display_block .= "\n<P>Number of sections (categories) <input type=\"number\" id=\"new_num_cats\" name=\"new_num_cats\" value=\"$num_categories\" min=\"1\" max=\"5\" size=6 maxlength=5> (Note that questions will be deleted should this number be less that those shown on this form.)</P>\n";
 
-// Get number of categories by counting the rows in $assess_cats
+    // Get number of categories by counting the rows in $assess_cats
     $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
     try {
         $results = $db->query($query);
@@ -329,18 +324,17 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
         exit();
     }
     $num_categories = $results->rowCount();
-//$display_block .="<input type=\"hidden\" name=\"numcats\" value=\"$num_categories\" />";
+    //$display_block .="<input type=\"hidden\" name=\"numcats\" value=\"$num_categories\" />";
 
-// enter the max mark and percent of this part for use on the form
+    // enter the max mark and percent of this part for use on the form
     $display_block .= "<span id=\"markmax_span\">
 \n<input type=\"hidden\" id=\"markmax\" name=\"markmax\" value=\"$mark_max\" size=\"3\"></span>";
     $display_block .= "<span id=markpc>
 \n<input type=\"hidden\" id=\"markpc_id\" name=\"markpc\" value=\"$mark_pc\" size=\"3\"></span>";
-//$display_block .= "\n<span id=min_feedback_words>
-//<input type=\"hidden\" id=\"min_feedback_words_id\" name=\"min_feedback_words\" value=\"$min_feedback_words\" size=\"3\"></span>"; 
+    //$display_block .= "\n<span id=min_feedback_words>
+    //<input type=\"hidden\" id=\"min_feedback_words_id\" name=\"min_feedback_words\" value=\"$min_feedback_words\" size=\"3\"></span>";
 
     for ($cat = 1; $cat <= $num_categories; $cat++) {
-
         // Get the category titles
         $query = "select description, weight_percent, factor from $assess_cats where cat=$cat";
         //$get_cat_details_list = mysql_query($get_cat_details) or die(" Unable to get database $assess_cats. <BR>Query: $get_cat_details");
@@ -396,13 +390,12 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
             $num_entries[$q_count] = $qs_list['entries'];
 
             for ($r_count = 1; $r_count <= $num_entries[$q_count]; $r_count++) {
-                $r_text = "text" . $r_count;
+                $r_text = 'text' . $r_count;
                 $response_texts[$q_count][$r_count] = $qs_list[$r_text];
                 $value = $response_texts[$q_count][$r_count];
-                $r_mark = "mark" . $r_count;
+                $r_mark = 'mark' . $r_count;
                 $response_marks[$q_count][$r_count] = $qs_list[$r_mark];
             }
-
         }
         $display_block .= show_section_questions($cat, $description, $weight_pc, $factor, $num_questions, $questions, $num_entries, $response_texts, $response_marks);
         $display_block .= "<BR>\n";
@@ -412,19 +405,18 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
     $display_block .= "<BR>\n<input type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all selected\" >";
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"commit\">";
     $display_block .= "\n<input type=\"hidden\" name=\"nc\" value=\"$num_categories\">";
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Commit the changes to the database\"></p></form>";
+    $display_block .= '<p><input type="submit" id="submitbutton" name="submit" value="Commit the changes to the database"></p></form>';
 
-// End of main
-
+    // End of main
 } else {
-    $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= 'You do not have the appropriate admin level<BR>';
+    $display_block .= '<A href="../index.php">Go back here</A><BR>';
 }
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

@@ -1,6 +1,6 @@
 <?php
-function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $student_name, $username, $title, $supervisor_name, $second_marker_name, $marker_name, $project_id, $assesstype, $assess_cats, $max_mark, $mark_pc, $programme, $assesspart, $assesstype_desc, $module_desc, $is_numeric)
-{
+
+function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $student_name, $username, $title, $supervisor_name, $second_marker_name, $marker_name, $project_id, $assesstype, $assess_cats, $max_mark, $mark_pc, $programme, $assesspart, $assesstype_desc, $module_desc, $is_numeric) {
     //$display_block = "<h1>Part $assesspart: Assessment of $assesstype_desc by $student_name</h1>";
     $display_block = "<h1>Assessment of $module_desc : $assesstype_desc, by $student_name</h1>";
 
@@ -46,16 +46,16 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
         exit();
     }
     $get_marks_res = $results->fetch();
-    if($get_marks_res) {
+    if ($get_marks_res) {
         $final_total = $get_marks_res['total'];
         $rettotal = $get_marks_res['total'];
         $locked = $get_marks_res['locked'];
-    }else{
+    } else {
         $final_total = 0;
         $rettotal = 0;
         $locked = 0;
     }
-    $final_total_s = sprintf("%5.1f", $final_total * 100.0 / $max_mark);
+    $final_total_s = sprintf('%5.1f', $final_total * 100.0 / $max_mark);
 
     $display_block .= "
              <tr>
@@ -116,24 +116,24 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
         $description = $cat_data['description'];
         //$weight_pc = $cat_data['weight_percent'];
         //$factor = $cat_data['factor'];
-        if(array_key_exists('get_feedback',$cat_data)==false){
+        if (array_key_exists('get_feedback', $cat_data) == false) {
             $show_cat_feedback = 1;
-        }else{
+        } else {
             $show_cat_feedback = $cat_data['get_feedback'];
         }
 
         $display_block .= "<div class=\"feedbackSection\">($cat) $description </div>";
         // Display the header
-        $display_block .= "<table width=\"100%\" class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">";
+        $display_block .= '<table width="100%" class="tableSimple" style="border:1px solid black;border-collapse:collapse;">';
         $display_block .= "<tr></tr>\n";
 
         if ($is_numeric == 1) {
-            $title1 = "";
-            $title2 = "Mark awarded";
+            $title1 = '';
+            $title2 = 'Mark awarded';
             //$display_block .= "<tr><td class=\"tablehead\" width=\"50%\">$title2</td><td class=\"tablehead\" width=\"50%\">$title2</td></tr>\n";
         } else {
-            $title1 = "Question";
-            $title2 = "Feedback from marker";
+            $title1 = 'Question';
+            $title2 = 'Feedback from marker';
             $display_block .= "<tr><td class=\"tablehead\" width=\"50%\">$title1</td><td class=\"tablehead\" width=\"50%\">$title2</td></tr>\n";
         }
 
@@ -153,7 +153,7 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
         //$display_block .= "Number of questions = $num<br>";
         if ($num < 1) {
             //no questions
-            $display_block .= "<em>Sorry, there are no questions in this category select!</em>";
+            $display_block .= '<em>Sorry, there are no questions in this category select!</em>';
         } else {
             //has questions
             for ($count = 1; $count <= $num; $count++) {
@@ -176,13 +176,13 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
                 $entries = $qs_list['entries'];
 
                 $q_weight = $qs_list['weight'];
-                if(!is_numeric($q_weight)){
+                if (!is_numeric($q_weight)) {
                     $q_weight = 100;
                 }
                 $q_weight *= 0.01;
 
-                $choice = $cat . "-" . $count;
-                $pchoice = "q" . $choice;
+                $choice = $cat . '-' . $count;
+                $pchoice = 'q' . $choice;
                 if (array_key_exists('mark1', $qs_list) == false) {
                     $qs_list['mark1'] = null;
                 }
@@ -298,89 +298,88 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
 
                 //$display_block .= "Question : $count, Entries: $entries<BR>";
                 if ($count == $num) {
-                    $db_col = "C" . $cat . "Feedback";
+                    $db_col = 'C' . $cat . 'Feedback';
                 } else {
-                    $db_col = "C" . $cat . "Q" . $count;
+                    $db_col = 'C' . $cat . 'Q' . $count;
                 }
 
-                if($marks_stored1){
+                if ($marks_stored1) {
                     $mark1_stored = $marks_stored1[$db_col];
                     $mark2_stored = $marks_stored1[$db_col];
-                }else{
+                } else {
                     $mark1_stored = 0;
                     $mark2_stored = 0;
                 }
 
                 // If it is a numeric question then un weight it
-                if($is_numeric == 1){
+                if ($is_numeric == 1) {
                     // Only do if it is not feedback
-                    if(is_numeric($mark1_stored) && abs($q_weight) > 0.0001 ){
+                    if (is_numeric($mark1_stored) && abs($q_weight) > 0.0001) {
                         $mark1_stored /= $q_weight;
                     }
                 }
 
-                $checked1 = array();
-                $checked2 = array();
+                $checked1 = [];
+                $checked2 = [];
                 // set which is selected
                 for ($i = 1; $i <= 11; $i++) {
-                    $checked1[$i] = "";
-                    $checked2[$i] = "";
+                    $checked1[$i] = '';
+                    $checked2[$i] = '';
 
                     //$display_block .= "Mark stored " . $mark1_stored . " check_mark " . $check_marks[$i] . "<BR>";
                     if ($mark1_stored == $check_marks[$i]) {
-                        $checked1[$i] = "checked";
+                        $checked1[$i] = 'checked';
                         //$display_block .= $i . "<BR>";
                     }
                     if ($mark2_stored == $check_marks[$i]) {
-                        $checked2[$i] = "checked";
+                        $checked2[$i] = 'checked';
                     }
                     //$display_block .= $checked1[$i] . "<BR>";
                 }
 
                 // Display the question
-                $display_block .= "<tr>";
+                $display_block .= '<tr>';
 
                 //$display_block .= "choice " . $choice;
                 // Supervisor
                 if ($entries == 0) {// the feedback comments
-                    if($show_cat_feedback) {
+                    if ($show_cat_feedback) {
                         $mark1_stored = htmlentities($mark1_stored);
                         $mark1_stored = addslashes($mark1_stored);
-                        $mark1_stored = str_replace("’", "'", $mark1_stored);
+                        $mark1_stored = str_replace('’', "'", $mark1_stored);
                         $entry = nl2br($mark1_stored);
 
                         //$display_block .= "<textarea class=\"feedback\" placeholder=\"Remember, this feedback is for the student's benefit!\" name=A$choice >$entry</textarea><br /><br />";
                         $display_block .= "<td class=\"tablehead\" width=\"50%\">$question</td>";
-                        $display_block .= "<td width=\"50%\">";
+                        $display_block .= '<td width="50%">';
                         $display_block .= "$entry";
-                        $display_block .= "</td>";
+                        $display_block .= '</td>';
                     }
                 } else {
                     if ($is_numeric == 1) {
                         $display_block .= "<td class=\"tablehead\" width=\"50%\">$title2</td>";
-                        $display_block .= "<td width=\"50%\">";
+                        $display_block .= '<td width="50%">';
                         $display_block .= nl2br($mark1_stored);
-                        $display_block .= "</td>";
+                        $display_block .= '</td>';
                     } else {
                         //$display_block .= "$count: ";
                         for ($i = 1; $i <= $entries; $i++) {
-                            if ($checked1[$i] == "checked") {
+                            if ($checked1[$i] == 'checked') {
                                 $display_block .= "<td width=\"50%\">$count) $question</td>";
-                                $display_block .= "<td width=\"50%\">";
+                                $display_block .= '<td width="50%">';
                                 $display_block .= "$check_texts[$i]";
-                                $display_block .= "</td>";
+                                $display_block .= '</td>';
                             }
                         }
                     }
                 }
 
-//          // Second marker
+                //          // Second marker
 
                 $display_block .= "</tr>\n";
             }
         }
-        $display_block .= "</table><BR />";
-
+        $display_block .= '</table><BR />';
     } // $cat
 
     //$display_block .= "<a href=\"javascript:window.print()\">Print this page</a>";
@@ -388,15 +387,14 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
     return $display_block;
 }// end of show_feedback_form()
 
-function show_minor_part_overall_feedback_form($db, $part_label, $markstore, $sid, $min_feedback_words){
-
-    $overall_feedback_visibility = "block";
+function show_minor_part_overall_feedback_form($db, $part_label, $markstore, $sid, $min_feedback_words) {
+    $overall_feedback_visibility = 'block';
 
     // Display the overall feedback box
     $query = "ALTER TABLE $markstore ADD `OverallFeedback` text DEFAULT null";
-    if(!DoesColumnExistInTable($db,$markstore,'OverallFeedback')) {
+    if (!DoesColumnExistInTable($db, $markstore, 'OverallFeedback')) {
         $db->query($query);
-    }else{
+    } else {
     }
 
     $query = "SELECT OverallFeedback FROM $markstore WHERE SID=$sid";
@@ -417,9 +415,9 @@ function show_minor_part_overall_feedback_form($db, $part_label, $markstore, $si
         $overall_feedback_text = null;
     }
     $overall_feedback_heading = "Overall feedback on this $part_label part";
-    $overall_feedback_id = "overall_feedback";
+    $overall_feedback_id = 'overall_feedback';
 
-    $display_block = "";
+    $display_block = '';
     //$display_block .= "<div id='assess_criteria' style='border: thin solid black; padding-left: 5px; background-color: #ECEBE6; display: $overall_feedback_visibility;' >\n";
     //$display_block .= "<span class=\"feedbackQ\"><P>Overall Feedback: &nbsp;<span class=\"feedbackQem\">$overall_feedback_heading</span></p></span><br />";
     //$display_block .= "\n<textarea name='$overall_feedback_id'>$overall_feedback_text</textarea><br /><br />";
@@ -429,7 +427,6 @@ function show_minor_part_overall_feedback_form($db, $part_label, $markstore, $si
     $display_block .= "<tr></tr>\n";
     $display_block .= "<tr><td class='tablehead_overall'>$overall_feedback_heading</td></tr>\n";
     $display_block .= "<tr><td>$overall_feedback_text</td></tr>";
-    $display_block .= "</table>";
+    $display_block .= '</table>';
     return $display_block;
 }
-?>

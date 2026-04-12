@@ -1,17 +1,17 @@
 <?php
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("./utility_functions.php")) OR die("Cannot read utility_functions file<BR>");
-(@include_once("../markstore_functions.php")) OR die("Cannot read markstore_functions file<BR>");
-(@include_once("../staff_functions.php")) OR die("Cannot read markstore_functions file<BR>");
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./utility_functions.php')) or die('Cannot read utility_functions file<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot read markstore_functions file<BR>');
+(@include_once('../staff_functions.php')) or die('Cannot read markstore_functions file<BR>');
 
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // Check the admin level
@@ -19,8 +19,7 @@ $access = false;
 $access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access_phrase</h2>\n";
 
-if($access) {
-
+if ($access) {
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
     }
@@ -28,23 +27,23 @@ if($access) {
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
-        $POST_OP = "";
+        $POST_OP = '';
     }
 
-// see all the POST values
-//foreach ($_POST as $key => $value){
-//}
+    // see all the POST values
+    //foreach ($_POST as $key => $value){
+    //}
 
-    $display_block = "";
+    $display_block = '';
     $display_block .= $connect_msg;
-    $display_block .= "<h1>View Staff Project Load</h1>";
+    $display_block .= '<h1>View Staff Project Load</h1>';
 
     $staff_names_table = $staff_names2;
-#project_allocated_staff
+    //project_allocated_staff
 
     $display_block .= "<h3>Database staff table: $staff_names_table<BR>allocation load table: $project_allocated_staff</h3>";
 
-// Does $project_alllocated_staff exist?
+    // Does $project_alllocated_staff exist?
     try {
         $result = $db->query("SELECT 1 FROM $project_allocated_staff LIMIT 1");
     } catch (Exception $ex) {
@@ -74,8 +73,8 @@ SQL;
         }
     }
 
-################# Update the "use to plot" data #####################################
-    if ($POST_OP == "submit_edited") {
+    //################ Update the "use to plot" data #####################################
+    if ($POST_OP == 'submit_edited') {
         $staff_count = $_POST['staff_count'];
         for ($i = 1; $i <= $staff_count; $i++) {
             $postid = "staffid$i";
@@ -101,19 +100,18 @@ SQL;
     }
 
     $display_block .= "Hide/Show table <input type='checkbox' id='hideshow_checkbox' ><BR>";
-# $display_block .= "<button id='hide'>Hide table</button>\n";
-# $display_block .= "<button id='show'>Show table</button>\n";
-################## Update table form ################################################
+    // $display_block .= "<button id='hide'>Hide table</button>\n";
+    // $display_block .= "<button id='show'>Show table</button>\n";
+    //################# Update table form ################################################
     $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
     $display_block .= "\n<input type='hidden' name='op' value='update_table'>";
     $display_block .= "<p align='right'>Careful, this resets all 'use' data =><input type='submit' id='update_table' name='submit' value='Update table.'> </p>";
 
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 
-    if ($POST_OP == "update_table") {
-
-# Clear the table
+    if ($POST_OP == 'update_table') {
+        // Clear the table
         $query = "TRUNCATE $project_allocated_staff";
         //mysql_query($query) or die(" Unable to empty (truncate) $project_allocated_staff table . <BR>Error msg: " . mysql_error() . "<BR>Query: $query");
         try {
@@ -127,20 +125,20 @@ SQL;
             exit();
         }
 
-# Get the list of staff and count each ones activity
+        // Get the list of staff and count each ones activity
 
-#    $table = array();
-#    $table['cols'] = array(
-#        array('label' => 'Supervisor', 'type' => 'string'),
-#        array('label' => 'Number supervised', 'type' => 'number')
-#    );
+        //    $table = array();
+        //    $table['cols'] = array(
+        //        array('label' => 'Supervisor', 'type' => 'string'),
+        //        array('label' => 'Number supervised', 'type' => 'number')
+        //    );
         $query = "select * from $staff_names_table order by familyname";
         //$get_list_res = mysql_query($get_list) or die(" Unable to create staff name list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function " . " line: " . __LINE__ . "<BR>\n";
+            echo "An Error occured accessing the database in function: $this_function " . ' line: ' . __LINE__ . "<BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -159,7 +157,6 @@ SQL;
             $room = stripslashes($recs['room']);
             $inactive = stripslashes($recs['inactive']);
             if ($inactive == 0) {
-
                 $query = "select * from $project_allocated where supervisor_id = $staffid";
                 //$query_res = mysql_query($query) or die(" Unable to interrogate staff table for supervisor. <BR>Error msg: " . mysql_error() . "<BR>Query: $query");
                 //$num_supervise = mysql_num_rows($query_res);
@@ -190,68 +187,67 @@ SQL;
                 }
                 $num_second_mark = $results->rowCount();
 
-                # Write to the $project_allocated_staff table
+                // Write to the $project_allocated_staff table
                 $query = "INSERT INTO $project_allocated_staff (staffid,firstname,familyname,fullname,num_supervise,num_second_mark) VALUES ('$staffid','$firstname','$familyname','$fullname','$num_supervise','$num_second_mark')  ";
                 //mysql_query($query) or die(" Unable to insert data to the table $project_allocated_staff . <BR>Error msg: " . mysql_error() . "<BR>Query: $query");
                 try {
                     $results = $db->query($query);
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
-                    echo "An Error occured accessing the database in function: $this_function " . " line: " . __LINE__ . "<BR>\n";
+                    echo "An Error occured accessing the database in function: $this_function " . ' line: ' . __LINE__ . "<BR>\n";
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
                     exit();
                 }
 
-#           $temp = array();
-#           // Name
-#           $temp[] = array('v' => (string)$fullname);
-#           // value
-#           $temp[] = array('v' => (int)$num_supervise);
-#
-#            $rows[] = array('c' => $temp);
+                //           $temp = array();
+                //           // Name
+                //           $temp[] = array('v' => (string)$fullname);
+                //           // value
+                //           $temp[] = array('v' => (int)$num_supervise);
+                //
+                //            $rows[] = array('c' => $temp);
             }
         }
-#    $table['rows'] = $rows;
-        #print_r2($table);
-        #print($table);
-        #echo($table);
-#    if (!function_exists('json_encode')) {
-#        echo("json_encode does not exist<BR>");
-#    } else {
-#        #echo("json_encode DOES exist<BR>");
-#    }
-#    $jsonTable = json_encode($table);
-        #print($jsonTable);
-
+        //    $table['rows'] = $rows;
+        //print_r2($table);
+        //print($table);
+        //echo($table);
+        //    if (!function_exists('json_encode')) {
+        //        echo("json_encode does not exist<BR>");
+        //    } else {
+        //        #echo("json_encode DOES exist<BR>");
+        //    }
+        //    $jsonTable = json_encode($table);
+        //print($jsonTable);
     }// Recaculate table
 
-#######################################################################
-# Draw the table and prep the chart date_add()
-#######################################################################
+    //######################################################################
+    // Draw the table and prep the chart date_add()
+    //######################################################################
     $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
-// Get the list of staff from the staff_names2 table
+    // Get the list of staff from the staff_names2 table
     $query = "select * from $project_allocated_staff order by familyname";
-//$get_list_res = mysql_query($get_list) or die(" Unable to create staff load list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
+    //$get_list_res = mysql_query($get_list) or die(" Unable to create staff load list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function1: $this_function " . " line: " . __LINE__ . "<BR>\n";
+        echo "An Error occured accessing the database in function1: $this_function " . ' line: ' . __LINE__ . "<BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
         exit();
     }
 
-//$display_block .= "<select name='staffname_select'>\n";
+    //$display_block .= "<select name='staffname_select'>\n";
 
-//$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
+    //$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
     $display_block .= "<div id='alloc_table_div' style='display:none;'>\n";
     $display_block .= "<TABLE id='staffinfo' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
-    $display_block .= "
+    $display_block .= '
     <thead>
       <tr>
         <th>ID</th>
@@ -263,23 +259,23 @@ SQL;
         <th>Total involved in</th>
         <th>Use to plot</th>
       </tr>
-    </thead>";
+    </thead>';
     $display_block .= "<tbody>\n";
     $staff_count = 0;
     if ($results->rowCount() > 0) {
-        $table = array();
-        $table['cols'] = array(
-            array('label' => 'Supervisor', 'type' => 'string'),
-            array('label' => 'Number supervised', 'type' => 'number')
-        );
-        $rows = array();
+        $table = [];
+        $table['cols'] = [
+            ['label' => 'Supervisor', 'type' => 'string'],
+            ['label' => 'Number supervised', 'type' => 'number']
+        ];
+        $rows = [];
         $staff_count = 0;
         $results_rows = $results->fetchAll();
         foreach ($results_rows as $recs) {
             print_r($recs);
             $staffid = $recs['staffid'];
-            #$initials = $recs['initials'];
-            #$title = $recs['title'];
+            //$initials = $recs['initials'];
+            //$title = $recs['title'];
             $firstname = stripslashes($recs['firstname']);
             $familyname = stripslashes($recs['familyname']);
             $fullname = stripslashes($recs['fullname']);
@@ -287,59 +283,59 @@ SQL;
             $num_second_mark = stripslashes($recs['num_second_mark']);
             $use = stripslashes($recs['use']);
             $num_total = $num_supervise + $num_second_mark;
-            #$email = stripslashes($recs['email']);
-            #$username = stripslashes($recs['username']);
-            #$room = stripslashes($recs['room']);
-            #$inactive = stripslashes($recs['inactive']);
+            //$email = stripslashes($recs['email']);
+            //$username = stripslashes($recs['username']);
+            //$room = stripslashes($recs['room']);
+            //$inactive = stripslashes($recs['inactive']);
             $staff_count++;
             $display_block .= "<TR>\n";
             $display_block .= "<TD><input type='hidden' name='staffid$staff_count' value='$staffid'> $staffid</TD>";
-            #$display_block .= "<TD><input type='text' name='initials$staff_count' value='$initials'  size=5 maxlength=30></TD>";
-            #$display_block .= "<TD>". GetTitleSelect("title$staff_count",$title) . "</TD>";
+            //$display_block .= "<TD><input type='text' name='initials$staff_count' value='$initials'  size=5 maxlength=30></TD>";
+            //$display_block .= "<TD>". GetTitleSelect("title$staff_count",$title) . "</TD>";
             $display_block .= "<TD>$firstname</TD>";
             $display_block .= "<TD>$familyname</TD>";
             $display_block .= "<TD>$fullname</TD>";
-            #$display_block .= "<TD><input type='text' name='email$staff_count' value='$email'  size=30 maxlength=40></TD>";
-            #$display_block .= "<TD><input type='text' name='username$staff_count' value='$username'  size=8 maxlength=20></TD>";
-            #$display_block .= "<TD><input type='text' name='room$staff_count' value='$room'  size=5 maxlength=10></TD>";
-            #$checked = "";
-            #if($inactive==1){
-            #  $checked = "checked";
-            #}
-            #$display_block .= "<TD><input type='checkbox' name='use$staffid' value='1' $checked></TD>\n";
+            //$display_block .= "<TD><input type='text' name='email$staff_count' value='$email'  size=30 maxlength=40></TD>";
+            //$display_block .= "<TD><input type='text' name='username$staff_count' value='$username'  size=8 maxlength=20></TD>";
+            //$display_block .= "<TD><input type='text' name='room$staff_count' value='$room'  size=5 maxlength=10></TD>";
+            //$checked = "";
+            //if($inactive==1){
+            //  $checked = "checked";
+            //}
+            //$display_block .= "<TD><input type='checkbox' name='use$staffid' value='1' $checked></TD>\n";
             $display_block .= "<TD>$num_supervise</TD>";
             $display_block .= "<TD>$num_second_mark</TD>";
             $display_block .= "<TD>$num_total</TD>";
-            # $display_block .= "<TD>$use</TD>";
-            $checked = "";
+            // $display_block .= "<TD>$use</TD>";
+            $checked = '';
             if ($use == 1) {
-                $checked = "checked";
+                $checked = 'checked';
             }
             $display_block .= "<TD><input type='checkbox' name='use$staff_count' value='1' $checked></TD>\n";
 
             $display_block .= "</TR>\n";
 
             if ($use == 1) {
-                $temp = array();
+                $temp = [];
                 // Name
-                $temp[] = array('v' => (string)$fullname);
+                $temp[] = ['v' => (string) $fullname];
                 // value
-                $temp[] = array('v' => (int)$num_supervise);
+                $temp[] = ['v' => (int) $num_supervise];
 
-                $rows[] = array('c' => $temp);
+                $rows[] = ['c' => $temp];
             }
         }
         $table['rows'] = $rows;
-        #print_r2($table);
-        #print($table);
-        #echo($table);
+        //print_r2($table);
+        //print($table);
+        //echo($table);
         if (!function_exists('json_encode')) {
-            echo("json_encode does not exist<BR>");
+            echo('json_encode does not exist<BR>');
         } else {
-            #echo("json_encode DOES exist<BR>");
+            //echo("json_encode DOES exist<BR>");
         }
         $jsonTable = json_encode($table);
-        #print($jsonTable);
+        //print($jsonTable);
     }
     $display_block .= "</tbody>\n";
     $display_block .= "</TABLE>\n";
@@ -351,26 +347,26 @@ SQL;
 
     $display_block .= "<p align='right'><input type='submit' id='submitbutton' name='submit' value='Update 'Use to plot.''></p>";
 
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 
-# <!--this is the div that will hold the pie chart-->
+    // <!--this is the div that will hold the pie chart-->
     $display_block .= "\n<div class='bordered' id='chart_div2'></div>\n";
     $display_block .= "\n<div id='chart2_url_div'></div>\n";
 
     $display_block .= "\n<div class='bordered' id='chart_div'></div>\n";
     $display_block .= "\n<div id='chart_url_div'></div>\n";
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Save table to CSV...</H2>\n";
     $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
     $display_block .= "\n<input type='hidden' name='op' value='savecsv'>";
 
     $display_block .= "<p><input type='submit' id='submitbutton_new' name='submit' value='Save table to CSV file.'></p>";
 
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 
-// Save CSV of $project_allocated_staff";
-    if ($POST_OP == "savecsv") {
-        $tmpcsvfile = tempnam("dummy", "");
+    // Save CSV of $project_allocated_staff";
+    if ($POST_OP == 'savecsv') {
+        $tmpcsvfile = tempnam('dummy', '');
         $path = dirname($tmpcsvfile);
         //$csv_filename = $tmpcsvfile;
         //unlink($tmpcsvfile);
@@ -381,7 +377,7 @@ SQL;
             $results = $db->query($query);
         } catch (PDOException $ex) {
             $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function " . " line: " . __LINE__ . "<BR>\n";
+            echo "An Error occured accessing the database in function: $this_function " . ' line: ' . __LINE__ . "<BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -390,23 +386,22 @@ SQL;
 
         $fp = fopen($tmpcsvfile, 'w');
 
-        $row[0] = "";
-        $row[1] = "";
-        $row[2] = "";
-        $row[3] = "";
-        $row[4] = "";
-        $row[5] = "";
-        $row[0] = "First name";
-        $row[1] = "Family name";
-        $row[2] = "Full name";
-        $row[3] = "Number Supervising";
-        $row[4] = "Number Second marking";
-        $row[5] = "Total";
+        $row[0] = '';
+        $row[1] = '';
+        $row[2] = '';
+        $row[3] = '';
+        $row[4] = '';
+        $row[5] = '';
+        $row[0] = 'First name';
+        $row[1] = 'Family name';
+        $row[2] = 'Full name';
+        $row[3] = 'Number Supervising';
+        $row[4] = 'Number Second marking';
+        $row[5] = 'Total';
         $ret = fputcsv($fp, $row);
 
         $results_rows = $results->fetchAll();
         foreach ($results_rows as $recs) {
-
             $staffid = $recs['staffid'];
             $firstname = stripslashes($recs['firstname']);
             $familyname = stripslashes($recs['familyname']);
@@ -424,7 +419,7 @@ SQL;
             $ret = fputcsv($fp, $row);
         }
         fclose($fp);
-        $csv_filename = $project_allocated_staff . ".csv";
+        $csv_filename = $project_allocated_staff . '.csv';
 
         header('Content-type: application/excel');
         header("Content-Disposition: attachment; filename=$csv_filename");
@@ -437,16 +432,14 @@ SQL;
         readfile("$tmpcsvfile");
 
         $display_block = "<h2> Staff project allocation saved as CSV file to: $csv_filename</h2>";
-
     }
-
 }
 
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <style>
     div.bordered {

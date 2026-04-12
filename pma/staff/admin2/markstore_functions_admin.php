@@ -1,7 +1,6 @@
-<?PHP
+<?php
 
-function SetLockedStatusForMarker($db, $sid, $is_part_locked, $part_index, $marker_index, $markstores)
-{
+function SetLockedStatusForMarker($db, $sid, $is_part_locked, $part_index, $marker_index, $markstores) {
     $this_markstore = $markstores[$part_index][$marker_index];
     // Check exists
     $query = "select * from $this_markstore where sid='$sid'";
@@ -17,7 +16,7 @@ function SetLockedStatusForMarker($db, $sid, $is_part_locked, $part_index, $mark
         exit();
     }
     $num = $results->rowCount();
-    if($num > 0 ){
+    if ($num > 0) {
         $query = "update $this_markstore set locked='$is_part_locked' where sid = $sid";
         //mysql_query($mod_details) or die(" Unable to modify the locked in the $this_markstore table. <BR>Query: $mod_details");
         try {
@@ -30,28 +29,25 @@ function SetLockedStatusForMarker($db, $sid, $is_part_locked, $part_index, $mark
 
             exit();
         }
-    }else{
+    } else {
     }
 }
 
-function SetLockedStatusForPart($db, $sid, $is_locked, $part_index, $markstores)
-{
-    for($j=1; $j<=3 ; $j++){
+function SetLockedStatusForPart($db, $sid, $is_locked, $part_index, $markstores) {
+    for ($j = 1; $j <= 3 ; $j++) {
         SetLockedStatusForMarker($db, $sid, $is_locked, $part_index, $j, $markstores);
     }
 }
 
-function SetLockedStatusForAllParts($db, $sid, $is_locked, $part_index, $markstores)
-{
-    for($i=1; $i<=5 ; $i++) {
+function SetLockedStatusForAllParts($db, $sid, $is_locked, $part_index, $markstores) {
+    for ($i = 1; $i <= 5 ; $i++) {
         for ($j = 1; $j <= 3; $j++) {
             SetLockedStatusForMarker($db, $sid, $is_locked, $i, $j, $markstores);
         }
     }
 }
 
-function SetLockedStatusOverall($db, $sid, $is_part_locked, $markstore_totals)
-{
+function SetLockedStatusOverall($db, $sid, $is_part_locked, $markstore_totals) {
     // Check exists
     $this_markstore = $markstore_totals;
     $query = "select * from $this_markstore where sid='$sid'";
@@ -66,7 +62,7 @@ function SetLockedStatusOverall($db, $sid, $is_part_locked, $markstore_totals)
         exit();
     }
     $num = $results->rowCount();
-    if($num > 0 ){
+    if ($num > 0) {
         $query = "update $this_markstore set locked='$is_part_locked' where sid = $sid";
         //mysql_query($mod_details) or die(" Unable to modify the locked in the $this_markstore table. <BR>Query: $mod_details");
         try {
@@ -79,12 +75,11 @@ function SetLockedStatusOverall($db, $sid, $is_part_locked, $markstore_totals)
 
             exit();
         }        //echo("Set = $is_part_locked<BR>\n");
-    }else{
+    } else {
     }
 }
 
-function SetThirdMarkerStatusForPart($db, $sid, $is_third_marker_required, $part_index, $markstore_totals)
-{
+function SetThirdMarkerStatusForPart($db, $sid, $is_third_marker_required, $part_index, $markstore_totals) {
     // Check exists
     $this_markstore = $markstore_totals;
     $query = "select * from $this_markstore where sid='$sid'";
@@ -99,7 +94,7 @@ function SetThirdMarkerStatusForPart($db, $sid, $is_third_marker_required, $part
         exit();
     }
     $num = $results->rowCount();
-    if($num > 0 ){
+    if ($num > 0) {
         $field = "third_marker_req$part_index";
         $query = "update $this_markstore set $field='$is_third_marker_required' where sid = $sid";
         //mysql_query($mod_details) or die(" Unable to modify the $field in the $this_markstore table. <BR>Query: $mod_details");
@@ -113,12 +108,11 @@ function SetThirdMarkerStatusForPart($db, $sid, $is_third_marker_required, $part
 
             exit();
         }
-    }else{
+    } else {
     }
 }
 
-function GetLockedStatusForMarker($db, $sid, $part_index, $marker_index, $markstores)
-{
+function GetLockedStatusForMarker($db, $sid, $part_index, $marker_index, $markstores) {
     $is_locked = 0;
     $this_markstore = $markstores[$part_index][$marker_index];
     $query = "select * from $this_markstore where sid='$sid'";
@@ -133,17 +127,16 @@ function GetLockedStatusForMarker($db, $sid, $part_index, $marker_index, $markst
         exit();
     }
     $num = $results->rowCount();
-    if($num > 0 ){
+    if ($num > 0) {
         //$recs = mysql_fetch_array($get_list_res);
         $recs = $results->fetch();
-        $entry = "locked";
+        $entry = 'locked';
         $is_locked = $recs[$entry];
     }
     return $is_locked;
 }
 
-function GetLockedStatusOverall($db, $sid,  $markstore_totals)
-{
+function GetLockedStatusOverall($db, $sid, $markstore_totals) {
     $is_locked = 0;
     $this_markstore = $markstore_totals;
     $query = "select * from $this_markstore where sid='$sid'";
@@ -158,14 +151,12 @@ function GetLockedStatusOverall($db, $sid,  $markstore_totals)
         exit();
     }
     $num = $results->rowCount();
-    if($num > 0 ){
+    if ($num > 0) {
         //$recs = mysql_fetch_array($get_list_res);
         $recs = $results->fetch();
-        $entry = "locked";
+        $entry = 'locked';
         $is_locked = $recs[$entry];
     }
 
     return $is_locked;
 }
-
-?>

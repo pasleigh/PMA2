@@ -5,18 +5,20 @@
  * Date: 15/05/2016
  * Time: 22:16
  */
- ini_set("max_execution_time", 300); // 5 mins
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("./backup_class.php")) OR die("Cannot find this file to include: backup_class.php<BR>");
+ini_set('max_execution_time', 300); // 5 mins
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_titles.php")) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('./backup_class.php')) or die('Cannot find this file to include: backup_class.php<BR>');
 
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables");
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables');
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-(@include_once("./PasswordHash.php")) OR die("Cannot open PasswordHash.php<BR>");
+(@include_once('./PasswordHash.php')) or die('Cannot open PasswordHash.php<BR>');
 
-if (array_key_exists('op', $_REQUEST) == false) {$_REQUEST['op'] = null;}
+if (array_key_exists('op', $_REQUEST) == false) {
+    $_REQUEST['op'] = null;
+}
 $OP = $_REQUEST['op'];
 
 if (array_key_exists('submit_pwd', $_REQUEST) == false) {
@@ -24,17 +26,17 @@ if (array_key_exists('submit_pwd', $_REQUEST) == false) {
 }
 $submit_pwd = $_REQUEST['submit_pwd'];
 
-$my_date_now = date("d-m-Y-H:i:s");
+$my_date_now = date('d-m-Y-H:i:s');
 $my_school = str_replace(' ', '_', $school_title);
 $sql_dump_filename = "database_dump_$my_school-$my_date_now.sql";
 
-$tmpsqlfile = tempnam(PMA_TMP_DIR, "X");
-if(!$tmpsqlfile){
-    echo("Not able to create temporary file.<BR>");
+$tmpsqlfile = tempnam(PMA_TMP_DIR, 'X');
+if (!$tmpsqlfile) {
+    echo('Not able to create temporary file.<BR>');
 }
 $path = dirname($tmpsqlfile);
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // Check the admin level
@@ -43,20 +45,18 @@ $access = access_check_response($db, $this_staff_username, $this_staff_full_name
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
 if ($access) {
-
-    if ($OP == "dump") {
-        $t_hasher = new PasswordHash(8, TRUE);
+    if ($OP == 'dump') {
+        $t_hasher = new PasswordHash(8, true);
         $check_pwd = $t_hasher->CheckPassword($submit_pwd, $hash_to_test_against);
         $check_pwd = true;
         if ($check_pwd) {
-
-            $dbb = new DBBackup(array(
+            $dbb = new DBBackup([
                 'driver' => 'mysql',
                 'host' => $hostname,
                 'user' => $dbusername,
                 'password' => $password,
                 'database' => $dbName
-            ));
+            ]);
 
             $backup = $dbb->backup();
 
@@ -95,19 +95,18 @@ if ($access) {
 
         $display_block .= "<p><input type='submit' id='submitbutton_dump' name='submit' value='Dump the database'></p>";
 
-        $display_block .= "</form>";
+        $display_block .= '</form>';
         //$display_block .= "\n</BODY>\n</HTML>\n";
-
     }
-}else{
-    $display_block .= "<h2>You must have full Super Admin level to access the functions of this page</h2><BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+} else {
+    $display_block .= '<h2>You must have full Super Admin level to access the functions of this page</h2><BR>';
+    $display_block .= '<A href="../index.php">Go back here</A><BR>';
 }
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

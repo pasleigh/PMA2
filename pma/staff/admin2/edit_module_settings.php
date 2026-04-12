@@ -1,15 +1,15 @@
 <?php
 // connect to the datbase
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) OR die("Cannot connect to the database<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_titles.php")) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) or die('Cannot connect to the database<BR>');
 
-(@include_once("$STAFF_DIR_VAL/setup_tables.php")) OR die("Cannot setup database tables");
-(@include_once("$STAFF_DIR_VAL/staff_functions.php")) OR die("Cannot setup database tables");
-(@include_once("$STAFF_DIR_VAL/markstore_functions.php")) OR die("Cannot setup markstore functions");
+(@include_once("$STAFF_DIR_VAL/setup_tables.php")) or die('Cannot setup database tables');
+(@include_once("$STAFF_DIR_VAL/staff_functions.php")) or die('Cannot setup database tables');
+(@include_once("$STAFF_DIR_VAL/markstore_functions.php")) or die('Cannot setup markstore functions');
 
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
 // Get the project
 if (!isset($_REQUEST['pm_id'])) {
@@ -17,37 +17,35 @@ if (!isset($_REQUEST['pm_id'])) {
 }
 $pm_id = $_REQUEST['pm_id'];
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // Check the admin level
 $admin_access = false;
-$admin_access = access_check_response($db,$this_staff_username, $this_staff_full_name, $staff_names,$access_phrase);
+$admin_access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 $is_module_admin = IsModuleAdmin($db, $this_staff_username, $pm_id, null, null);
 
-if($is_module_admin) {
+if ($is_module_admin) {
     $access_phrase = "You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful.";
 }
 
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
-
 if ($admin_access || $is_module_admin) {
-
     $display_block .= "<h1><span style='color: black'>Module Admin functions for:</span> $module_short_description - $module_prefix$module1$module_postfix. <BR><span style='color: black'>Starting </span>Sept $year_begin</h1>";
 
-    $display_block .= admin_functions_block($db,$pm_id,$project_allocated,$num_parts,$p_description,$year_begin, $this_staff_username, $admin_access);
+    $display_block .= admin_functions_block($db, $pm_id, $project_allocated, $num_parts, $p_description, $year_begin, $this_staff_username, $admin_access);
 
-    $display_block .= "<BR>";
+    $display_block .= '<BR>';
 } else {
-    $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= 'You do not have the appropriate admin level<BR>';
+    $display_block .= '<A href="../index.php">Go back here</A><BR>';
 }
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

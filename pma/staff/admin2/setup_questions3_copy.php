@@ -2,21 +2,23 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-(@include_once("./set_dir_admin.php"))        OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php"))  OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php"))        OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("../markstore_functions.php")) OR die("Cannot find this file to include: markstore_functions.php<BR>");
-(@include_once("../connect_pdo.php"))         OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php"))        OR die("Cannot setup database tables<BR>");
-(@include_once("../show_feedback_form.php"))  OR die("Cannot get show_feedback_form.php<BR>");
-(@include_once("./admin_functions.php"))      OR die("Cannot include admin functions<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot find this file to include: markstore_functions.php<BR>');
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('../show_feedback_form.php')) or die('Cannot get show_feedback_form.php<BR>');
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-if (!isset($_REQUEST['pm_id'])) { $_REQUEST['pm_id'] = null; }
-$pm_id      = $_REQUEST['pm_id'];
-$assesspart = isset($_GET['part']) ? (int)$_GET['part'] : null;
+if (!isset($_REQUEST['pm_id'])) {
+    $_REQUEST['pm_id'] = null;
+}
+$pm_id = $_REQUEST['pm_id'];
+$assesspart = isset($_GET['part']) ? (int) $_GET['part'] : null;
 
 // Tables for the destination (current module/part)
-$dest_qs_table   = $assessqs[$assesspart];
+$dest_qs_table = $assessqs[$assesspart];
 $dest_cats_table = $assessqs_cats[$assesspart];
 $assesstype_text = $p_description[$assesspart];
 
@@ -28,13 +30,13 @@ $assesstype_text = $p_description[$assesspart];
  * Given a projects_setup row, return the assessqs table name for a given part.
  */
 function qs_table_for_row($row, $part) {
-    $sc  = strtolower($row['short_code']);
-    $ye  = (int)$row['year_end'];
+    $sc = strtolower($row['short_code']);
+    $ye = (int) $row['year_end'];
     return "assessqs_{$sc}_{$ye}_p{$part}";
 }
 function cats_table_for_row($row, $part) {
-    $sc  = strtolower($row['short_code']);
-    $ye  = (int)$row['year_end'];
+    $sc = strtolower($row['short_code']);
+    $ye = (int) $row['year_end'];
     return "assessqs_cats_{$sc}_{$ye}_p{$part}";
 }
 
@@ -43,32 +45,32 @@ function cats_table_for_row($row, $part) {
 // ─────────────────────────────────────────────────────────────────────────────
 if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_projects') {
     header('Content-Type: application/json');
-    $year = (int)($_GET['year'] ?? 0);
+    $year = (int) ($_GET['year'] ?? 0);
     $stmt = $db->prepare(
-        "SELECT id, module_prefix, module, module_postfix, module_short_desc, short_code, year_begin, year_end, num_parts,
+        'SELECT id, module_prefix, module, module_postfix, module_short_desc, short_code, year_begin, year_end, num_parts,
                 use_p1, use_p2, use_p3, use_p4, use_p5,
                 p1_desc, p2_desc, p3_desc, p4_desc, p5_desc
-         FROM projects_setup WHERE year_begin = :y ORDER BY short_code, module"
+         FROM projects_setup WHERE year_begin = :y ORDER BY short_code, module'
     );
     $stmt->execute([':y' => $year]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $out = [];
     foreach ($rows as $row) {
         $out[] = [
-            'id'    => $row['id'],
+            'id' => $row['id'],
             'label' => trim($row['module_prefix'] . $row['module'] . $row['module_postfix'])
                        . ' — ' . $row['module_short_desc']
                        . ' (' . $row['short_code'] . ')',
-            'num_parts' => (int)$row['num_parts'],
-            'parts' => array_map(function($p) use ($row) {
+            'num_parts' => (int) $row['num_parts'],
+            'parts' => array_map(function ($p) use ($row) {
                 return [
-                    'part'  => $p,
-                    'desc'  => $row["p{$p}_desc"],
-                    'use'   => (int)$row["use_p{$p}"],
+                    'part' => $p,
+                    'desc' => $row["p{$p}_desc"],
+                    'use' => (int) $row["use_p{$p}"],
                 ];
             }, range(1, 5)),
             'short_code' => $row['short_code'],
-            'year_end'   => $row['year_end'],
+            'year_end' => $row['year_end'],
         ];
     }
     echo json_encode($out);
@@ -80,8 +82,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_projects') {
 // ─────────────────────────────────────────────────────────────────────────────
 if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_preview') {
     header('Content-Type: application/json');
-    $src_pm_id = (int)($_GET['src_pm_id'] ?? 0);
-    $src_part  = (int)($_GET['src_part']  ?? 0);
+    $src_pm_id = (int) ($_GET['src_pm_id'] ?? 0);
+    $src_part = (int) ($_GET['src_part'] ?? 0);
 
     if ($src_pm_id < 1 || $src_part < 1) {
         echo json_encode(['ok' => false, 'html' => 'Invalid selection.']);
@@ -89,7 +91,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_preview') {
     }
 
     // Fetch source project row
-    $stmt = $db->prepare("SELECT * FROM projects_setup WHERE id = :id");
+    $stmt = $db->prepare('SELECT * FROM projects_setup WHERE id = :id');
     $stmt->execute([':id' => $src_pm_id]);
     $src_row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -99,13 +101,21 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_preview') {
     }
 
     $src_cats = cats_table_for_row($src_row, $src_part);
-    $src_qs   = qs_table_for_row($src_row, $src_part);
+    $src_qs = qs_table_for_row($src_row, $src_part);
 
     // Check tables exist
     $cats_exist = false;
-    $qs_exist   = false;
-    try { $db->query("SELECT 1 FROM $src_cats LIMIT 1"); $cats_exist = true; } catch (PDOException $e) {}
-    try { $db->query("SELECT 1 FROM $src_qs   LIMIT 1"); $qs_exist   = true; } catch (PDOException $e) {}
+    $qs_exist = false;
+    try {
+        $db->query("SELECT 1 FROM $src_cats LIMIT 1");
+        $cats_exist = true;
+    } catch (PDOException $e) {
+    }
+    try {
+        $db->query("SELECT 1 FROM $src_qs   LIMIT 1");
+        $qs_exist = true;
+    } catch (PDOException $e) {
+    }
 
     if (!$cats_exist || !$qs_exist) {
         echo json_encode(['ok' => false,
@@ -117,16 +127,16 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_preview') {
     // Build readonly summary
     $cats_rows = $db->query("SELECT * FROM $src_cats ORDER BY cat")->fetchAll(PDO::FETCH_ASSOC);
 
-    $html  = "<div class='table-responsive'>";
+    $html = "<div class='table-responsive'>";
     foreach ($cats_rows as $cat_row) {
-        $cat = (int)$cat_row['cat'];
+        $cat = (int) $cat_row['cat'];
         $html .= "<div class='card mb-2'>";
         $html .= "<div class='card-header py-1'><strong>Section $cat: "
                . htmlspecialchars($cat_row['description'], ENT_QUOTES, 'UTF-8')
-               . "</strong> &nbsp; "
-               . htmlspecialchars($cat_row['weight_percent'] ?? '', ENT_QUOTES, 'UTF-8') . "% &nbsp; "
-               . "factor: " . htmlspecialchars($cat_row['factor'] ?? '', ENT_QUOTES, 'UTF-8')
-               . "</div>";
+               . '</strong> &nbsp; '
+               . htmlspecialchars($cat_row['weight_percent'] ?? '', ENT_QUOTES, 'UTF-8') . '% &nbsp; '
+               . 'factor: ' . htmlspecialchars($cat_row['factor'] ?? '', ENT_QUOTES, 'UTF-8')
+               . '</div>';
         $html .= "<div class='card-body py-1'>";
 
         // Questions for this cat (exclude feedback placeholder)
@@ -140,34 +150,36 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_preview') {
             $html .= "<table class='table table-sm table-bordered mb-0'>";
             $html .= "<thead class='table-light'><tr><th>#</th><th>Question</th><th>Responses</th></tr></thead><tbody>";
             foreach ($q_rows as $qr) {
-                $qid     = (int)$qr['qid'];
-                $entries = (int)$qr['entries'];
-                $resps   = [];
+                $qid = (int) $qr['qid'];
+                $entries = (int) $qr['entries'];
+                $resps = [];
                 for ($r = 1; $r <= $entries; $r++) {
                     $t = htmlspecialchars($qr["text$r"] ?? '', ENT_QUOTES, 'UTF-8');
                     $m = htmlspecialchars($qr["mark$r"] ?? '', ENT_QUOTES, 'UTF-8');
-                    if ($t !== '') { $resps[] = "$t ($m)"; }
+                    if ($t !== '') {
+                        $resps[] = "$t ($m)";
+                    }
                 }
-                $html .= "<tr>";
+                $html .= '<tr>';
                 $html .= "<td>$qid</td>";
-                $html .= "<td>" . htmlspecialchars($qr['question'], ENT_QUOTES, 'UTF-8') . "</td>";
-                $html .= "<td><small>" . implode('<br>', $resps) . "</small></td>";
-                $html .= "</tr>";
+                $html .= '<td>' . htmlspecialchars($qr['question'], ENT_QUOTES, 'UTF-8') . '</td>';
+                $html .= '<td><small>' . implode('<br>', $resps) . '</small></td>';
+                $html .= '</tr>';
             }
-            $html .= "</tbody></table>";
+            $html .= '</tbody></table>';
         } else {
             $html .= "<em class='text-muted'>No questions found.</em>";
         }
 
-        $html .= "</div></div>";
+        $html .= '</div></div>';
     }
-    $html .= "</div>";
+    $html .= '</div>';
 
     echo json_encode([
-        'ok'        => true,
-        'html'      => $html,
-        'src_cats'  => $src_cats,
-        'src_qs'    => $src_qs,
+        'ok' => true,
+        'html' => $html,
+        'src_cats' => $src_cats,
+        'src_qs' => $src_qs,
         'src_label' => trim($src_row['module_prefix'] . $src_row['module'] . $src_row['module_postfix'])
                        . ' ' . $src_row['module_short_desc']
                        . ' (' . $src_row['short_code'] . ') '
@@ -181,11 +193,11 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_preview') {
 // POST: do_copy  — performs the actual table copy after confirmation
 // ─────────────────────────────────────────────────────────────────────────────
 $copy_done = false;
-$copy_msg  = '';
+$copy_msg = '';
 if (isset($_POST['op']) && $_POST['op'] === 'do_copy') {
-    $confirmed    = isset($_POST['confirm_copy']) && $_POST['confirm_copy'] === '1';
-    $src_qs_post  = $_POST['src_qs']   ?? '';
-    $src_cats_post= $_POST['src_cats'] ?? '';
+    $confirmed = isset($_POST['confirm_copy']) && $_POST['confirm_copy'] === '1';
+    $src_qs_post = $_POST['src_qs'] ?? '';
+    $src_cats_post = $_POST['src_cats'] ?? '';
 
     // Validate: table names must match the expected pattern and exist
     $valid_pattern = '/^assessqs(_cats)?_[a-z0-9]+_\d{4}_p[1-5]$/';
@@ -210,11 +222,10 @@ if (isset($_POST['op']) && $_POST['op'] === 'do_copy') {
                       . "into <code>$dest_qs_table</code> / <code>$dest_cats_table</code>.</div>"
                       . "<p><a href='./edit_module_settings.php?pm_id=$pm_id' class='btn btn-primary'>Go to module admin page</a></p>";
             $copy_done = true;
-
         } catch (PDOException $ex) {
             error_log($ex->getMessage());
             $copy_msg = "<div class='alert alert-danger'>Database error: "
-                      . htmlspecialchars($ex->getMessage(), ENT_QUOTES, 'UTF-8') . "</div>";
+                      . htmlspecialchars($ex->getMessage(), ENT_QUOTES, 'UTF-8') . '</div>';
         }
     }
 }
@@ -222,19 +233,20 @@ if (isset($_POST['op']) && $_POST['op'] === 'do_copy') {
 // ─────────────────────────────────────────────────────────────────────────────
 // PAGE BUILD
 // ─────────────────────────────────────────────────────────────────────────────
-$display_block  = $connect_msg;
+$display_block = $connect_msg;
 
-$admin_access    = false;
-$admin_access    = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
+$admin_access = false;
+$admin_access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
-if ($is_module_admin) { $access_phrase = $module_level_access_phrase; }
+if ($is_module_admin) {
+    $access_phrase = $module_level_access_phrase;
+}
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
 if (!$is_module_admin && !$admin_access) {
-    $display_block .= "You do not have the appropriate admin level<BR>";
+    $display_block .= 'You do not have the appropriate admin level<BR>';
     $display_block .= "<a href='../index.php'>Go back here</a><BR>";
 } else {
-
     $display_block .= "
 <div class='alert alert-danger'>
   <strong>Warning:</strong> This page will <strong>permanently overwrite</strong> the existing questions
@@ -259,9 +271,8 @@ if (!$is_module_admin && !$admin_access) {
     }
 
     if (!$copy_done) {
-
         // Distinct years available
-        $years = $db->query("SELECT DISTINCT year_begin FROM projects_setup ORDER BY year_begin DESC")
+        $years = $db->query('SELECT DISTINCT year_begin FROM projects_setup ORDER BY year_begin DESC')
                     ->fetchAll(PDO::FETCH_COLUMN);
 
         $display_block .= "
@@ -275,7 +286,7 @@ if (!$is_module_admin && !$admin_access) {
         <select id='sel_year' class='form-select' onchange='loadProjects()'>
           <option value=''>— select year —</option>";
         foreach ($years as $y) {
-            $display_block .= "<option value='" . (int)$y . "'>" . (int)$y . "/" . ((int)$y + 1) . "</option>";
+            $display_block .= "<option value='" . (int) $y . "'>" . (int) $y . '/' . ((int) $y + 1) . '</option>';
         }
         $display_block .= "
         </select>
@@ -324,17 +335,15 @@ if (!$is_module_admin && !$admin_access) {
     </div>
   </div>
 </div>";
-
     } // end if !$copy_done
 
     $display_block .= "<p class='mt-3'><a href='./edit_module_settings.php?pm_id=$pm_id'>← Back to module admin page</a></p>";
-
 } // end access check
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">
@@ -358,7 +367,7 @@ if (!$is_module_admin && !$admin_access) {
 var SELF_URL = <?php echo json_encode(
     htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')
     . '?pm_id=' . urlencode($pm_id ?? '')
-    . '&part='  . urlencode($assesspart ?? '')
+    . '&part=' . urlencode($assesspart ?? '')
 ); ?>;
 
 // Stores project rows returned from server

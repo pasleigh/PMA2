@@ -1,38 +1,37 @@
 <?php
-(@include_once("./set_dir_staff.php")) OR die("Cannot find this file to include: set_dir_staff.php<BR>");
-(@include_once("./config.php")) OR die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
-(@include_once("./setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("./connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("./setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("./staff_functions.php")) OR die("Cannot include staff_function.php<BR>");
-(@include_once("./show_minor_part_feedback_form.php")) OR die("Cannot include show_minor_part_feedback<BR>");
+
+(@include_once('./set_dir_staff.php')) or die('Cannot find this file to include: set_dir_staff.php<BR>');
+(@include_once('./config.php')) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
+(@include_once('./setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('./connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('./setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./staff_functions.php')) or die('Cannot include staff_function.php<BR>');
+(@include_once('./show_minor_part_feedback_form.php')) or die('Cannot include show_minor_part_feedback<BR>');
 //(@include_once("./show_mark_questions.php")) OR die("Cannot include show_mark_questions<BR>");
-(@include_once("./markstore_functions.php")) OR die("Cannot include markstore_functions<BR>");
+(@include_once('./markstore_functions.php')) or die('Cannot include markstore_functions<BR>');
 
-
-$staff_username = "unknown";
-if(array_key_exists('REMOTE_USER',$_SERVER)){
+$staff_username = 'unknown';
+if (array_key_exists('REMOTE_USER', $_SERVER)) {
     $staff_username = get_server_username();
-}else{
-    if(isset($_SESSION['USERNAME'])){
+} else {
+    if (isset($_SESSION['USERNAME'])) {
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaffB($db, $staff_username, $staff_names) == false){
-    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+if (IsStaffB($db, $staff_username, $staff_names) == false) {
+    echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
     exit();
 }
 
-
-set_include_path( get_include_path().PATH_SEPARATOR."..");
+set_include_path(get_include_path() . PATH_SEPARATOR . '..');
 
 require_once 'vendor/autoload.php';
 
-$xlsx_filename = "project_marks_" . $module_prefix . $module1 . $module_postfix . "_" . $short_code . "_" . $year_begin . "-" . $year_end . ".xlsx";
-$xlsx_sheet_name = $module_prefix . $module1 . $module_postfix . "_" . $year_begin . "-" . $year_end;
+$xlsx_filename = 'project_marks_' . $module_prefix . $module1 . $module_postfix . '_' . $short_code . '_' . $year_begin . '-' . $year_end . '.xlsx';
+$xlsx_sheet_name = $module_prefix . $module1 . $module_postfix . '_' . $year_begin . '-' . $year_end;
 
-$tmpxlsxfile = tempnam(PMA_TMP_DIR, "");
+$tmpxlsxfile = tempnam(PMA_TMP_DIR, '');
 $path = dirname($tmpxlsxfile);
 
 $display_block = "<h1>Excel file format (.xlsx) list of Projects Marks for $module_prefix$module1 $short_code $year_begin/$year_end</h1>\n";
@@ -51,156 +50,155 @@ try {
 $num = $results->rowCount();
 if ($num < 1) {
     //no records
-    $display_block .= "<p><em>Sorry, there are no records to select!</em></p>";
+    $display_block .= '<p><em>Sorry, there are no records to select!</em></p>';
 } else {
     //has records
     // So create the xls writer
-        $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
-        // delete the default active sheet
-        $spreadsheet->removeSheetByIndex(0);
-        $summary_worksheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, "Module Summary");
-        $spreadsheet->addSheet($summary_worksheet, 0);
-        $final_marks_worksheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, "Final_Marks_");
-        $spreadsheet->addSheet($final_marks_worksheet, 1);
-        $sheetIndex = 2;
-        for ($i = 0; $i < $num_parts; $i++) {
-            $filename = "Part " . ($i+1) . " Qs";
-            $part_Qs_worksheets[$i] = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $filename);
-            $spreadsheet->addSheet($part_Qs_worksheets[$i], $sheetIndex);
-            $sheetIndex++;
-        }
-        for ($i = 0; $i < $num_parts; $i++) {
-            $filename = "Part " . ($i+1) . " Marks";
-            $part_Marks_worksheets[$i] = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $filename);
-            $spreadsheet->addSheet($part_Marks_worksheets[$i], $sheetIndex);
-            $sheetIndex++;
-        }
+    $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+    // delete the default active sheet
+    $spreadsheet->removeSheetByIndex(0);
+    $summary_worksheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Module Summary');
+    $spreadsheet->addSheet($summary_worksheet, 0);
+    $final_marks_worksheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Final_Marks_');
+    $spreadsheet->addSheet($final_marks_worksheet, 1);
+    $sheetIndex = 2;
+    for ($i = 0; $i < $num_parts; $i++) {
+        $filename = 'Part ' . ($i + 1) . ' Qs';
+        $part_Qs_worksheets[$i] = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $filename);
+        $spreadsheet->addSheet($part_Qs_worksheets[$i], $sheetIndex);
+        $sheetIndex++;
+    }
+    for ($i = 0; $i < $num_parts; $i++) {
+        $filename = 'Part ' . ($i + 1) . ' Marks';
+        $part_Marks_worksheets[$i] = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $filename);
+        $spreadsheet->addSheet($part_Marks_worksheets[$i], $sheetIndex);
+        $sheetIndex++;
+    }
 
     //-------------------------------------------------------------
     // The module summary sheet
-    $all_rows_for_output = array();
+    $all_rows_for_output = [];
     // blank row
-    $row[0] = "";
-    $row[1] = "";
-    $row[2] = "";
+    $row[0] = '';
+    $row[1] = '';
+    $row[2] = '';
     $all_rows_for_output[] = $row;
 
-    $row[0] = "Module name";
+    $row[0] = 'Module name';
     $row[1] = "$module_short_description";
     $all_rows_for_output[] = $row;
-    $row[0] = "Module code";
+    $row[0] = 'Module code';
     $row[1] = "$module_prefix$module1$module_postfix";
     $row[2] = "$short_code";
     $all_rows_for_output[] = $row;
-    $row[0] = "Year begin";
+    $row[0] = 'Year begin';
     $row[1] = $year_begin;
-    $row[2] = "";
+    $row[2] = '';
     $all_rows_for_output[] = $row;
-    $row[0] = "Year end";
+    $row[0] = 'Year end';
     $row[1] = $year_end;
     $all_rows_for_output[] = $row;
 
-    $row[0] = "Module leader";
+    $row[0] = 'Module leader';
     $row[1] = $module_leader_fullname;
     $all_rows_for_output[] = $row;
     $module_leader_email = GetStaffEmailFromFullname($db, $module_leader_fullname, $staff_names);
-    $row[0] = "Module leader email";
+    $row[0] = 'Module leader email';
     $row[1] = $module_leader_email;
     $all_rows_for_output[] = $row;
 
     // blank row
-    $row[0] = "";
-    $row[1] = "";
+    $row[0] = '';
+    $row[1] = '';
     $all_rows_for_output[] = $row;
 
-    $row[0] = "Number of assessment parts";
+    $row[0] = 'Number of assessment parts';
     $row[1] = $num_parts;
     $all_rows_for_output[] = $row;
-    $row[0] = "Acceptable variation";
+    $row[0] = 'Acceptable variation';
     $row[1] = $accept_var;
     $all_rows_for_output[] = $row;
-    $row[0] = "Pass mark";
+    $row[0] = 'Pass mark';
     $row[1] = $pass_mark;
     $all_rows_for_output[] = $row;
-    $row[0] = "Min number of feedback words";
+    $row[0] = 'Min number of feedback words';
     $row[1] = $min_feedback_words;
     $all_rows_for_output[] = $row;
 
     // blank row
-    $row[0] = "";
-    $row[1] = "";
+    $row[0] = '';
+    $row[1] = '';
     $all_rows_for_output[] = $row;
-    $row[0] = "Assessment parts";
-    $row[1] = "";
+    $row[0] = 'Assessment parts';
+    $row[1] = '';
     $all_rows_for_output[] = $row;
     for ($i = 1; $i <= $num_parts; $i++) {
-        $row[0] = "Part";
+        $row[0] = 'Part';
         $row[1] = $i;
         $all_rows_for_output[] = $row;
 
-        $row[0] = "Description";
+        $row[0] = 'Description';
         $row[1] = $p_description[$i];
         $all_rows_for_output[] = $row;
 
-        $row[0] = "% of module";
+        $row[0] = '% of module';
         $row[1] = $p_percent[$i];
         $all_rows_for_output[] = $row;
 
-        $row[0] = "Maximum mark";
+        $row[0] = 'Maximum mark';
         $row[1] = $p_max[$i];
         $all_rows_for_output[] = $row;
 
-        $row[0] = "Number of markers";
+        $row[0] = 'Number of markers';
         $row[1] = $p_num_markers[$i];
         $all_rows_for_output[] = $row;
 
-        $row[0] = "Used in the assessment";
+        $row[0] = 'Used in the assessment';
         if ($p_use[$i] == 1) {
-            $row[1] = "Yes";
+            $row[1] = 'Yes';
         } else {
-            $row[1] = "No";
+            $row[1] = 'No';
         }
         $all_rows_for_output[] = $row;
 
-        $row[0] = "Response type";
+        $row[0] = 'Response type';
         if ($p_numeric[$i] == 0) {
-            $row[1] = "Phrase";
+            $row[1] = 'Phrase';
         } else {
-            $row[1] = "Numeric";
+            $row[1] = 'Numeric';
         }
         $all_rows_for_output[] = $row;
 
         // blank row
-        $row[0] = "";
-        $row[1] = "";
+        $row[0] = '';
+        $row[1] = '';
         $all_rows_for_output[] = $row;
-
     }
 
     $rowIndex = 1;
     $colIndex = 1;
-    foreach ($all_rows_for_output as $row_text){
-            for($colIndex = 1; $colIndex <= count($row_text); $colIndex++) {
-                $summary_worksheet->setCellValue([$colIndex, $rowIndex], $row_text[$colIndex-1]);
-            }
-            $rowIndex++;
+    foreach ($all_rows_for_output as $row_text) {
+        for ($colIndex = 1; $colIndex <= count($row_text); $colIndex++) {
+            $summary_worksheet->setCellValue([$colIndex, $rowIndex], $row_text[$colIndex - 1]);
+        }
+        $rowIndex++;
     }
     //================================================================================================
 
     //-------------------------------------------------------------
     // The module marks sheet
-    $all_rows_for_output = array();
-    $row[0] = "";
-    $row[1] = "";
-    $row[2] = "";
-    $row[3] = "";
-    $row[4] = "";
-    $row[5] = "";
-    $row[6] = "";
-    $row[7] = "";
+    $all_rows_for_output = [];
+    $row[0] = '';
+    $row[1] = '';
+    $row[2] = '';
+    $row[3] = '';
+    $row[4] = '';
+    $row[5] = '';
+    $row[6] = '';
+    $row[7] = '';
     $count = 8;
     for ($i = 1; $i <= $num_parts; $i++) {
-        $part = "p$i" . "_num_markers";
+        $part = "p$i" . '_num_markers';
         $num_markers = $setup_res[$part];
         if ($num_markers == 2) {
             $num_markers = 3;
@@ -210,7 +208,7 @@ if ($num < 1) {
             if ($num_markers == 1) {
                 $row[$count] = "$pc";
             } else {
-                $row[$count] = "";
+                $row[$count] = '';
             }
             $count++;
         }
@@ -219,23 +217,23 @@ if ($num < 1) {
             $count++;
         }
     }
-    $row[$count] = "";
+    $row[$count] = '';
 
     // add the row
     $all_rows_for_output[] = $row;
 
     // Title row
-    $row[0] = "Student name";
-    $row[1] = "SID";
-    $row[2] = "Username";
-    $row[3] = "Programme";
-    $row[4] = "Project ID";
-    $row[5] = "Project title";
-    $row[6] = "Supervisor";
-    $row[7] = "2nd Marker";
+    $row[0] = 'Student name';
+    $row[1] = 'SID';
+    $row[2] = 'Username';
+    $row[3] = 'Programme';
+    $row[4] = 'Project ID';
+    $row[5] = 'Project title';
+    $row[6] = 'Supervisor';
+    $row[7] = '2nd Marker';
     $count = 8;
     for ($i = 1; $i <= $num_parts; $i++) {
-        $part = "p$i" . "_num_markers";
+        $part = "p$i" . '_num_markers';
         $num_markers = $setup_res[$part];
         if ($num_markers == 2) {
             $num_markers = 3;
@@ -249,7 +247,7 @@ if ($num < 1) {
             $count++;
         }
     }
-    $row[$count] = "Final Mark";
+    $row[$count] = 'Final Mark';
 
     // add the row
     $all_rows_for_output[] = $row;
@@ -263,8 +261,8 @@ if ($num < 1) {
         $supervisor_id = $recs['supervisor_id'];
         $second_marker_id = $recs['second_marker_id'];
 
-        $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_names2, "0");
-        $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_names2, "0");
+        $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_names2, '0');
+        $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_names2, '0');
 
         $query = "select * from $students where sid=$sid";
         try {
@@ -279,16 +277,16 @@ if ($num < 1) {
         }
         $student_recs = $results->fetch();
 
-        if($student_recs) {
+        if ($student_recs) {
             $student_name = $student_recs['name'];
             $username = $student_recs['username'];
             $programme = $student_recs['programme'];
             $sel = $student_recs['sel'];
-        }else{
-            $student_name = "unable to find studnet name from SID";
-            $username = "unable to find username from SID";
-            $programme = "unknown";
-            $sel = "";
+        } else {
+            $student_name = 'unable to find studnet name from SID';
+            $username = 'unable to find username from SID';
+            $programme = 'unknown';
+            $sel = '';
         }
 
         $row[0] = $student_name;
@@ -303,7 +301,7 @@ if ($num < 1) {
         $count = 8;
         // get the part marks from SID
         for ($i = 1; $i <= $num_parts; $i++) {
-            $part = "p$i" . "_num_markers";
+            $part = "p$i" . '_num_markers';
             $num_markers = $setup_res[$part];
             if ($num_markers == 2) {
                 $num_markers = 3;
@@ -323,7 +321,7 @@ if ($num < 1) {
                 }
                 $marks_recs = $results->fetch();
                 $total = 0.0;
-                if($marks_recs){
+                if ($marks_recs) {
                     $total = $marks_recs['total'];
                 }
                 $row[$count] = $total;
@@ -350,7 +348,7 @@ if ($num < 1) {
         $marks_recs = $results->fetch();
 
         $total = 0.0;
-        if($marks_recs){
+        if ($marks_recs) {
             $total = $marks_recs['total'];
         }
         $row[$count] = $total;
@@ -361,28 +359,27 @@ if ($num < 1) {
 
     // Write the module marks to the xlsxwriter
     $rowIndex = 1;
-    foreach ($all_rows_for_output as $row_text){
-            for($colIndex = 1; $colIndex <= count($row_text); $colIndex++) {
-                $final_marks_worksheet->setCellValue([$colIndex, $rowIndex], $row_text[$colIndex-1]);
-            }
-            $rowIndex++;
+    foreach ($all_rows_for_output as $row_text) {
+        for ($colIndex = 1; $colIndex <= count($row_text); $colIndex++) {
+            $final_marks_worksheet->setCellValue([$colIndex, $rowIndex], $row_text[$colIndex - 1]);
+        }
+        $rowIndex++;
     }
     //==================================================================================================
 
     // Part Questions
-    $row = array();
+    $row = [];
     // Initialise to the longest number of responses
     // It seems like the row need to be the same length for all output
     $row_len = 250;
     $some_data = '';
-    for ($i = 0; $i < $row_len; $i++)
-    {
+    for ($i = 0; $i < $row_len; $i++) {
         // one of these
         $row[] = $some_data;
     }
 
-    $cat_weights = array();
-    $cat_factors = array();
+    $cat_weights = [];
+    $cat_factors = [];
 
     for ($i = 1; $i <= $num_parts; $i++) {
         // empty the row
@@ -391,30 +388,30 @@ if ($num < 1) {
         }
         $q_count = 0;
         $xlsx_part_sheet_name = "Part $i Qs";
-        $all_rows_for_output = array();
+        $all_rows_for_output = [];
 
-        $row[0] = "Part";
+        $row[0] = 'Part';
         $row[1] = $i;
-        $row[2] = "";
-        $row[3] = "";
-        $row[4] = "";
+        $row[2] = '';
+        $row[3] = '';
+        $row[4] = '';
         $all_rows_for_output[] = $row;
 
-        $row[0] = "Description";
+        $row[0] = 'Description';
         $row[1] = $p_description[$i];
         $all_rows_for_output[] = $row;
 
-        $row[0] = "";
-        $row[1] = "";
+        $row[0] = '';
+        $row[1] = '';
         $all_rows_for_output[] = $row;
 
-        $row[0] = "Question No.";
-        $row[1] = "Section No.";
-        $row[2] = "Section title";
-        $row[3] = "Question";
-        $row[4] = "Section Q No.";
-        $row[5] = "Weight %";
-        $row[6] = "Factor";
+        $row[0] = 'Question No.';
+        $row[1] = 'Section No.';
+        $row[2] = 'Section title';
+        $row[3] = 'Question';
+        $row[4] = 'Section Q No.';
+        $row[5] = 'Weight %';
+        $row[6] = 'Factor';
         $all_rows_for_output[] = $row;
 
         // Questions table
@@ -437,8 +434,8 @@ if ($num < 1) {
         $num_categories = $results->rowCount();
         $cat_count = $num_categories;
 
-        $cat_weights[$i] = array();
-        $cat_factors[$i] = array();
+        $cat_weights[$i] = [];
+        $cat_factors[$i] = [];
 
         for ($cat = 1; $cat <= $cat_count; $cat++) {
             // Get the category titles
@@ -476,7 +473,7 @@ if ($num < 1) {
 
             if ($num < 1) {
                 //no questions
-                $display_block .= "<em>Sorry, there are no questions in this catagory select!</em>";
+                $display_block .= '<em>Sorry, there are no questions in this catagory select!</em>';
             } else {
                 //has questions
                 for ($count = 1; $count <= $num; $count++) {
@@ -514,10 +511,10 @@ if ($num < 1) {
                     for ($j = 1; $j <= $entries; $j++) {
                         $text_id = 'text' . $j;
                         $mark_id = 'mark' . $j;
-                        $text =  $qs_list[$text_id];
-                        $mark =  $qs_list[$mark_id];
-                        $row[7+($j-1)*2] = $text;
-                        $row[7+($j-1)*2+1] = $mark;
+                        $text = $qs_list[$text_id];
+                        $mark = $qs_list[$mark_id];
+                        $row[7 + ($j - 1) * 2] = $text;
+                        $row[7 + ($j - 1) * 2 + 1] = $mark;
                     }
                     $all_rows_for_output[] = $row;
                 }
@@ -526,45 +523,44 @@ if ($num < 1) {
 
         // Write this part questions to the xlsxwriter
         $rowIndex = 1;
-        foreach ($all_rows_for_output as $row_text){
-                for($colIndex = 1; $colIndex <= count($row_text); $colIndex++) {
-                    $part_Qs_worksheets[$i-1]->setCellValue([$colIndex, $rowIndex], $row_text[$colIndex-1]);
-                }
-                $rowIndex++;
+        foreach ($all_rows_for_output as $row_text) {
+            for ($colIndex = 1; $colIndex <= count($row_text); $colIndex++) {
+                $part_Qs_worksheets[$i - 1]->setCellValue([$colIndex, $rowIndex], $row_text[$colIndex - 1]);
+            }
+            $rowIndex++;
         }
-
     }
 
     //-------------------------------------------------------------
     // The part marks sheets
 
-    for($k = 1 ; $k <= $num_parts; $k++) {
+    for ($k = 1 ; $k <= $num_parts; $k++) {
         // empty the row
         for ($j = 0; $j < count($row); $j++) {
             $row[$j] = '';
         }
         $q_count = 0;
         $xlsx_part_sheet_name = "Part $k Marks";
-        $all_rows_for_output = array();
+        $all_rows_for_output = [];
 
-        $row[0] = "Part";
+        $row[0] = 'Part';
         $row[1] = $k;
-        $row[2] = "marks";
+        $row[2] = 'marks';
         $all_rows_for_output[] = $row;
 
-        $row[0] = "Description";
+        $row[0] = 'Description';
         $row[1] = "$p_description[$k]";
-        $row[2] = "";
+        $row[2] = '';
         $all_rows_for_output[] = $row;
 
-        $part = "p$k" . "_num_markers";
+        $part = "p$k" . '_num_markers';
         $num_markers = $setup_res[$part];
         if ($num_markers == 2) {
             $num_markers = 3;
         }
 
         // add the row
-        $row[0] = "Num markers";
+        $row[0] = 'Num markers';
         $row[1] = $num_markers;
         $row[2] = '';
         $all_rows_for_output[] = $row;
@@ -600,7 +596,7 @@ if ($num < 1) {
 
         $row[0] = 'Qs per section';
 
-        $cat_q_count = array();
+        $cat_q_count = [];
         for ($cat = 1; $cat <= $cat_count; $cat++) {
             $query = "select * from $assessqs_year where cat=$cat";
             try {
@@ -642,17 +638,17 @@ if ($num < 1) {
         $rows = $results->fetchAll();
 
         // Title row
-        $row[0] = "Student name";
-        $row[1] = "SID";
-        $row[2] = "Username";
-        $row[3] = "Project ID";
+        $row[0] = 'Student name';
+        $row[1] = 'SID';
+        $row[2] = 'Username';
+        $row[3] = 'Project ID';
         $count = 4;
-        for($m = 1; $m <= $num_markers; $m++) {
+        for ($m = 1; $m <= $num_markers; $m++) {
             for ($cat = 1; $cat <= $cat_count; $cat++) {
                 for ($j = 1; $j <= $cat_q_count[$cat]; $j++) {
-                    $label = "Sec" . $cat . "Q" . $j . "(m$m)";
+                    $label = 'Sec' . $cat . 'Q' . $j . "(m$m)";
                     if ($j == $cat_q_count[$cat]) {
-                        $label = "Sec" . $cat . "Feedback" . "(m$m)";
+                        $label = 'Sec' . $cat . 'Feedback' . "(m$m)";
                     }
                     $row[$count] = $label;
                     $count++;
@@ -670,7 +666,7 @@ if ($num < 1) {
         foreach ($rows as $recs) {
             $project_id = $recs['projectid'];
             $sid = $recs['sid'];
-            
+
             $query = "select * from $students where sid=$sid";
             try {
                 $results = $db->query($query);
@@ -684,16 +680,16 @@ if ($num < 1) {
             }
             $student_recs = $results->fetch();
 
-            if($student_recs) {
+            if ($student_recs) {
                 $student_name = $student_recs['name'];
                 $username = $student_recs['username'];
                 $programme = $student_recs['programme'];
                 $sel = $student_recs['sel'];
-            }else{
-                $student_name = "unable to find studnet name from SID";
-                $username = "unable to find username from SID";
-                $programme = "unknown";
-                $sel = "";
+            } else {
+                $student_name = 'unable to find studnet name from SID';
+                $username = 'unable to find username from SID';
+                $programme = 'unknown';
+                $sel = '';
             }
 
             $row[0] = $student_name;
@@ -720,12 +716,12 @@ if ($num < 1) {
 
                 for ($cat = 1; $cat <= $cat_count; $cat++) {
                     for ($n = 1; $n <= $cat_q_count[$cat]; $n++) {
-                        $label = "C" . $cat . "Q" . $n;
+                        $label = 'C' . $cat . 'Q' . $n;
                         if ($n == $cat_q_count[$cat]) {
-                            $label = "C" . $cat . "Feedback";
+                            $label = 'C' . $cat . 'Feedback';
                         }
                         $mark = 0.0;
-                        if($marks_recs){
+                        if ($marks_recs) {
                             $mark = $marks_recs[$label];
                         }
                         $real_mark = $mark;
@@ -740,26 +736,24 @@ if ($num < 1) {
             }
             // add the row
             $all_rows_for_output[] = $row;
-
         }
 
         // Write the module marks to the xlsxwriter
         $rowIndex = 1;
-        foreach ($all_rows_for_output as $row_text){
-                for($colIndex = 1; $colIndex <= count($row_text); $colIndex++) {
-                    $part_Marks_worksheets[$k-1]->setCellValue([$colIndex, $rowIndex], $row_text[$colIndex-1]);
-                }
-                $rowIndex++;
+        foreach ($all_rows_for_output as $row_text) {
+            for ($colIndex = 1; $colIndex <= count($row_text); $colIndex++) {
+                $part_Marks_worksheets[$k - 1]->setCellValue([$colIndex, $rowIndex], $row_text[$colIndex - 1]);
+            }
+            $rowIndex++;
         }
     }
     //==================================================================================================
 
     $spreadsheet_writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment; filename="'. urlencode($xlsx_filename).'"');
+    header('Content-Disposition: attachment; filename="' . urlencode($xlsx_filename) . '"');
     ob_clean();
     flush();
     $spreadsheet_writer->save('php://output');
     $display_block = "<h2> Project marks saved as Excel (.xlsx) file to: $xlsx_filename</h2>";
 }
-?>

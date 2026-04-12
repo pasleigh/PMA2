@@ -1,16 +1,15 @@
 <?php
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_titles.php")) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("$STAFF_DIR_VAL/markstore_functions.php")) OR die("Cannot get markstore functions<BR>");
-(@include_once("./utility_functions.php")) OR die("Cannot get utility_functions<BR>");
-(@include_once("$STAFF_DIR_VAL/staff_student_functions.php")) OR die("Cannot get utility_functions<BR>");
+(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) or die('Cannot connect to the database<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_tables.php")) or die('Cannot setup database tables<BR>');
+(@include_once("$STAFF_DIR_VAL/markstore_functions.php")) or die('Cannot get markstore functions<BR>');
+(@include_once('./utility_functions.php')) or die('Cannot get utility_functions<BR>');
+(@include_once("$STAFF_DIR_VAL/staff_student_functions.php")) or die('Cannot get utility_functions<BR>');
 
-if(IsStaff($db,$this_staff_username,$staff_names)) {
-
+if (IsStaff($db, $this_staff_username, $staff_names)) {
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
     }
@@ -18,7 +17,7 @@ if(IsStaff($db,$this_staff_username,$staff_names)) {
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
-        $POST_OP = "";
+        $POST_OP = '';
     }
     if (array_key_exists('pm_id', $_REQUEST) == false) {
         $_REQUEST['pm_id'] = null;
@@ -40,20 +39,20 @@ if(IsStaff($db,$this_staff_username,$staff_names)) {
     $nowarray = getdate();
     $staff_close_str = $rows['staff_close'];
     $staff_close_date = strtotime($staff_close_str);
-    $month_i = date("m", $staff_close_date);
-    $day_i = date("d", $staff_close_date);
-    $year_i = date("Y", $staff_close_date);
+    $month_i = date('m', $staff_close_date);
+    $day_i = date('d', $staff_close_date);
+    $year_i = date('Y', $staff_close_date);
     $close = mktime(17, 0, 0, $month_i, $day_i, $year_i);
-    $cldate = "5pm, " . date("D", $staff_close_date) . " " . $day_i . " " . date("M", $staff_close_date) . " " . $year_i;
+    $cldate = '5pm, ' . date('D', $staff_close_date) . ' ' . $day_i . ' ' . date('M', $staff_close_date) . ' ' . $year_i;
     $module1 = $rows['module'];
     $year_begin = $rows['year_begin'];
     $year_end_short = $year_begin - 2000 + 1;
     $module_short_code = $rows['short_code'];
     $module_leader_fullname = $rows['module_leader'];
-    $module_leader_id = GetStaffIDFromName($db, $module_leader_fullname,$staff2);
+    $module_leader_id = GetStaffIDFromName($db, $module_leader_fullname, $staff2);
     $module_leader_email = GetStaffEmailFromID($db, $module_leader_id, $staff2);
 
-    $display_block = "";
+    $display_block = '';
     $display_block .= $connect_msg;
     $project_summary_title = "$module_short_description ($module_short_code), $module_prefix$module1$module_postfix,  for year $year_begin/$year_end_short";
     $display_block .= "<h1>View staff project load over for the module/project: $project_summary_title</h1>\n";
@@ -70,11 +69,11 @@ if(IsStaff($db,$this_staff_username,$staff_names)) {
         $module_short_desc = $rows['module_short_desc'];
         $short_code = $rows['short_code'];
         $my_key = "chk_id$count";
-        $ischecked = "";
+        $ischecked = '';
         if (isset($_POST[$my_key])) {
-            $ischecked = "checked";
+            $ischecked = 'checked';
         }
-        $ischecked = "checked";
+        $ischecked = 'checked';
         //$display_block .= "\n<P>$module_prefix$module, $module_short_desc, $short_code, $id</P>";
         $display_block .= "<span style='display:none;' id='m$id'>";
         $display_block .= "$module_prefix$module $module_short_desc: $short_code ($id) ";
@@ -84,7 +83,7 @@ if(IsStaff($db,$this_staff_username,$staff_names)) {
     }
 
     $display_block .= "<span id='anon_span'><BR>";
-    $display_block .= "Hide names on chart";
+    $display_block .= 'Hide names on chart';
     $display_block .= "<input type='checkbox' name='anon_chk'  id='anon_chk' value='1' checked onchange=update_module_list(this.value);>";
     $display_block .= "<BR></span>\n";
 
@@ -96,25 +95,24 @@ if(IsStaff($db,$this_staff_username,$staff_names)) {
     // The table
     $max_num_modules = 20;
     $num_columns = 2 + 2 * $max_num_modules + 2;
-    $display_block .= "<BR><H1>Number of Module Supervisions and Second Marking per staff</H1>";
-    $display_block .= "<p>The <em>Total summed</em> = sum of supervised  + sum of second marked  * 0.1</p>";
+    $display_block .= '<BR><H1>Number of Module Supervisions and Second Marking per staff</H1>';
+    $display_block .= '<p>The <em>Total summed</em> = sum of supervised  + sum of second marked  * 0.1</p>';
 
     $display_block .= "<div id='datatable_div'>";
     $display_block .= "<table width='100%' cellspacing='3' cellpadding='0' id='data-entry' class='hover compact cell-border'></table>";
-    $display_block .= "</div>";
+    $display_block .= '</div>';
 
     $display_block .= "<div id='mod_table' style='height: 580px; width:100%; border-style: solid; border-width: 2px; margin-top: 10px; margin-bottom: 10px;  border-color: silver; padding: 5px; display: none;'></div>\n";
-
-}else{
-    $display_block = "<H1>You do not appear to be a member of staff</H1>";
-    $display_block .= "<P>Please contact the manager of this system if you think this is wrong</P>";
+} else {
+    $display_block = '<H1>You do not appear to be a member of staff</H1>';
+    $display_block .= '<P>Please contact the manager of this system if you think this is wrong</P>';
 }
 
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

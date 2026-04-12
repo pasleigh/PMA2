@@ -1,22 +1,21 @@
 <?php
-(@include_once("./set_dir_admin.php")) or die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) or die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) or die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("../connect_pdo.php")) or die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) or die("Cannot setup database tables<BR>");
-(@include_once("./utility_functions.php")) or die("Cannot read utility_functions file<BR>");
-(@include_once("../markstore_functions.php")) or die("Cannot read markstore_functions file<BR>");
-(@include_once("../staff_functions.php")) or die("Cannot read markstore_functions file<BR>");
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./utility_functions.php')) or die('Cannot read utility_functions file<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot read markstore_functions file<BR>');
+(@include_once('../staff_functions.php')) or die('Cannot read markstore_functions file<BR>');
 
-(@include_once("./admin_functions.php")) or die("Cannot include admin functions<BR>");
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // Check the admin level
@@ -24,7 +23,7 @@ $access = false;
 $access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
-$display_block .= "<h1>Upload / View Assessment Criteria</h1>";
+$display_block .= '<h1>Upload / View Assessment Criteria</h1>';
 //$display_block .= "<h2>Database table to be updated '$assessment_criteria_table'</h2>";
 
 if (array_key_exists('op', $_POST) == false) {
@@ -34,12 +33,11 @@ if (array_key_exists('op', $_POST) == false) {
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
-    $POST_OP = "";
+    $POST_OP = '';
 }
 
 if ($access) {
-
-    if ($POST_OP == "upload_csv") {
+    if ($POST_OP == 'upload_csv') {
         $mark_col = 1;
         $class_col = 2;
         $grade_col = 3;
@@ -61,7 +59,7 @@ if ($access) {
         $file_info .= "File read earror message $xlsx_file_error<BR>";
 
         if (!$xlsx_file_error) {
-            if ($xlsx_file_name != "") {
+            if ($xlsx_file_name != '') {
                 $PHP_EXCEL_filetype = IOFactory::identify($xlsx_file_tmp);
                 $file_info .= "PHPExcel file type: $PHP_EXCEL_filetype<BR>";
 
@@ -123,14 +121,12 @@ if ($access) {
                             exit();
                         }
                     }
-
                 }
             }
         }
-
     }// end of if ($POST_OP == "submint_new")
 
-// Get the list of allcoations from the students table
+    // Get the list of allcoations from the students table
     $query = "SELECT * FROM $assessment_criteria_table ORDER BY mark DESC";
     try {
         $results = $db->query($query);
@@ -140,9 +136,9 @@ if ($access) {
         exit();
     }
     $rows = $results->fetchAll();
-//$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
+    //$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
     $display_block .= "<TABLE id='assessmentcriteria' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
-    $display_block .= "
+    $display_block .= '
     <thead>
       <tr>
         <th>Mark</th>
@@ -152,7 +148,7 @@ if ($access) {
         <th>University Descriptor</th>
         <th>School Descriptor</th>
       </tr>
-    </thead>";
+    </thead>';
     $display_block .= "<tbody>\n";
     $student_count = 0;
     foreach ($rows as $recs) {
@@ -171,32 +167,31 @@ if ($access) {
         $display_block .= "<TD style='font-size: small;'>$university_text</TD>";
         $display_block .= "<TD style='font-size: small;'>$school_text</TD>";
         $display_block .= "</TR>\n";
-
     }
     $display_block .= "</tbody>\n";
     $display_block .= "</TABLE>\n";
 
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Upload a XLSX/CSV of the Assessment Criteria</H2>\n";
     $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]' enctype='multipart/form-data'>\n";
-    $display_block .= "<P> Create a XLSX/CSV with the headings:<B>Mark</B>, <B>Class</B>, <B>Grade</B>,  <B>GPA</B>, <B>University Descriptor</B> , <B>School Descriptor</B> and load here.</P>";
-    $display_block .= "<P>(This should have in all (integer) marks from 0 to 100)</P>";
+    $display_block .= '<P> Create a XLSX/CSV with the headings:<B>Mark</B>, <B>Class</B>, <B>Grade</B>,  <B>GPA</B>, <B>University Descriptor</B> , <B>School Descriptor</B> and load here.</P>';
+    $display_block .= '<P>(This should have in all (integer) marks from 0 to 100)</P>';
     $display_block .= "<P></P><input name='csv' type='file' id='csv' /></P>";
     $display_block .= "\n<input type='hidden' name='op' value='upload_csv'>";
 
     $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton_csv' name='submit' value='Upload a XLSX/CSV of the Assessment Criteria'></p>";
 
     $display_block .= "</form>\n";
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
 } else {
-    $display_block .= "You do not have the appropriate admin level<BR>";
+    $display_block .= 'You do not have the appropriate admin level<BR>';
     $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

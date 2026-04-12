@@ -1,28 +1,28 @@
 <?php
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("../staff_functions.php")) OR die("Cannot open staff_functions.php<BR>");
-(@include_once("../markstore_functions.php")) OR die("Cannot open staff_functions.php<BR>");
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('../staff_functions.php')) or die('Cannot open staff_functions.php<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot open staff_functions.php<BR>');
 
 //foreach ($_SERVER as $key=>$val )
 //{
 //}
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // Check the admin level
 $access = false;
-$access = access_check_response($db,$this_staff_username, $this_staff_full_name, $staff_names,$access_phrase);
+$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
-if($access) {
+if ($access) {
     if (array_key_exists('submit', $_REQUEST) == false) {
         $_REQUEST['op'] = null;
     }
@@ -40,7 +40,7 @@ if($access) {
     $display_block .= "<TD><B>Corresponding Module Tables</B></TD>\n";
     $display_block .= "</TR>\n";
 
-    $table_search ="staff_names_%";
+    $table_search = 'staff_names_%';
     $query = "SHOW TABLES LIKE '$table_search'";
     try {
         $results = $db->query($query);
@@ -55,34 +55,33 @@ if($access) {
     $num = $results->rowCount();
     if ($num < 1) {
         //no records
-
     } else {
         //has records
         $rows = $results->fetchAll();
         foreach ($rows as $rec) {
             $staff_names_table = $rec[0];
-            $post_fix = substr($staff_names_table,12);
-            $allocated_table = "allocated_" . $post_fix;
-            $master_name_table = "master_name_" . $post_fix;
-            $project_details_table = "project_details_" . $post_fix;
+            $post_fix = substr($staff_names_table, 12);
+            $allocated_table = 'allocated_' . $post_fix;
+            $master_name_table = 'master_name_' . $post_fix;
+            $project_details_table = 'project_details_' . $post_fix;
 
             $checktable = $db->query("SHOW TABLES LIKE '$allocated_table'");
-            if( $checktable->rowCount() > 0 ){
-                $allocated_table .= " exists";
-            }else{
-                $allocated_table .= " DOES NOT exist";
+            if ($checktable->rowCount() > 0) {
+                $allocated_table .= ' exists';
+            } else {
+                $allocated_table .= ' DOES NOT exist';
             }
             $checktable = $db->query("SHOW TABLES LIKE '$master_name_table'");
-            if( $checktable->rowCount() > 0 ){
-                $master_name_table .= " exists";
-            }else{
-                $master_name_table .= " DOES NOT exist";
+            if ($checktable->rowCount() > 0) {
+                $master_name_table .= ' exists';
+            } else {
+                $master_name_table .= ' DOES NOT exist';
             }
             $checktable = $db->query("SHOW TABLES LIKE '$project_details_table'");
-            if( $checktable->rowCount() > 0 ){
-                $project_details_table .= " exists";
-            }else{
-                $project_details_table .= " DOES NOT exist";
+            if ($checktable->rowCount() > 0) {
+                $project_details_table .= ' exists';
+            } else {
+                $project_details_table .= ' DOES NOT exist';
             }
 
             $display_block .= "<TR>\n";
@@ -94,15 +93,15 @@ if($access) {
     $display_block .= "</table>\n";
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"process_staff_names\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Process the staff names tables.\"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton_new" name="submit" value="Process the staff names tables."></p>';
 
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 
-    if ($POST_OP == "process_staff_names") {
+    if ($POST_OP == 'process_staff_names') {
         // Do the processing
         $display_block .= "<h2>About to start processing the $staff_names_default table</h2>\n";
 
-        $table_search ="staff_names_%";
+        $table_search = 'staff_names_%';
         $query = "SHOW TABLES LIKE '$table_search'";
         try {
             $results = $db->query($query);
@@ -117,23 +116,23 @@ if($access) {
         $num = $results->rowCount();
         if ($num < 1) {
             //no records
-            $display_block .= "<H2>Nothing to do ... you should not see this. Probably an error.</H2>";
+            $display_block .= '<H2>Nothing to do ... you should not see this. Probably an error.</H2>';
         } else {
             //has records
             $rows = $results->fetchAll();
             foreach ($rows as $rec) {
                 $staff_names_table = $rec[0];
                 $post_fix = substr($staff_names_table, 12);
-                $allocated_table = "allocated_" . $post_fix;
-                $master_name_table = "master_name_" . $post_fix;
-                $project_details_table = "project_details_" . $post_fix;
+                $allocated_table = 'allocated_' . $post_fix;
+                $master_name_table = 'master_name_' . $post_fix;
+                $project_details_table = 'project_details_' . $post_fix;
 
                 $display_block .= "<BR><H1>Processing: $staff_names_table</H1>";
 
                 // Master name as this is the easiest
                 // Create a copy and work on that
                 $display_block .= "<H2>Processing: $master_name_table</H2>";
-                $master_name_table_copy = $master_name_table . "_copy";
+                $master_name_table_copy = $master_name_table . '_copy';
                 try {
                     $query = "CREATE TABLE IF NOT EXISTS $master_name_table_copy LIKE $master_name_table;";
                     $results = $db->query($query);
@@ -180,12 +179,11 @@ if($access) {
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
                         exit();
                     }
-
                 }
                 // Finished the master_name table updating
                 // rename the original to _old
                 // rename the _copy to the original
-                $master_name_table_old = $master_name_table . "_old";
+                $master_name_table_old = $master_name_table . '_old';
                 $checktable = $db->query("SHOW TABLES LIKE '$master_name_table_old'");
                 if ($checktable->rowCount() > 0) { // exists
                     // But don;t want to delete the original data
@@ -202,7 +200,6 @@ if($access) {
                         exit();
                     }
                     */
-
                 } else {
                     // Does not exist so don't try to delete but copy the original
                     $query = "RENAME TABLE $master_name_table to $master_name_table_old";
@@ -244,7 +241,7 @@ if($access) {
                 // project_details as this is the easiest
                 // Create a copy and work on that
                 $display_block .= "<H2>Processing: $project_details_table</H2>";
-                $project_details_table_copy = $project_details_table . "_copy";
+                $project_details_table_copy = $project_details_table . '_copy';
                 try {
                     $query = "CREATE TABLE IF NOT EXISTS $project_details_table_copy LIKE $project_details_table;";
                     $results = $db->query($query);
@@ -291,12 +288,11 @@ if($access) {
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
                         exit();
                     }
-
                 }
                 // Finished the project_details table updating
                 // rename the original to _old
                 // rename the _copy to the original
-                $project_details_table_old = $project_details_table . "_old";
+                $project_details_table_old = $project_details_table . '_old';
                 $checktable = $db->query("SHOW TABLES LIKE '$project_details_table_old'");
                 if ($checktable->rowCount() > 0) { // exists
                     // But don;t want to delete the original data
@@ -354,7 +350,7 @@ if($access) {
                 //
                 // Create a copy and work on that
                 $display_block .= "<H2>Processing: $allocated_table </H2>";
-                $allocated_table_old = $allocated_table . "_old";
+                $allocated_table_old = $allocated_table . '_old';
                 // if allocated_old exists then the conversion has been done and we can't do it again
                 //if exists allocated_old
                 $checktable = $db->query("SHOW TABLES LIKE '$allocated_table_old'");
@@ -363,7 +359,7 @@ if($access) {
                     // NOT DONE allocated_ table updating
                     $display_block .= "<H2 style='font-size: large; color: #ab1471'>Processing: $allocated_table NOT DONE as done $allocated_table_old exists</H2>";
                 } else {
-                    $allocated_table_copy = $allocated_table . "_copy";
+                    $allocated_table_copy = $allocated_table . '_copy';
 
                     try {
                         $query = "CREATE TABLE IF NOT EXISTS $allocated_table_copy LIKE $allocated_table;";
@@ -436,7 +432,7 @@ if($access) {
                             $display_block .= "<BR>Project id: $project_id.";
                             for ($p = 1; $p <= 5; $p++) {
                                 for ($m = 1; $m <= 3; $m++) {
-                                    $field = "marker_p" . $p . "m" . $m . "_id";
+                                    $field = 'marker_p' . $p . 'm' . $m . '_id';
                                     $old_marker_id = $allocrec[$field];
                                     if ($old_marker_id == 0) {
                                         // do nothing
@@ -490,7 +486,7 @@ if($access) {
 
                 // rename the staff_names table to _old
                 // copy teh entries of the staff_names_default table into the staff_names table
-                $staff_names_table_old = $staff_names_table . "_old";
+                $staff_names_table_old = $staff_names_table . '_old';
                 $checktable = $db->query("SHOW TABLES LIKE '$staff_names_table_old'");
                 if ($checktable->rowCount() > 0) { // exist
                     // do nothing
@@ -523,15 +519,13 @@ if($access) {
         }
 
         $display_block .= "<h2 style='font-size: large; color: red'>Done All</h2>\n";
-
     }// End of POST select
-
 }
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

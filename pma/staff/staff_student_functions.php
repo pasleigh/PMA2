@@ -1,4 +1,4 @@
-<?PHP
+<?php
 
 /**
  * Shared staff/student identity and access-level helpers.
@@ -15,15 +15,14 @@
  * @param string $staff_names Staff table name.
  * @return bool
  */
-function IsStaff($db, $username, $staff_names)
-{
+function IsStaff($db, $username, $staff_names) {
     $query = "SELECT * FROM $staff_names WHERE username=:username";
 
     try {
         $results = $db->prepare($query);
         $results->execute([':username' => $username]);
     } catch (PDOException $ex) {
-        error_log("Error in IsStaff: " . $ex->getMessage());
+        error_log('Error in IsStaff: ' . $ex->getMessage());
         return false;
     }
 
@@ -44,15 +43,14 @@ function IsStaff($db, $username, $staff_names)
  * @param string $students Students table name.
  * @return bool
  */
-function IsStudent($db, $username, $students)
-{
+function IsStudent($db, $username, $students) {
     $query = "SELECT * FROM $students WHERE username=:username";
 
     try {
         $results = $db->prepare($query);
         $results->execute([':username' => $username]);
     } catch (PDOException $ex) {
-        error_log("Error in IsStudent: " . $ex->getMessage());
+        error_log('Error in IsStudent: ' . $ex->getMessage());
         return false;
     }
 
@@ -76,18 +74,17 @@ function IsStudent($db, $username, $students)
  * @param string $username Web-server authenticated username.
  * @return int Admin level (0 = none, positive integer = increasing privilege).
  */
-function GetSuperAdminLevel_staff_student($db, $username)
-{
+function GetSuperAdminLevel_staff_student($db, $username) {
     // Returns the admin level - 0 if no admin privilidges
     //
     $admin_level = 0;
-    $query = "SELECT * FROM admin_users WHERE username=:username";
+    $query = 'SELECT * FROM admin_users WHERE username=:username';
 
     try {
         $results = $db->prepare($query);
         $results->execute([':username' => $username]);
     } catch (PDOException $ex) {
-        error_log("Error in GetSuperAdminLevel_staff_student: " . $ex->getMessage());
+        error_log('Error in GetSuperAdminLevel_staff_student: ' . $ex->getMessage());
         return $admin_level;
     }
 
@@ -151,4 +148,3 @@ function IsStaffActive($db, $this_staff_full_name, $staff_names_table = "staff_n
     return $active;
 }
 */
-?>

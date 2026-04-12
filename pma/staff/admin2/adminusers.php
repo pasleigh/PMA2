@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Admin role and privilege helpers (staff-side).
  *
@@ -18,8 +19,8 @@
  * @param string $username Web-server authenticated username.
  * @return bool
  */
-function IsAdmin($db, $username){
-    if(GetSuperAdminLevel($db,$username) > 0){
+function IsAdmin($db, $username) {
+    if (GetSuperAdminLevel($db, $username) > 0) {
         return true;
     }
     return false;
@@ -32,8 +33,8 @@ function IsAdmin($db, $username){
  * @param string $staff_names_table Staff table name.
  * @return bool
  */
-function IsProjectAdmin($db, $username, $staff_names_table){
-    if(GetProjectAdminLevel($db,$username, $staff_names_table) > 0){
+function IsProjectAdmin($db, $username, $staff_names_table) {
+    if (GetProjectAdminLevel($db, $username, $staff_names_table) > 0) {
         return true;
     }
     return false;
@@ -46,13 +47,12 @@ function IsProjectAdmin($db, $username, $staff_names_table){
  * @param string $username Web-server authenticated username.
  * @return int 0 = no privilege, positive = increasing admin level.
  */
-function GetSuperAdminLevel($db, $username)
-{
+function GetSuperAdminLevel($db, $username) {
     // Returns the admin level - 0 if no admin privilidges
     //
     $admin_level = 0;
     try {
-        $results = $db->prepare("SELECT * FROM admin_users WHERE username = ?");
+        $results = $db->prepare('SELECT * FROM admin_users WHERE username = ?');
         $results->execute([$username]);
     } catch (PDOException $ex) {
         error_log($ex->getMessage());
@@ -75,8 +75,7 @@ function GetSuperAdminLevel($db, $username)
  * @param string $staff_names Staff table name.
  * @return int 0 = no privilege, positive = increasing admin level.
  */
-function GetProjectAdminLevel($db, $username, $staff_names)
-{
+function GetProjectAdminLevel($db, $username, $staff_names) {
     // Returns the project admin level - 0 if no admin privilidges
     //
     $admin_level = 0;
@@ -109,7 +108,7 @@ function GetProjectAdminLevel($db, $username, $staff_names)
  * @param string|null $year_begin Academic year start (used with $short_code).
  * @return bool
  */
-function IsModuleAdmin($db, $username, $pm_id, $short_code, $year_begin){
+function IsModuleAdmin($db, $username, $pm_id, $short_code, $year_begin) {
     // Can test on either:
     // $pm_id
     // short_code and year_begin combination, for normal modules
@@ -117,15 +116,15 @@ function IsModuleAdmin($db, $username, $pm_id, $short_code, $year_begin){
     // pm_id = all, wii search teh whole table for any module i.e. to find if the user has access to at least 1 module
 
     $admin_level_module = 0;
-    if($pm_id != null){ // this also functions for : cwt, dist, pega, hamid
-        $admin_level_module = GetModuleAdminLevelFromPID($db,$username, $pm_id);
-    }else{
-        $admin_level_module = GetModuleAdminLevelFromShortCode($db,$username, $short_code, $year_begin);
+    if ($pm_id != null) { // this also functions for : cwt, dist, pega, hamid
+        $admin_level_module = GetModuleAdminLevelFromPID($db, $username, $pm_id);
+    } else {
+        $admin_level_module = GetModuleAdminLevelFromShortCode($db, $username, $short_code, $year_begin);
     }
 
-    if($admin_level_module > 0){
+    if ($admin_level_module > 0) {
         return true;
-    }else {
+    } else {
         return false;
     }
 }
@@ -139,17 +138,16 @@ function IsModuleAdmin($db, $username, $pm_id, $short_code, $year_begin){
  * @param string $pm_id    Project-module ID or 'all'.
  * @return int 0 = no privilege, positive = admin level for that module.
  */
-function GetModuleAdminLevelFromPID($db, $username, $pm_id)
-{
+function GetModuleAdminLevelFromPID($db, $username, $pm_id) {
     // Returns the project admin level for a module, 0 if no admin privilidges
     //
     $admin_level_module = 0;
     try {
-        if($pm_id == 'all'){
-            $results = $db->prepare("SELECT * FROM admin_users_module WHERE username = ?");
+        if ($pm_id == 'all') {
+            $results = $db->prepare('SELECT * FROM admin_users_module WHERE username = ?');
             $results->execute([$username]);
-        }else{
-            $results = $db->prepare("SELECT * FROM admin_users_module WHERE project_id = ? AND username = ?");
+        } else {
+            $results = $db->prepare('SELECT * FROM admin_users_module WHERE project_id = ? AND username = ?');
             $results->execute([$pm_id, $username]);
         }
     } catch (PDOException $ex) {
@@ -158,9 +156,9 @@ function GetModuleAdminLevelFromPID($db, $username, $pm_id)
     }
 
     if ($results->rowCount() > 0) {
-        if($pm_id == 'all'){
+        if ($pm_id == 'all') {
             $admin_level_module = 1;
-        }else{
+        } else {
             $result = $results->fetch();
             $admin_level_module = $result['admin_level'];
         }
@@ -177,13 +175,12 @@ function GetModuleAdminLevelFromPID($db, $username, $pm_id)
  * @param string $year_begin Academic year start (e.g. '2024').
  * @return int 0 = no privilege, positive = admin level for that module.
  */
-function GetModuleAdminLevelFromShortCode($db, $username, $short_code, $year_begin)
-{
+function GetModuleAdminLevelFromShortCode($db, $username, $short_code, $year_begin) {
     // Returns the project admin level for a module, 0 if no admin privilidges
     //
     $admin_level_module = 0;
     try {
-        $results = $db->prepare("SELECT * FROM admin_users_module WHERE short_code = ? AND year_begin = ? AND username = ?");
+        $results = $db->prepare('SELECT * FROM admin_users_module WHERE short_code = ? AND year_begin = ? AND username = ?');
         $results->execute([$short_code, $year_begin, $username]);
     } catch (PDOException $ex) {
         error_log($ex->getMessage());
@@ -197,5 +194,3 @@ function GetModuleAdminLevelFromShortCode($db, $username, $short_code, $year_beg
 
     return $admin_level_module;
 }
-
-?>

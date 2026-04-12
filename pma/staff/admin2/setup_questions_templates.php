@@ -4,61 +4,63 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 // connect to the datbase
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once ("./ADMINconnect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once ("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once ("../show_feedback_form.php")) OR die("Cannot get show_feedback_form.php<BR>");
-(@include_once ("./template_functions_pdo.php")) OR die("Cannot include template_functions.php<BR>");
+(@include_once ('./ADMINconnect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once ('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once ('../show_feedback_form.php')) or die('Cannot get show_feedback_form.php<BR>');
+(@include_once ('./template_functions_pdo.php')) or die('Cannot include template_functions.php<BR>');
 
-if (array_key_exists('qs_template', $_POST)==false){ $_POST['qs_template']=null; }
+if (array_key_exists('qs_template', $_POST) == false) {
+    $_POST['qs_template'] = null;
+}
 $assessqs_template = $_POST['qs_template'];
 
-$assessqs_cats_template = "assessqs_cats_template_" . substr($assessqs_template,18);
+$assessqs_cats_template = 'assessqs_cats_template_' . substr($assessqs_template, 18);
 
 //if (array_key_exists('module1', $_GET)==false){ $_GET['module1']=null; }
 //if (array_key_exists('year_begin', $_GET)==false){ $_GET['year_begin']=null; }
 //$module1 = $_GET['module1'];
 //$year_begin = $_GET['year_begin'];
 
-$display_block="";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // if the form was submitted then enter it all into the database
 if (array_key_exists('op', $_POST)) {
-  $POST_OP = $_POST['op']  ;
-}else{
-	$POST_OP = "";
+    $POST_OP = $_POST['op']  ;
+} else {
+    $POST_OP = '';
 }
 // see all the POST values
 
 //foreach ($_POST as $key => $value){
 //}
 
-  $display_block .="<form method=\"post\" action=\"$_SERVER[PHP_SELF]\" \">\n";
-  $name = "qs_template";
-  $display_block .="<P> Select a questions template to edit: " . GetQsTemplatesSelect($db,$name,"$assessqs_template") ."</P>";
-  $display_block .="<HR>";
-  $display_block .="\n<input type=\"hidden\" name=\"op\" value=\"edit\">";
-  $display_block .="<p><input type=\"submit\" id=\"editsubmitbutton\" name=\"submit\" value=\"Edit this template\"></p></form>";
+$display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\" \">\n";
+$name = 'qs_template';
+$display_block .= '<P> Select a questions template to edit: ' . GetQsTemplatesSelect($db, $name, "$assessqs_template") . '</P>';
+$display_block .= '<HR>';
+$display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"edit\">";
+$display_block .= '<p><input type="submit" id="editsubmitbutton" name="submit" value="Edit this template"></p></form>';
 
 // definitions for each part
 // Questions table
 $assessqs_year = $assessqs_template;
 // Questions categories table
 $assess_cats = $assessqs_cats_template;
-// description 
-$assesstype_text = "Template edit" ;
+// description
+$assesstype_text = 'Template edit' ;
 // markbook
-$mark_max =  100;
+$mark_max = 100;
 $mark_pc = 100;
 
-if ($POST_OP == "commit"){
-  // Get number of categories by counting the rows in $assess_cats
-  $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
-  //$num_categories = mysql_num_rows($myquery);
+if ($POST_OP == 'commit') {
+    // Get number of categories by counting the rows in $assess_cats
+    $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
+    //$num_categories = mysql_num_rows($myquery);
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
@@ -71,125 +73,66 @@ if ($POST_OP == "commit"){
     }
     $num_categories = $results->rowCount();
 
-    $display_block .="<h2>Submitting the changes to the database ...</H2>";
-  
-  // the insert to the database code goes here
- 
-  // Get the  data from the form
-  for ($cat=1;$cat<=$num_categories;$cat++) {
-    $id = "sec" . $cat;
-    $section_q[$cat] = addslashes($_POST[$id]);
-    $id = "weightpc_name" . $cat;
-    $section_weight[$cat] = $_POST[$id];
-    $id = "factor_name" . $cat;
-    $section_factor[$cat] = $_POST[$id];
-    
-    $id = "numqs" . $cat;
-    $numqs = $_POST[$id];
-    
-    $id="new_numqs$cat";
-    $new_numqs = $_POST[$id];
-    $new_numqs = $new_numqs +1;
-    
-    for ($i = 1 ; $i < $numqs ; $i++)
-    {
-      $id = "q$cat-$i";
-      $question = addslashes($_POST[$id]);
-      //$id = "r$cat-$i";
-      //$rmark = $_POST[$id];
-      $id = "res$cat-$i";
-      $num_entries = $_POST[$id];
-      $query_entry = "";
-      for( $r = 1 ; $r <= $num_entries ; $r++ )
-      {
-        $id = "t$cat-$i$r";
-        $text[$r] = addslashes($_POST[$id]);
-        $id = "m$cat-$i$r";
-        $mark[$r] = $_POST[$id];
-        $query_entry .= ", text$r='".$text[$r]."', mark$r" . "='" . $mark[$r] ."'\n";
-      }
-      
-      // Input text and marks fo responses into the database
-        $query = "update $assessqs_year set
+    $display_block .= '<h2>Submitting the changes to the database ...</H2>';
+
+    // the insert to the database code goes here
+
+    // Get the  data from the form
+    for ($cat = 1;$cat <= $num_categories;$cat++) {
+        $id = 'sec' . $cat;
+        $section_q[$cat] = addslashes($_POST[$id]);
+        $id = 'weightpc_name' . $cat;
+        $section_weight[$cat] = $_POST[$id];
+        $id = 'factor_name' . $cat;
+        $section_factor[$cat] = $_POST[$id];
+
+        $id = 'numqs' . $cat;
+        $numqs = $_POST[$id];
+
+        $id = "new_numqs$cat";
+        $new_numqs = $_POST[$id];
+        $new_numqs = $new_numqs + 1;
+
+        for ($i = 1 ; $i < $numqs ; $i++) {
+            $id = "q$cat-$i";
+            $question = addslashes($_POST[$id]);
+            //$id = "r$cat-$i";
+            //$rmark = $_POST[$id];
+            $id = "res$cat-$i";
+            $num_entries = $_POST[$id];
+            $query_entry = '';
+            for ($r = 1 ; $r <= $num_entries ; $r++) {
+                $id = "t$cat-$i$r";
+                $text[$r] = addslashes($_POST[$id]);
+                $id = "m$cat-$i$r";
+                $mark[$r] = $_POST[$id];
+                $query_entry .= ", text$r='" . $text[$r] . "', mark$r" . "='" . $mark[$r] . "'\n";
+            }
+
+            // Input text and marks fo responses into the database
+            $query = "update $assessqs_year set
                          question='$question', 
                          entries='$num_entries'
                          $query_entry
-                         where qid='$i' and cat='$cat'"; 
-        //mysql_query($action) or die(" Unable to add mark data to the table: $assessqs_year. <BR /> Query = $action");
-        try {
-            $results = $db->query($query);
-        } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
-            error_log($ex->getMessage());
-            echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                         where qid='$i' and cat='$cat'";
+            //mysql_query($action) or die(" Unable to add mark data to the table: $assessqs_year. <BR /> Query = $action");
+            try {
+                $results = $db->query($query);
+            } catch (PDOException $ex) {
+                $this_function = __FUNCTION__;
+                echo "An Error occured accessing the database in function: $this_function <BR>\n";
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
-            exit();
-        }
-        // Input Section title and weight and factor into the database
-        $query = "update $assess_cats set
+                exit();
+            }
+            // Input Section title and weight and factor into the database
+            $query = "update $assess_cats set
                          description='$section_q[$cat]', 
                          weight_percent='$section_weight[$cat]',
                          factor='$section_factor[$cat]'
                          where cat='$cat'";
-        //mysql_query($action) or die(" Unable to add mark data to the table: $assess_cats. <BR /> Query = $action");
-        try {
-            $results = $db->query($query);
-        } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
-            error_log($ex->getMessage());
-            echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
-            exit();
-        }
-      
-    }
-    
-    if($new_numqs != $numqs){
-      // Need to update the questions
-      // This is a bit fiddly
-      if($new_numqs > 11){$new_numqs = 11;}
-      
-      $new_numqs1 = $new_numqs + 1;
-      $numqs1 = $numqs + 1;
-      
-      if($new_numqs > $numqs){
-        // Change the "Feedback" entry to this number of Qs plus 1
-        $query = "update $assessqs_year set qid='$new_numqs' where qid='$numqs'";
-        //mysql_query($action) or die(" Unable to change the Feedback qid table : $assessqs_year. <BR /> Query = $action");
-          try {
-              $results = $db->query($query);
-          } catch (PDOException $ex) {
-              $this_function = __FUNCTION__;
-              echo "An Error occured accessing the database in function: $this_function <BR>\n";
-              error_log($ex->getMessage());
-              echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
-              exit();
-          }
-          for($i = $numqs; $i < $new_numqs ; $i++){
-          $query = "insert $assessqs_year set qid='$i', cat='$cat', question='--New question--CHANGE ME--', entries='6',
-                     text1='answer 1',mark1='0', text2='answer 2',mark2='10',text3='answer 3',mark3='25',
-                     text4='answer 4',mark4='50',text5='answer 5',mark5='60',text6='answer 6',mark6='90'";
-          //mysql_query($action) or die(" Unable to add rows to table : $assessqs_year. <BR /> Query = $action");
-              try {
-                  $results = $db->query($query);
-              } catch (PDOException $ex) {
-                  $this_function = __FUNCTION__;
-                  echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                  error_log($ex->getMessage());
-                  echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
-                  exit();
-              }
-          }
-      }
-      if($new_numqs < $numqs){
-        // Need to delete some questions
-        for($i = $new_numqs; $i <= $numqs ; $i++){
-          $query = "DELETE FROM $assessqs_year WHERE qid='$i'";
-          //mysql_query($action) or die(" Unable to delete rows from table : $assessqs_year. <BR /> Query = $action");
+            //mysql_query($action) or die(" Unable to add mark data to the table: $assess_cats. <BR /> Query = $action");
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
@@ -201,35 +144,90 @@ if ($POST_OP == "commit"){
                 exit();
             }
         }
-        // Insert a feedback row
-        $query = "insert $assessqs_year set qid='$new_numqs', cat='$cat', question='Feedback Comments:', entries='0'";
-        //mysql_query($action) or die(" Unable to change the Feedback qid table : $assessqs_year. <BR /> Query = $action");
-          try {
-              $results = $db->query($query);
-          } catch (PDOException $ex) {
-              $this_function = __FUNCTION__;
-              echo "An Error occured accessing the database in function: $this_function <BR>\n";
-              error_log($ex->getMessage());
-              echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
-              exit();
-          }
-      }
+        if ($new_numqs != $numqs) {
+            // Need to update the questions
+            // This is a bit fiddly
+            if ($new_numqs > 11) {
+                $new_numqs = 11;
+            }
+
+            $new_numqs1 = $new_numqs + 1;
+            $numqs1 = $numqs + 1;
+
+            if ($new_numqs > $numqs) {
+                // Change the "Feedback" entry to this number of Qs plus 1
+                $query = "update $assessqs_year set qid='$new_numqs' where qid='$numqs'";
+                //mysql_query($action) or die(" Unable to change the Feedback qid table : $assessqs_year. <BR /> Query = $action");
+                try {
+                    $results = $db->query($query);
+                } catch (PDOException $ex) {
+                    $this_function = __FUNCTION__;
+                    echo "An Error occured accessing the database in function: $this_function <BR>\n";
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
+
+                    exit();
+                }
+                for ($i = $numqs; $i < $new_numqs ; $i++) {
+                    $query = "insert $assessqs_year set qid='$i', cat='$cat', question='--New question--CHANGE ME--', entries='6',
+                     text1='answer 1',mark1='0', text2='answer 2',mark2='10',text3='answer 3',mark3='25',
+                     text4='answer 4',mark4='50',text5='answer 5',mark5='60',text6='answer 6',mark6='90'";
+                    //mysql_query($action) or die(" Unable to add rows to table : $assessqs_year. <BR /> Query = $action");
+                    try {
+                        $results = $db->query($query);
+                    } catch (PDOException $ex) {
+                        $this_function = __FUNCTION__;
+                        echo "An Error occured accessing the database in function: $this_function <BR>\n";
+                        error_log($ex->getMessage());
+                        echo "A database error occurred. Please contact the system administrator.<BR>\n";
+
+                        exit();
+                    }
+                }
+            }
+            if ($new_numqs < $numqs) {
+                // Need to delete some questions
+                for ($i = $new_numqs; $i <= $numqs ; $i++) {
+                    $query = "DELETE FROM $assessqs_year WHERE qid='$i'";
+                    //mysql_query($action) or die(" Unable to delete rows from table : $assessqs_year. <BR /> Query = $action");
+                    try {
+                        $results = $db->query($query);
+                    } catch (PDOException $ex) {
+                        $this_function = __FUNCTION__;
+                        echo "An Error occured accessing the database in function: $this_function <BR>\n";
+                        error_log($ex->getMessage());
+                        echo "A database error occurred. Please contact the system administrator.<BR>\n";
+
+                        exit();
+                    }
+                }
+                // Insert a feedback row
+                $query = "insert $assessqs_year set qid='$new_numqs', cat='$cat', question='Feedback Comments:', entries='0'";
+                //mysql_query($action) or die(" Unable to change the Feedback qid table : $assessqs_year. <BR /> Query = $action");
+                try {
+                    $results = $db->query($query);
+                } catch (PDOException $ex) {
+                    $this_function = __FUNCTION__;
+                    echo "An Error occured accessing the database in function: $this_function <BR>\n";
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
+
+                    exit();
+                }
+            }
+        }
     }
-    
-  }
 
-    $display_block .="<h2>Done ... carry on making changes if you like</H2>";
-
+    $display_block .= '<h2>Done ... carry on making changes if you like</H2>';
 }// end of if ($POST_OP == "commit")
-else if($POST_OP == "edit")
-{ 
-  // No need to have an else as the rest is always done.
-  
-  $display_block .= "<h1>This form allows you to view and edit TEMPLATE questions, marks and section weightings.</h1>";
-  //$display_block .= "<h2>$assesstype_text section of module $module1, beginning year $year_begin</h2>";
-  $display_block .= "<p>Questions table: $assessqs_year,  Question Categories: $assess_cats</p>";
-  $display_block .="<div class=\"feedbackInstructions\">You can use this form <em>play</em> with setting before finally commiting them to the marking system.<BR> \nYou can use it to: \n
+elseif ($POST_OP == 'edit') {
+    // No need to have an else as the rest is always done.
+
+    $display_block .= '<h1>This form allows you to view and edit TEMPLATE questions, marks and section weightings.</h1>';
+    //$display_block .= "<h2>$assesstype_text section of module $module1, beginning year $year_begin</h2>";
+    $display_block .= "<p>Questions table: $assessqs_year,  Question Categories: $assess_cats</p>";
+    $display_block .= "<div class=\"feedbackInstructions\">You can use this form <em>play</em> with setting before finally commiting them to the marking system.<BR> \nYou can use it to: \n
   <OL>\n
   <LI>Change the text of questions (just edit the text in the boxes)</LI>\n
   <LI>Change the text of responses</LI>\n
@@ -244,15 +242,15 @@ else if($POST_OP == "edit")
   The  maximum \"Mark for Section\" should be equal to or less than the \"Proportion of assessment\"<BR>
   the \"Weight factor\" is used achieve this while giving <em>sensible</em> numbers to each question.</div><BR>\n";
 
-  $display_block .="<div id=\"sticker\">0.0</div>\n";
+    $display_block .= "<div id=\"sticker\">0.0</div>\n";
 
-  $display_block .="<form method=\"post\" action=\"$_SERVER[PHP_SELF]\" \">\n";
-  //This one has the validation
-  //$display_block .="<form method=\"post\" onsubmit=\"return validate_form();\" action=\"$_SERVER[PHP_SELF]?module1=$module1&year_begin=$year_begin\" \">\n";
-  
-  // Get number of categories by counting the rows in $assess_cats
-  $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
-  //$num_categories = mysql_num_rows($myquery);
+    $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\" \">\n";
+    //This one has the validation
+    //$display_block .="<form method=\"post\" onsubmit=\"return validate_form();\" action=\"$_SERVER[PHP_SELF]?module1=$module1&year_begin=$year_begin\" \">\n";
+
+    // Get number of categories by counting the rows in $assess_cats
+    $query = "SELECT cat FROM $assess_cats WHERE cat IS NOT NULL";
+    //$num_categories = mysql_num_rows($myquery);
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
@@ -267,161 +265,156 @@ else if($POST_OP == "edit")
 
     //$display_block .="<input type=\"hidden\" name=\"numcats\" value=\"$num_categories\" />";
 
-  $display_block .="\n<P>Number of sections (categories) <input type=\"number\" name=\"new_num_cats\" value=\"$num_categories\" min=\"1\" max=\"5\" size=6 maxlength=5> (Note that questions will be deleted should this number be less that those shown on this form.)</P>\n";
-  
-  $display_block .= "<span id=\"markmax_span\">
-  \n<input type=\"hidden\" id=\"markmax\" name=\"markmax\" value=\"$mark_max\" size=\"3\"></span>"; 
-  $display_block .= "<span id=markpc>
-  \n<input type=\"hidden\" id=\"markpc_id\" name=\"markpc\" value=\"$mark_pc\" size=\"3\"></span>"; 
-  $display_block .= "\n<span id=min_feedback_words>
-  <input type=\"hidden\" id=\"min_feedback_words_id\" name=\"min_feedback_words\" value=\"$min_feedback_words\" size=\"3\"></span>"; 
+    $display_block .= "\n<P>Number of sections (categories) <input type=\"number\" name=\"new_num_cats\" value=\"$num_categories\" min=\"1\" max=\"5\" size=6 maxlength=5> (Note that questions will be deleted should this number be less that those shown on this form.)</P>\n";
 
-  for ($cat=1;$cat<=$num_categories;$cat++) {
+    $display_block .= "<span id=\"markmax_span\">
+  \n<input type=\"hidden\" id=\"markmax\" name=\"markmax\" value=\"$mark_max\" size=\"3\"></span>";
+    $display_block .= "<span id=markpc>
+  \n<input type=\"hidden\" id=\"markpc_id\" name=\"markpc\" value=\"$mark_pc\" size=\"3\"></span>";
+    $display_block .= "\n<span id=min_feedback_words>
+  <input type=\"hidden\" id=\"min_feedback_words_id\" name=\"min_feedback_words\" value=\"$min_feedback_words\" size=\"3\"></span>";
 
-       // Get the category titles
-       $query = "select description, weight_percent, factor from $assess_cats where cat=$cat";
-       //$get_cat_details_list = mysql_query($get_cat_details) or die(" Unable to get database $assess_cats. <BR>Query: $get_cat_details");
-       //$cat_data = mysql_fetch_array($get_cat_details_list);
-      try {
-          $results = $db->query($query);
-      } catch (PDOException $ex) {
-          $this_function = __FUNCTION__;
-          echo "An Error occured accessing the database in function: $this_function <BR>\n";
-          error_log($ex->getMessage());
-          echo "A database error occurred. Please contact the system administrator.<BR>\n";
+    for ($cat = 1;$cat <= $num_categories;$cat++) {
+        // Get the category titles
+        $query = "select description, weight_percent, factor from $assess_cats where cat=$cat";
+        //$get_cat_details_list = mysql_query($get_cat_details) or die(" Unable to get database $assess_cats. <BR>Query: $get_cat_details");
+        //$cat_data = mysql_fetch_array($get_cat_details_list);
+        try {
+            $results = $db->query($query);
+        } catch (PDOException $ex) {
+            $this_function = __FUNCTION__;
+            echo "An Error occured accessing the database in function: $this_function <BR>\n";
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
-          exit();
-      }
-      $cat_data = $results->fetch();
-       $description = $cat_data['description'];
-       $weight_pc = $cat_data['weight_percent'];
-       $factor = $cat_data['factor'];
-       
-       // Get the questions for this category
-       $query = "select * from $assessqs_year where cat=$cat";
-       //$get_list_qstot = mysql_query($get_qstot) or die(" Unable to create list from $assessqs_year table. <BR>Query: $get_qstot");
-      try {
-          $results = $db->query($query);
-      } catch (PDOException $ex) {
-          $this_function = __FUNCTION__;
-          echo "An Error occured accessing the database in function: $this_function <BR>\n";
-          error_log($ex->getMessage());
-          echo "A database error occurred. Please contact the system administrator.<BR>\n";
+            exit();
+        }
+        $cat_data = $results->fetch();
+        $description = $cat_data['description'];
+        $weight_pc = $cat_data['weight_percent'];
+        $factor = $cat_data['factor'];
 
-          exit();
-      }
-      // $num_questions=mysql_num_rows($get_list_qstot);
-      $num_questions=$results->rowCount();
+        // Get the questions for this category
+        $query = "select * from $assessqs_year where cat=$cat";
+        //$get_list_qstot = mysql_query($get_qstot) or die(" Unable to create list from $assessqs_year table. <BR>Query: $get_qstot");
+        try {
+            $results = $db->query($query);
+        } catch (PDOException $ex) {
+            $this_function = __FUNCTION__;
+            echo "An Error occured accessing the database in function: $this_function <BR>\n";
+            error_log($ex->getMessage());
+            echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
-       for ($q_count=1; $q_count < $num_questions; $q_count++) {
-           $get_qs_query = "select * from $assessqs_year where cat=$cat and qid=$q_count";
-           //$get_qs_res = mysql_query($get_qs);
-           //$qs_list = mysql_fetch_array($get_qs_res);
-           try {
-               $results = $db->query($get_qs_query);
-           } catch (PDOException $ex) {
-               $this_function = __FUNCTION__;
-               echo "An Error occured accessing the database in function: $this_function <BR>\n";
-               echo(" Query = $get_qs_query<BR> \n");
-               error_log($ex->getMessage());
-               echo "A database error occurred. Please contact the system administrator.<BR>\n";
+            exit();
+        }
+        // $num_questions=mysql_num_rows($get_list_qstot);
+        $num_questions = $results->rowCount();
 
-               exit();
-           }
-           $qs_list =$results->fetch();
+        for ($q_count = 1; $q_count < $num_questions; $q_count++) {
+            $get_qs_query = "select * from $assessqs_year where cat=$cat and qid=$q_count";
+            //$get_qs_res = mysql_query($get_qs);
+            //$qs_list = mysql_fetch_array($get_qs_res);
+            try {
+                $results = $db->query($get_qs_query);
+            } catch (PDOException $ex) {
+                $this_function = __FUNCTION__;
+                echo "An Error occured accessing the database in function: $this_function <BR>\n";
+                echo(" Query = $get_qs_query<BR> \n");
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
-           $questions[$q_count]=$qs_list['question'];
-           $num_entries[$q_count] =$qs_list['entries'];
-           
-           for ( $r_count=1; $r_count <= $num_entries[$q_count] ; $r_count++ )
-           {
-             $r_text = "text".$r_count;
-             $response_texts[$q_count][$r_count]   =$qs_list[$r_text];
-             $value = $response_texts[$q_count][$r_count];
-             $r_mark = "mark".$r_count;
-             $response_marks[$q_count][$r_count]   =$qs_list[$r_mark];
-           }
+                exit();
+            }
+            $qs_list = $results->fetch();
 
-       }
-       $display_block .= show_section_questions($cat, $description, $weight_pc, $factor,$num_questions, $questions,$num_entries,$response_texts,$response_marks);
-       $display_block .= "<BR>\n";
-  }
+            $questions[$q_count] = $qs_list['question'];
+            $num_entries[$q_count] = $qs_list['entries'];
 
-  $display_block .= "\n<div class=\"feedbackSection\">Total marks = <span class=\"feedbackTotalMark\" id=totalmarks> </span></div>";
-  $display_block .= "<BR>\n<input type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all selected\" >";
-  $display_block .="\n<input type=\"hidden\" name=\"op\" value=\"commit\">";
-  $display_block .="\n<input type=\"hidden\" name=\"qs_template\" value=\"$assessqs_year\">";
-  $display_block .="\n<input type=\"hidden\" name=\"nc\" value=\"$num_categories\">";
-  $display_block .="<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Commit the changes to the database\"></p></form>";
+            for ($r_count = 1; $r_count <= $num_entries[$q_count] ; $r_count++) {
+                $r_text = 'text' . $r_count;
+                $response_texts[$q_count][$r_count] = $qs_list[$r_text];
+                $value = $response_texts[$q_count][$r_count];
+                $r_mark = 'mark' . $r_count;
+                $response_marks[$q_count][$r_count] = $qs_list[$r_mark];
+            }
+        }
+        $display_block .= show_section_questions($cat, $description, $weight_pc, $factor, $num_questions, $questions, $num_entries, $response_texts, $response_marks);
+        $display_block .= "<BR>\n";
+    }
+
+    $display_block .= "\n<div class=\"feedbackSection\">Total marks = <span class=\"feedbackTotalMark\" id=totalmarks> </span></div>";
+    $display_block .= "<BR>\n<input type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all selected\" >";
+    $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"commit\">";
+    $display_block .= "\n<input type=\"hidden\" name=\"qs_template\" value=\"$assessqs_year\">";
+    $display_block .= "\n<input type=\"hidden\" name=\"nc\" value=\"$num_categories\">";
+    $display_block .= '<p><input type="submit" id="submitbutton" name="submit" value="Commit the changes to the database"></p></form>';
 }
 
 // End of main
 
 // Start of functions
-function show_section_questions($cat, $cat_description, $weight_pc, $factor,$num_questions, $questions,$num_responses,$response_texts,$response_marks)
-{
-       $display_block = "\n\n<span id=section>";
-       $display_block .= "<table id=table$cat class=\"tableSection\">";
-       $display_block .= "<tr>\n";
+function show_section_questions($cat, $cat_description, $weight_pc, $factor, $num_questions, $questions, $num_responses, $response_texts, $response_marks) {
+    $display_block = "\n\n<span id=section>";
+    $display_block .= "<table id=table$cat class=\"tableSection\">";
+    $display_block .= "<tr>\n";
 
-       // Display the category title
-       $sectionid = "sec" . $cat;
-       $display_block .= "<td><div class=\"feedbackSection\">Section $cat:
+    // Display the category title
+    $sectionid = 'sec' . $cat;
+    $display_block .= "<td><div class=\"feedbackSection\">Section $cat:
         \n<input  class=\"feedbackSectionQ\" type=\"text\" id=\"$sectionid\" name=\"$sectionid\" value=\"$cat_description\" size=\"60\">
         \n<input type=\"hidden\" id=\"numqs$cat\" name=\"numqs$cat\" value=\"$num_questions\">
-        </div>\n"; 
-       $display_block .= "<div class=\"feedbackWeights\">Proportion of assessment: <span id=weightpc$cat>
-        \n<input type=\"number\" id=\"weightpc_id$cat\" name=\"weightpc_name$cat\" value=\"$weight_pc\" min=\"0\" max=\"100\" size=\"3\">%. </span>"; 
-       $display_block .= "Weight factor <span id=factor$cat>
-        \n<input type=\"number\" id=\"factor_id$cat\" name=\"factor_name$cat\" value=\"$factor\" min=\"0\" max=\"1\" step=\"0.001\" size=\"4\"></span></div>"; 
-       $display_block .= "</td>\n";
-       $display_block .= "</tr>";
-       $num_qs = $num_questions-1;
-       $display_block .="\n<tr><td>Number of questions in this section <input type=\"number\" name=\"new_numqs$cat\" value=\"$num_qs\" min=\"3\" max=\"10\" size=6 maxlength=5> (note that questions will be deleted if this number is less than already exists.)</td></tr>\n";
-       $display_block .= "<tr>\n<td>";
-       for ($q_count=1; $q_count < $num_questions; $q_count++) {
-           $question=$questions[$q_count];
-           
-           $display_block .= "<span class=\"feedbackQ\">Question $q_count:\n";
-           $qid = "q" . $cat . "-" . $q_count ;
-           $rid = "res" . $cat . "-" . $q_count ;
-           $display_block .= "<span class=\"feedbackQem\">
+        </div>\n";
+    $display_block .= "<div class=\"feedbackWeights\">Proportion of assessment: <span id=weightpc$cat>
+        \n<input type=\"number\" id=\"weightpc_id$cat\" name=\"weightpc_name$cat\" value=\"$weight_pc\" min=\"0\" max=\"100\" size=\"3\">%. </span>";
+    $display_block .= "Weight factor <span id=factor$cat>
+        \n<input type=\"number\" id=\"factor_id$cat\" name=\"factor_name$cat\" value=\"$factor\" min=\"0\" max=\"1\" step=\"0.001\" size=\"4\"></span></div>";
+    $display_block .= "</td>\n";
+    $display_block .= '</tr>';
+    $num_qs = $num_questions - 1;
+    $display_block .= "\n<tr><td>Number of questions in this section <input type=\"number\" name=\"new_numqs$cat\" value=\"$num_qs\" min=\"3\" max=\"10\" size=6 maxlength=5> (note that questions will be deleted if this number is less than already exists.)</td></tr>\n";
+    $display_block .= "<tr>\n<td>";
+    for ($q_count = 1; $q_count < $num_questions; $q_count++) {
+        $question = $questions[$q_count];
+
+        $display_block .= "<span class=\"feedbackQ\">Question $q_count:\n";
+        $qid = 'q' . $cat . '-' . $q_count ;
+        $rid = 'res' . $cat . '-' . $q_count ;
+        $display_block .= "<span class=\"feedbackQem\">
            <input class=\"feedbackQem\" type=\"text\" id=\"$qid\" name=\"$qid\" value=\"$question\" size=\"120\">
            </span></span><br />\n";
-           $display_block .= "<div class=\"options\">\n";
-           $display_block .= "Number of responses <input type=\"number\" id=\"$rid\" name=\"$rid\" value=\"$num_responses[$q_count]\"  min=\"3\" max=\"11\" size=\"2\"><BR>";
-           for ( $r_count=1; $r_count <= $num_responses[$q_count] ; $r_count++ )
-           {
-             $pchoice = "q" . $cat . "-" . $q_count ;
-             $pchoice_id = "id" . $pchoice . $r_count;
-             $mchoice = "m" . $cat . "-" . $q_count . $r_count;
-             $mchoice_id = "id" . $mchoice ;
-             $tchoice = "t" . $cat . "-" . $q_count . $r_count;
-             $tchoice_id = "id" . $tchoice;
-             $rchoice = "r" . $cat . "-" . $q_count;
-             $response_text = $response_texts[$q_count][$r_count];
-             $response_mark = $response_marks[$q_count][$r_count];
-             $display_block .= "\n<input type=\"text\" id=\"$tchoice_id\" name=\"$tchoice\" value=\"$response_text\" size=\"60\">";
-             $display_block .= "\n<input type=\"number\" id=\"$mchoice_id\" name=\"$mchoice\" value=\"$response_mark\"  min=\"-100\" max=\"100\" size=\"5\">";
-             $display_block .= "\n<input type=\"radio\" id=\"$pchoice_id\" name=\"$rchoice\" value=\"$response_mark\"> <BR>\n";
-           }
-           $display_block .= "<BR>";
-           $display_block .= "</DIV>\n";
-       }
-       $display_block .= "</td>\n</tr>\n";
-       $display_block .= "<tr><td><span class=\"feedbackSectionMarkText\">Mark for section $cat: 
+        $display_block .= "<div class=\"options\">\n";
+        $display_block .= "Number of responses <input type=\"number\" id=\"$rid\" name=\"$rid\" value=\"$num_responses[$q_count]\"  min=\"3\" max=\"11\" size=\"2\"><BR>";
+        for ($r_count = 1; $r_count <= $num_responses[$q_count] ; $r_count++) {
+            $pchoice = 'q' . $cat . '-' . $q_count ;
+            $pchoice_id = 'id' . $pchoice . $r_count;
+            $mchoice = 'm' . $cat . '-' . $q_count . $r_count;
+            $mchoice_id = 'id' . $mchoice ;
+            $tchoice = 't' . $cat . '-' . $q_count . $r_count;
+            $tchoice_id = 'id' . $tchoice;
+            $rchoice = 'r' . $cat . '-' . $q_count;
+            $response_text = $response_texts[$q_count][$r_count];
+            $response_mark = $response_marks[$q_count][$r_count];
+            $display_block .= "\n<input type=\"text\" id=\"$tchoice_id\" name=\"$tchoice\" value=\"$response_text\" size=\"60\">";
+            $display_block .= "\n<input type=\"number\" id=\"$mchoice_id\" name=\"$mchoice\" value=\"$response_mark\"  min=\"-100\" max=\"100\" size=\"5\">";
+            $display_block .= "\n<input type=\"radio\" id=\"$pchoice_id\" name=\"$rchoice\" value=\"$response_mark\"> <BR>\n";
+        }
+        $display_block .= '<BR>';
+        $display_block .= "</DIV>\n";
+    }
+    $display_block .= "</td>\n</tr>\n";
+    $display_block .= "<tr><td><span class=\"feedbackSectionMarkText\">Mark for section $cat: 
                           <span id=sectionmarktext$cat> </span></span>";
-       $display_block .= "        <span class=\"feedbackSectionMark\" id=sectionmark$cat> </span></td></tr>";
+    $display_block .= "        <span class=\"feedbackSectionMark\" id=sectionmark$cat> </span></td></tr>";
 
-       $display_block .= "</table></span>\n";
+    $display_block .= "</table></span>\n";
 
-  return $display_block;
+    return $display_block;
 }// end of show_section_questions()
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

@@ -1,16 +1,16 @@
 <?php
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("./utility_functions.php")) OR die("Cannot read utility_functions file<BR>");
-(@include_once("../markstore_functions.php")) OR die("Cannot read markstore_functions file<BR>");
-(@include_once("../staff_functions.php")) OR die("Cannot read markstore_functions file<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./utility_functions.php')) or die('Cannot read utility_functions file<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot read markstore_functions file<BR>');
+(@include_once('../staff_functions.php')) or die('Cannot read markstore_functions file<BR>');
 
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // Check the admin level
@@ -19,32 +19,31 @@ $access = access_check_response($db, $this_staff_username, $this_staff_full_name
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access_phrase</h2>\n";
 
 if ($access) {
-
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
     }
-// if the form was submitted then enter it all into the database
+    // if the form was submitted then enter it all into the database
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
-        $POST_OP = "";
+        $POST_OP = '';
     }
 
-// see all the POST values
-//foreach ($_POST as $key => $value){
-//}
-    $display_block .= "<h1>Edit dash feedback tools and visibility</h1>";
+    // see all the POST values
+    //foreach ($_POST as $key => $value){
+    //}
+    $display_block .= '<h1>Edit dash feedback tools and visibility</h1>';
 
     $display_block .= "<h2>Database table $dash_projects_setup</h2>";
 
-    if ($POST_OP == "submit_edited") {
-        $postid = "dash_visible_staff";
+    if ($POST_OP == 'submit_edited') {
+        $postid = 'dash_visible_staff';
         if (array_key_exists($postid, $_POST) == false) {
             $_POST[$postid] = 0;
         }
         $dash_visible_staff_chk = $_POST[$postid];
 
-        $postid = "dash_visible_student";
+        $postid = 'dash_visible_student';
         if (array_key_exists($postid, $_POST) == false) {
             $_POST[$postid] = 0;
         }
@@ -65,7 +64,6 @@ if ($access) {
 
         $dash_count = $_POST['dash_count'];
         for ($i = 1; $i < $dash_count; $i++) {
-
             //$display_block .= "Submitting: <BR>\n";
             $id = $i;
             $postid = "description$i";
@@ -110,7 +108,6 @@ if ($access) {
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
-
         }
         $display_block .= "<B>All updated</B><BR><hr>\n";
     }
@@ -130,7 +127,7 @@ if ($access) {
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
-    $dash_visible_block= "";
+    $dash_visible_block = '';
     $table_block = "<TABLE id=\"dashinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
     $table_block .= "
     <thead>
@@ -151,20 +148,20 @@ if ($access) {
     $rows = $results->fetchAll();
     foreach ($rows as $recs) {
         $id = $dash_count;
-        if($id == 0) {
+        if ($id == 0) {
             $dash_visible_staff_chk = $recs['staff'];
-            $checked = "";
+            $checked = '';
             if ($dash_visible_staff_chk == 1) {
-                $checked = "checked";
+                $checked = 'checked';
             }
             $dash_visible_block .= "<P>Make dash options visible to STAFF <input type='checkbox' name='dash_visible_staff' value='1' $checked></P>\n";
             $dash_visible_student_chk = $recs['student'];
-            $checked = "";
+            $checked = '';
             if ($dash_visible_student_chk == 1) {
-                $checked = "checked";
+                $checked = 'checked';
             }
             $dash_visible_block .= "<P>Make dash options visible to STUDENTS <input type='checkbox' name='dash_visible_student' value='1' $checked></P>\n";
-        }else{
+        } else {
             $table_prefix = $recs['prefix'];
             $description = stripslashes($recs['description']);
             $title = stripslashes($recs['title']);
@@ -180,24 +177,24 @@ if ($access) {
             $table_block .= "<TD><input type='text' name='description$id' value='$description' size='30'></TD>\n";
             $table_block .= "<TD><input type='text' name='title$id' value='$title' size='10'></TD>\n";
             $table_block .= "<TD><input type='text' name='subtitle$id' value='$subtitle' size='35'></TD>\n";
-            $checked = "";
+            $checked = '';
             if ($visible == 1) {
-                $checked = "checked";
+                $checked = 'checked';
             }
             $table_block .= "<TD><input type='checkbox' name='visible$id' value='1' $checked></TD>\n";
-            $checked = "";
+            $checked = '';
             if ($active == 1) {
-                $checked = "checked";
+                $checked = 'checked';
             }
             $table_block .= "<TD><input type='checkbox' name='active$id' value='1' $checked></TD>\n";
-            $checked = "";
+            $checked = '';
             if ($staff == 1) {
-                $checked = "checked";
+                $checked = 'checked';
             }
             $table_block .= "<TD><input type='checkbox' name='staff$id' value='1' $checked></TD>\n";
-            $checked = "";
+            $checked = '';
             if ($student == 1) {
-                $checked = "checked";
+                $checked = 'checked';
             }
             $table_block .= "<TD><input type='checkbox' name='student$id' value='1' $checked></TD>\n";
             $table_block .= "</TR>\n";
@@ -213,16 +210,16 @@ if ($access) {
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_edited\">";
     $display_block .= "\n<input type=\"hidden\" name=\"dash_count\" value=\"$dash_count\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit changes to feedback tools.\"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton" name="submit" value="Submit changes to feedback tools."></p>';
 
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 }
 
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

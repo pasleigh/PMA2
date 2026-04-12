@@ -5,43 +5,42 @@
  * Date: 11/06/2016
  * Time: 20:28
  */
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("./utility_functions.php")) OR die("Cannot read utility_functions file<BR>");
-(@include_once("../markstore_functions.php")) OR die("Cannot read markstore_functions file<BR>");
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./utility_functions.php')) or die('Cannot read utility_functions file<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot read markstore_functions file<BR>');
 //(@include_once("../staff_functions.php")) OR die("Cannot read markstore_functions file<BR>");
 
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
+
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
-$assess_part_description_text = "";
+$assess_part_description_text = '';
 
 // Check the admin level
 $admin_access = false;
-$admin_access = access_check_response($db,$this_staff_username, $this_staff_full_name, $staff_names,$access_phrase);
+$admin_access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
 $pm_id = $_REQUEST['pm_id'];
-$is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase );
-if($is_module_admin){
+$is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
+if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
 }
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
-if($is_module_admin || $admin_access) {
-
+if ($is_module_admin || $admin_access) {
     $display_block .= "<h1>Upload Totals for a Part of the Poject </h1>\n";
     $display_block .= "<h2>Database table to be updated '$markstore_totals'</h2>\n";
 
@@ -50,25 +49,23 @@ if($is_module_admin || $admin_access) {
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
     }
-// if the form was submitted then enter it all into the database
+    // if the form was submitted then enter it all into the database
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
-        $POST_OP = "";
+        $POST_OP = '';
     }
 
-// see all the POST values
-//foreach ($_POST as $key => $value){
-//}
+    // see all the POST values
+    //foreach ($_POST as $key => $value){
+    //}
     if (array_key_exists('radio_part_number', $_POST) == false) {
         $_POST['radio_part_number'] = null;
     }
     $radio_part_number = $_POST['radio_part_number'];
 
-    if ($POST_OP == "upload_csv") {
-
+    if ($POST_OP == 'upload_csv') {
         if (!is_null($radio_part_number)) {
-
             // For the part mark we will only import into the 1st marker
             $marker_num = 1;
             $markstore_part = $markstores[$radio_part_number][$marker_num];
@@ -92,7 +89,7 @@ if($is_module_admin || $admin_access) {
             $file_info .= "File read earror message $xlsx_file_error<BR>";
 
             if (!$xlsx_file_error) {
-                if ($xlsx_file_name != "") {
+                if ($xlsx_file_name != '') {
                     $PHP_EXCEL_filetype = IOFactory::identify($xlsx_file_tmp);
                     $file_info .= "PHPExcel file type: $PHP_EXCEL_filetype<BR>";
 
@@ -131,7 +128,7 @@ if($is_module_admin || $admin_access) {
                             $row = $results->fetch();
                             $num = $results->rowCount();
 
-                            $part_header = "retmark" . $radio_part_number;
+                            $part_header = 'retmark' . $radio_part_number;
                             // REPLACE does a UPDATE or INSERT (Actually if exists it does a delete)
                             if ($num == 0) {
                                 $query = "INSERT INTO $markstore_totals (SID,$part_header) VALUES (";
@@ -177,9 +174,9 @@ if($is_module_admin || $admin_access) {
                             $row = $results->fetch();
                             $num = $results->rowCount();
 
-                            $part_header = "total";
+                            $part_header = 'total';
                             $feedback_text = "There is no recorded feedback for this part as this was by a bulk uploaded mark list.\n";
-                            $feedback_text .= "Feedback will be provided separately.";
+                            $feedback_text .= 'Feedback will be provided separately.';
                             // REPLACE does a UPDATE or INSERT (Actually if exists it does a delete)
                             if ($num == 0) {
                                 $query = "INSERT INTO $markstore_part (SID,C1Feedback,$part_header) VALUES (";
@@ -211,11 +208,9 @@ if($is_module_admin || $admin_access) {
                                     exit();
                                 }
                             }
-
                         } else {
                             echo("Part numbers do not match in the XLSX/CSV file and the radio button. for $sid, $student_name <BR\n");
                         }
-
                     }
                 }
             }
@@ -224,9 +219,9 @@ if($is_module_admin || $admin_access) {
         }
     }// end of if ($POST_OP == "upload_csv")
 
-//$display_block .="\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
+    //$display_block .="\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
-// Get the list of allcoations from the students table
+    // Get the list of allcoations from the students table
     $query = "select * from $markstore_totals";
     try {
         $results = $db->query($query);
@@ -239,9 +234,9 @@ if($is_module_admin || $admin_access) {
     }
     $rows = $results->fetchAll();
     $num = $results->rowCount();
-//$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
+    //$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
     $display_block .= "\n<TABLE id='marktotals' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
-    $display_block .= "
+    $display_block .= '
     <thead>
       <tr>
         <th>SID</th>
@@ -253,7 +248,7 @@ if($is_module_admin || $admin_access) {
         <th>Total: Part 5</th>
         <th>Final Total</th>
       </tr>
-    </thead>";
+    </thead>';
     $display_block .= "<tbody>\n";
     $student_count = 0;
     foreach ($rows as $recs) {
@@ -290,7 +285,6 @@ if($is_module_admin || $admin_access) {
         $display_block .= "<TD>$total_mark</TD>";
 
         $display_block .= "</TR>\n";
-
     }
     $display_block .= "</tbody>\n";
     $display_block .= "</TABLE>\n";
@@ -298,11 +292,11 @@ if($is_module_admin || $admin_access) {
     $display_block .= "\n<input type='hidden' name='op' value='submit_edited'>";
     $display_block .= "\n<input type='hidden' name='student_count' value='$student_count'>\n";
 
-//$display_block .="<p><input type='submit' id='submitbutton' name='submit' value='Submit changes to student details.'></p>";
+    //$display_block .="<p><input type='submit' id='submitbutton' name='submit' value='Submit changes to student details.'></p>";
 
-//$display_block .="</form>\n";
+    //$display_block .="</form>\n";
 
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Upload XLSX/CSV... </H2>\n";
     $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id' enctype='multipart/form-data'>\n";
     $display_block .= "<P> Upload a XLSX/CSV file to enter totals data for a part <B>overwriting and data there</B></P>\n";
@@ -323,9 +317,9 @@ if($is_module_admin || $admin_access) {
 
     $display_block .= "</form>\n";
 
-//---------------------------------------------------------------------------------
-}else{
-    $display_block .= "You do not have the appropriate admin level<BR>";
+    //---------------------------------------------------------------------------------
+} else {
+    $display_block .= 'You do not have the appropriate admin level<BR>';
     $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 
@@ -333,7 +327,7 @@ if($is_module_admin || $admin_access) {
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

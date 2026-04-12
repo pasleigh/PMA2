@@ -1,4 +1,4 @@
-<?PHP
+<?php
 
 /**
  * Mark-store read/write helpers.
@@ -23,8 +23,7 @@
  * @param string $markstore  Mark-store table name (single marker, single part).
  * @return bool
  */
-function IsMarked($db, $sid, $markstore)
-{
+function IsMarked($db, $sid, $markstore) {
     $isMarked = false;
     $query = "select * from $markstore where sid=:sid";
     try {
@@ -52,8 +51,7 @@ function IsMarked($db, $sid, $markstore)
  * @param string $markstore Mark-store table name.
  * @return float|int Mark total, or -1 if no record found.
  */
-function GetThisMark($db, $sid, $part, $markstore)
-{
+function GetThisMark($db, $sid, $part, $markstore) {
     $thisMark = -1;
     $query = "select * from $markstore where sid=:sid";
     //$get_list_res = mysql_query($get_list) or die("Unable to marks list from table $markstore.<BR>Query: $get_list\n");
@@ -84,8 +82,7 @@ function GetThisMark($db, $sid, $part, $markstore)
  * @param string $markstore_totals Totals table name.
  * @return float|int Reconciled mark, or -1 if no record.
  */
-function GetTotalForPart($db, $sid, $part, $markstore_totals)
-{
+function GetTotalForPart($db, $sid, $part, $markstore_totals) {
     $total = -1;
     $query = "select * from $markstore_totals where sid=:sid";
 
@@ -115,11 +112,10 @@ function GetTotalForPart($db, $sid, $part, $markstore_totals)
  * @param string $markstore_totals Totals table name.
  * @return int Number of students requiring a third marker for this part.
  */
-function CountThirdMarkersRequired($db, $part, $markstore_totals)
-{
+function CountThirdMarkersRequired($db, $part, $markstore_totals) {
     $count = 0;
 
-    $entry = "third_marker_req" . $part;
+    $entry = 'third_marker_req' . $part;
     $query = "select * from $markstore_totals where $entry=1";
     try {
         $results = $db->query($query);
@@ -141,9 +137,7 @@ function CountThirdMarkersRequired($db, $part, $markstore_totals)
  * @param string $markstore_totals Totals table name.
  * @return bool
  */
-function IsThirdMarkerRequired($db, $sid, $part, $markstore_totals)
-{
-
+function IsThirdMarkerRequired($db, $sid, $part, $markstore_totals) {
     $query = "select * from $markstore_totals where SID=:sid";
     try {
         $results = $db->prepare($query);
@@ -177,9 +171,8 @@ function IsThirdMarkerRequired($db, $sid, $part, $markstore_totals)
  * @param string $markstore_totals Totals table name.
  * @return string HTML confirmation string "<p>Done</p>".
  */
-function SetThirdMarkerRequired($db, $sid, $part, $markstore_totals)
-{
-    $third_marker_entry = "third_marker_req" . $part;
+function SetThirdMarkerRequired($db, $sid, $part, $markstore_totals) {
+    $third_marker_entry = 'third_marker_req' . $part;
 
     // Need to check if the SID already has an entry or not
     $query = "select count(SID) from $markstore_totals where SID=:sid";
@@ -206,7 +199,7 @@ function SetThirdMarkerRequired($db, $sid, $part, $markstore_totals)
         exit();
     }
 
-    return "<p>Done</p>";
+    return '<p>Done</p>';
 }
 
 /**
@@ -223,8 +216,7 @@ function SetThirdMarkerRequired($db, $sid, $part, $markstore_totals)
  * @param string $markstore_totals Totals table name.
  * @return bool
  */
-function HaveAllMarkersMarked($db, $sid, $part, $num_markers, $markstores, $markstore_totals)
-{
+function HaveAllMarkersMarked($db, $sid, $part, $num_markers, $markstores, $markstore_totals) {
     // $num_markers is the default number of markers.
     // If it is two and the third marker has been requested then there needs to be completion of three markers checked.
     for ($j = 1; $j <= $num_markers; $j++) {
@@ -270,8 +262,7 @@ function HaveAllMarkersMarked($db, $sid, $part, $num_markers, $markstores, $mark
  * @param string $markstore_totals Totals table name.
  * @return bool
  */
-function HaveAllPartsBeenMarked($db, $sid, $num_parts, $markstore_totals)
-{
+function HaveAllPartsBeenMarked($db, $sid, $num_parts, $markstore_totals) {
     for ($i = 1; $i <= $num_parts; $i++) {
         $part_mark = GetTotalForPart($db, $sid, $i, $markstore_totals);
         if ($part_mark < 0.01) {
@@ -294,8 +285,7 @@ function HaveAllPartsBeenMarked($db, $sid, $num_parts, $markstore_totals)
  * @param string $markstore_totals Totals table name.
  * @return float|int Computed weighted total, or -1 if incomplete.
  */
-function SetRecalculatedOverallTotal($db, $sid, $num_parts, $part_percents, $markstore_totals)
-{
+function SetRecalculatedOverallTotal($db, $sid, $num_parts, $part_percents, $markstore_totals) {
     $total = 0.0;
     for ($i = 1; $i <= $num_parts; $i++) {
         $part_mark = GetTotalForPart($db, $sid, $i, $markstore_totals);
@@ -306,7 +296,7 @@ function SetRecalculatedOverallTotal($db, $sid, $num_parts, $part_percents, $mar
         $total += $part_mark * $part_percents[$i] * 0.01;
     }
 
-    $entry = "total";
+    $entry = 'total';
     $query = "update $markstore_totals set $entry=:total where SID=:sid";
 
     try {
@@ -330,8 +320,7 @@ function SetRecalculatedOverallTotal($db, $sid, $num_parts, $part_percents, $mar
  * @param array  $markstores  2-D array of mark-store table names indexed [part][marker_number].
  * @return float|int Sum of marks, or -2 if any marker has not yet submitted.
  */
-function GetTotalFromAllMarkers($db, $sid, $part, $num_markers, $markstores)
-{
+function GetTotalFromAllMarkers($db, $sid, $part, $num_markers, $markstores) {
     $total = 0.0;
     for ($j = 1; $j <= $num_markers; $j++) {
         if (IsMarked($db, $sid, $markstores[$part][$j]) == false) {
@@ -354,8 +343,7 @@ function GetTotalFromAllMarkers($db, $sid, $part, $num_markers, $markstores)
  * @param array $markstores 2-D array of mark-store table names indexed [part][marker_number].
  * @return float Absolute difference between the two markers' totals.
  */
-function GetDifference($db, $sid, $part, $markstores)
-{
+function GetDifference($db, $sid, $part, $markstores) {
     // return the difference between the first and second marker
     // Assumes there are two markers
     $mark1 = GetThisMark($db, $sid, $part, $markstores[$part][1]);
@@ -376,14 +364,13 @@ function GetDifference($db, $sid, $part, $markstores)
  * @param string $markstore3         Marker 3 table name.
  * @return array Mark-store table names indexed from 1 (index 0 is always empty string).
  */
-function GetMarkStoreListFromMarkMethodString($mark_method_string, $markstore1, $markstore2, $markstore3)
-{
+function GetMarkStoreListFromMarkMethodString($mark_method_string, $markstore1, $markstore2, $markstore3) {
     $mark_method_array = GetMarkMethodAsArray($mark_method_string);
 
-    $markstore_list = array();
+    $markstore_list = [];
     $count = 0;
 
-    $markstore_list[0] = "";
+    $markstore_list[0] = '';
     $count++;
 
     if ($mark_method_array[4] == 1) {
@@ -418,14 +405,13 @@ function GetMarkStoreListFromMarkMethodString($mark_method_string, $markstore1, 
  * @param string $marker3            Marker 3 full name.
  * @return array Marker name strings indexed from 1 (index 0 is always empty string).
  */
-function GetMarkerListFromMarkMethodString($mark_method_string, $marker1, $marker2, $marker3)
-{
+function GetMarkerListFromMarkMethodString($mark_method_string, $marker1, $marker2, $marker3) {
     $mark_method_array = GetMarkMethodAsArray($mark_method_string);
 
-    $marker_list = array();
+    $marker_list = [];
     $count = 0;
 
-    $marker_list[0] = "";
+    $marker_list[0] = '';
     $count++;
 
     if ($mark_method_array[4] == 1) {
@@ -461,9 +447,8 @@ function GetMarkerListFromMarkMethodString($mark_method_string, $marker1, $marke
  * @param string $markstore_totals Totals table name.
  * @return string 4-character bitmask, e.g. '0011' = markers 1 & 2, '1000' = overwritten.
  */
-function GetMarkMethodString($db, $sid, $part, $markstore_totals)
-{
-    $mark_method_string = "9999";
+function GetMarkMethodString($db, $sid, $part, $markstore_totals) {
+    $mark_method_string = '9999';
 
     $query = "select * from $markstore_totals where sid=:sid";
     try {
@@ -478,14 +463,14 @@ function GetMarkMethodString($db, $sid, $part, $markstore_totals)
     if ($num_rows > 0) {
         $recs = $results->fetch();
         $entry = "mark_method$part";
-        if($recs){
-            if($recs[$entry] !== null){
+        if ($recs) {
+            if ($recs[$entry] !== null) {
                 $mark_method_string = $recs[$entry];
             }
         }
     }
-    if(strlen($mark_method_string) != 4){
-        $mark_method_string = "0001";
+    if (strlen($mark_method_string) != 4) {
+        $mark_method_string = '0001';
     }
     return $mark_method_string;
 }
@@ -499,9 +484,8 @@ function GetMarkMethodString($db, $sid, $part, $markstore_totals)
  * @param string $markstore_totals Totals table name.
  * @return string Reason string, or empty string if not set.
  */
-function GetMarkReasonString($db, $sid, $part, $markstore_totals)
-{
-    $mark_reason_string = "";
+function GetMarkReasonString($db, $sid, $part, $markstore_totals) {
+    $mark_reason_string = '';
 
     $query = "select * from $markstore_totals where sid=:sid";
     try {
@@ -534,8 +518,7 @@ function GetMarkReasonString($db, $sid, $part, $markstore_totals)
  * @param string $markstore_totals Totals table name.
  * @return float|int Returned mark, or -1 if no record.
  */
-function GetReturnedMark($db, $sid, $part, $markstore_totals)
-{
+function GetReturnedMark($db, $sid, $part, $markstore_totals) {
     $mark = -1;
 
     $query = "select * from $markstore_totals where sid=:sid";
@@ -569,8 +552,7 @@ function GetReturnedMark($db, $sid, $part, $markstore_totals)
  * @param string $mark_method 4-character bitmask string (e.g. '0011').
  * @return array<int, string> Indexed 1–4, each value '0' or '1'.
  */
-function GetMarkMethodAsArray($mark_method)
-{
+function GetMarkMethodAsArray($mark_method) {
     // mark_method is a string of 4 1s and 0s
     // Position  corresponds to the market (Overwrite, Third, Second, First)
     // This function returns an array with:
@@ -600,8 +582,7 @@ function GetMarkMethodAsArray($mark_method)
  * @param string $staff_names             Staff table name.
  * @return array<int, string> Array of 4 name strings indexed 0–3.
  */
-function GetMarkerNamesArray($db, $sid, $part, $project_allocated_table, $staff_names)
-{
+function GetMarkerNamesArray($db, $sid, $part, $project_allocated_table, $staff_names) {
     $query = "select * from $project_allocated_table where sid=:sid";
     try {
         $results = $db->prepare($query);
@@ -611,7 +592,7 @@ function GetMarkerNamesArray($db, $sid, $part, $project_allocated_table, $staff_
         exit();
     }
 
-    $marker_names = array_fill(0, 4, "");
+    $marker_names = array_fill(0, 4, '');
 
     $num_rows = $results->rowCount();
 
@@ -619,24 +600,24 @@ function GetMarkerNamesArray($db, $sid, $part, $project_allocated_table, $staff_
         $recs = $results->fetch();
 
         $who = 0;
-        $marker_entry = "supervisor_id";
+        $marker_entry = 'supervisor_id';
         $marker_id = $recs[$marker_entry];
-        $marker_names[$who] = GetStaffNameFromID($db, $marker_id, $staff_names, NULL);
+        $marker_names[$who] = GetStaffNameFromID($db, $marker_id, $staff_names, null);
 
         $who = 1;
-        $marker_entry = "marker_p$part" . "m$who" . "_id";
+        $marker_entry = "marker_p$part" . "m$who" . '_id';
         $marker_id = $recs[$marker_entry];
-        $marker_names[$who] = GetStaffNameFromID($db, $marker_id, $staff_names, NULL);
+        $marker_names[$who] = GetStaffNameFromID($db, $marker_id, $staff_names, null);
 
         $who = 2;
-        $marker_entry = "marker_p$part" . "m$who" . "_id";
+        $marker_entry = "marker_p$part" . "m$who" . '_id';
         $marker_id = $recs[$marker_entry];
-        $marker_names[$who] = GetStaffNameFromID($db, $marker_id, $staff_names, NULL);
+        $marker_names[$who] = GetStaffNameFromID($db, $marker_id, $staff_names, null);
 
         $who = 3;
-        $marker_entry = "marker_p$part" . "m$who" . "_id";
+        $marker_entry = "marker_p$part" . "m$who" . '_id';
         $marker_id = $recs[$marker_entry];
-        $marker_names[$who] = GetStaffNameFromID($db, $marker_id, $staff_names, NULL);
+        $marker_names[$who] = GetStaffNameFromID($db, $marker_id, $staff_names, null);
     }
 
     return $marker_names;
@@ -650,8 +631,7 @@ function GetMarkerNamesArray($db, $sid, $part, $project_allocated_table, $staff_
  * @param string $project_allocated_table Allocation table name.
  * @return bool
  */
-function IsSIDAllocated($db, $sid, $project_allocated_table)
-{
+function IsSIDAllocated($db, $sid, $project_allocated_table) {
     $query = "select * from $project_allocated_table where sid=:sid";
     try {
         $results = $db->prepare($query);
@@ -681,8 +661,7 @@ function IsSIDAllocated($db, $sid, $project_allocated_table)
  * @param string $project_allocated_table Allocation table name.
  * @return bool
  */
-function IsSIDActive($db, $sid, $project_allocated_table)
-{
+function IsSIDActive($db, $sid, $project_allocated_table) {
     if (IsSIDAllocated($db, $sid, $project_allocated_table)) {
         $query = "select * from $project_allocated_table where sid=:sid";
         try {
@@ -701,7 +680,7 @@ function IsSIDActive($db, $sid, $project_allocated_table)
             return true;
         }
     }
-    # If not allocated then IS NOT active i.e. is inactive
+    // If not allocated then IS NOT active i.e. is inactive
     return false;
 }
 
@@ -716,8 +695,7 @@ function IsSIDActive($db, $sid, $project_allocated_table)
  * @param string $project_setup_table Project setup table name.
  * @return int 1 = numeric scoring, 0 = grade band scoring.
  */
-function GetIsNumeric($db, $pm_id, $part, $project_setup_table)
-{
+function GetIsNumeric($db, $pm_id, $part, $project_setup_table) {
     $isnumeric = 0;
 
     $query = "select * from $project_setup_table where id=:pm_id";
@@ -732,7 +710,7 @@ function GetIsNumeric($db, $pm_id, $part, $project_setup_table)
 
     if ($num_rows > 0) {
         $recs = $results->fetch();
-        $entry = "p$part" . "_numeric";
+        $entry = "p$part" . '_numeric';
 
         $isnumeric = $recs[$entry];
     }
@@ -749,8 +727,7 @@ function GetIsNumeric($db, $pm_id, $part, $project_setup_table)
  * @param string $allocation_table Allocation table name.
  * @return int Row count, or 0 if table is missing.
  */
-function CountAllocationTable($db, $allocation_table)
-{
+function CountAllocationTable($db, $allocation_table) {
     $num = 0;
     try {
         $query = "DESCRIBE $allocation_table";
@@ -785,8 +762,7 @@ function CountAllocationTable($db, $allocation_table)
  * @param string $table Table name to test.
  * @return bool
  */
-function DoesTableExist($db, $table)
-{
+function DoesTableExist($db, $table) {
     try {
         $query = "DESCRIBE $table";
         $db->query($query);
@@ -809,15 +785,14 @@ function DoesTableExist($db, $table)
  * @param string $column Column name to check for.
  * @return bool
  */
-function DoesColumnExistInTable($db, $table, $column)
-{
+function DoesColumnExistInTable($db, $table, $column) {
     $query = "SHOW COLUMNS FROM $table LIKE '$column'";
     $res = $db->query($query);
     $count = $res->rowCount();
 
     $result = true;
 
-    if($count == 0){
+    if ($count == 0) {
         $result = false;
     }
 
@@ -830,8 +805,7 @@ function DoesColumnExistInTable($db, $table, $column)
  * @param mixed $val Value to dump.
  * @return void
  */
-function print_r2($val)
-{
+function print_r2($val) {
     echo '<pre>';
     print_r($val);
     echo '</pre>';
@@ -844,12 +818,9 @@ function print_r2($val)
  * @param mixed  $val  Value to dump.
  * @return void
  */
-function print_r3($name, $val)
-{
+function print_r3($name, $val) {
     echo '<pre>';
     echo("$name\n");
     print_r($val);
     echo '</pre>';
 }
-
-?>

@@ -1,20 +1,20 @@
 <?php
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("./utility_functions.php")) OR die("Cannot read utility_functions file<BR>");
-(@include_once("../markstore_functions.php")) OR die("Cannot read markstore_functions file<BR>");
-(@include_once("../staff_functions.php")) OR die("Cannot read markstore_functions file<BR>");
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./utility_functions.php')) or die('Cannot read utility_functions file<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot read markstore_functions file<BR>');
+(@include_once('../staff_functions.php')) or die('Cannot read markstore_functions file<BR>');
 
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
-$assess_part_description_text = "";
+$assess_part_description_text = '';
 
 // Check the admin level
 $admin_access = false;
@@ -31,8 +31,7 @@ if ($is_module_admin) {
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
 if ($is_module_admin || $admin_access) {
-
-    $display_block .= "<h1>Upload Student Project Allocation</h1>";
+    $display_block .= '<h1>Upload Student Project Allocation</h1>';
     $display_block .= "<h2>Database table to be updated \"$project_allocated\"</h2>";
 
     if (array_key_exists('op', $_POST) == false) {
@@ -42,17 +41,16 @@ if ($is_module_admin || $admin_access) {
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
-        $POST_OP = "";
+        $POST_OP = '';
     }
 
-//if ($access) {
-// see all the POST values
-//foreach ($_POST as $key => $value){
-//}
-    $allowed_tyle_ext = array('csv', 'CSV');
+    //if ($access) {
+    // see all the POST values
+    //foreach ($_POST as $key => $value){
+    //}
+    $allowed_tyle_ext = ['csv', 'CSV'];
 
-    if ($POST_OP == "upload_csv") {
-
+    if ($POST_OP == 'upload_csv') {
         $csv_file_name = $_FILES['csv']['name'];
         $ext = pathinfo($csv_file_name, PATHINFO_EXTENSION);
         $csv_file_size = $_FILES['csv']['size'];
@@ -65,7 +63,7 @@ if ($is_module_admin || $admin_access) {
             $display_block .= "<H3>The file: $csv_file_name is NOT .csv file. <BR>Proposals were not uploaded. Choose another file.</H3>";
         }
 
-        if ($csv_file_name != "" && $is_csv) {
+        if ($csv_file_name != '' && $is_csv) {
             $importer = new CSVparse();
             $CSV_DATA = $importer->parse_file($csv_file_tmp);
             foreach ($CSV_DATA as $each_alloc_entry) {
@@ -190,16 +188,13 @@ if ($is_module_admin || $admin_access) {
                     echo "$key: $value<br />";
 
                 }*/
-
             }
-        }else{
+        } else {
             $display_block .= "<H3 style='color: red; background-color: #f1c40f'>You need to browse and select a CSV file to upload.</H3>";
         }
-
     }// end of if ($POST_OP == "upload_csv")
 
-    if ($POST_OP == "upload_detailed_csv") {
-
+    if ($POST_OP == 'upload_detailed_csv') {
         $csv_file_name = $_FILES['csv']['name'];
         $ext = pathinfo($csv_file_name, PATHINFO_EXTENSION);
         $csv_file_size = $_FILES['csv']['size'];
@@ -212,7 +207,7 @@ if ($is_module_admin || $admin_access) {
             $display_block .= "<H3>The file: $csv_file_name is NOT .csv file. <BR>Proposals were not uploaded. Choose another file.</H3>";
         }
 
-        if ($csv_file_name != "" && $is_csv) {
+        if ($csv_file_name != '' && $is_csv) {
             $importer = new CSVparse();
             $CSV_DATA = $importer->parse_file($csv_file_tmp);
             foreach ($CSV_DATA as $each_alloc_entry) {
@@ -281,8 +276,8 @@ if ($is_module_admin || $admin_access) {
                 }
 
                 for ($i = 1; $i <= $num_parts; $i++) {
-                    $m1_entry = "marker_p$i" . "m1_id";
-                    $m2_entry = "marker_p$i" . "m2_id";
+                    $m1_entry = "marker_p$i" . 'm1_id';
+                    $m2_entry = "marker_p$i" . 'm2_id';
                     $marker1_id = $supervisor_ida[$i];
                     $marker2_id = $second_marker_ida[$i];
                     $query = "UPDATE $project_allocated SET `$m1_entry`=$marker1_id, `$m2_entry`=$marker2_id WHERE sid=$sid";
@@ -302,22 +297,20 @@ if ($is_module_admin || $admin_access) {
                     echo "$key: $value<br />";
 
                 }*/
-
             }
-        }else{
+        } else {
             $display_block .= "<H3 style='color: red; background-color: #f1c40f'>You need to browse and select a CSV file to upload.</H3>";
         }
-
     }// end of if ($POST_OP == "upload_detailed_csv")
 
-//$display_block .="\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
+    //$display_block .="\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
     $num = CountAllocationTable($db, $project_allocated);
     if ($num == 0) {
         $display_block .= "<P>There are no entries in the $project_allocated table. This might indicate that the table has not yet been created. Upload a CSV file to creat it.</P>";
     } else {
-// Get the list of allcoations from the students table
+        // Get the list of allcoations from the students table
         $query = "select * from $project_allocated order by projectid";
-//$get_list_res = mysql_query($get_list) or die(" Unable to get student allocation list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
+        //$get_list_res = mysql_query($get_list) or die(" Unable to get student allocation list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
@@ -328,9 +321,9 @@ if ($is_module_admin || $admin_access) {
             exit();
         }
         $rows = $results->fetchAll();
-//$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
+        //$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
         $display_block .= "<TABLE id=\"studentallocation\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
-        $display_block .= "
+        $display_block .= '
     <thead>
       <tr>
         <th>Project ID</th>
@@ -350,7 +343,7 @@ if ($is_module_admin || $admin_access) {
         <th>P5 marker</th>
         <th>P5 2nd marker</th>
       </tr>
-    </thead>";
+    </thead>';
         $display_block .= "<tbody>\n";
         $student_count = 0;
         foreach ($rows as $recs) {
@@ -358,9 +351,9 @@ if ($is_module_admin || $admin_access) {
             $sid = $recs['sid'];
             $title = $recs['title'];
             $supervisor_id = $recs['supervisor_id'];
-            $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_names2, NULL);
+            $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_names2, null);
             $second_marker_id = $recs['second_marker_id'];
-            $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_names2, NULL);
+            $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_names2, null);
 
             $s_get_list_query = "select * from $students where sid=$sid";
             try {
@@ -376,8 +369,8 @@ if ($is_module_admin || $admin_access) {
             //$s_get_list_res = mysql_query($s_get_list) or die(" Unable to create student list from database. <BR>Query: $s_get_list");
             //$s_recs = mysql_fetch_array($s_get_list_res);
             $s_recs = $results->fetch();
-            $student_name = "";
-            if($s_recs){
+            $student_name = '';
+            if ($s_recs) {
                 $student_name = stripslashes($s_recs['name']);
             }
 
@@ -391,18 +384,16 @@ if ($is_module_admin || $admin_access) {
             $display_block .= "<TD><input type=\"text\" name=\"second_marker$student_count\" value=\"$second_marker_name\"  size=20 maxlength=30 readonly></TD>";
 
             for ($i = 1; $i <= 5; $i++) {
-                $m1_entry = "marker_p$i" . "m1_id";
-                $m2_entry = "marker_p$i" . "m2_id";
+                $m1_entry = "marker_p$i" . 'm1_id';
+                $m2_entry = "marker_p$i" . 'm2_id';
                 $marker1_id = $recs[$m1_entry];
                 $marker2_id = $recs[$m2_entry];
-                $marker1_name = GetStaffNameFromID($db, $marker1_id, $staff_names2, NULL);
-                $marker2_name = GetStaffNameFromID($db, $marker2_id, $staff_names2, NULL);
+                $marker1_name = GetStaffNameFromID($db, $marker1_id, $staff_names2, null);
+                $marker2_name = GetStaffNameFromID($db, $marker2_id, $staff_names2, null);
                 $display_block .= "<TD style='font-size: small;'>$marker1_name</TD>";
                 $display_block .= "<TD style='font-size: small;'>$marker2_name</TD>";
-
             }
             $display_block .= "</TR>\n";
-
         }
         $display_block .= "</tbody>\n";
         $display_block .= "</TABLE>\n";
@@ -410,37 +401,37 @@ if ($is_module_admin || $admin_access) {
         $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_edited\">";
         $display_block .= "\n<input type=\"hidden\" name=\"student_count\" value=\"$student_count\">";
     }
-//$display_block .="<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit changes to student details.\"></p>";
+    //$display_block .="<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit changes to student details.\"></p>";
 
-//$display_block .="</form>\n";
+    //$display_block .="</form>\n";
 
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Upload a Simple CSV... (with the same marker/second marker for each part)</H2>\n";
     $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\" enctype=\"multipart/form-data\">\n";
     $display_block .= "<P> You can alternatively upload a CSV file to update and <B>add</B> students' allocations (you cannot delete students) </P>";
     $display_block .= "<P> Create a CSV with the headings:<B>SID</B>,<B>Project ID</B>, <B>Title</B>,  <B>Supervisor Surname (plus ', Initial' [e.g. Smith, A] if necessary)</B>, <B>Second marker Surname (plus ', Initial' if necessary)</B> and load here.</P>";
-    $display_block .= "<P>(The Project ID would normally be the ID used in the selection process - but it could be anything. It does NOT have to be unique)</P>";
-    $display_block .= "<P></P><input name=\"csv\" type=\"file\" id=\"csv\" /></P>";
+    $display_block .= '<P>(The Project ID would normally be the ID used in the selection process - but it could be anything. It does NOT have to be unique)</P>';
+    $display_block .= '<P></P><input name="csv" type="file" id="csv" /></P>';
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"upload_csv\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_csv\" name=\"submit\" value=\"Upload a simple CSV \"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton_csv" name="submit" value="Upload a simple CSV "></p>';
 
     $display_block .= "</form>\n";
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Upload a detailed CSV... (with different marker for each part)</H2>\n";
     $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\" enctype=\"multipart/form-data\">\n";
     $display_block .= "<P> You can alternatively upload a CSV file to update and <B>add</B> students' allocations (you cannot delete students) </P>";
-    $display_block .= "<P> The detailed breakdown of the imported allocation of markers will be show on this page ... you cannot edit them.</P>";
+    $display_block .= '<P> The detailed breakdown of the imported allocation of markers will be show on this page ... you cannot edit them.</P>';
     $display_block .= "<P> Create a CSV with the headings:<B>SID</B>, <B>Project ID</B>, <B>Title</B>,  <B>Supervisor Surname (plus ', Initial' [e.g. Smith, A] if necessary)</B>, <B>Second marker Surname (plus ', Initial' if necessary)</B>, <B>P1M1</B>, <B>P1M2</B>, <B>P2M1</B>, <B>P2M2</B>, <B>P3M1</B>, <B>P3M2</B>, <B>P4M1</B>, <B>P4M2</B>, <B>P5M1</B>, <B>P5M2</B>. These are the repeated pairs of markers' surnames for each part -  (NOTE you need BOTH the first and second marker - even if a part does not have a second marker) (You only need upto the number of parts i.e. if there are 2 parts, you will need 6 columns of staff names).</P>";
-    $display_block .= "<P>(The Project ID would normally be the ID used in the selection process - but it could be anything.)</P>";
+    $display_block .= '<P>(The Project ID would normally be the ID used in the selection process - but it could be anything.)</P>';
 
-    $display_block .= "<P></P><input name=\"csv\" type=\"file\" id=\"csv\" /></P>";
+    $display_block .= '<P></P><input name="csv" type="file" id="csv" /></P>';
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"upload_detailed_csv\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_full_csv\" name=\"submit\" value=\"Upload a detailed CSV \"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton_full_csv" name="submit" value="Upload a detailed CSV "></p>';
 
     $display_block .= "</form>\n";
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
     /*
         $display_block .="<hr><h2>Add a new student...</H2>\n";
         $display_block .="\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
@@ -452,16 +443,16 @@ if ($is_module_admin || $admin_access) {
         $display_block .="</form>\n";
     */
 
-//mysql_close();
+    //mysql_close();
 } else {
-    $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= 'You do not have the appropriate admin level<BR>';
+    $display_block .= '<A href="../index.php">Go back here</A><BR>';
 }
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

@@ -1,14 +1,14 @@
 <?php
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("../staff_functions.php")) OR die("Cannot open staff_functions.php<BR>");
-(@include_once("../markstore_functions.php")) OR die("Cannot open markstore_functions.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('../staff_functions.php')) or die('Cannot open staff_functions.php<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot open markstore_functions.php<BR>');
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // Check the admin level
@@ -16,8 +16,7 @@ $access = false;
 $access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access_phrase</h2>\n";
 
-if($access) {
-
+if ($access) {
     require_valid_csrf();
 
     if (array_key_exists('op', $_POST) == false) {
@@ -41,14 +40,14 @@ if($access) {
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
-        $POST_OP = "";
+        $POST_OP = '';
     }
 
-    if(!DoesTableExist($db, $admin_users_module_table)){
+    if (!DoesTableExist($db, $admin_users_module_table)) {
         create_admin_users_module_table_structure($db);
     }
 
-    $display_block .= "<h1>Edit Module Level Admin users </h1>";
+    $display_block .= '<h1>Edit Module Level Admin users </h1>';
 
     $query = "SELECT * FROM $projects_setup WHERE 1 ORDER BY year_begin DESC";
     try {
@@ -61,7 +60,7 @@ if($access) {
         exit();
     }
 
-    $project_list_options = "";
+    $project_list_options = '';
     $results_data = $results->fetchAll();
     $pm_id_first = null;
     foreach ($results_data as $get_data) {
@@ -72,44 +71,70 @@ if($access) {
         $module_postfix_l = $get_data['module_postfix'];
         $module_short_desc_l = $get_data['module_short_desc'];
         $pm_id_s = $get_data['id'];
-        if($pm_id_first == null){
+        if ($pm_id_first == null) {
             // need this to get first on select list
             $pm_id_first = $pm_id_s;
         }
 
         if ($pm_id_s == $pm_id_selected) {
-            $selected = "selected";
+            $selected = 'selected';
         } else {
-            $selected = "";
+            $selected = '';
         }
         $project_list_desc = "$year_l $module_prefix_l$module_number_l$module_postfix_l - $module_short_code_s_l - $module_short_desc_l";
         $project_list_options .= "<option $selected value='$pm_id_s'>$project_list_desc</option>\n";
     }
-    if($pm_id_selected == null){$pm_id_selected = $pm_id_first;}
+    if ($pm_id_selected == null) {
+        $pm_id_selected = $pm_id_first;
+    }
     // plus the feedback tools
-    $selected = "";
-    $project_list_desc = "Hamid - How Am I Doing";
-    if ($pm_id_selected == 'hamid'){$selected = "selected";}else{$selected = "";}
+    $selected = '';
+    $project_list_desc = 'Hamid - How Am I Doing';
+    if ($pm_id_selected == 'hamid') {
+        $selected = 'selected';
+    } else {
+        $selected = '';
+    }
     $project_list_options .= "<option $selected value='hamid'>$project_list_desc</option>\n";
 
-    $project_list_desc = "CWT - Coursework Timetables";
-    if ($pm_id_selected == 'cwt'){$selected = "selected";}else{$selected = "";}
+    $project_list_desc = 'CWT - Coursework Timetables';
+    if ($pm_id_selected == 'cwt') {
+        $selected = 'selected';
+    } else {
+        $selected = '';
+    }
     $project_list_options .= "<option $selected value='cwt'>$project_list_desc</option>\n";
 
-    $project_list_desc = "DIST - Distribution charts";
-    if ($pm_id_selected == 'dist'){$selected = "selected";}else{$selected = "";}
+    $project_list_desc = 'DIST - Distribution charts';
+    if ($pm_id_selected == 'dist') {
+        $selected = 'selected';
+    } else {
+        $selected = '';
+    }
     $project_list_options .= "<option $selected value='dist'>$project_list_desc</option>\n";
 
-    $project_list_desc = "PEGA - Workload visualisations";
-    if ($pm_id_selected == 'pega'){$selected = "selected";}else{$selected = "";}
+    $project_list_desc = 'PEGA - Workload visualisations';
+    if ($pm_id_selected == 'pega') {
+        $selected = 'selected';
+    } else {
+        $selected = '';
+    }
     $project_list_options .= "<option $selected value='pega'>$project_list_desc</option>\n";
 
-    $project_list_desc = "KMAP - Key Assessment Info. Mapping";
-    if ($pm_id_selected == 'kmap'){$selected = "selected";}else{$selected = "";}
+    $project_list_desc = 'KMAP - Key Assessment Info. Mapping';
+    if ($pm_id_selected == 'kmap') {
+        $selected = 'selected';
+    } else {
+        $selected = '';
+    }
     $project_list_options .= "<option $selected value='kmap'>$project_list_desc</option>\n";
 
-    $project_list_desc = "All - show all module level users";
-    if ($pm_id_selected == 'all'){$selected = "selected";}else{$selected = "";}
+    $project_list_desc = 'All - show all module level users';
+    if ($pm_id_selected == 'all') {
+        $selected = 'selected';
+    } else {
+        $selected = '';
+    }
     $project_list_options .= "<option $selected value='all'>$project_list_desc</option>\n";
 
     // Display the dropdowns to select the module and year
@@ -117,15 +142,15 @@ if($access) {
 
     $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
     $display_block .= csrf_token_field();
-    $display_block .= "<P><strong>Project/Module descriptions in the database: </strong>";
+    $display_block .= '<P><strong>Project/Module descriptions in the database: </strong>';
     $display_block .= "<select class='form-control' name='pm_id_selected' id='module_select'>\n";
     $display_block .= $project_list_options;
     $display_block .= "</select>\n</P>";
     $display_block .= "<input type='hidden' name='op' value='select'>";
     $display_block .= "<p><input class='btn btn-secondary' type='submit' id='submitbutton' name='submit' value='List admin user for the selected module/year'></p>";
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 
-    if ($POST_OP == "selected_new_staff") {
+    if ($POST_OP == 'selected_new_staff') {
         // write a query to get the username of the id selected
         try {
             $results = $db->prepare("SELECT * FROM $staff_names WHERE staffid=?");
@@ -138,32 +163,32 @@ if($access) {
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
-        if($results->rowCount() > 0) {
+        if ($results->rowCount() > 0) {
             $staff_recs = $results->fetch();
 
             $fullname = $staff_recs['fullname'];
             $username = $staff_recs['username'];
             $staffid = $staff_recs['staffid'];
 
-            if($pm_id_selected == "hamid") {
+            if ($pm_id_selected == 'hamid') {
                 $short_code = $pm_id_selected;
                 //$pm_id_selected = -1;
-            }elseif ($pm_id_selected == "cwt") {
+            } elseif ($pm_id_selected == 'cwt') {
                 $short_code = $pm_id_selected;
                 //$pm_id_selected = -2;
-            }elseif ($pm_id_selected == "dist") {
+            } elseif ($pm_id_selected == 'dist') {
                 $short_code = $pm_id_selected;
                 //$pm_id_selected = -3;
-            }elseif ($pm_id_selected == "pega") {
+            } elseif ($pm_id_selected == 'pega') {
                 $short_code = $pm_id_selected;
                 //$pm_id_selected = -4;
-            }elseif ($pm_id_selected == "kmap") {
+            } elseif ($pm_id_selected == 'kmap') {
                 $short_code = $pm_id_selected;
                 //$pm_id_selected = -5;
-            }elseif ($pm_id_selected == "all") {
+            } elseif ($pm_id_selected == 'all') {
                 $short_code = $pm_id_selected;
                 //$pm_id_selected = -6;
-            }else{
+            } else {
                 try {
                     $results = $db->prepare("SELECT * FROM $projects_setup WHERE id=?");
                     $results->execute([$pm_id_selected]);
@@ -217,13 +242,11 @@ if($access) {
     }
 
     // delete the checked
-    if ($POST_OP == "submit_modified") {
-
+    if ($POST_OP == 'submit_modified') {
         // loop through all _POST find the "ai" keys
-        foreach ($_POST as $key => $value)
-        {
-            if(substr($key,0,3)=="ai_"){
-                $staff_admin_index = substr($key,3);
+        foreach ($_POST as $key => $value) {
+            if (substr($key, 0, 3) == 'ai_') {
+                $staff_admin_index = substr($key, 3);
                 try {
                     $results = $db->prepare("DELETE FROM $admin_users_module_table WHERE `index`=?");
                     $results->execute([$staff_admin_index]);
@@ -241,14 +264,14 @@ if($access) {
     {
         // Display the admin users table for this module
 
-        $display_block .= "<H2>The current Admin users for this Module</H2> ";
+        $display_block .= '<H2>The current Admin users for this Module</H2> ';
 
         $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
         $display_block .= csrf_token_field();
 
         // Get the list of staff from
         try {
-            if($pm_id_selected == 'all'){
+            if ($pm_id_selected == 'all') {
                 $results = $db->prepare("SELECT * FROM $admin_users_module_table WHERE 1");
                 $results->execute([]);
             } else {
@@ -264,7 +287,7 @@ if($access) {
         }
 
         $display_block .= "<TABLE id='adminstaffinfo' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
-        $display_block .= "
+        $display_block .= '
             <thead>
               <tr>
                 <th>Project id</th>
@@ -276,7 +299,7 @@ if($access) {
                 <th>Admin level</th>
                 <th>Tick to delete</th>        
               </tr>
-            </thead>";
+            </thead>';
         $display_block .= "<tbody>\n";
         $admin_staff_count = 0;
         $rows = $results->fetchAll();
@@ -314,10 +337,10 @@ if($access) {
 
         $display_block .= "<p><input class='btn btn-outline-danger' type='submit' id='submitbutton' name='submit' value='Delete ticked staff from admin list for this module/year.'></p>";
 
-        $display_block .= "</form>";
+        $display_block .= '</form>';
 
         //---------------------------------------------------------------------------------
-        if($pm_id_selected != 'all') {
+        if ($pm_id_selected != 'all') {
             $display_block .= "<hr><h2>Add a new admin person to the above selected module / year ...</H2>\n";
             $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
             $display_block .= csrf_token_field();
@@ -329,18 +352,16 @@ if($access) {
 
             $display_block .= "<div class='m-3'><input class='btn btn-primary' type='submit' id='submitbutton_new' name='submit_new' value='Add a NEW admin user to this module/year.'></div>";
 
-            $display_block .= "</form>";
+            $display_block .= '</form>';
         }
-
     }
-
 }
 
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

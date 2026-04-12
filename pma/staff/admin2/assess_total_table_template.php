@@ -1,8 +1,8 @@
 <?php
-function CreateAccessTotalTableQuery($assess_total_table_name)
-{
-  //$str = "`$assess_total_table_name`<BR>";
-  $create_table_query = "CREATE TABLE IF NOT EXISTS `$assess_total_table_name` (
+
+function CreateAccessTotalTableQuery($assess_total_table_name) {
+    //$str = "`$assess_total_table_name`<BR>";
+    $create_table_query = "CREATE TABLE IF NOT EXISTS `$assess_total_table_name` (
       `SID` char(10) default NULL,
       `retmark1` float default NULL,
       `third_marker_req1` int(11) default 0,
@@ -28,6 +28,5 @@ function CreateAccessTotalTableQuery($assess_total_table_name)
       `locked` int(11) default NULL
     ) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
 
-  return $create_table_query;
+    return $create_table_query;
 }
-?>

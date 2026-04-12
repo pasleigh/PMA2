@@ -1,8 +1,8 @@
 <?php
-function CreateAccessTableQuery($assess_table_name)
-{
-  //$str = "`$assess_table_name`<BR>";
-  $create_table_query = "CREATE TABLE `$assess_table_name` (
+
+function CreateAccessTableQuery($assess_table_name) {
+    //$str = "`$assess_table_name`<BR>";
+    $create_table_query = "CREATE TABLE `$assess_table_name` (
     `SID` char(10) default NULL,
     `C1Q1` float default NULL,
     `C1Q2` float default NULL,
@@ -69,6 +69,5 @@ function CreateAccessTableQuery($assess_table_name)
     `locked` int(11) default NULL
   ) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
 
-  return $create_table_query;
+    return $create_table_query;
 }
-?>

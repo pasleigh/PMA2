@@ -1,12 +1,12 @@
 <?php
 // connect to the database
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_tables.php")) OR die("Cannot setup database tables<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_titles.php")) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) or die('Cannot connect to the database<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_tables.php")) or die('Cannot setup database tables<BR>');
 
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
 if (array_key_exists('sid_s', $_REQUEST) == false) {
     $_REQUEST['sid_s'] = null;
@@ -22,25 +22,24 @@ $POST_OP = $_REQUEST['op'];
 //}else{
 //}
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
-
 
 // Check the admin level
 $admin_access = false;
-$admin_access = access_check_response($db,$this_staff_username, $this_staff_full_name, $staff_names,$access_phrase);
+$admin_access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
 $pm_id = $_REQUEST['pm_id'];
-$is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase );
-if($is_module_admin){
+$is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
+if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
 }
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
-if($is_module_admin || $admin_access) {
+if ($is_module_admin || $admin_access) {
     $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
     $display_block .= "<h1>Select a student to add an adhoc (self defined) project</h1>
@@ -55,7 +54,7 @@ if($is_module_admin || $admin_access) {
     $sid_select = "<select name='sid_s'>\n";
 
     $query = "select * from $students order by name";
-//$get_list_res = mysql_query($get_list) or die(" Unable to create student list from database. <BR>Query: $get_list");
+    //$get_list_res = mysql_query($get_list) or die(" Unable to create student list from database. <BR>Query: $get_list");
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
@@ -76,10 +75,10 @@ if($is_module_admin || $admin_access) {
             $sid_select .= "<option value='$sid_s'>$student_name ($sid_s)</option>\n";
         }
     }
-    $sid_select .= "</select>";
+    $sid_select .= '</select>';
 
     $display_block .= $sid_select;
-    $display_block .= "&nbsp;&nbsp;</td></tr>";
+    $display_block .= '&nbsp;&nbsp;</td></tr>';
 
     $display_block .= "<TR><td><input class='btn btn-primary' type='submit' name='submit' value='Select this student'></td></TR>\n";
 
@@ -88,7 +87,7 @@ if($is_module_admin || $admin_access) {
 
     $display_block .= "<HR>\n";
 
-    if ($POST_OP == "selected") {
+    if ($POST_OP == 'selected') {
         // add the student to the $project_allocated list if not already in it
         $query = "select count(SID) from $project_allocated where SID=$sid";
         //$get_list_allocated = mysql_query($get_allocated) or die(" Unable to create list from table $project_allocated. <BR>Query = $get_allocated");
@@ -151,16 +150,15 @@ if($is_module_admin || $admin_access) {
         $display_block .= "<A class='btn btn-success' href='../modify_student_project_details.php?pm_id=$pm_id&sid=$sid&pid=$project_id'>$student_name ($sid)</A>";
         $display_block .= "<BR><BR><HR>\n";
     }
-
 } else {
-    $display_block .= "You do not have the appropriate admin level<BR>";
+    $display_block .= 'You do not have the appropriate admin level<BR>';
     $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

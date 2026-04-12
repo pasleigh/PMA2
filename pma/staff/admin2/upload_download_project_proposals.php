@@ -1,16 +1,16 @@
 <?php
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("./utility_functions.php")) OR die("Cannot read utility_functions file<BR>");
-(@include_once("../markstore_functions.php")) OR die("Cannot read markstore_functions file<BR>");
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./utility_functions.php')) or die('Cannot read utility_functions file<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot read markstore_functions file<BR>');
 
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // Check the admin level
@@ -25,21 +25,20 @@ $display_block .= $connect_msg;
 
 // Check the admin level
 $admin_access = false;
-$admin_access = access_check_response($db,$this_staff_username, $this_staff_full_name, $staff_names,$access_phrase);
+$admin_access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
 $pm_id = $_REQUEST['pm_id'];
-$is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase );
-if($is_module_admin){
+$is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
+if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
 }
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
-if($is_module_admin || $admin_access) {
-
-    $display_block .= "<h1>Upload and Downloading of projects </h1>";
+if ($is_module_admin || $admin_access) {
+    $display_block .= '<h1>Upload and Downloading of projects </h1>';
     $display_block .= "<h2>Database tables: $master_name and $project_details</h2>";
 
     if (array_key_exists('op', $_POST) == false) {
@@ -51,12 +50,12 @@ if($is_module_admin || $admin_access) {
         $_POST['proposal_count'] = null;
     }
 
-// see all the POST values
-//foreach ($_POST as $key => $value){
-//}
+    // see all the POST values
+    //foreach ($_POST as $key => $value){
+    //}
 
-    if ($POST_OP == "upload_csv") {
-        $allowed_tyle_ext = array('csv','CSV');
+    if ($POST_OP == 'upload_csv') {
+        $allowed_tyle_ext = ['csv', 'CSV'];
         $csv_file_name = $_FILES['csv']['name'];
         $ext = pathinfo($csv_file_name, PATHINFO_EXTENSION);
         $csv_file_size = $_FILES['csv']['size'];
@@ -64,12 +63,12 @@ if($is_module_admin || $admin_access) {
         $csv_file_type = $_FILES['csv']['type'];
 
         $is_csv = true;
-        if(!in_array($ext,$allowed_tyle_ext)){
+        if (!in_array($ext, $allowed_tyle_ext)) {
             $is_csv = false;
             $display_block .= "<H3>The file: $csv_file_name is NOT .csv file. <BR>Proposals were not uploaded. Choose another file.</H3>";
         }
 
-        if($csv_file_name != "" && $is_csv) {
+        if ($csv_file_name != '' && $is_csv) {
             $importer = new CSVparse();
             $CSV_DATA = $importer->parse_file($csv_file_tmp);
             foreach ($CSV_DATA as $each_proposal_entry) {
@@ -118,31 +117,30 @@ if($is_module_admin || $admin_access) {
                     echo "$key: $value<br />";
 
                 }*/
-
             }
             $display_block .= "<H3>The csv file: $$csv_file_name has been uploaded.</H3>";
             $display_block .= "Please visit the <A href='./edit_project_proposals_quick.php?pm_id=$pm_id'>Minor modification and delrtiion of project proposals<A> to check and fix any upload errors.<BR><HR><BR>";
-        }else{
+        } else {
             $display_block .= "<H3 style='color: red; background-color: #f1c40f'>You need to browse and select a CSV file to upload.</H3>";
         }
-    }elseif ($POST_OP == "download_csv") {
-        $csv_filename = "project_proposals_" . $module_prefix . $module1 . $module_postfix . "_" . $short_code . "_" . $year_begin . "-" . $year_end . ".csv";
+    } elseif ($POST_OP == 'download_csv') {
+        $csv_filename = 'project_proposals_' . $module_prefix . $module1 . $module_postfix . '_' . $short_code . '_' . $year_begin . '-' . $year_end . '.csv';
 
         // Construct the list of proposals to NOT download
         $num_proposals = $_POST['proposal_count'];
         $num_not_exported = 0;
 
-        for($i = 0; $i < $num_proposals ; $i++){
+        for ($i = 0; $i < $num_proposals ; $i++) {
             // Check the export flag
             $chk_name = "export$i";
             $pid_name = "pid$i";
             $chk_value = 0;
-            if(isset($_POST[$chk_name])){
+            if (isset($_POST[$chk_name])) {
                 $chk_value = $_POST[$chk_name];
                 $pid_value = $_POST[$pid_name];
             }
             $export_flag[$i] = $chk_value;
-            if($chk_value != 1){
+            if ($chk_value != 1) {
                 $num_not_exported++;
             }
         }
@@ -166,23 +164,23 @@ if($is_module_admin || $admin_access) {
         $num = $results->rowCount();
         if ($num < 1) {
             //no records
-            $display_block .= "<p><em>Sorry, there are no project proposals to download!</em></p>";
+            $display_block .= '<p><em>Sorry, there are no project proposals to download!</em></p>';
         } else {
             //has records
             $fp = fopen($tmpcsvfile, 'w');
 
             // Title row
-            $row[0] = "PID";
-            $row[1] = "Date entered";
-            $row[2] = "Date modified";
-            $row[3] = "Title";
-            $row[4] = "Supervisor";
-            $row[5] = "Supervisor ID";
-            $row[6] = "Second marker";
-            $row[7] = "Second marker ID";
-            $row[8] = "Project Description";
-            $row[9] = "Programmes associated";
-            $row[10] = "Number of places for this project";
+            $row[0] = 'PID';
+            $row[1] = 'Date entered';
+            $row[2] = 'Date modified';
+            $row[3] = 'Title';
+            $row[4] = 'Supervisor';
+            $row[5] = 'Supervisor ID';
+            $row[6] = 'Second marker';
+            $row[7] = 'Second marker ID';
+            $row[8] = 'Project Description';
+            $row[9] = 'Programmes associated';
+            $row[10] = 'Number of places for this project';
 
             $ret = fputcsv($fp, $row);
             //fclose($fp);
@@ -190,7 +188,7 @@ if($is_module_admin || $admin_access) {
             $rows = $results->fetchAll();
             $i_count = 0;
             foreach ($rows as $recs) {
-                if($export_flag[$i_count] == 1) {
+                if ($export_flag[$i_count] == 1) {
                     $pid = $recs['id'];
                     $date_added = $recs['date_added'];
                     $date_modified = $recs['date_modified'];
@@ -255,7 +253,7 @@ if($is_module_admin || $admin_access) {
 
     $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
 
-// Get the list of proposals from the $master_name table
+    // Get the list of proposals from the $master_name table
     $query = "SELECT * FROM $master_name ORDER BY id";
     try {
         $results = $db->query($query);
@@ -267,9 +265,9 @@ if($is_module_admin || $admin_access) {
 
         exit();
     }
-//$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
+    //$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
     $display_block .= "<TABLE id=\"proposalinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
-    $display_block .= "
+    $display_block .= '
     <thead>
       <tr>
         <th>Project id</th>
@@ -277,13 +275,12 @@ if($is_module_admin || $admin_access) {
         <th>Supervisor</th>
         <th>Checked=Export</th>
       </tr>
-    </thead>";
+    </thead>';
     $display_block .= "<tbody>\n";
     $proposal_count = 0;
     $rows = $results->fetchAll();
-//if ($results->fetch(PDO::FETCH_NUM) > 0 ) {
+    //if ($results->fetch(PDO::FETCH_NUM) > 0 ) {
     foreach ($rows as $recs) {
-
         $pid = $recs['id'];
         $project_title = $recs['f_title'];
         $supervisor_name = $recs['f_supervisor'];
@@ -293,10 +290,10 @@ if($is_module_admin || $admin_access) {
         $display_block .= "<TD>$project_title</TD>";
         $display_block .= "<TD>$supervisor_name</TD>";
 
-        $checked = "";
+        $checked = '';
         $sel = 1;
         if ($sel == 1) {
-            $checked = "checked";
+            $checked = 'checked';
         }
         $display_block .= "<TD><input type=\"checkbox\" name=\"export$proposal_count\" value=\"1\" $checked></TD>\n";
 
@@ -304,40 +301,39 @@ if($is_module_admin || $admin_access) {
 
         $proposal_count++;
     }
-//}
+    //}
     $display_block .= "</tbody>\n";
     $display_block .= "</TABLE>\n";
 
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"download_csv\">";
     $display_block .= "\n<input type=\"hidden\" name=\"proposal_count\" value=\"$proposal_count\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Export proposals to CSV.\"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton" name="submit" value="Export proposals to CSV."></p>';
 
     $display_block .= "</form>\n";
 
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Upload a CSV...</H2>\n";
     $display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\" enctype=\"multipart/form-data\">\n";
-    $display_block .= "<P> You can upload a CSV file to update and <B>add</B> proposals (you cannot delete proposals this way.) </P>";
-    $display_block .= "<P> The CSV should be the same format as the one downloaded from this same page. <BR>It is useful, for example,  for copying project proposals from a previous year to the current.</P>";
+    $display_block .= '<P> You can upload a CSV file to update and <B>add</B> proposals (you cannot delete proposals this way.) </P>';
+    $display_block .= '<P> The CSV should be the same format as the one downloaded from this same page. <BR>It is useful, for example,  for copying project proposals from a previous year to the current.</P>';
 
-    $display_block .= "<P></P><input name=\"csv\" type=\"file\" id=\"csv\" /></P>";
+    $display_block .= '<P></P><input name="csv" type="file" id="csv" /></P>';
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"upload_csv\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_csv\" name=\"submit\" value=\"Upload a CSV \"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton_csv" name="submit" value="Upload a CSV "></p>';
 
     $display_block .= "</form>\n";
-
 } else {
-    $display_block .= "You do not have the appropriate admin level<BR>";
-    $display_block .= "<A href=\"../index.php\">Go back here</A><BR>";
+    $display_block .= 'You do not have the appropriate admin level<BR>';
+    $display_block .= '<A href="../index.php">Go back here</A><BR>';
 }
 
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

@@ -1,4 +1,4 @@
-<?PHP
+<?php
 /*
 function relativePath($from, $to, $ps = DIRECTORY_SEPARATOR)
 {
@@ -35,9 +35,9 @@ if (array_key_exists('BASE_URL', $_SESSION)) {
   $thisDIR_URL = "http://" . $sessionBASE_URL . "/staff";
 }
 */
-$protocol = isset($_SERVER["HTTPS"]) ? 'https' : 'http';
-$location = ".";
-$staff_location = "..";
+$protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
+$location = '.';
+$staff_location = '..';
 ?>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>

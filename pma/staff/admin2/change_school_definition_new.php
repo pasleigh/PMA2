@@ -1,13 +1,13 @@
 <?php
 $first_use = true;
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_tables.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_titles.php")) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_tables.php")) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) OR die("Cannot find this file to include: connect_pdo.php<BR>");
-(@include_once("$STAFF_DIR_VAL/table_functions.php")) OR die("Cannot include table_functions.php<BR>");
-(@include_once("$STAFF_DIR_VAL/markstore_functions.php")) OR die("Cannot include markstore_functions.php<BR>");
+(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) or die('Cannot find this file to include: connect_pdo.php<BR>');
+(@include_once("$STAFF_DIR_VAL/table_functions.php")) or die('Cannot include table_functions.php<BR>');
+(@include_once("$STAFF_DIR_VAL/markstore_functions.php")) or die('Cannot include markstore_functions.php<BR>');
 
 if (array_key_exists('op', $_POST) == false) {
     $_POST['op'] = null;
@@ -16,22 +16,21 @@ if (array_key_exists('op', $_POST) == false) {
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
-    $POST_OP = "";
+    $POST_OP = '';
 }
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
 //}
 
-$display_block = "";
+$display_block = '';
 
 // Does the definition table exist?
-$definition_table_name = "definition";
-try{
+$definition_table_name = 'definition';
+try {
     $db->query("DESCRIBE $definition_table_name");
-}catch (PDOException $ex) {
+} catch (PDOException $ex) {
     $display_block .= "Definition table coulld not be accessed<BR>\n";
-
 }
 
 try {
@@ -40,7 +39,7 @@ try {
     //$res = $db->query($query);
     //$count = $res->rowCount();
     //if($count == 0){
-    if(!DoesColumnExistInTable($db,$definition_table_name,'header_image_id')){
+    if (!DoesColumnExistInTable($db, $definition_table_name, 'header_image_id')) {
         $query = "ALTER TABLE $definition_table_name ADD `header_image_id` INT(11) DEFAULT 0";
         $db->query($query);
     }
@@ -49,11 +48,11 @@ try {
     echo("\nError message: $e\n");
 }
 
-$display_block .= "<h1>Edit details for your School and select the header image you would like to use</h1>";
+$display_block .= '<h1>Edit details for your School and select the header image you would like to use</h1>';
 
 //$display_block = "<P>Database definitions table: $definition_table_name</P>";
 
-if ($POST_OP == "") {
+if ($POST_OP == '') {
     $query = "SELECT * FROM $definition_table_name WHERE id=1";
     try {
         $results = $db->query($query);
@@ -72,7 +71,7 @@ if ($POST_OP == "") {
     $school_header_image_id = $res['header_image_id'];
     $school_running_title = $res['running_title'];
 
-    $display_block .= "<h2>School details</h2>";
+    $display_block .= '<h2>School details</h2>';
 
     $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">";
 
@@ -101,21 +100,22 @@ if ($POST_OP == "") {
     try {
         $results = $db->query($query);
         $rows = $results->fetchAll();
-        $i=1;
+        $i = 1;
         foreach ($rows as $recs) {
             $header_image = $recs['header_image'];
             $header_image_id = $recs['id'];
             $header_image_filename = $recs['filename'];
             //$img_file_base64 = base64_encode($header_image);
-            $checked = "";
-            if($school_header_image_id == $header_image_id){$checked = "checked";}
+            $checked = '';
+            if ($school_header_image_id == $header_image_id) {
+                $checked = 'checked';
+            }
             $display_block .= "<div>\n<input type='radio' name='header_image_selected' value='$header_image_filename|$header_image_id' $checked> id = $header_image_id\n";
             //$display_block .= '<img src="data:image/png;base64,' . $header_image .'" style="border-style: solid; border-width: 1px;" />';
-            $display_block .= '<img src="../images/' . $header_images[$i] .'" style="border-style: solid; border-width: 1px;" />';
+            $display_block .= '<img src="../images/' . $header_images[$i] . '" style="border-style: solid; border-width: 1px;" />';
             $display_block .= '</div><BR>';
             $i++;
         }
-
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database table  $definition_table_name in function: $this_function <BR>\n";
@@ -132,19 +132,18 @@ if ($POST_OP == "") {
 
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_new\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Submit School Settings.\"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton_new" name="submit" value="Submit School Settings."></p>';
 
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 
     $display_block .= "<hr>\n";
-} elseif ($POST_OP == "submit_new") {
-
+} elseif ($POST_OP == 'submit_new') {
     $school_title = $_POST['school_title'];
     $school_module_code = $_POST['school_module_code'];
     $school_short_name = $_POST['school_short_name'];
     $school_running_title = $_POST['school_running_title'];
     $header_image_selected = $_POST['header_image_selected'];
-    $header_image_info = explode("|",$header_image_selected);
+    $header_image_info = explode('|', $header_image_selected);
 
     $query = "UPDATE $definition_table_name SET school_short_name='$school_short_name', school_title='$school_title',
                               default_module_prefix='$school_module_code',
@@ -170,14 +169,13 @@ if ($POST_OP == "") {
     }
 
     $display_block .= "<BR>\n";
-
 }// end of if ($POST_OP == "edit")
 
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

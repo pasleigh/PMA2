@@ -1,15 +1,15 @@
 <?php
 // Turn off all error reporting
-(@include_once("./set_dir_staff.php")) OR die("Cannot find this file to include: set_dir_staff.php<BR>");
-(@include_once($STAFF_DIR_VAL . "/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once($STAFF_DIR_VAL . "/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once($STAFF_DIR_VAL . "/connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once($STAFF_DIR_VAL . "/setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once($STAFF_DIR_VAL . "/staff_functions.php")) OR die("Cannot include staff_function.php<BR>");
-(@include_once($STAFF_DIR_VAL . "/show_minor_part_feedback_form.php")) OR die("Cannot include show_minor_part_feedback<BR>");
+(@include_once('./set_dir_staff.php')) or die('Cannot find this file to include: set_dir_staff.php<BR>');
+(@include_once($STAFF_DIR_VAL . '/config.php')) or die('Cannot find this file to include: config.php<BR>');
+(@include_once($STAFF_DIR_VAL . '/setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once($STAFF_DIR_VAL . '/connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once($STAFF_DIR_VAL . '/setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once($STAFF_DIR_VAL . '/staff_functions.php')) or die('Cannot include staff_function.php<BR>');
+(@include_once($STAFF_DIR_VAL . '/show_minor_part_feedback_form.php')) or die('Cannot include show_minor_part_feedback<BR>');
 //(@include_once($STAFF_DIR_VAL . "/show_mark_questions.php")) OR die("Cannot include show_mark_questions2<BR>");
-(@include_once($STAFF_DIR_VAL . "/markstore_functions.php")) OR die("Cannot include markstore_function.php<BR>");
-(@include_once($STAFF_DIR_VAL . "/admin2/admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once($STAFF_DIR_VAL . '/markstore_functions.php')) or die('Cannot include markstore_function.php<BR>');
+(@include_once($STAFF_DIR_VAL . '/admin2/admin_functions.php')) or die('Cannot include admin functions<BR>');
 if (array_key_exists('sid', $_GET) == false) {
     $_GET['sid'] = null;
 }
@@ -21,13 +21,12 @@ if (array_key_exists('isnumeric', $_GET) == false) {
 }
 //$module1 = $_GET['module1'];
 //$year_begin = $_GET['year_begin'];
-$display_block = "";
-$sid = $_GET["sid"];
-$project_id = $_GET["pid"];
+$display_block = '';
+$sid = $_GET['sid'];
+$project_id = $_GET['pid'];
 $is_numeric = $_GET['isnumeric'];
 
-
-$project_marking_page = "projectmarking_bs.php";
+$project_marking_page = 'projectmarking_bs.php';
 
 $display_block .= "<h1 class='intro'>$module_short_description</h1>";
 $display_block .= "<h1>$module_prefix$module1$module_postfix , $year_begin/$year_end </h1>";
@@ -58,7 +57,7 @@ $programme = $recs['programme'];
 $email = $username . $local_email_domain;
 $sel = $recs['sel'];
 
-$display_block .= "<BR>";
+$display_block .= '<BR>';
 $display_block .= "<div class='bolder'>Student: <span class='h3size'>$student_name</span></div>";
 $display_block .= "<div>SID: <span class='h3size'>$sid</span></div>";
 $display_block .= "<div>Username: <span class='h3size'>$username</span></div>";
@@ -66,7 +65,7 @@ $display_block .= "<div>Email: <span class='h3size'>$email</span></div>";
 $display_block .= "<div>Programme of study: <span class='h3size'>$programme</span></div>";
 
 //$display_block .= "<h1 class='intro'>Marks:</h1>";
-$display_block .= "<BR>";
+$display_block .= '<BR>';
 
 $query = "select * from $markstore_totals where SID=$sid";
 try {
@@ -81,13 +80,12 @@ try {
 }
 $num_marks_in_list = $results->rowCount();
 
-if($num_marks_in_list > 0){
-
+if ($num_marks_in_list > 0) {
     // Loop through the parts to get the number of columns required for each
     for ($i = 1; $i <= $num_parts; $i++) {
         if ($p_num_markers[$i] == 1) {
             $number_of_cols[$i] = 1;
-        } else if ($p_num_markers[$i] == 2) {
+        } elseif ($p_num_markers[$i] == 2) {
             if (CountThirdMarkersRequired($db, $i, $markstore_totals) > 0) {
                 $number_of_cols[$i] = 4;
             } else {
@@ -101,7 +99,7 @@ if($num_marks_in_list > 0){
     $overview_table = "<table id='holder' width='600px'>\n<tr><td>\n";
 
     $overview_table .= "<table id='marksummary' class='hover compact' cellspacing='0' width='100%'>\n";
-    $overview_table .= "
+    $overview_table .= '
     <thead>
       <tr>
         <th>Assessment</th>
@@ -110,41 +108,41 @@ if($num_marks_in_list > 0){
         <th>Mark %</th>
         <th>Feedback link</th>
       </tr>
-    </thead>";
+    </thead>';
 
-    $overview_table .= "<tbody>";
+    $overview_table .= '<tbody>';
 
     $recs = $results->fetch();
-    $total_mark = $recs["total"];
-    $total_mark_s = sprintf("%5.1f%%", (float)$total_mark);
+    $total_mark = $recs['total'];
+    $total_mark_s = sprintf('%5.1f%%', (float) $total_mark);
 
     // definitions for each part
     // Questions table
-    for($assesspart = 1 ; $assesspart <= $num_parts ; $assesspart++){
+    for ($assesspart = 1 ; $assesspart <= $num_parts ; $assesspart++) {
         // get the total for each part
         $part_mark = $recs["retmark$assesspart"];
-        $part_mark_s = sprintf("%5.1f%%", (float)$part_mark);
+        $part_mark_s = sprintf('%5.1f%%', (float) $part_mark);
         $pc_for_part = $p_percent[$assesspart];
         $part_desc = $p_description[$assesspart];
         //$display_block .= "<div class='bolder'>Part $assesspart: $part_desc. ($pc_for_part%). Mark: $part_mark_s</div>";
 
-        $link = "";
+        $link = '';
         $who = 3;
 
         $p_is_numeric = $p_numeric[$assesspart];
         // Get the number of markers
-        if($p_num_markers[$assesspart] == 1) {
+        if ($p_num_markers[$assesspart] == 1) {
             $who = 1;
             $num_markers = 1;
             $link = "<a href='assess_minor_part_questions_bs.php?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$p_is_numeric'>feedback pdf</A> ($num_markers marker)\n";
-        }else if($p_num_markers[$assesspart] == 2){
+        } elseif ($p_num_markers[$assesspart] == 2) {
             $num_markers = 2;
-            if(IsThirdMarkerRequired($db, $sid, $assesspart, $markstore_totals)){
+            if (IsThirdMarkerRequired($db, $sid, $assesspart, $markstore_totals)) {
                 $num_markers++;
                 $link = "<a href='assess_minor_part_questions_3_side_by_side_bs.php?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$p_is_numeric'>feedback pdf</A> ($num_markers markers)\n";
             }
             $link = "<a href='assess_minor_part_questions_3_side_by_side_bs.php?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$p_is_numeric'>feedback pdf</A> ($num_markers markers)\n";
-        }else{
+        } else {
             $num_markers = 3;
             $link = "<a href='assess_minor_part_questions_3_side_by_side_bs.php?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$p_is_numeric'>feedback pdf</A> ($num_markers markers)\n";
         }
@@ -162,7 +160,7 @@ if($num_marks_in_list > 0){
         $assesstype_text = $p_description[$assesspart];
 
         // markbook
-        for($who = 1 ; $who <= 3 ; $who++) {
+        for ($who = 1 ; $who <= 3 ; $who++) {
             $markstore = $markstores[$assesspart][$who];
         }
         $mark_max = $p_max[$assesspart];
@@ -174,21 +172,21 @@ if($num_marks_in_list > 0){
 
     $overview_table .= "\n</tr></td>\n</table>\n <!--/holder-->";
     $display_block .= $overview_table;
-}else{
+} else {
     // No marks
-    $display_block .= "<h3>There are no final marks for this student.</h3>";
+    $display_block .= '<h3>There are no final marks for this student.</h3>';
 }
-$admin_link_text = "";
-$show_admin_link = "none";
-$admin_link = "";
+$admin_link_text = '';
+$show_admin_link = 'none';
+$admin_link = '';
 if (IsAdmin($db, $this_staff_username)) {
-    $admin_link = "./admin2/";
-    $admin_link_text = "Super Admin";
-    $show_admin_link = "block";
-} else if (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
-    $admin_link = "./admin2/";
-    $admin_link_text = "Admin";
-    $show_admin_link = "block";
+    $admin_link = './admin2/';
+    $admin_link_text = 'Super Admin';
+    $show_admin_link = 'block';
+} elseif (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
+    $admin_link = './admin2/';
+    $admin_link_text = 'Admin';
+    $show_admin_link = 'block';
 }
 
 ?>
@@ -197,7 +195,7 @@ if (IsAdmin($db, $this_staff_username)) {
 <!--<html manifest="app.manifest">-->
 <html>
 <?php
-(@include_once("$mobile_head_bs")) OR die("Cannot find this file to include: $desktop_head<BR>");
+(@include_once("$mobile_head_bs")) or die("Cannot find this file to include: $desktop_head<BR>");
 ?>
 <script>
     $(function () {
@@ -215,7 +213,7 @@ if (IsAdmin($db, $this_staff_username)) {
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">
     <div class="container">
-        <span class="navbar-brand">Overall Assessment Feedback : <?PHP echo("$module_short_description  $module_prefix$module1$module_postfix,  $year_begin/$year_end") ?></span>
+        <span class="navbar-brand">Overall Assessment Feedback : <?php echo("$module_short_description  $module_prefix$module1$module_postfix,  $year_begin/$year_end") ?></span>
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="./<?php echo("$project_marking_page?pm_id=$pm_id") ?>" class="nav-link px-2 text-white-50">Full marking list</a></li>
             <li class="nav-item"><a target="_self" href="./<?php echo("$project_marking_page?pm_id=$pm_id&user=1") ?>" class="nav-link px-2 text-white-50">User marking list</a></li>

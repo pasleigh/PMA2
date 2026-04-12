@@ -1,41 +1,40 @@
 <?php
 // Report all PHP errors (see changelog)
-(@include_once("./set_dir_staff.php")) or die("Cannot find this file to include: set_dir_staff.php<BR>");
-(@include_once("./config.php")) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
-(@include_once("./setup_titles.php")) or die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("./connect_pdo.php")) or die("Cannot connect to the database<BR>");
+(@include_once('./set_dir_staff.php')) or die('Cannot find this file to include: set_dir_staff.php<BR>');
+(@include_once('./config.php')) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
+(@include_once('./setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('./connect_pdo.php')) or die('Cannot connect to the database<BR>');
 
-(@include_once("./admin2/adminusers.php")) or die("Cannot find this file to include: $adminusers_php<BR>");
-(@include_once("./connect_pdo.php")) or die("Cannot connect to the database<BR>");
-(@include_once("./setup_tables.php")) or die("Cannot setup database tables<BR>");
-(@include_once("./staff_functions.php")) or die("Cannot include staff_function.php<BR>");
-(@include_once("./show_feedback_form.php")) or die("Cannot find this file to include: show_feedback_form_php<BR>");
-(@include_once("./EmailPDFAttachment.php")) or die("Cannot find this file to include: EmailPDFAttachment_php<BR>");
-(@include_once("./show_minor_part_feedback_form.php")) or die("Cannot include show_minor_part_feedback<BR>");
-(@include_once("./markstore_functions.php")) or die("Cannot include markstore_function.php<BR>");
+(@include_once('./admin2/adminusers.php')) or die("Cannot find this file to include: $adminusers_php<BR>");
+(@include_once('./connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('./setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./staff_functions.php')) or die('Cannot include staff_function.php<BR>');
+(@include_once('./show_feedback_form.php')) or die('Cannot find this file to include: show_feedback_form_php<BR>');
+(@include_once('./EmailPDFAttachment.php')) or die('Cannot find this file to include: EmailPDFAttachment_php<BR>');
+(@include_once('./show_minor_part_feedback_form.php')) or die('Cannot include show_minor_part_feedback<BR>');
+(@include_once('./markstore_functions.php')) or die('Cannot include markstore_function.php<BR>');
 
 $debug_write = false;
-$staff_username = "unknown";
-if(array_key_exists('REMOTE_USER',$_SERVER)){
+$staff_username = 'unknown';
+if (array_key_exists('REMOTE_USER', $_SERVER)) {
     $staff_username = get_server_username();
-}else{
-    if(isset($_SESSION['USERNAME'])){
+} else {
+    if (isset($_SESSION['USERNAME'])) {
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaffB($db, $staff_username, $staff_names) == false){
-    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+if (IsStaffB($db, $staff_username, $staff_names) == false) {
+    echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
     exit();
 }
-
 
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-function download_link($file_to_download, $saveas_filename){
+function download_link($file_to_download, $saveas_filename) {
     $html = "<BR>\n";
     $self_link = htmlspecialchars($_SERVER['PHP_SELF']);
     $html .= "<form action='$self_link' method='post'><BR>\n";
@@ -48,14 +47,14 @@ function download_link($file_to_download, $saveas_filename){
     $html .= "</form>\n";
     return $html;
 }
-function download_zip($file_to_download, $saveas_filename){
-    header("Pragma: public");
-    header("Expires: 0");
-    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-    header("Cache-Control: private",false);
-    header("Content-Type: application/zip");
-    header("Content-Disposition: attachment; filename=".$saveas_filename );
-    header("Content-Length: ".filesize($file_to_download));
+function download_zip($file_to_download, $saveas_filename) {
+    header('Pragma: public');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Cache-Control: private', false);
+    header('Content-Type: application/zip');
+    header('Content-Disposition: attachment; filename=' . $saveas_filename);
+    header('Content-Length: ' . filesize($file_to_download));
     ob_clean();
     flush();
     readfile("$file_to_download");
@@ -67,17 +66,17 @@ $POST_OP = null;
 if (isset($_POST['op'])) {
     $POST_OP = $_POST['op'];
 }
-if($POST_OP == 'download') {
+if ($POST_OP == 'download') {
     $file_to_download = $_POST['file_to_download'];
     $saveas_filename = $_POST['saveas_filename'];
     download_zip($file_to_download, $saveas_filename);
     exit();
 }
-$project_marking_page = "projectmarking_bs.php";
-$project_marking_options_page = "projectmarking_select_bs.php";
+$project_marking_page = 'projectmarking_bs.php';
+$project_marking_options_page = 'projectmarking_select_bs.php';
 
-$display_block = "";
-$files_to_zip = array();
+$display_block = '';
+$files_to_zip = [];
 
 if (array_key_exists('part', $_GET) == false) {
     $_GET['part'] = null;
@@ -99,7 +98,7 @@ $start_time = microtime(true);
 // Disable PHP Timeout
 //set php script timeout, 0 to disable
 set_time_limit(0);
-ini_set("memory_limit", "256M");
+ini_set('memory_limit', '256M');
 
 if (array_key_exists('save', $_GET) == false) {
     $_GET['save'] = null;
@@ -107,7 +106,7 @@ if (array_key_exists('save', $_GET) == false) {
 $saving = $_GET['save'];
 
 if ($saving == 1) {
-    $action = "saving feedback PDFs one by one";
+    $action = 'saving feedback PDFs one by one';
 } elseif ($saving == 2) {
     $savezip = 1;
     $save_folder = PMA_TMP_DIR;
@@ -121,27 +120,31 @@ if ($saving == 1) {
     echo("Zip file: $zip_filename<BR>");
     //create the archive
     //if (class_exists('ZipArchive')) {
-        echo("Using the ZipArchive Class to zip files<BR>");
-        // Create a new ZipArchive class
-        $zip_file_name_tempnam = tempnam('',"zip_marks_file");
-        $zip = new ZipArchive;
-        // Open a zip file
-        $zip_file_res = $zip->open($zip_file_name_tempnam, ZipArchive::CREATE|ZipArchive::OVERWRITE);
-        if ($zip_file_res === TRUE) {
-            if($debug_write){echo 'ok created zip<BR>';}
-        } else {
-            if($debug_write){echo 'failed to create zip, code:' . $zip_file_res .'<BR>';}
+    echo('Using the ZipArchive Class to zip files<BR>');
+    // Create a new ZipArchive class
+    $zip_file_name_tempnam = tempnam('', 'zip_marks_file');
+    $zip = new ZipArchive();
+    // Open a zip file
+    $zip_file_res = $zip->open($zip_file_name_tempnam, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+    if ($zip_file_res === true) {
+        if ($debug_write) {
+            echo 'ok created zip<BR>';
         }
+    } else {
+        if ($debug_write) {
+            echo 'failed to create zip, code:' . $zip_file_res . '<BR>';
+        }
+    }
     //}
     if (!function_exists('shell_exec')) {
-        echo("Shell_exec does not exist on this server <BR>");
+        echo('Shell_exec does not exist on this server <BR>');
     } else {
         //$zip_command = "zip -j /tmp/testzip.zip /tmp/*-Objectives.pdf  ";
         //shell_exec($zip_command);
     }
     $action = "saving part $part ($assess_description_text) feedback PDFs as zip to $zip_file_name_tempnam <BR>for downloading as $zip_filename";
 } else {
-    $action = "emailing feedback PDFs";
+    $action = 'emailing feedback PDFs';
 }
 echo("Action: $action<BR>");
 
@@ -162,15 +165,14 @@ $student_counter = 0;
 $num_rows = $results->rowCount();
 echo("The number of rows in: $project_allocated is $num_rows<BR>\n");
 $mem_per_call_estimate = 5;
-if ($mem_per_call_estimate*$num_rows > 256)
-{
-    $mem_needed = $mem_per_call_estimate*$num_rows;
-    ini_set("memory_limit",$mem_needed . "M");
+if ($mem_per_call_estimate * $num_rows > 256) {
+    $mem_needed = $mem_per_call_estimate * $num_rows;
+    ini_set('memory_limit', $mem_needed . 'M');
 }
 
 if ($num_rows < 1) {
     //no records
-    $display_block = "<p><em>Sorry, there are no records to select!</em></p>";
+    $display_block = '<p><em>Sorry, there are no records to select!</em></p>';
 } else {
     //has records
     // create the zip
@@ -190,14 +192,14 @@ if ($num_rows < 1) {
         } else {
         }
         // To do
-        $marker1 = "";
-        $marker2 = "";
+        $marker1 = '';
+        $marker2 = '';
 
-        $marker_entry = "marker_p$part" . "m$who" . "_id";
+        $marker_entry = "marker_p$part" . "m$who" . '_id';
         $marker_id = $recs[$marker_entry];
-        $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_names2, NULL);
-        $marker_name = GetStaffNameFromID($db, $marker_id, $staff_names2, NULL);
-        $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_names2, NULL);
+        $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_names2, null);
+        $marker_name = GetStaffNameFromID($db, $marker_id, $staff_names2, null);
+        $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_names2, null);
 
         $query = "select * from $students where sid=$sid";
         try {
@@ -229,7 +231,7 @@ if ($num_rows < 1) {
         //if( $locked == 0 )
         if (HaveAllMarkersMarked($db, $sid, $part, $p_num_markers[$part], $markstores, $markstore_totals)) {
             $student_counter += 1;
-            $feedback_form_html = "";
+            $feedback_form_html = '';
             $marker_name_for_feedback = $marker_name;
             for ($i = 1; $i <= $p_num_markers[$part]; $i++) {
                 $markstore = $markstores[$part][$i];
@@ -268,22 +270,22 @@ if ($num_rows < 1) {
                 // saving to a zip
                 // first save all the individual files to the temp folder, saving the names
                 $student_name_cleaned = trim($student_name);
-                $student_name_cleaned = str_replace(",", "", $student_name_cleaned);
-                $student_name_cleaned = str_replace(".", "", $student_name_cleaned);
-                $student_name_cleaned = str_replace("\\", "", $student_name_cleaned);
-                $student_name_cleaned = str_replace("'", "", $student_name_cleaned);
-                $student_name_cleaned = str_replace(" ", "_", $student_name_cleaned);
+                $student_name_cleaned = str_replace(',', '', $student_name_cleaned);
+                $student_name_cleaned = str_replace('.', '', $student_name_cleaned);
+                $student_name_cleaned = str_replace('\\', '', $student_name_cleaned);
+                $student_name_cleaned = str_replace("'", '', $student_name_cleaned);
+                $student_name_cleaned = str_replace(' ', '_', $student_name_cleaned);
                 $pdf_filename = "$student_name_cleaned-$username-$assess_description_text.pdf";
                 $pdf_filename = str_replace(' ', '_', $pdf_filename);
 
-                $pdf_fullpath_name = "$save_folder".DIRECTORY_SEPARATOR."$pdf_filename";
+                $pdf_fullpath_name = "$save_folder" . DIRECTORY_SEPARATOR . "$pdf_filename";
                 //ob_start();
                 //$pdf_fullpath_name = "$save_folder".DIRECTORY_SEPARATOR."$pdf_filename";
                 //$mpdf->Output("$pdf_fullpath_name", 'F');
                 //$mpdf->OutputFile($pdf_fullpath_name);
 
                 $mpdf_output = $mpdf->OutputBinaryData();
-                $zip->addFromString($pdf_filename,$mpdf_output);
+                $zip->addFromString($pdf_filename, $mpdf_output);
 
                 $pdfs_count++;
                 //$files_to_zip[] = $pdf_fullpath_name;
@@ -300,7 +302,7 @@ if ($num_rows < 1) {
 
                 $email_manager = $module_leader_email;
 
-                $name_of_file = "project_feedback.pdf";
+                $name_of_file = 'project_feedback.pdf';
 
                 $myemail_from = "$email_manager (Project feedback)";
                 $myemail_subject = "Level $level Project Feedback";
@@ -313,7 +315,7 @@ if ($num_rows < 1) {
                 $do_not_attach = 0;
                 //$ok = EmailPDFAttachment($myemail_to, $myemail_from, $fileattached_pdf, $myemail_subject, $myemail_message, $name_of_file, $do_not_attach);
 
-                if ($ok == "1") {
+                if ($ok == '1') {
                     echo("Success emailing $student_name. Num: $student_counter<BR>\n");
                 } else {
                     echo("Problems emailing $student_name. Num: $student_counter<BR>\n");
@@ -323,12 +325,11 @@ if ($num_rows < 1) {
             }
             error_reporting(-1);
 
-            $display_block = "<h2>Finished sending/saving feedback emails to students</h2>";
+            $display_block = '<h2>Finished sending/saving feedback emails to students</h2>';
             //exit;
         }
     }
     $zip->close();
-
 }
 if ($saving == 2) {
     // make the zip and download it
@@ -345,26 +346,24 @@ if ($saving == 2) {
 
     $archiveName = "$save_folder/$zip_filename";
     if (file_exists($zip_file_name_tempnam)) {
-        if($debug_write){
+        if ($debug_write) {
             echo("file: $zip_file_name_tempnam ready to download<BR>");
         }
         //download_zip($zip_file_name_tempnam,$zip_filename);
         //exit();
-        $link_html = download_link($zip_file_name_tempnam,$zip_filename);
+        $link_html = download_link($zip_file_name_tempnam, $zip_filename);
         echo($link_html);
-    }else{
-        if($debug_write){
+    } else {
+        if ($debug_write) {
             echo("file: $zip_file_name_tempnam could not be found<BR>");
         }
     }
-
-
 }
 $end_time = microtime(true);
 $execution_time = $end_time - $start_time;
-$time_per_call = $execution_time/$pdfs_count;
-$memory_used =  memory_get_usage()/1000000;
-$memory_per_pdf = $memory_used/$pdfs_count;
+$time_per_call = $execution_time / $pdfs_count;
+$memory_used = memory_get_usage() / 1000000;
+$memory_per_pdf = $memory_used / $pdfs_count;
 echo("Execution time: $execution_time seconds<BR>");
 echo("Memory used: $memory_used M bytes<BR>");
 echo("Memory per pdf: $memory_per_pdf M bytes<BR>");

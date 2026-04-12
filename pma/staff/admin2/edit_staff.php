@@ -1,13 +1,13 @@
 <?php
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("./ADMINconnect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('./ADMINconnect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
-$display_block .= "<h1>Edit Staff details</h1>";
+$display_block .= '<h1>Edit Staff details</h1>';
 $display_block .= "<h2>Database table $staff_names2</h2>";
 
 if (array_key_exists('op', $_POST) == false) {
@@ -17,16 +17,16 @@ if (array_key_exists('op', $_POST) == false) {
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
-    $POST_OP = "";
+    $POST_OP = '';
 }
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
 //}
 
-$selected ="";
-if ($POST_OP == "new") {
-    $display_block .= "<P>A New member of staff.</P>";
+$selected = '';
+if ($POST_OP == 'new') {
+    $display_block .= '<P>A New member of staff.</P>';
 
     $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">";
     $display_block .= "<table>\n";
@@ -84,9 +84,9 @@ if ($POST_OP == "new") {
     $display_block .= "<TR>\n";
     $display_block .= "<TD>Admin level (0=normal staff, 1=module leader, 2 or 3  do not use)</TD>\n";
     $display_block .= "<TD><select name=\"admin_level_select\">\n";
-    $selected = "selected";
+    $selected = 'selected';
     $display_block .= "<option value=\"0\" $selected>0</option>\n";
-    $selected = "";
+    $selected = '';
     $display_block .= "<option value=\"1\" $selected>1</option>\n";
     $display_block .= "<option value=\"2\" $selected>2</option>\n";
     $display_block .= "<option value=\"3\" $selected>3</option>\n";
@@ -97,14 +97,13 @@ if ($POST_OP == "new") {
 
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_new\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Submit details of this new staff member.\"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton_new" name="submit" value="Submit details of this new staff member."></p>';
 
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 
     $display_block .= "<hr>\n";
-}
-elseif ($POST_OP == "edit") {
-    $display_block .= "<P>Editing the details of the member of staff.<BR>";
+} elseif ($POST_OP == 'edit') {
+    $display_block .= '<P>Editing the details of the member of staff.<BR>';
 
     $staffid = $_POST['staffname_select'];
     $display_block .= "<h3>Staffid: $staffid</h3>";
@@ -142,40 +141,40 @@ elseif ($POST_OP == "edit") {
     $display_block .= "<TD>Title</TD>\n";
     $display_block .= "<TD><select name=\"title_select\">\n";
 
-    if ($title == "Prof") {
-        $selected = "selected";
+    if ($title == 'Prof') {
+        $selected = 'selected';
     } else {
-        $selected = "";
+        $selected = '';
     }
     $display_block .= "<option value=\"Prof\" $selected>Prof</option>\n";
-    if ($title == "Dr") {
-        $selected = "selected";
+    if ($title == 'Dr') {
+        $selected = 'selected';
     } else {
-        $selected = "";
+        $selected = '';
     }
     $display_block .= "<option value=\"Dr\" $selected>Dr</option>\n";
-    if ($title == "Mrs") {
-        $selected = "selected";
+    if ($title == 'Mrs') {
+        $selected = 'selected';
     } else {
-        $selected = "";
+        $selected = '';
     }
     $display_block .= "<option value=\"Mrs\" $selected>Mrs</option>\n";
-    if ($title == "Ms") {
-        $selected = "selected";
+    if ($title == 'Ms') {
+        $selected = 'selected';
     } else {
-        $selected = "";
+        $selected = '';
     }
     $display_block .= "<option value=\"Ms\" $selected>Ms</option>\n";
-    if ($title == "Miss") {
-        $selected = "selected";
+    if ($title == 'Miss') {
+        $selected = 'selected';
     } else {
-        $selected = "";
+        $selected = '';
     }
     $display_block .= "<option value=\"Miss\" $selected>Miss</option>\n";
-    if ($title == "Mr") {
-        $selected = "selected";
+    if ($title == 'Mr') {
+        $selected = 'selected';
     } else {
-        $selected = "";
+        $selected = '';
     }
     $display_block .= "<option value=\"Mr\" $selected>Mr</option>\n";
     $display_block .= "</select></TD>\n";
@@ -214,16 +213,16 @@ elseif ($POST_OP == "edit") {
     $display_block .= "<TR>\n";
     $display_block .= "<TD>Inactive (1=not taking part in projects)</TD>\n";
     $display_block .= "<TD><select name=\"inactive_select\">\n";
-    if ($inactive == "1") {
-        $selected = "selected";
+    if ($inactive == '1') {
+        $selected = 'selected';
     } else {
-        $selected = "";
+        $selected = '';
     }
     $display_block .= "<option value=\"1\" $selected>1</option>\n";
-    if ($inactive == "0") {
-        $selected = "selected";
+    if ($inactive == '0') {
+        $selected = 'selected';
     } else {
-        $selected = "";
+        $selected = '';
     }
     $display_block .= "<option value=\"0\" $selected>0</option>\n";
     $display_block .= "</select></TD>\n";
@@ -232,13 +231,29 @@ elseif ($POST_OP == "edit") {
     $display_block .= "<TR>\n";
     $display_block .= "<TD>Admin level (0=normal staff, 1=module leader, 2 or 3  do not use)</TD>\n";
     $display_block .= "<TD><select name=\"admin_level_select\">\n";
-    if($mod_admin_level == 0){$selected = "selected";}else{$selected = "";}
+    if ($mod_admin_level == 0) {
+        $selected = 'selected';
+    } else {
+        $selected = '';
+    }
     $display_block .= "<option value=\"0\" $selected>0</option>\n";
-    if($mod_admin_level == 1){$selected = "selected";}else{$selected = "";}
+    if ($mod_admin_level == 1) {
+        $selected = 'selected';
+    } else {
+        $selected = '';
+    }
     $display_block .= "<option value=\"1\" $selected>1</option>\n";
-    if($mod_admin_level == 2){$selected = "selected";}else{$selected = "";}
+    if ($mod_admin_level == 2) {
+        $selected = 'selected';
+    } else {
+        $selected = '';
+    }
     $display_block .= "<option value=\"2\" $selected>2</option>\n";
-    if($mod_admin_level == 3){$selected = "selected";}else{$selected = "";}
+    if ($mod_admin_level == 3) {
+        $selected = 'selected';
+    } else {
+        $selected = '';
+    }
     $display_block .= "<option value=\"3\" $selected>3</option>\n";
     $display_block .= "</select></TD>\n";
     $display_block .= "</TR>\n";
@@ -248,13 +263,12 @@ elseif ($POST_OP == "edit") {
     $display_block .= "\n<input type=\"hidden\" name=\"staffid\" value=\"$staffid\">";
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_edited\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_edited\" name=\"submit\" value=\"Submit these edits.\"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton_edited" name="submit" value="Submit these edits."></p>';
 
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 
     $display_block .= "<hr>\n";
-}
-elseif ($POST_OP == "submit_edited") {
+} elseif ($POST_OP == 'submit_edited') {
     $display_block .= "Submitting: <BR>\n";
 
     $staffid = $_POST['staffid'];
@@ -284,8 +298,7 @@ elseif ($POST_OP == "submit_edited") {
         exit();
     }
     $display_block .= "<B>Done</B><BR><hr>\n";
-}
-elseif ($POST_OP == "submit_new") {
+} elseif ($POST_OP == 'submit_new') {
     $display_block .= "Submitting: <BR>\n";
 
     //$staffid = $_POST['staffid'];
@@ -347,9 +360,9 @@ $display_block .= "</select>\n<br>";
 
 $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"edit\">";
 
-$display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Edit details for this member of staff.\"></p>";
+$display_block .= '<p><input type="submit" id="submitbutton" name="submit" value="Edit details for this member of staff."></p>';
 
-$display_block .= "</form>";
+$display_block .= '</form>';
 
 //---------------------------------------------------------------------------------
 $display_block .= "<hr><h2>Add a new member of staff...</H2>\n";
@@ -357,9 +370,9 @@ $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_i
 
 $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"new\">";
 
-$display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Add details of a NEW member of staff.\"></p>";
+$display_block .= '<p><input type="submit" id="submitbutton_new" name="submit" value="Add details of a NEW member of staff."></p>';
 
-$display_block .= "</form>";
+$display_block .= '</form>';
 
 $display_block .= "<HR><P><a href='./edit_staff_table.php'>Back to Old Staff Edit page</a></P>"
 
@@ -368,7 +381,7 @@ $display_block .= "<HR><P><a href='./edit_staff_table.php'>Back to Old Staff Edi
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

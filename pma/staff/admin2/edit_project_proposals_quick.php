@@ -1,37 +1,36 @@
 <?php
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("./utility_functions.php")) OR die("Cannot read utility_functions file<BR>");
-(@include_once("../markstore_functions.php")) OR die("Cannot read markstore_functions file<BR>");
-(@include_once("../staff_functions.php")) OR die("Cannot read staff_functions file<BR>");
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./utility_functions.php')) or die('Cannot read utility_functions file<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot read markstore_functions file<BR>');
+(@include_once('../staff_functions.php')) or die('Cannot read staff_functions file<BR>');
 
-(@include_once("../proposals/project_display_functions_staff.php")) OR die("Cannot include project_display_functions_staff.php");
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('../proposals/project_display_functions_staff.php')) or die('Cannot include project_display_functions_staff.php');
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg ;
 
 // Check the admin level
 $admin_access = false;
-$admin_access = access_check_response($db,$this_staff_username, $this_staff_full_name, $staff_names,$access_phrase);
+$admin_access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
 $pm_id = $_REQUEST['pm_id'];
-$is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase );
-if($is_module_admin){
+$is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
+if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
 }
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
-if($is_module_admin || $admin_access) {
-
-    $display_block .= "<h1>Quick minor modification of projects </h1>";
+if ($is_module_admin || $admin_access) {
+    $display_block .= '<h1>Quick minor modification of projects </h1>';
     $display_block .= "<h3>Database tables: $master_name and $project_details</h3>";
 
     if (array_key_exists('op', $_POST) == false) {
@@ -43,7 +42,7 @@ if($is_module_admin || $admin_access) {
         $_POST['project_count'] = null;
     }
 
-// Get the list of proposals from the $master_name table
+    // Get the list of proposals from the $master_name table
     $query = "SELECT * FROM $master_name ORDER BY id";
     try {
         $results = $db->query($query);
@@ -57,7 +56,7 @@ if($is_module_admin || $admin_access) {
     }
 
     $display_block .= "<TABLE id='proposalinfo' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
-    $display_block .= "
+    $display_block .= '
     <thead>
       <tr>
         <th>Index</th>
@@ -69,13 +68,12 @@ if($is_module_admin || $admin_access) {
         <th>Programmes</th>
         <th>Checked=DELETE</th>
       </tr>
-    </thead>";
+    </thead>';
     $display_block .= "<tbody>\n";
     $project_count = 1;
     $rows = $results->fetchAll();
 
     foreach ($rows as $recs) {
-
         $master_id = $recs['id'];
         $project_title = $recs['f_title'];
         $supervisor_name = $recs['f_supervisor'];
@@ -102,12 +100,12 @@ if($is_module_admin || $admin_access) {
         $progs = $p_rec['f_progs'];
 
         $program_variants = GetProgramVariantsStaff($db, $projects_setup_proposals, $pm_id, $num_progs_variants);
-        $progs_chks = "";
-        for($i = 0; $i < $num_progs_variants; $i++){
-            $prog_variant_flags[$i] = (int)substr($progs,$i,1);
-            $checked = "";
-            if($prog_variant_flags[$i] == 1){
-                $checked = "checked";
+        $progs_chks = '';
+        for ($i = 0; $i < $num_progs_variants; $i++) {
+            $prog_variant_flags[$i] = (int) substr($progs, $i, 1);
+            $checked = '';
+            if ($prog_variant_flags[$i] == 1) {
+                $checked = 'checked';
             }
             $chk_id = "pr_$master_id" . "_$i";
             $prog_variant = $program_variants[$i];
@@ -119,12 +117,12 @@ if($is_module_admin || $admin_access) {
         $display_block .= "<TD>$project_index</TD>";
         $display_block .= "<TD><input type='hidden' id='master_id$project_count' name='master_id$project_count' value='$master_id'>$master_id</TD>";
         $display_block .= "<TD><input type='text' id='title_id$project_count' value='$project_title'></TD>";
-        $display_block .= "<TD>$supervisor_name" . GetStaffSelectID($db, $staff_names, "supervisor_id$project_count", $supervisor_id) . "</TD>";
-        $display_block .= "<TD>$second_supervisor_name" . GetStaffSelectID($db, $staff_names, "second_supervisor_id$project_count", $second_supervisor_id) . "</TD>";
+        $display_block .= "<TD>$supervisor_name" . GetStaffSelectID($db, $staff_names, "supervisor_id$project_count", $supervisor_id) . '</TD>';
+        $display_block .= "<TD>$second_supervisor_name" . GetStaffSelectID($db, $staff_names, "second_supervisor_id$project_count", $second_supervisor_id) . '</TD>';
         $display_block .= "<TD><INPUT type='number' id='number$project_count' name='number$project_count' max='10' value='$num_projects'></TD>";
         $display_block .= "<TD>$progs<BR>$progs_chks</TD>";
 
-        $checked = "";
+        $checked = '';
         $display_block .= "<TD><input type='checkbox' id='delete$project_count' name='delete$project_count' value='1' $checked></TD>\n";
 
         $display_block .= "</TR>\n";
@@ -144,7 +142,7 @@ if($is_module_admin || $admin_access) {
 
     $display_block .= "<button class='btn btn-primary' id='listPost_btn' type='button'>Submit changes to project details</button><BR><BR>";
 } else {
-    $display_block .= "You do not have the appropriate admin level<BR>";
+    $display_block .= 'You do not have the appropriate admin level<BR>';
     $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 
@@ -152,7 +150,7 @@ if($is_module_admin || $admin_access) {
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <script>
     $(function () {

@@ -1,30 +1,30 @@
 <?php
 
 // Report all PHP errors (see changelog)
-(@include_once("./set_dir_staff.php")) or die("Cannot find this file to include: set_dir_staff.php<BR>");
-(@include_once("./config.php")) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
-(@include_once("./setup_titles.php")) or die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("./connect_pdo.php")) or die("Cannot connect to the database<BR>");
+(@include_once('./set_dir_staff.php')) or die('Cannot find this file to include: set_dir_staff.php<BR>');
+(@include_once('./config.php')) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
+(@include_once('./setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('./connect_pdo.php')) or die('Cannot connect to the database<BR>');
 
-(@include_once("./admin2/adminusers.php")) or die("Cannot find this file to include: $adminusers_php<BR>");
-(@include_once("./connect_pdo.php")) or die("Cannot connect to the database<BR>");
-(@include_once("./setup_tables.php")) or die("Cannot setup database tables<BR>");
-(@include_once("./staff_functions.php")) or die("Cannot include staff_function.php<BR>");
-(@include_once("./show_feedback_form.php")) or die("Cannot find this file to include: show_feedback_form_php<BR>");
-(@include_once("./EmailPDFAttachment.php")) or die("Cannot find this file to include: EmailPDFAttachment_php<BR>");
-(@include_once("./show_minor_part_feedback_form.php")) or die("Cannot include show_minor_part_feedback<BR>");
-(@include_once("./markstore_functions.php")) or die("Cannot include markstore_function.php<BR>");
+(@include_once('./admin2/adminusers.php')) or die("Cannot find this file to include: $adminusers_php<BR>");
+(@include_once('./connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('./setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./staff_functions.php')) or die('Cannot include staff_function.php<BR>');
+(@include_once('./show_feedback_form.php')) or die('Cannot find this file to include: show_feedback_form_php<BR>');
+(@include_once('./EmailPDFAttachment.php')) or die('Cannot find this file to include: EmailPDFAttachment_php<BR>');
+(@include_once('./show_minor_part_feedback_form.php')) or die('Cannot include show_minor_part_feedback<BR>');
+(@include_once('./markstore_functions.php')) or die('Cannot include markstore_function.php<BR>');
 
-$staff_username = "unknown";
-if(array_key_exists('REMOTE_USER',$_SERVER)){
+$staff_username = 'unknown';
+if (array_key_exists('REMOTE_USER', $_SERVER)) {
     $staff_username = get_server_username();
-}else{
-    if(isset($_SESSION['USERNAME'])){
+} else {
+    if (isset($_SESSION['USERNAME'])) {
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaffB($db, $staff_username, $staff_names) == false){
-    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+if (IsStaffB($db, $staff_username, $staff_names) == false) {
+    echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
     exit();
 }
@@ -34,7 +34,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$files_to_zip = array();
+$files_to_zip = [];
 
 $part = $_POST['part'];
 $pm_id = $_POST['pm_id'];
@@ -53,7 +53,7 @@ $this_staff_email = GetStaffEmailFromID($db, $this_staff_id, $staff_names2);
 // Disable PHP Timeout
 //set php script timeout, 0 to disable
 set_time_limit(0);
-ini_set("memory_limit", "144M");
+ini_set('memory_limit', '144M');
 
 $savezip = 1;
 $save_folder = PMA_TMP_DIR;
@@ -85,7 +85,7 @@ $zip_info[] = "number of rows in $project_allocated $num_rows";
 
 if ($num_rows < 1) {
     //no records
-    $zip_info[] = "Sorry, there are no records to select!";
+    $zip_info[] = 'Sorry, there are no records to select!';
 } else {
     //has records
     $rows = $results->fetchAll();
@@ -103,14 +103,14 @@ if ($num_rows < 1) {
         } else {
         }
         // To do
-        $marker1 = "";
-        $marker2 = "";
+        $marker1 = '';
+        $marker2 = '';
 
-        $marker_entry = "marker_p$part" . "m$who" . "_id";
+        $marker_entry = "marker_p$part" . "m$who" . '_id';
         $marker_id = $recs[$marker_entry];
-        $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_names2, NULL);
-        $marker_name = GetStaffNameFromID($db, $marker_id, $staff_names2, NULL);
-        $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_names2, NULL);
+        $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_names2, null);
+        $marker_name = GetStaffNameFromID($db, $marker_id, $staff_names2, null);
+        $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_names2, null);
 
         $query = "select * from $students where sid=$sid";
         try {
@@ -142,7 +142,7 @@ if ($num_rows < 1) {
         //if( $locked == 0 )
         if (HaveAllMarkersMarked($db, $sid, $part, $p_num_markers[$part], $markstores, $markstore_totals)) {
             $student_counter += 1;
-            $feedback_form_html = "";
+            $feedback_form_html = '';
             $marker_name_for_feedback = $marker_name;
             for ($i = 1; $i <= $p_num_markers[$part]; $i++) {
                 $markstore = $markstores[$part][$i];
@@ -168,15 +168,15 @@ if ($num_rows < 1) {
             // saving to a zip
             // first save all the individual files to the temp folder, saving the names
             $student_name_cleaned = trim($student_name);
-            $student_name_cleaned = str_replace(",", "", $student_name_cleaned);
-            $student_name_cleaned = str_replace(".", "", $student_name_cleaned);
-            $student_name_cleaned = str_replace("\\", "", $student_name_cleaned);
-            $student_name_cleaned = str_replace("'", "", $student_name_cleaned);
-            $student_name_cleaned = str_replace(" ", "_", $student_name_cleaned);
+            $student_name_cleaned = str_replace(',', '', $student_name_cleaned);
+            $student_name_cleaned = str_replace('.', '', $student_name_cleaned);
+            $student_name_cleaned = str_replace('\\', '', $student_name_cleaned);
+            $student_name_cleaned = str_replace("'", '', $student_name_cleaned);
+            $student_name_cleaned = str_replace(' ', '_', $student_name_cleaned);
             $pdf_filename = "$student_name_cleaned-$username-$assess_description_text.pdf";
             $pdf_filename = str_replace(' ', '_', $pdf_filename);
 
-            $pdf_fullpath_name = "$save_folder".DIRECTORY_SEPARATOR."$pdf_filename";
+            $pdf_fullpath_name = "$save_folder" . DIRECTORY_SEPARATOR . "$pdf_filename";
             //ob_start();
             $zip_info[] = "$pdf_fullpath_name";
             //$mpdf->Output("$pdf_fullpath_name", 'F');
@@ -190,11 +190,10 @@ if ($num_rows < 1) {
 
             error_reporting(-1);
 
-            $zip_info[] = "Finished sending/saving feedback emails to students";
+            $zip_info[] = 'Finished sending/saving feedback emails to students';
             //exit;
         }
     }
-
 }
 
 // make the zip and download it
@@ -217,15 +216,15 @@ $html = "<form action='download_zip.php' method='POST'>";
 $html .= "<input type='hidden' name='zip_filename' value='$archiveName'>";
 $html .= "<input type='hidden' name='saveas_zip_filename' value='$zip_filename'>";
 $html .= "<input type='submit' value='Click to download zip of PDFs'>";
-$html .= "</form>";
+$html .= '</form>';
 
-$return_zip_info = array(
+$return_zip_info = [
     'part' => $part,
     'zip_filename_on_server' => $archiveName,
     'saveas_zip_filename' => $zip_filename,
     'zip_info' => $zip_info,
     'html' => $html
-);
+];
 
 // clean all levels of output buffer
 while (ob_get_level()) {
@@ -244,4 +243,3 @@ readfile("$archiveName");
 // return all our data to an AJAX call
 echo json_encode($return_zip_info);
 exit;
-

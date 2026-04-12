@@ -1,11 +1,11 @@
 <?php
 $first_use = true;
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_titles.php")) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) OR die("Cannot find this file to include: connect_pdo.php<BR>");
-(@include_once("$STAFF_DIR_VAL/table_functions.php")) OR die("Cannot include table_functions.php<BR>");
+(@include_once("$STAFF_DIR_VAL/connect_pdo.php")) or die('Cannot find this file to include: connect_pdo.php<BR>');
+(@include_once("$STAFF_DIR_VAL/table_functions.php")) or die('Cannot include table_functions.php<BR>');
 
 if (array_key_exists('op', $_POST) == false) {
     $_POST['op'] = null;
@@ -14,29 +14,28 @@ if (array_key_exists('op', $_POST) == false) {
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
-    $POST_OP = "";
+    $POST_OP = '';
 }
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
 //}
 
-$display_block = "";
+$display_block = '';
 
 // Does the definition table exist?
-$definition_table_name = "definition";
-try{
+$definition_table_name = 'definition';
+try {
     $db->query("DESCRIBE $definition_table_name");
-}catch (PDOException $ex) {
+} catch (PDOException $ex) {
     $display_block .= "Definition table coulld not be accessed<BR>\n";
-
 }
 
-$display_block .= "<h1>Edit details for your School and select the header image you would like to use</h1>";
+$display_block .= '<h1>Edit details for your School and select the header image you would like to use</h1>';
 
 //$display_block = "<P>Database definitions table: $definition_table_name</P>";
 
-if ($POST_OP == "") {
+if ($POST_OP == '') {
     $query = "select * from $definition_table_name where id=1";
     try {
         $results = $db->query($query);
@@ -55,7 +54,7 @@ if ($POST_OP == "") {
     $header_image_name = $res['header_image_name'];
     $school_running_title = $res['running_title'];
 
-    $display_block .= "<h2>School details</h2>";
+    $display_block .= '<h2>School details</h2>';
 
     $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]'>";
 
@@ -85,12 +84,12 @@ if ($POST_OP == "") {
     while ($file = readdir($handle)) {
         if ($file !== '.' && $file !== '..') {
             if (strpos($file, 'header.png')) {
-                $checked="";
-                if(strpos($file, 'default')){
-                    $checked = "checked";
+                $checked = '';
+                if (strpos($file, 'default')) {
+                    $checked = 'checked';
                 }
-                if($file == $header_image_name){
-                    $checked = "checked";
+                if ($file == $header_image_name) {
+                    $checked = 'checked';
                 }
                 //$display_block .= "<div><input type='radio' name='header_image' value='$file' $checked><img src='../images/" . $file . "' border='2' /> $file<BR> </div>\n";
                 $img_file = file_get_contents("../images/$file");
@@ -102,7 +101,7 @@ if ($POST_OP == "") {
                 $display_block .= "<TD>\n";
                 $display_block .= "<input type='radio' name='header_image' value='$file' $checked>";
                 //$display_block .= '<img src="data:image/png;base64,' . $img_file_base64 .'" style="border-style: solid; border-width: 1px;" />' . "\n";
-                $display_block .= '<img src="../images/' . $file .'" style="border-style: solid; border-width: 1px;" />' . "\n";
+                $display_block .= '<img src="../images/' . $file . '" style="border-style: solid; border-width: 1px;" />' . "\n";
                 //$display_block .= "<div><textarea rows='10' cols='50'>$img_file_base64</textarea></div>";
                 $display_block .= "</TD>\n";
                 $display_block .= "</TR>\n";
@@ -117,11 +116,10 @@ if ($POST_OP == "") {
 
     $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton_new' name='submit' value='Submit Changes to School Settings.'></p>";
 
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 
     $display_block .= "<hr>\n";
-} elseif ($POST_OP == "submit_new") {
-
+} elseif ($POST_OP == 'submit_new') {
     $school_title = $_POST['school_title'];
     $school_module_code = $_POST['school_module_code'];
     $school_short_name = $_POST['school_short_name'];
@@ -152,14 +150,13 @@ if ($POST_OP == "") {
     }
 
     $display_block .= "<BR>\n";
-
 }// end of if ($POST_OP == "edit")
 
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

@@ -1,10 +1,10 @@
 <?php
 
-(@include_once("ADMINconnect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("utility_functions.php")) OR die("Cannot read utility_functions file<BR>");
-(@include_once("../markstore_functions.php")) OR die("Cannot read markstore_functions file<BR>");
-(@include_once("../staff_functions.php")) OR die("Cannot read markstore_functions file<BR>");
+(@include_once('ADMINconnect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('utility_functions.php')) or die('Cannot read utility_functions file<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot read markstore_functions file<BR>');
+(@include_once('../staff_functions.php')) or die('Cannot read markstore_functions file<BR>');
 
 if (array_key_exists('op', $_POST) == false) {
     $_POST['op'] = null;
@@ -13,23 +13,22 @@ if (array_key_exists('op', $_POST) == false) {
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
-    $POST_OP = "";
+    $POST_OP = '';
 }
 
 // see all the POST values
 //foreach ($_POST as $key => $value){
 //}
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
-$display_block .= "<h1>Edit which projects are visible to staff users</h1>";
+$display_block .= '<h1>Edit which projects are visible to staff users</h1>';
 
-$display_block .= "<h2>Projects in the database</h2>";
+$display_block .= '<h2>Projects in the database</h2>';
 
-if ($POST_OP == "submit_edited") {
-    $display_block .= "Making these change to the visibility<BR>";
+if ($POST_OP == 'submit_edited') {
+    $display_block .= 'Making these change to the visibility<BR>';
     $project_count = $_POST['project_count'];
-    for ($i = 1; $i <= $project_count; $i++)
-    {
+    for ($i = 1; $i <= $project_count; $i++) {
         $postid = "p_id_$i";
         $pm_id = $_POST[$postid];
         $postid = "visibility_$i";
@@ -53,7 +52,7 @@ if ($POST_OP == "submit_edited") {
         }
     }
 }
-$display_block .= "<HR>";
+$display_block .= '<HR>';
 
 $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
 
@@ -70,7 +69,7 @@ try {
 
 //$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
 $display_block .= "<TABLE id=\"projectinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
-$display_block .= "
+$display_block .= '
     <thead>
       <tr>
         <th>Project ID</th>
@@ -80,12 +79,11 @@ $display_block .= "
         <th>Module description</th>
         <th>Visibility</th>
       </tr>
-    </thead>";
+    </thead>';
 $display_block .= "<tbody>\n";
 $project_count = 0;
 $rows = $results->fetchAll();
 foreach ($rows as $recs) {
-
     $year = $recs['year_begin'];
     $module_number = $recs['module'];
     $module_short_code_s = $recs['short_code'];
@@ -101,13 +99,12 @@ foreach ($rows as $recs) {
     $display_block .= "<TD>$module_prefix$module_number</TD>";
     $display_block .= "<TD>$module_short_code_s</TD>";
     $display_block .= "<TD>$module_short_desc</TD>";
-    $checked = "";
+    $checked = '';
     if ($visibility == 1) {
-        $checked = "checked";
+        $checked = 'checked';
     }
     $display_block .= "<TD><input type=\"checkbox\" name=\"visibility_$project_count\" value=\"1\" $checked></TD>\n";
     $display_block .= "</TR>\n";
-
 }
 $display_block .= "</tbody>\n";
 $display_block .= "</TABLE>\n";
@@ -115,16 +112,16 @@ $display_block .= "</TABLE>\n";
 $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_edited\">";
 $display_block .= "\n<input type=\"hidden\" name=\"project_count\" value=\"$project_count\">";
 
-$display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit changes to visibility of projects.\"></p>";
+$display_block .= '<p><input type="submit" id="submitbutton" name="submit" value="Submit changes to visibility of projects."></p>';
 
-$display_block .= "</form>";
+$display_block .= '</form>';
 //---------------------------------------------------------------------------------
 
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

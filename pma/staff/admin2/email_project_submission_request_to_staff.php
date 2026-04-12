@@ -1,40 +1,39 @@
 <?php
 
 // connect to the datbase
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
 
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
-(@include_once("./admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
-$assess_part_description_text = "";
+$assess_part_description_text = '';
 
 // Check the admin level
 $admin_access = false;
-$admin_access = access_check_response($db,$this_staff_username, $this_staff_full_name, $staff_names,$access_phrase);
+$admin_access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
 $pm_id = $_REQUEST['pm_id'];
-$is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase );
-if($is_module_admin){
+$is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
+if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
 }
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
-if($is_module_admin || $admin_access) {
-
+if ($is_module_admin || $admin_access) {
     require('EmailBodyString.php');
 
     if (array_key_exists('module1', $_POST) == false) {
@@ -78,16 +77,16 @@ if($is_module_admin || $admin_access) {
     $POST_OP = $_REQUEST['op'];
     $activestaff = $_REQUEST['activestaff'];
 
-//foreach ($_REQUEST as $key => $value){
-//}
-//
-// Check the date for editiing has not passed
-// 
+    //foreach ($_REQUEST as $key => $value){
+    //}
+    //
+    // Check the date for editiing has not passed
+    //
 
-//$get_setup = "select year_begin, module, short_code, dayname(staff_close), dayofmonth(staff_close), monthname(staff_close), month(staff_close), year(staff_close) from $projects_setup where id=$pm_id";
+    //$get_setup = "select year_begin, module, short_code, dayname(staff_close), dayofmonth(staff_close), monthname(staff_close), month(staff_close), year(staff_close) from $projects_setup where id=$pm_id";
     $query = "select * from $projects_setup where id=$pm_id";
-//$get_setup_list = mysql_query($get_setup) or die(" Unable to get database configuration.<BR>Query = $get_setup");
-//$setup_data = mysql_fetch_array($get_setup_list);
+    //$get_setup_list = mysql_query($get_setup) or die(" Unable to get database configuration.<BR>Query = $get_setup");
+    //$setup_data = mysql_fetch_array($get_setup_list);
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
@@ -103,11 +102,11 @@ if($is_module_admin || $admin_access) {
     $nowarray = getdate();
     $staff_close_str = $setup_data['staff_close'];
     $staff_close_date = strtotime($staff_close_str);
-    $month_i = date("m", $staff_close_date);
-    $day_i = date("d", $staff_close_date);
-    $year_i = date("Y", $staff_close_date);
+    $month_i = date('m', $staff_close_date);
+    $day_i = date('d', $staff_close_date);
+    $year_i = date('Y', $staff_close_date);
     $close = mktime(17, 0, 0, $month_i, $day_i, $year_i);
-    $cldate = "5pm, " . date("D", $staff_close_date) . " " . $day_i . " " . date("M", $staff_close_date) . " " . $year_i;
+    $cldate = '5pm, ' . date('D', $staff_close_date) . ' ' . $day_i . ' ' . date('M', $staff_close_date) . ' ' . $year_i;
     $module1 = $setup_data['module'];
     $year_begin = $setup_data['year_begin'];
     $module_short_code = $setup_data['short_code'];
@@ -120,41 +119,41 @@ if($is_module_admin || $admin_access) {
         $display_block .= "<b>Updates to the project area database closes at $cldate</b>";
     }
 
-//if($module1 == "" || $year_begin == "")
-//{
-//	exit;
-//}
-//
-//if (array_key_exists('op', $_POST)==false){ $_POST['op']=null; }
-//
-//// if the form was submitted then enter it all into the database
-////echo($_POST['op'] . "<BR>\n");
-//if (array_key_exists('op', $_POST)) {
-//  $POST_OP = $_POST['op']  ;
-//}else{
-//	$POST_OP = "";
-//}
+    //if($module1 == "" || $year_begin == "")
+    //{
+    //	exit;
+    //}
+    //
+    //if (array_key_exists('op', $_POST)==false){ $_POST['op']=null; }
+    //
+    //// if the form was submitted then enter it all into the database
+    ////echo($_POST['op'] . "<BR>\n");
+    //if (array_key_exists('op', $_POST)) {
+    //  $POST_OP = $_POST['op']  ;
+    //}else{
+    //	$POST_OP = "";
+    //}
 
-// see all the POST values
+    // see all the POST values
     /*
     foreach ($_POST as $key => $value){
       echo "{$key} = {$value}<BR>\r\n";
     }
     */
-// Email body example
+    // Email body example
     $lb = "\n";
     $lb = "<BR>\n";
-    $sp = " ";
-    $sp = "&nbsp;";
+    $sp = ' ';
+    $sp = '&nbsp;';
     $email_body = "It is now time to propose project titles for Level 3 and 5 projects.$lb";
     $email_body .= "This should be done using the online system we have used for the past few years.$lb";
     $email_body .= "This year - to help you get started - I have  populated the list with last year's projects.$lb";
     $email_body .= "You should look at this list and add to, edit or delete projects as you require.$lb$lb";
 
-    if ($POST_OP == "select") {
-        $display_block .= "<P>In the box below type the text you want to send out. Put in HTML code if necessary.<BR>";
+    if ($POST_OP == 'select') {
+        $display_block .= '<P>In the box below type the text you want to send out. Put in HTML code if necessary.<BR>';
 
-        $display_block .= "<P>You can mail a <B>list of thier own projects</b> to staff by clicking the box below. <BR>The text you type  will then be followed by a list of the projects by each member of staff and instruction on how to access the data.</P>";
+        $display_block .= '<P>You can mail a <B>list of thier own projects</b> to staff by clicking the box below. <BR>The text you type  will then be followed by a list of the projects by each member of staff and instruction on how to access the data.</P>';
 
         $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>
                       <P><textarea class='form-control' rows='20' cols='100' name='email_body_text' placeholder='Type the text you want to send to all staff...'>$email_body</textarea></P>\n";
@@ -170,9 +169,7 @@ if($is_module_admin || $admin_access) {
                      
                      <P><input class='btn btn-primary' type='submit' name='submit' value='Tick the box and click to this text to all staff NOW.'></P>
                      </form><BR><HR>";
-
-    } elseif ($POST_OP == "send") {
-
+    } elseif ($POST_OP == 'send') {
         //$link = "https://www2.mech-eng.leeds.ac.uk/civilprojects/staff/database/projects_index.php?year_begin=2014";
 
         $display_block .= "<b>Updates to the project area database closes at $cldate</b>";
@@ -195,7 +192,7 @@ if($is_module_admin || $admin_access) {
         $num = $results->fetch();
         if ($num < 1) {
             //no records
-            $display_block .= "<p><em>Sorry, there are no records to select!</em></p>";
+            $display_block .= '<p><em>Sorry, there are no records to select!</em></p>';
         } else {
             //has records
             $rows = $results->fetchAll();
@@ -211,12 +208,12 @@ if($is_module_admin || $admin_access) {
                 $email_fullname = "$firstname, $lb$lb";
 
                 // if not actvie email all staff (i.e. make all staff active
-                if ($activestaff != "active") {
+                if ($activestaff != 'active') {
                     $inactive = 0;
-                };
+                }
 
                 if ($inactive == 0) {
-                    if ($messagetype != "free") {
+                    if ($messagetype != 'free') {
                         $query = "select * from $master_name where f_supervisor = '$fullname'";
                         try {
                             $results = $db->query($query);
@@ -229,7 +226,7 @@ if($is_module_admin || $admin_access) {
                             exit();
                         }
                         //$get_list_res2 = mysql_query($get_list2) or die(" Unable to get projects from $master_name table:<BR> query = $get_list2 <BR>");
-                        $email_block = "";
+                        $email_block = '';
 
                         $num = $results->rowCount();
 
@@ -267,8 +264,8 @@ if($is_module_admin || $admin_access) {
                     $from = $this_staff_username . $local_email_domain;
                     $to = $staffemail;
                     //$to = $from;
-                    if ($subjectline == "") {
-                        $subject = "Level 3 / 5 Project email";
+                    if ($subjectline == '') {
+                        $subject = 'Level 3 / 5 Project email';
                     } else {
                         $subject = $subjectline;
                     }
@@ -282,13 +279,11 @@ if($is_module_admin || $admin_access) {
                     // Not participating in projects this year.
                     $display_block .= "$firstname $familyname. $lb Not offering projects this year.$lb$lb<HR>$lb";
                 }
-
             }
         }
     }// end of if ($POST_OP == "select")
-
 } else {
-    $display_block .= "You do not have the appropriate admin level<BR>";
+    $display_block .= 'You do not have the appropriate admin level<BR>';
     $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 
@@ -296,7 +291,7 @@ if($is_module_admin || $admin_access) {
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

@@ -1,28 +1,28 @@
 <?php
 ob_start(); // Buffer all output — required so mPDF can set Content-Type headers even if something echoes earlier
 // Turn off all error reporting
-(@include_once("./set_dir_staff.php")) OR die("Cannot find this file to include: set_dir_staff.php<BR>");
-(@include_once("./config.php")) OR die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
-(@include_once("./setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("./connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("./setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("./staff_functions.php")) OR die("Cannot include staff_function.php<BR>");
-(@include_once("./show_feedback_form.php")) OR die("Cannot include show_feedback<BR>");
-(@include_once("./show_mark_questions2_bs.php")) OR die("Cannot include show_mark_questions2<BR>");
-(@include_once("./admin2/admin_functions.php")) OR die("Cannot include admin functions<BR>");
-(@include_once("./markstore_functions.php")) OR die("Cannot include markstore_function.php<BR>");
-(@include_once("./pdo_query_functions.php")) OR die("Cannot include pdo_query_functions<BR>");
+(@include_once('./set_dir_staff.php')) or die('Cannot find this file to include: set_dir_staff.php<BR>');
+(@include_once('./config.php')) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
+(@include_once('./setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('./connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('./setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./staff_functions.php')) or die('Cannot include staff_function.php<BR>');
+(@include_once('./show_feedback_form.php')) or die('Cannot include show_feedback<BR>');
+(@include_once('./show_mark_questions2_bs.php')) or die('Cannot include show_mark_questions2<BR>');
+(@include_once('./admin2/admin_functions.php')) or die('Cannot include admin functions<BR>');
+(@include_once('./markstore_functions.php')) or die('Cannot include markstore_function.php<BR>');
+(@include_once('./pdo_query_functions.php')) or die('Cannot include pdo_query_functions<BR>');
 
-$staff_username = "unknown";
-if(array_key_exists('REMOTE_USER',$_SERVER)){
+$staff_username = 'unknown';
+if (array_key_exists('REMOTE_USER', $_SERVER)) {
     $staff_username = get_server_username();
-}else{
-    if(isset($_SESSION['USERNAME'])){
+} else {
+    if (isset($_SESSION['USERNAME'])) {
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaffB($db, $staff_username, $staff_names) == false){
-    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+if (IsStaffB($db, $staff_username, $staff_names) == false) {
+    echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
     exit();
 }
@@ -61,9 +61,9 @@ if (array_key_exists('o_f', $_GET) == false) {
 }
 //$module1 = $_GET['module1'];
 //$year_begin = $_GET['year_begin'];
-$display_block = "";
-$sid = $_GET["sid"];
-$project_id = $_GET["pid"];
+$display_block = '';
+$sid = $_GET['sid'];
+$project_id = $_GET['pid'];
 $assesspart = $_GET['part'];
 $who = $_GET['who'];
 $marker_id = $_GET['marker_id'];
@@ -76,19 +76,19 @@ $show_overall_feedback_flag = $_GET['o_f'];
 if (array_key_exists('op', $_POST)) {
     $POST_OP = $_POST['op'];
 } else {
-    $POST_OP = "";
+    $POST_OP = '';
 }
 if (isset($_POST['disagree'])) {
-    $POST_OP = "disagree";
+    $POST_OP = 'disagree';
 }
 
 // Check all the POST values
 // Check if feedback text is base64 encoded, and decode as necessary
-foreach ($_POST as $key => $value){
-    if(str_contains($key, "feedback")){
+foreach ($_POST as $key => $value) {
+    if (str_contains($key, 'feedback')) {
         // decode, returns "false" if it is NOT a base 64 string
         $decoded_value = base64_decode($value, true);
-        if($decoded_value !== false){
+        if ($decoded_value !== false) {
             // use the decoded string
             // replace the $_POST value
             $_POST[$key] = $decoded_value;
@@ -96,14 +96,14 @@ foreach ($_POST as $key => $value){
     }
 }
 
-$project_marking_page = "projectmarking_bs.php";
+$project_marking_page = 'projectmarking_bs.php';
 
 // definitions for each part
 // Questions table
 $assessqs_year = $assessqs[$assesspart];
 // Questions categories table
 $assess_cats = $assessqs_cats[$assesspart];
-// description 
+// description
 $assesstype_text = $p_description[$assesspart];
 // markbook
 $who = 1;
@@ -131,8 +131,8 @@ try {
 
 $num_categories = $results->rowCount();
 
-$marker1 = " (marker)";
-$marker2 = " (marker)";
+$marker1 = ' (marker)';
+$marker2 = ' (marker)';
 
 //
 // Get title and supervisor
@@ -152,7 +152,7 @@ try {
 $recs = $results->fetch();
 
 $master_id = $recs['masterid'];
-if($master_id != null) {
+if ($master_id != null) {
     $master_id = stripslashes($master_id);
 }
 $title = stripslashes($recs['title']);
@@ -160,18 +160,18 @@ $supervisor_id = stripslashes($recs['supervisor_id']);
 $second_marker_id = stripslashes($recs['second_marker_id']);
 $student_inactive = $recs['inactive'];
 
-$supervisor = GetStaffNameFromID($db, $supervisor_id, $staff2, NULL);
+$supervisor = GetStaffNameFromID($db, $supervisor_id, $staff2, null);
 
 $i = $assesspart;
 $j = 1;
-$marker_entry = "marker_p$i" . "m$j" . "_id";
+$marker_entry = "marker_p$i" . "m$j" . '_id';
 $marker_id = $recs[$marker_entry];
-$marker_name = GetStaffNameFromID($db, $marker_id, $staff2, NULL);//. " ($marker_entry, $marker_id)";
+$marker_name = GetStaffNameFromID($db, $marker_id, $staff2, null);//. " ($marker_entry, $marker_id)";
 
 $j = 2;
-$marker_entry = "marker_p$i" . "m$j" . "_id";
+$marker_entry = "marker_p$i" . "m$j" . '_id';
 $second_marker_id = $recs[$marker_entry];
-$second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff2, NULL);
+$second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff2, null);
 
 //
 // Get the student name from SID
@@ -212,10 +212,10 @@ try {
 }
 $recs = $results->fetch();
 
-if($recs) {
+if ($recs) {
     $mark1 = $recs['total'];
     $locked = $recs['locked'];
-}else{
+} else {
     $mark1 = 0;
     $locked = 0;
 }
@@ -236,16 +236,16 @@ try {
 }
 $recs = $results->fetch();
 
-if($recs) {
+if ($recs) {
     $mark2 = $recs['total'];
     $locked = $recs['locked'];
-}else{
+} else {
     $mark2 = 0;
     $locked = 0;
 }
 
-if ($POST_OP == "commit") {
-    $display_block .= "<h2>Submitting the changes to the database ...</H2>";
+if ($POST_OP == 'commit') {
+    $display_block .= '<h2>Submitting the changes to the database ...</H2>';
 
     // Get the data from the form
     $mark_total = 0.0;
@@ -272,9 +272,9 @@ if ($POST_OP == "commit") {
 
             $weight_pc = $cat_data['weight_percent'];
             $factor = $cat_data['factor'];
-            if(array_key_exists('get_feedback',$cat_data)==false){
+            if (array_key_exists('get_feedback', $cat_data) == false) {
                 $show_cat_feedback = 1;
-            }else{
+            } else {
                 $show_cat_feedback = $cat_data['get_feedback'];
             }
             /*
@@ -291,18 +291,18 @@ if ($POST_OP == "commit") {
                 $rmarks[$i] = 0;
             }
 
-            $id = "numqs" . $who . $cat;
+            $id = 'numqs' . $who . $cat;
             $numqs = $_POST[$id];
             $marktot = 0.0;
-            $mark_query_string = "";
-            $marks_array = array();
+            $mark_query_string = '';
+            $marks_array = [];
             for ($i = 1; $i < $numqs; $i++) {
                 //$id = "q$who$cat-$i";
                 //$question = addslashes($_POST[$id]);
 
                 $q_weight = 1.0;
                 $is_numeric_name = $is_numeric;//$_POST['is_numeric_name'];
-                if($is_numeric_name = 1) {
+                if ($is_numeric_name = 1) {
                     $id = "qw$who$cat-$i";
                     $q_weight_pc = $_POST[$id];
                     $q_weight = $q_weight_pc * 0.01;
@@ -318,14 +318,14 @@ if ($POST_OP == "commit") {
                 $key = "C$cat" . "Q$i";
                 $marks_array[$key] = $rmark_w;
             }
-            $id = "feedback" . $who . $cat;
-            if(array_key_exists($id,$_POST) and $show_cat_feedback == 1) {
+            $id = 'feedback' . $who . $cat;
+            if (array_key_exists($id, $_POST) and $show_cat_feedback == 1) {
                 $feedback_text = $_POST[$id];
                 $feedback_text = convert_smart_quotes($feedback_text);
                 $feedbacks[$cat] = addslashes($feedback_text);
                 $mark_query_string .= "C$cat" . "Feedback='$feedbacks[$cat]',";
-            }else{
-                $feedback_text = "";
+            } else {
+                $feedback_text = '';
             }
 
             $marktot = $marktot * $factor;
@@ -358,20 +358,20 @@ if ($POST_OP == "commit") {
 
             if ($get_marks_res[0] == 0) {
                 $query = "insert $markstore set SID='$sid', $mark_query_string
-                         C$cat" . "total" . "=$marktot, total=$mark_total_all_cats
+                         C$cat" . 'total' . "=$marktot, total=$mark_total_all_cats
                          ";
 
-                $CXtotal = "C$cat" . "total";
-                $Ctotal = "total";
+                $CXtotal = "C$cat" . 'total';
+                $Ctotal = 'total';
                 //$CXFeedback = "C$cat" . "Feedback";
                 $query2 = "INSERT $markstore SET SID=:sid, $CXtotal=:cat_total, total=:all_cats_total";
 
-                $data =array(
+                $data = [
                     $CXtotal => $marktot,
                     $Ctotal => $mark_total_all_cats,
                     //$CXFeedback => $feedback_text,
                     'sid' => $sid
-                );
+                ];
                 // tag on the marks
                 foreach ($marks_array as $key => $value) {
                     $data[$key] = $value;
@@ -379,25 +379,25 @@ if ($POST_OP == "commit") {
                 $results = perform_insert_prepared_query($db, $markstore, $data);
             } else {
                 $query = "update $markstore set $mark_query_string
-                         C$cat" . "total" . "=$marktot, total=$mark_total_all_cats
+                         C$cat" . 'total' . "=$marktot, total=$mark_total_all_cats
                          where SID='$sid'";
 
-                $CXtotal = "C$cat" . "total";
-                $Ctotal = "total";
+                $CXtotal = "C$cat" . 'total';
+                $Ctotal = 'total';
                 //$CXFeedback = "C$cat" . "Feedback";
                 $query2 = "UPDATE $markstore SET $CXtotal=:cat_total, total=:all_cats_total WHERE SID=:sid ";
-                $data =array(
+                $data = [
                     $CXtotal => $marktot,
                     $Ctotal => $mark_total_all_cats,
                     //$CXFeedback => $feedback_text
-                );
+                ];
                 // tag on the marks
                 foreach ($marks_array as $key => $value) {
                     $data[$key] = $value;
                 }
-                $where_data =array(
+                $where_data = [
                     'sid' => $sid
-                );
+                ];
                 $results = perform_update_prepared_query($db, $markstore, $data, $where_data);
             }
             //mysql_query($action) or die(" Unable to add mark data to the table $markstore. <BR /> Query = $action");
@@ -416,7 +416,7 @@ if ($POST_OP == "commit") {
 
         $overall_feedback_id = "overall_feedback$who";
 
-        if(array_key_exists($overall_feedback_id,$_POST) and $show_overall_feedback_flag == 1){
+        if (array_key_exists($overall_feedback_id, $_POST) and $show_overall_feedback_flag == 1) {
             $overall_feedback_text = $_POST[$overall_feedback_id];
             $overall_feedback_text = convert_smart_quotes($overall_feedback_text);
             $overall_feedback_text = addslashes($overall_feedback_text);
@@ -436,7 +436,7 @@ if ($POST_OP == "commit") {
     }// $who
 
     $mark_total *= 0.5;
-    $mark_total_s = sprintf("%5.2f", (float)$mark_total);
+    $mark_total_s = sprintf('%5.2f', (float) $mark_total);
 
     // Enter the marks in markstore totals
     $query = "select locked from $markstore_totals where SID='$sid'";
@@ -454,7 +454,7 @@ if ($POST_OP == "commit") {
     }
     $res = $results->fetch();
 
-    if($res){
+    if ($res) {
         $locked_stat = $res['locked'];
     }
 
@@ -524,24 +524,22 @@ if ($POST_OP == "commit") {
       or
             <a target = \"_self\" href = \"./$project_marking_page?pm_id=$pm_id&user=1\" style = \"color: dimgray;\" > User marking list</a >
             </span>\n";
-    $display_block .= "</div>";// close class='container-fluid'
-} else if ($POST_OP == "disagree") {// end of if ($POST_OP == "commit")
-    $display_block .= "<h2>Markers cannot agree - setting-up requirement for third marker ...</H2>";
+    $display_block .= '</div>';// close class='container-fluid'
+} elseif ($POST_OP == 'disagree') {// end of if ($POST_OP == "commit")
+    $display_block .= '<h2>Markers cannot agree - setting-up requirement for third marker ...</H2>';
     $display_block .= SetThirdMarkerRequired($db, $sid, $assesspart, $markstore_totals);
     $display_block .= "<span><BR><a target=\"_self\" href=\"./$project_marking_page?pm_id=$pm_id#$username\" style=\"color: dimgray;\">Back to marking list</a></span>\n";
-
 } else {// end of if ($POST_OP == "disagree")
-
     //$locked=1;
     if ($locked == 1 || $force_pdf == 1) {
         //$display_block = "<h1>Project Report Mark Sheet (<span class=\"red\">Marked and Locked</span>)</h1>";
-        $display_block = " ";
+        $display_block = ' ';
         //$display_block .= show_minor_part_feedback_form($sid,$markstore,$assessqs_year,$student_name,$username,$title,$supervisor,$second_marker_name,$project_id,$level,$assesstype_text,$assess_cats,$mark_max,$mark_pc);
         $display_block .= show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $markstore_totals, $assessqs_year, $student_name, $username, $title, $supervisor, $second_marker_name, $marker_name, $project_id, $assesstype_text, $assess_cats, $mark_max, $mark_pc, $programme, $assesspart, $assesstype_text, $module_short_description, $is_numeric);
-        if($show_overall_feedback_flag == 1) {
+        if ($show_overall_feedback_flag == 1) {
             $display_block .= show_overall_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $assesstype_text, $min_feedback_words);
         }
-        $POST_OP = "donothing";
+        $POST_OP = 'donothing';
 
         if ($topdf > 0 || $force_pdf == 1) {
             // Discard any buffered HTML so mPDF can send PDF headers cleanly
@@ -558,31 +556,29 @@ if ($POST_OP == "commit") {
                 // Stream as a download — user opens with their own PDF viewer
                 $mpdf->Output($safe_filename, 'D');
                 exit();
-            } else if ($topdf == 3) {
+            } elseif ($topdf == 3) {
                 // Email to student
                 // Done in file projectmarking_civl_email_feedback.php
             }
         }
         $display_block .= "<a href=\"$_SERVER[PHP_SELF]?sid=$sid&pid=$project_id&module1=$module1&year_begin=$year_begin&assesstype=$assesstype&topdf=1&force_pdf=1&isnumeric=$is_numeric&o_f=$show_overall_feedback_flag\">Save to PDF</A><BR />";
-
     } else {// end of if locked
-
         // No need to have an else as the rest is always done.
-        $forwhom = "the supervisor only: " . $supervisor;
+        $forwhom = 'the supervisor only: ' . $supervisor;
         if ($who == 1) {
-            $forwhom = "the supervisor : " . $supervisor;
-        } else if ($who == 2) {
-            $forwhom = "the second marker : " . $second_marker_name;
-        } else if ($who == 3) {
-            $forwhom = "both the subervisor: " . $supervisor . " and second marker : " . $second_marker_name;
+            $forwhom = 'the supervisor : ' . $supervisor;
+        } elseif ($who == 2) {
+            $forwhom = 'the second marker : ' . $second_marker_name;
+        } elseif ($who == 3) {
+            $forwhom = 'both the subervisor: ' . $supervisor . ' and second marker : ' . $second_marker_name;
         }
 
-        $instructions = "<h4>This form is for comparing marks from each marker.</h4>";
+        $instructions = '<h4>This form is for comparing marks from each marker.</h4>';
         $instructions .= "<div><h6>This form should be used to compare each markers' responses to the questions and to ensure that the final mark is within the agreed acceptable difference for the <em>$assesstype_text</em></h6></div>";
 
-        $final_total_diff = sprintf("%5.1f", abs($mark1 - $mark2));
-        $mark1_s = sprintf("%5.1f", $mark1);
-        $mark2_s = sprintf("%5.1f", $mark2);
+        $final_total_diff = sprintf('%5.1f', abs($mark1 - $mark2));
+        $mark1_s = sprintf('%5.1f', $mark1);
+        $mark2_s = sprintf('%5.1f', $mark2);
         $instructions .= "<p>1st Marker mark: $mark1_s%</p> <p>2nd Marker mark: $mark2_s%</p> <p>Difference: $final_total_diff%</p>";
         $instructions .= "<p>The acceptable difference is: $accept_var%</P>";
         if ($final_total_diff <= $accept_var) {
@@ -612,8 +608,8 @@ if ($POST_OP == "commit") {
         $display_block .= "<div class='row'><div class='col-sm-2'><strong>Project ID:</strong></div><div class='col-sm-6'> $project_id</div></div>";
         $display_block .= "<div class='row mt-2'><strong>This assessment contributes $mark_pc% to the modue mark</strong></div>";
 
-        $display_block .= "</div>";// close of card-body
-        $display_block .= "</div>";// close of card
+        $display_block .= '</div>';// close of card-body
+        $display_block .= '</div>';// close of card
 
         $display_block .= "<div style='z-index: 100;' id=\"sticker\">0.0</div>";
         $display_block .= "<div style='z-index: 100;' id=\"sticker_mid\">0.0</div>\n";
@@ -650,7 +646,6 @@ if ($POST_OP == "commit") {
         $display_block .= "\n<div class='col-6'><span class=\"markerName\">$marker_name</span><BR>";
         for ($whois = 1; $whois <= 2; $whois++) {
             for ($cat = 1; $cat <= $num_categories; $cat++) {
-
                 // Get the category titles
                 $query = "select * from $assess_cats where cat=$cat";
                 //$get_cat_details_list = mysql_query($get_cat_details) or die(" Unable to get database $assess_cats. <BR>Query: $get_cat_details");
@@ -669,9 +664,9 @@ if ($POST_OP == "commit") {
                 $description = $cat_data['description'];
                 $weight_pc = $cat_data['weight_percent'];
                 $factor = $cat_data['factor'];
-                if(array_key_exists('get_feedback',$cat_data)==false){
+                if (array_key_exists('get_feedback', $cat_data) == false) {
                     $show_cat_feedback = 1;
-                }else{
+                } else {
                     $show_cat_feedback = $cat_data['get_feedback'];
                 }
 
@@ -709,16 +704,16 @@ if ($POST_OP == "commit") {
                     $questions[$q_count] = $qs_list['question'];
                     $num_entries[$q_count] = $qs_list['entries'];
                     $q_weight = $qs_list['weight'];
-                    if(!is_numeric($q_weight)){
+                    if (!is_numeric($q_weight)) {
                         $q_weight = 100;
                     }
                     $q_weights[$q_count] = $q_weight;
 
                     for ($r_count = 1; $r_count <= $num_entries[$q_count]; $r_count++) {
-                        $r_text = "text" . $r_count;
+                        $r_text = 'text' . $r_count;
                         $response_texts[$q_count][$r_count] = $qs_list[$r_text];
                         $value = $response_texts[$q_count][$r_count];
-                        $r_mark = "mark" . $r_count;
+                        $r_mark = 'mark' . $r_count;
                         $response_marks[$q_count][$r_count] = $qs_list[$r_mark];
                         //$display_block .= "[q_count][r_count] = [$q_count][$r_count]<BR>";
                     }
@@ -739,7 +734,7 @@ if ($POST_OP == "commit") {
                 $display_block .= "<BR>\n";
             }
             //$show_overall_feedback_flag = 1;
-            if($show_overall_feedback_flag == 1) {
+            if ($show_overall_feedback_flag == 1) {
                 $display_block .= show_overall_feedback2_bs($db, $assesstype_text, $markstore, $sid, $whois, $min_feedback_words);
             }
 
@@ -765,15 +760,15 @@ if ($POST_OP == "commit") {
         $display_block .= "<div class='container-fluid'><div class='row mt-3'>";
         $display_block .= "<div class='col-sm-3'>";
         $display_block .= "\n<input class='btn btn-sm btn-outline-secondary' type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all responses completed\" >\n";
-        $display_block .= "</div>";
+        $display_block .= '</div>';
         $display_block .= "<div class='col-sm-3'></div>";
 
         $display_block .= "<div class='col-sm-6'>";
         $display_block .= "<span id='show_pdf_id'>";
         $display_block .= "<A class='btn btn-sm btn-info float-end' target='_blank' href='$_SERVER[PHP_SELF]?sid=$sid&pid=$project_id&pm_id=$pm_id&module1=$module1&year_begin=$year_begin&part=$assesspart&topdf=1&force_pdf=1&who=$who&isnumeric=$is_numeric&o_f=$show_overall_feedback_flag'>Show the PDF feedback sheet that the student will see</A>";
-        $display_block .= "</span>";
-        $display_block .= "</div>";
-        $display_block .= "</div></div>";
+        $display_block .= '</span>';
+        $display_block .= '</div>';
+        $display_block .= '</div></div>';
 
         //$display_block .= "<BR>\n<input type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all selected\" >";
         $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"commit\">";
@@ -795,31 +790,29 @@ if ($POST_OP == "commit") {
 
         $display_block .= "</form>\n";
 
-        $display_block .= "</div>";// Close class='container-fluid'
-        $display_block .= "</div>";// Close class='container'
-
+        $display_block .= '</div>';// Close class='container-fluid'
+        $display_block .= '</div>';// Close class='container'
     }
-
 }
 // End of main
-$admin_link_text = "";
-$show_admin_link = "none";
-$admin_link = "";
+$admin_link_text = '';
+$show_admin_link = 'none';
+$admin_link = '';
 if (IsAdmin($db, $this_staff_username)) {
-    $admin_link = "./admin2/";
-    $admin_link_text = "Super Admin";
-    $show_admin_link = "block";
-} else if (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
-    $admin_link = "./admin2/";
-    $admin_link_text = "Admin";
-    $show_admin_link = "block";
+    $admin_link = './admin2/';
+    $admin_link_text = 'Super Admin';
+    $show_admin_link = 'block';
+} elseif (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
+    $admin_link = './admin2/';
+    $admin_link_text = 'Admin';
+    $show_admin_link = 'block';
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <?php
-(@include_once("$mobile_head_bs")) OR die("Cannot find this file to include: $mobile_head_bs<BR>");
+(@include_once("$mobile_head_bs")) or die("Cannot find this file to include: $mobile_head_bs<BR>");
 ?>
 
 <script type="text/javascript">
@@ -1044,7 +1037,7 @@ if (IsAdmin($db, $this_staff_username)) {
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">
     <div class="container">
-        <span class="navbar-brand">Compare Marking :- <?PHP echo("$module_short_description  $module_prefix$module1  $year_begin/$year_end") ?></span>
+        <span class="navbar-brand">Compare Marking :- <?php echo("$module_short_description  $module_prefix$module1  $year_begin/$year_end") ?></span>
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="<?php echo("$project_marking_page?pm_id=$pm_id") ?>" class="nav-link px-2 text-white-50">Full marking list</a></li>
             <li class="nav-item"><a href="<?php echo("$project_marking_page?pm_id=$pm_id&user=1") ?>" class="nav-link px-2 text-white-50">User marking list</a></li>

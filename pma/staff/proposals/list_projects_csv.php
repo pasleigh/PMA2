@@ -1,26 +1,27 @@
 <?php
+
 // connect to the database
-(@include_once("./set_dir_props.php")) OR die("Cannot find this file to include: set_dir_props.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables");
-(@include_once("../staff_functions.php")) OR die("Cannot setup database tables");
-(@include_once("../markstore_functions.php")) OR die("Cannot open markstore_functions.php");
+(@include_once('./set_dir_props.php')) or die('Cannot find this file to include: set_dir_props.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables');
+(@include_once('../staff_functions.php')) or die('Cannot setup database tables');
+(@include_once('../markstore_functions.php')) or die('Cannot open markstore_functions.php');
 
-(@include_once("../admin2/adminusers.php")) OR die("Cannot setup admin users");
-(@include_once("../staff_student_functions.php")) OR die("Cannot find staff_student_functions.php");
+(@include_once('../admin2/adminusers.php')) or die('Cannot setup admin users');
+(@include_once('../staff_student_functions.php')) or die('Cannot find staff_student_functions.php');
 
-$staff_username = "unknown";
-if(array_key_exists('REMOTE_USER',$_SERVER)){
+$staff_username = 'unknown';
+if (array_key_exists('REMOTE_USER', $_SERVER)) {
     $staff_username = get_server_username();
-}else{
-    if(isset($_SESSION['USERNAME'])){
+} else {
+    if (isset($_SESSION['USERNAME'])) {
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaff($db, $staff_username, $staff_names) == false){
-    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+if (IsStaff($db, $staff_username, $staff_names) == false) {
+    echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='../..'>Return to the home page</a>.</P>";
     exit();
 }
@@ -44,30 +45,29 @@ $module_prefix = $res['module_prefix'];
 $module_short_description = $res['module_short_desc'];
 $short_code = $res['short_code'];
 
-$html_filename = $module_prefix . $module1 . "_" . $year_begin . "_" . $year_end . ".xls";
+$html_filename = $module_prefix . $module1 . '_' . $year_begin . '_' . $year_end . '.xls';
 
 header("Content-Disposition: attachment; filename=$html_filename");
-header("Content-Type: application/vnd.ms-excel");
+header('Content-Type: application/vnd.ms-excel');
 
-$html_page = "";
+$html_page = '';
 
-$tmpcsvfile = tempnam("dummy", "");
+$tmpcsvfile = tempnam('dummy', '');
 $path = dirname($tmpcsvfile);
 
 $sep = "\t";
 $html_page .= "Project ID $sep Supervisor $sep Email $sep Second Marker $sep Title $sep Num projects $sep Description ";
-$project_option_titles = "";
+$project_option_titles = '';
 for ($i = 0; $i < sizeof($option); $i++) {
     if ($option_flag[$i] == 1) {
         $option_title = $option_text[$i];
         cleanData($option_title);
         $project_option_titles .= $option_title . $sep;
-
     }
 }
-if ($project_option_titles == ""){
+if ($project_option_titles == '') {
     $html_page .= " \n";
-}else{
+} else {
     $html_page .= "$sep$project_option_titles \n";
 }
 
@@ -102,7 +102,7 @@ foreach ($rows as $recs) {
 
     $num_projects = 0;
     $num_places = 0;
-    $csv_block = "";
+    $csv_block = '';
     foreach ($m_rows as $m_recs) {
         $project_id = $m_recs['id'];
         $title = $m_recs['f_title'];
@@ -160,7 +160,7 @@ foreach ($rows as $recs) {
                 $option_value[7] = $f_works;
                 $option_value[8] = $f_furtherinfo;
 
-                $project_options = "";
+                $project_options = '';
                 for ($i = 0; $i < sizeof($option); $i++) {
                     if ($option_flag[$i] == 1) {
                         $value = $option_value[$i];
@@ -169,27 +169,24 @@ foreach ($rows as $recs) {
                     }
                 }
 
-                if ($project_options == ""){
+                if ($project_options == '') {
                     $csv_block .= " \n";
-                }else{
+                } else {
                     $csv_block .= "$sep$project_options \n";
                 }
             }
-
         }
     }
 
     $html_page .= $csv_block;
-
 }
 
 echo $html_page;
 
-function cleanData(&$str)
-{
-    $str = preg_replace("/\t/", "\\t", $str);
-    $str = preg_replace("/\r?\n/", "\\n", $str);
-    if (strstr($str, '"')) $str = '"' . str_replace('"', '""', $str) . '"';
+function cleanData(&$str) {
+    $str = preg_replace("/\t/", '\\t', $str);
+    $str = preg_replace("/\r?\n/", '\\n', $str);
+    if (strstr($str, '"')) {
+        $str = '"' . str_replace('"', '""', $str) . '"';
+    }
 }
-
-?>

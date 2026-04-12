@@ -1,9 +1,9 @@
 <?php
-function CreateAllocatedTableQuery($allocated_table_name)
-{
-  //$str = "`$allocated_table_name`<BR>";
 
- $create_table_query = "CREATE TABLE `$allocated_table_name` (
+function CreateAllocatedTableQuery($allocated_table_name) {
+    //$str = "`$allocated_table_name`<BR>";
+
+    $create_table_query = "CREATE TABLE `$allocated_table_name` (
                         `projectid` int(11) NOT NULL auto_increment,
                         `sid` varchar(10) default NULL,
                         `masterid` int(11) default NULL,
@@ -29,6 +29,5 @@ function CreateAllocatedTableQuery($allocated_table_name)
                         PRIMARY KEY  (`projectid`)
                       ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;";
 
-  return $create_table_query;
+    return $create_table_query;
 }
-?>

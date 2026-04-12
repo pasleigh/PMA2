@@ -1,37 +1,37 @@
 <?php
-(@include_once("./set_dir_staff.php")) OR die("Cannot find this file to include: set_dir_staff.php<BR>");
-(@include_once("./config.php")) OR die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
-(@include_once("./setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("./connect_pdo.php")) OR die("Cannot connect to the database<BR>");
+
+(@include_once('./set_dir_staff.php')) or die('Cannot find this file to include: set_dir_staff.php<BR>');
+(@include_once('./config.php')) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
+(@include_once('./setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('./connect_pdo.php')) or die('Cannot connect to the database<BR>');
 
 //if (array_key_exists('pm_id', $_REQUEST)==false){ $_REQUEST['pm_id']=null; }
 //$pm_id=$_REQUEST['pm_id'];
 
-(@include_once("./setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("./staff_functions.php")) OR die("Cannot include staff_function.php<BR>");
-(@include_once("./show_minor_part_feedback_form.php")) OR die("Cannot include show_minor_part_feedback<BR>");
+(@include_once('./setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./staff_functions.php')) or die('Cannot include staff_function.php<BR>');
+(@include_once('./show_minor_part_feedback_form.php')) or die('Cannot include show_minor_part_feedback<BR>');
 //(@include_once("./show_mark_questions.php")) OR die("Cannot include show_mark_questions<BR>");
-(@include_once("./markstore_functions.php")) OR die("Cannot include markstore_functions<BR>");
+(@include_once('./markstore_functions.php')) or die('Cannot include markstore_functions<BR>');
 
-$staff_username = "unknown";
-if(array_key_exists('REMOTE_USER',$_SERVER)){
+$staff_username = 'unknown';
+if (array_key_exists('REMOTE_USER', $_SERVER)) {
     $staff_username = get_server_username();
-}else{
-    if(isset($_SESSION['USERNAME'])){
+} else {
+    if (isset($_SESSION['USERNAME'])) {
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaffB($db, $staff_username, $staff_names) == false){
-    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+if (IsStaffB($db, $staff_username, $staff_names) == false) {
+    echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
     exit();
 }
 
-
-$csv_filename = "project_marks_" . $module_prefix . $module1 . $module_postfix . "_" . $short_code . "_" . $year_begin . "-" . $year_end . ".csv";
+$csv_filename = 'project_marks_' . $module_prefix . $module1 . $module_postfix . '_' . $short_code . '_' . $year_begin . '-' . $year_end . '.csv';
 
 //$tmpcsvfile = tempnam("dummy", "");
-$tmpcsvfile = tempnam(PMA_TMP_DIR, "");
+$tmpcsvfile = tempnam(PMA_TMP_DIR, '');
 $path = dirname($tmpcsvfile);
 //$csv_filename = $tmpcsvfile;
 //unlink($tmpcsvfile);
@@ -53,22 +53,22 @@ try {
 $num = $results->rowCount();
 if ($num < 1) {
     //no records
-    $display_block .= "<p><em>Sorry, there are no records to select!</em></p>";
+    $display_block .= '<p><em>Sorry, there are no records to select!</em></p>';
 } else {
     //has records
     $fp = fopen($tmpcsvfile, 'w');
 
-    $row[0] = "";
-    $row[1] = "";
-    $row[2] = "";
-    $row[3] = "";
-    $row[4] = "";
-    $row[5] = "";
-    $row[6] = "";
-    $row[7] = "";
+    $row[0] = '';
+    $row[1] = '';
+    $row[2] = '';
+    $row[3] = '';
+    $row[4] = '';
+    $row[5] = '';
+    $row[6] = '';
+    $row[7] = '';
     $count = 8;
     for ($i = 1; $i <= $num_parts; $i++) {
-        $part = "p$i" . "_num_markers";
+        $part = "p$i" . '_num_markers';
         $num_markers = $setup_res[$part];
         if ($num_markers == 2) {
             $num_markers = 3;
@@ -78,7 +78,7 @@ if ($num < 1) {
             if ($num_markers == 1) {
                 $row[$count] = "$pc";
             } else {
-                $row[$count] = "";
+                $row[$count] = '';
             }
             $count++;
         }
@@ -87,22 +87,22 @@ if ($num < 1) {
             $count++;
         }
     }
-    $row[$count] = "";
+    $row[$count] = '';
 
     $ret = fputcsv($fp, $row);
 
     // Title row
-    $row[0] = "Student name";
-    $row[1] = "SID";
-    $row[2] = "Username";
-    $row[3] = "Programme";
-    $row[4] = "Project ID";
-    $row[5] = "Project title";
-    $row[6] = "Supervisor";
-    $row[7] = "2nd Marker";
+    $row[0] = 'Student name';
+    $row[1] = 'SID';
+    $row[2] = 'Username';
+    $row[3] = 'Programme';
+    $row[4] = 'Project ID';
+    $row[5] = 'Project title';
+    $row[6] = 'Supervisor';
+    $row[7] = '2nd Marker';
     $count = 8;
     for ($i = 1; $i <= $num_parts; $i++) {
-        $part = "p$i" . "_num_markers";
+        $part = "p$i" . '_num_markers';
         $num_markers = $setup_res[$part];
         if ($num_markers == 2) {
             $num_markers = 3;
@@ -116,7 +116,7 @@ if ($num < 1) {
             $count++;
         }
     }
-    $row[$count] = "Final Mark";
+    $row[$count] = 'Final Mark';
 
     $ret = fputcsv($fp, $row);
     //fclose($fp);
@@ -130,8 +130,8 @@ if ($num < 1) {
         $supervisor_id = $recs['supervisor_id'];
         $second_marker_id = $recs['second_marker_id'];
 
-        $supervisor_name = GetStaffNameFromID($db,$supervisor_id, $staff_names2, "0");
-        $second_marker_name = GetStaffNameFromID($db,$second_marker_id, $staff_names2, "0");
+        $supervisor_name = GetStaffNameFromID($db, $supervisor_id, $staff_names2, '0');
+        $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_names2, '0');
 
         $query = "select * from $students where sid=$sid";
         //$get_list_res = mysql_query($get_list) or die("Unable to get student details from database. Query: $get_list");
@@ -147,16 +147,16 @@ if ($num < 1) {
         }
         $student_recs = $results->fetch();
 
-        if($student_recs){
+        if ($student_recs) {
             $student_name = $student_recs['name'];
             $username = $student_recs['username'];
             $programme = $student_recs['programme'];
             $sel = $student_recs['sel'];
-        }else{
-            $student_name = "Name not found from SID";
-            $username = "Username not found from SID";
-            $programme = "unknown";
-            $sel = "";
+        } else {
+            $student_name = 'Name not found from SID';
+            $username = 'Username not found from SID';
+            $programme = 'unknown';
+            $sel = '';
         }
 
         $row[0] = $student_name;
@@ -171,7 +171,7 @@ if ($num < 1) {
         $count = 8;
         // get the part marks from SID
         for ($i = 1; $i <= $num_parts; $i++) {
-            $part = "p$i" . "_num_markers";
+            $part = "p$i" . '_num_markers';
             $num_markers = $setup_res[$part];
             if ($num_markers == 2) {
                 //if (IsThirdMarkerRequired($sid, $i, $markstore_totals) ){
@@ -194,7 +194,7 @@ if ($num < 1) {
                 }
                 $marks_recs = $results->fetch();
                 $total = 0.0;
-                if($marks_recs) {
+                if ($marks_recs) {
                     $total = $marks_recs['total'];
                 }
                 $row[$count] = $total;
@@ -223,7 +223,7 @@ if ($num < 1) {
         $marks_recs = $results->fetch();
 
         $total = 0.0;
-        if($marks_recs){
+        if ($marks_recs) {
             $total = $marks_recs['total'];
         }
         $row[$count] = $total;
@@ -241,4 +241,3 @@ if ($num < 1) {
     $display_block = "<h2> Project marks saved as CSV file to: $csv_filename</h2>";
 }
 //mysql_close();
-?>

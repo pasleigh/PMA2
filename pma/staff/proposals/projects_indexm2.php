@@ -1,24 +1,24 @@
 <?php
-(@include_once("./set_dir_props.php")) OR die("Cannot find this file to include: set_dir_props.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("../connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) OR die("Cannot setup database tables");
+(@include_once('./set_dir_props.php')) or die('Cannot find this file to include: set_dir_props.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables');
 
-(@include_once("../admin2/utility_functions.php")) OR die("Cannot setup utility functions");
-(@include_once("../admin2/adminusers.php")) OR die("Cannot setup admin users");
-(@include_once("../staff_student_functions.php")) OR die("Cannot find staff_student_functions.php");
+(@include_once('../admin2/utility_functions.php')) or die('Cannot setup utility functions');
+(@include_once('../admin2/adminusers.php')) or die('Cannot setup admin users');
+(@include_once('../staff_student_functions.php')) or die('Cannot find staff_student_functions.php');
 
-$staff_username = "unknown";
-if(array_key_exists('REMOTE_USER',$_SERVER)){
+$staff_username = 'unknown';
+if (array_key_exists('REMOTE_USER', $_SERVER)) {
     $staff_username = get_server_username();
-}else{
-    if(isset($_SESSION['USERNAME'])){
+} else {
+    if (isset($_SESSION['USERNAME'])) {
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaff($db, $staff_username, $staff_names) == false){
-    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+if (IsStaff($db, $staff_username, $staff_names) == false) {
+    echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='../..'>Return to the home page</a>.</P>";
     exit();
 }
@@ -47,16 +47,16 @@ $module_prefix = $res['module_prefix'];
 $module_short_description = $res['module_short_desc'];
 $short_code = $res['short_code'];
 
-$staff_close_date = $res['staff_close'] . " 23:59";
-$str_staff_close_date = date("j F Y, H:i", strtotime($staff_close_date));
+$staff_close_date = $res['staff_close'] . ' 23:59';
+$str_staff_close_date = date('j F Y, H:i', strtotime($staff_close_date));
 $student_allocation_date = $res['alloc_date'];
-$str_student_allocation_date = date("j F Y", strtotime($student_allocation_date));
-$today = date("Y-m-d");
+$str_student_allocation_date = date('j F Y', strtotime($student_allocation_date));
+$today = date('Y-m-d');
 
-$now_datetime = date("Y-m-d H:i:s");
+$now_datetime = date('Y-m-d H:i:s');
 
-$display_block = "";
-$display_block_edit_buttons = "";
+$display_block = '';
+$display_block_edit_buttons = '';
 
 $date_diff = day_diff($now_datetime, $staff_close_date);
 //$display_block .= "Date diff (day) = $date_diff, Close: $staff_close_date, Now: $now_datetime<BR>\n";
@@ -75,13 +75,13 @@ $display_block_edit_buttons .= "
         </div>
         ";
 
-if($date_diff > 1.0 ){
-    $display_block .= "<H1>The deadline for entering project proposals has passed.</H1>";
+if ($date_diff > 1.0) {
+    $display_block .= '<H1>The deadline for entering project proposals has passed.</H1>';
     if (IsAdmin($db, $this_staff_username) or IsProjectAdmin($db, $this_staff_username, $staff_names)) {
         $display_block .= "<P class='text-admin-ok'>As module level administrator you have access to modifying projects past the deadline date. <span class='text-passed'>Do this sparingly.</span></P>";
         $display_block .= $display_block_edit_buttons;
     }
-}else {
+} else {
     $display_block .= $display_block_edit_buttons;
 }
 
@@ -100,11 +100,11 @@ $display_block .= "
   <div><span style='font-size: small;'>This gives you an excel file that is functional but not pretty. Format it yourself if you want it to look nice.
       <BR>Excel may ask you if it is safe to open this file. The risk that it is not safe is low, I suggest you click the &quot;Yes&quot; button.</span></div>
   ";
-$display_block .= "</div>";
+$display_block .= '</div>';
 ?>
 <!DOCTYPE HTML>
 <html>
-<?php (@include_once("./mobile_head_bs.php")) OR die("Cannot find this file to include: mobile_head_bs.php<BR>"); ?>
+<?php (@include_once('./mobile_head_bs.php')) or die('Cannot find this file to include: mobile_head_bs.php<BR>'); ?>
 <body class="bg-dark text-white">
 
 <nav class="navbar navbar-expand-sm fixed-top navbar-dark text-white bg-secondary">

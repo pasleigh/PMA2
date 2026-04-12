@@ -1,31 +1,30 @@
 <?php
-(@include_once("./set_dir_staff.php")) OR die("Cannot find this file to include: set_dir_staff.php<BR>");
-(@include_once("./config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("./setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
+(@include_once('./set_dir_staff.php')) or die('Cannot find this file to include: set_dir_staff.php<BR>');
+(@include_once('./config.php')) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('./setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
 
-(@include_once("./connect_pdo.php")) OR die("Cannot connect to the database<BR>");
-(@include_once("./setup_tables.php")) OR die("Cannot setup database tables<BR>");
+(@include_once('./connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('./setup_tables.php')) or die('Cannot setup database tables<BR>');
 
-(@include_once("./admin2/admin_functions.php")) OR die("Cannot include admin functions<BR>");
+(@include_once('./admin2/admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-$staff_username = "unknown";
-if(array_key_exists('REMOTE_USER',$_SERVER)){
+$staff_username = 'unknown';
+if (array_key_exists('REMOTE_USER', $_SERVER)) {
     $staff_username = get_server_username();
-}else{
-    if(isset($_SESSION['USERNAME'])){
+} else {
+    if (isset($_SESSION['USERNAME'])) {
         $staff_username = $_SESSION['USERNAME'];
     }
 }
-if(IsStaffB($db, $staff_username, $staff_names) == false){
-    echo "You do not have access to this page. If you think this is an error please contact the system administrator.<BR>";
+if (IsStaffB($db, $staff_username, $staff_names) == false) {
+    echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
     exit();
 }
 
-
 $admin = 0;
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // Check the admin level
@@ -33,7 +32,7 @@ $access = false;
 $access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 $is_module_admin = IsModuleAdmin($db, $this_staff_username, $pm_id, null, null);
 
-if($is_module_admin) {
+if ($is_module_admin) {
     $access_phrase = "You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful.";
 }
 
@@ -45,7 +44,7 @@ if ($access || $is_module_admin) {
     $display_block .= "<div class='col-4'><H2>Email feedback to students <BR>with covering text</h2></div>";
     $display_block .= "<div class='col-4'><h2>Download zip of feedback pdfs</h2></div>";
     $display_block .= "<div class='col-2'></div>";
-    $display_block .= "</div>";
+    $display_block .= '</div>';
 
     $email_block = "<div class='btn-group-vertical w-100' role='group'>";
     $download_block = "<div class='btn-group-vertical w-100' role='group'>";
@@ -54,49 +53,48 @@ if ($access || $is_module_admin) {
         $email_block .= "<A class='btn btn-secondary btn-lg' href='./admin2/email_project_feedback_to_students.php?pm_id=$pm_id&part=$i&op=select'>Email $desc feedback</A>\n";
         $download_block .= "<A class='btn btn-outline-secondary btn-lg' href='./projectmarking_save_part_pdf_feedback_to_zip.php?pm_id=$pm_id&part=$i&save=2'>Download $desc feedback</A>\n";
     }
-    $email_block .= "</div>";
-    $download_block .= "</div>";
+    $email_block .= '</div>';
+    $download_block .= '</div>';
 
     $display_block .= "<div class='row text-center'>";
     $display_block .= "<div class='col-2'></div>";
     $display_block .= "<div class='col-4'>$email_block</div>";
     $display_block .= "<div class='col-4'>$download_block</div>";
     $display_block .= "<div class='col-2'></div>";
-    $display_block .= "</div>";
+    $display_block .= '</div>';
 
     // The overall module email
     $display_block .= "<div class='row text-center mt-5'>";
     $display_block .= "<div class='col-2'></div>";
     $display_block .= "<div class='col-8'><H2>Overall Module</H2></div>";
     $display_block .= "<div class='col-2'></div>";
-    $display_block .= "</div>";
+    $display_block .= '</div>';
     $display_block .= "<div class='row text-center'>";
     $display_block .= "<div class='col-2'></div>";
     $display_block .= "<div class='col-8'>";
-    $display_block .=    "<A class='btn btn-primary btn-lg w-100' href='./admin2/email_project_feedback_to_students.php?pm_id=$pm_id&part=$num_parts&op=select&list=1&summary_mark=1'>Email $desc feedback PDFs - With covering text and mark breakdown</A>\n";
-    $display_block .= "</div>";
+    $display_block .= "<A class='btn btn-primary btn-lg w-100' href='./admin2/email_project_feedback_to_students.php?pm_id=$pm_id&part=$num_parts&op=select&list=1&summary_mark=1'>Email $desc feedback PDFs - With covering text and mark breakdown</A>\n";
+    $display_block .= '</div>';
     $display_block .= "<div class='col-2'></div>";
-    $display_block .= "</div>";
-
+    $display_block .= '</div>';
 }
-$admin_link_text = "";
-$show_admin_link = "none";
-$admin_link = "";
+$admin_link_text = '';
+$show_admin_link = 'none';
+$admin_link = '';
 if (IsAdmin($db, $this_staff_username)) {
-    $admin_link = "./admin2/";
-    $admin_link_text = "Super Admin";
-    $show_admin_link = "block";
-} else if (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
-    $admin_link = "./admin2/";
-    $admin_link_text = "Admin";
-    $show_admin_link = "block";
+    $admin_link = './admin2/';
+    $admin_link_text = 'Super Admin';
+    $show_admin_link = 'block';
+} elseif (IsModuleAdmin($db, $this_staff_username, 'all', null, null)) {
+    $admin_link = './admin2/';
+    $admin_link_text = 'Admin';
+    $show_admin_link = 'block';
 }
 ?>
 <!DOCTYPE HTML>
 <!--<html manifest="app.manifest">-->
 <html>
 <?php
-(@include_once("$mobile_head_bs")) OR die("Cannot find this file to include: $mobile_head<BR>");
+(@include_once("$mobile_head_bs")) or die("Cannot find this file to include: $mobile_head<BR>");
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

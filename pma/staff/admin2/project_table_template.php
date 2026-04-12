@@ -1,6 +1,6 @@
 <?php
-function CreateProjectMasterNameTableQuery($master_name_table_name)
-{
+
+function CreateProjectMasterNameTableQuery($master_name_table_name) {
     //$str = "`$master_name_table_name`<BR>";
 
     $create_table_query = "CREATE TABLE `$master_name_table_name` (
@@ -16,11 +16,9 @@ function CreateProjectMasterNameTableQuery($master_name_table_name)
             ";
 
     return $create_table_query;
-
 }
 
-function CreateProjectDetailsTableQuery($project_details_table_name)
-{
+function CreateProjectDetailsTableQuery($project_details_table_name) {
     //$str = "`$project_details_table_name`<BR>";
 
     $create_table_query = "CREATE TABLE `$project_details_table_name` (
@@ -49,6 +47,4 @@ function CreateProjectDetailsTableQuery($project_details_table_name)
             ";
 
     return $create_table_query;
-
 }
-?>

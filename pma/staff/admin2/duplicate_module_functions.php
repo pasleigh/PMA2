@@ -1,24 +1,24 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Andy
  * Date: 12-Dec-17
  * Time: 12:28 AM
  */
-function create_new_module_from_old($db, $projects_setup, $projects_setup_poposals, $pm_id_old, $short_code_old, $short_code_new, $year_begin_old, $year_begin_new)
-{
+function create_new_module_from_old($db, $projects_setup, $projects_setup_poposals, $pm_id_old, $short_code_old, $short_code_new, $year_begin_old, $year_begin_new) {
     // Check that the short_code_new and the year_begin_new are unique
-    if(IsUniqueModule($db, $projects_setup, $short_code_new, $year_begin_new)){
+    if (IsUniqueModule($db, $projects_setup, $short_code_new, $year_begin_new)) {
         $pm_id_new = copy_module_project_setup_row($db, $projects_setup, $projects_setup_poposals, $pm_id_old, $short_code_new, $year_begin_new);
         copy_module_tables($db, $short_code_old, $short_code_new, $year_begin_old, $year_begin_new);
-    }else{
+    } else {
         $pm_id_new = -1; // undefined
     }
 
     return $pm_id_new;
 }
 
-function IsUniqueModule($db, $projects_setup, $short_code_new, $year_begin_new){
+function IsUniqueModule($db, $projects_setup, $short_code_new, $year_begin_new) {
     $query = "select * from $projects_setup where short_code='$short_code_new' AND year_begin='$year_begin_new'";
     $results = $db->query($query);
     $num_entries = $results->rowCount();
@@ -30,8 +30,7 @@ function IsUniqueModule($db, $projects_setup, $short_code_new, $year_begin_new){
     return true;
 }
 
-function copy_module_project_setup_row($db, $projects_setup_table, $projects_setup_poposals_table, $pm_id_old, $short_code_new, $year_begin_new){
-
+function copy_module_project_setup_row($db, $projects_setup_table, $projects_setup_poposals_table, $pm_id_old, $short_code_new, $year_begin_new) {
     $query = "SELECT * from $projects_setup_table WHERE id=$pm_id_old";
     try {
         $results = $db->query($query);
@@ -109,7 +108,7 @@ function copy_module_project_setup_row($db, $projects_setup_table, $projects_set
     // Change these
     $short_code = $short_code_new;
     $year_begin = $year_begin_new;
-    $year_end = $year_begin+1;
+    $year_end = $year_begin + 1;
 
     $query = <<<SQL
 INSERT INTO projects_setup (
@@ -238,9 +237,9 @@ VALUES (
   '$use_project_selection'
   );
 SQL;
-    try{
+    try {
         $db->query($query);
-    }catch (PDOException $ex) {
+    } catch (PDOException $ex) {
         $err_msg = $ex->getMessage();
         echo($err_msg . "<BR>\n");
     }
@@ -290,8 +289,7 @@ SQL;
     return $pm_id_new;
 }
 
-function copy_module_tables($db, $short_code_old, $short_code_new, $year_begin_old, $year_begin_new)
-{
+function copy_module_tables($db, $short_code_old, $short_code_new, $year_begin_old, $year_begin_new) {
     $old_year_begin = $year_begin_old;
     $new_year_begin = $year_begin_new;
 
@@ -301,35 +299,35 @@ function copy_module_tables($db, $short_code_old, $short_code_new, $year_begin_o
     $new_short_name_lc = strtolower($short_code_new);
     $old_short_name_lc = strtolower($short_code_old);
 
-    $new_table = "master_name_" . $new_short_name_lc . "_" . $new_year_begin;
-    $old_table = "master_name_" . $old_short_name_lc . "_" . $old_year_begin;
+    $new_table = 'master_name_' . $new_short_name_lc . '_' . $new_year_begin;
+    $old_table = 'master_name_' . $old_short_name_lc . '_' . $old_year_begin;
     CopyTable($db, $old_table, $new_table);
 
-    $new_table = "project_details_" . $new_short_name_lc . "_" . $new_year_begin;
-    $old_table = "project_details_" . $old_short_name_lc . "_" . $old_year_begin;
+    $new_table = 'project_details_' . $new_short_name_lc . '_' . $new_year_begin;
+    $old_table = 'project_details_' . $old_short_name_lc . '_' . $old_year_begin;
     CopyTable($db, $old_table, $new_table);
 
     for ($part = 1; $part <= 5; $part++) {
         for ($marker = 1; $marker <= 3; $marker++) {
             // assess
-            $new_table = "assess_" . $new_short_name_lc . "_" . $new_year_end . "_p$part" . "_m$marker";
-            $old_table = "assess_" . $old_short_name_lc . "_" . $old_year_end . "_p$part" . "_m$marker";
+            $new_table = 'assess_' . $new_short_name_lc . '_' . $new_year_end . "_p$part" . "_m$marker";
+            $old_table = 'assess_' . $old_short_name_lc . '_' . $old_year_end . "_p$part" . "_m$marker";
             CopyTable($db, $old_table, $new_table, false);
         }
     }
-    $new_table = "assess_total_" . $new_short_name_lc . "_" . $new_year_end;
-    $old_table = "assess_total_" . $old_short_name_lc . "_" . $old_year_end;
+    $new_table = 'assess_total_' . $new_short_name_lc . '_' . $new_year_end;
+    $old_table = 'assess_total_' . $old_short_name_lc . '_' . $old_year_end;
     CopyTable($db, $old_table, $new_table, false);
 
-    $new_table = "allocated_" . $new_short_name_lc . "_" . $new_year_begin;
-    $old_table = "allocated_" . $old_short_name_lc . "_" . $old_year_begin;
+    $new_table = 'allocated_' . $new_short_name_lc . '_' . $new_year_begin;
+    $old_table = 'allocated_' . $old_short_name_lc . '_' . $old_year_begin;
     CopyTable($db, $old_table, $new_table, false);
 
-    $new_table = "allocated_" . $new_short_name_lc . "_" . $new_year_begin . "_staff";
-    $old_table = "allocated_" . $old_short_name_lc . "_" . $old_year_begin . "_staff";
+    $new_table = 'allocated_' . $new_short_name_lc . '_' . $new_year_begin . '_staff';
+    $old_table = 'allocated_' . $old_short_name_lc . '_' . $old_year_begin . '_staff';
     CopyTable($db, $old_table, $new_table, false);
 
-    $new_table = "students_" . $new_short_name_lc . "_" . $new_year_begin;
+    $new_table = 'students_' . $new_short_name_lc . '_' . $new_year_begin;
     //$old_table = "students_" . $old_short_name_lc . "_" . $old_year_begin;
     $query = CreateStudentsTableQuery($new_table);
     try {
@@ -342,7 +340,7 @@ function copy_module_tables($db, $short_code_old, $short_code_new, $year_begin_o
         exit();
     }
 
-    $new_table = "select_" . $new_short_name_lc . "_" . $new_year_begin;
+    $new_table = 'select_' . $new_short_name_lc . '_' . $new_year_begin;
     //$old_table = "select_" . $old_short_name_lc . "_" . $old_year_begin;
     $query = CreateStudentsSelectionTableQuery($new_table);
     try {
@@ -355,17 +353,17 @@ function copy_module_tables($db, $short_code_old, $short_code_new, $year_begin_o
         exit();
     }
 
-    $new_table = "students_programmes_" . $new_short_name_lc . "_" . $new_year_begin;
-    $old_table = "students_programmes_" . $old_short_name_lc . "_" . $old_year_begin;
+    $new_table = 'students_programmes_' . $new_short_name_lc . '_' . $new_year_begin;
+    $old_table = 'students_programmes_' . $old_short_name_lc . '_' . $old_year_begin;
     CopyTable($db, $old_table, $new_table);
 
     for ($part = 1; $part <= 5; $part++) {
-        $new_table = "assessqs_" . $new_short_name_lc . "_" . $new_year_end . "_p$part";
-        $old_table = "assessqs_" . $old_short_name_lc . "_" . $old_year_end . "_p$part";
+        $new_table = 'assessqs_' . $new_short_name_lc . '_' . $new_year_end . "_p$part";
+        $old_table = 'assessqs_' . $old_short_name_lc . '_' . $old_year_end . "_p$part";
         CopyTable($db, $old_table, $new_table);
 
-        $new_table = "assessqs_cats_" . $new_short_name_lc . "_" . $new_year_end . "_p$part";
-        $old_table = "assessqs_cats_" . $old_short_name_lc . "_" . $old_year_end . "_p$part";
+        $new_table = 'assessqs_cats_' . $new_short_name_lc . '_' . $new_year_end . "_p$part";
+        $old_table = 'assessqs_cats_' . $old_short_name_lc . '_' . $old_year_end . "_p$part";
         CopyTable($db, $old_table, $new_table);
     }
 
@@ -373,20 +371,19 @@ function copy_module_tables($db, $short_code_old, $short_code_new, $year_begin_o
     //$old_table = "staff_names_" . $old_short_name_lc . "_" . $old_year_begin;
     //CopyTable($db, $old_table, $new_table);
 
-    $new_table = "projects_areas_" . $new_short_name_lc . "_" . $new_year_begin;
-    $old_table = "projects_areas_" . $old_short_name_lc . "_" . $old_year_begin;
+    $new_table = 'projects_areas_' . $new_short_name_lc . '_' . $new_year_begin;
+    $old_table = 'projects_areas_' . $old_short_name_lc . '_' . $old_year_begin;
     // Aas projects Areas are new they may not exist.
     // Create the table if necessary
-    create_project_areas_table_structure($db,$old_table );
+    create_project_areas_table_structure($db, $old_table);
     CopyTable($db, $old_table, $new_table);
-
 }
 
-function CopyTable($db, $old_table, $new_table, $copy_data = true){
+function CopyTable($db, $old_table, $new_table, $copy_data = true) {
     // Copy the data from all of the old table to the new tables
     $query1 = "CREATE TABLE IF NOT EXISTS $new_table LIKE $old_table ";
     $query2 = "INSERT $new_table SELECT * FROM $old_table";
-    
+
     try {
         $result = $db->query($query1);
     } catch (PDOException $ex) {
@@ -397,7 +394,7 @@ function CopyTable($db, $old_table, $new_table, $copy_data = true){
         exit();
     }
 
-    if($copy_data) {
+    if ($copy_data) {
         try {
             $result = $db->query($query2);
         } catch (PDOException $ex) {

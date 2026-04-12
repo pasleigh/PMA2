@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PDO prepared-query helpers.
  *
@@ -19,7 +20,7 @@
  * @param array  $where_data Associative array of column => value pairs for WHERE (ANDed).
  * @return PDOStatement|string Executed statement on success, error message string on failure.
  */
-function perform_update_prepared_query($db, $table, $data, $where_data){
+function perform_update_prepared_query($db, $table, $data, $where_data) {
     // $data is an associative array dbcolumn names and the data
     // [ 'my_col_name' => my_data ];
     // $where_data is the same for the WHERE clause. concatanated as AND
@@ -33,23 +34,21 @@ function perform_update_prepared_query($db, $table, $data, $where_data){
                 'sid' => $sid
             );
      */
-    $setStr = "";
-    foreach( $data as $col_name => $col_value)
-    {
+    $setStr = '';
+    foreach ($data as $col_name => $col_value) {
         $setStr .= "`$col_name` = :$col_name,";
     }
-    $setStr = rtrim($setStr, ",");
+    $setStr = rtrim($setStr, ',');
 
     $all_data = $data;
     $where_keys = array_keys($where_data);
-    $setWhereStr = "";
-    for($i = 0; $i < sizeof($where_keys); $i++)
-    {
+    $setWhereStr = '';
+    for ($i = 0; $i < sizeof($where_keys); $i++) {
         $col_name = $where_keys[$i];
         $col_value = $where_data[$col_name];
-        if($i < sizeof($where_keys) - 1){
+        if ($i < sizeof($where_keys) - 1) {
             $setWhereStr .= "`$col_name` = :$col_name AND ";
-        }else{
+        } else {
             // The last one , none AND
             $setWhereStr .= "`$col_name` = :$col_name ";
         }
@@ -58,11 +57,11 @@ function perform_update_prepared_query($db, $table, $data, $where_data){
 
     $query = "UPDATE $table SET $setStr WHERE  $setWhereStr";
 
-    try{
+    try {
         $results = $db->prepare($query);
         $results->execute($all_data);
-    }catch (PDOException $ex) {
-        error_log("Unable to perform update query: " . $ex->getMessage());
+    } catch (PDOException $ex) {
+        error_log('Unable to perform update query: ' . $ex->getMessage());
         $results = $ex->getMessage();
     }
     return $results;
@@ -78,7 +77,7 @@ function perform_update_prepared_query($db, $table, $data, $where_data){
  * @param array  $data  Associative array of column => value pairs to INSERT.
  * @return PDOStatement|string Executed statement on success, error message string on failure.
  */
-function perform_insert_prepared_query($db, $table, $data){
+function perform_insert_prepared_query($db, $table, $data) {
     // $data is an associative array dbcolumn names and the data
     // [ 'my_col_name' => my_data ];
     // e.g. Data array:
@@ -91,40 +90,38 @@ function perform_insert_prepared_query($db, $table, $data){
             );
      */
 
-    $setStr = "";
-    foreach( $data as $col_name => $col_value)
-    {
+    $setStr = '';
+    foreach ($data as $col_name => $col_value) {
         $setStr .= "`$col_name` = :$col_name,";
     }
-    $setStr = rtrim($setStr, ",");
+    $setStr = rtrim($setStr, ',');
 
     $query = "INSERT $table SET $setStr";
 
-    try{
+    try {
         $results = $db->prepare($query);
         $results->execute($data);
-    }catch (PDOException $ex) {
-        error_log("Unable to perform insert query: " . $ex->getMessage());
+    } catch (PDOException $ex) {
+        error_log('Unable to perform insert query: ' . $ex->getMessage());
         $results = $ex->getMessage();
     }
     return $results;
 }
 
-function perform_select_prepared_query($db, $table, $where_data, $extra){
+function perform_select_prepared_query($db, $table, $where_data, $extra) {
     // $where_data is an associative array dbcolumn names and the data
     // [ 'my_col_name' => my_data ];
     // concatanated as AND
     // $extra is something tagged on the end , e..g ORDER BY , LIMIT etc
 
     $where_keys = array_keys($where_data);
-    $setWhereStr = "";
-    for($i = 0; $i < sizeof($where_keys); $i++)
-    {
+    $setWhereStr = '';
+    for ($i = 0; $i < sizeof($where_keys); $i++) {
         $col_name = $where_keys[$i];
         $col_value = $where_data[$col_name];
-        if($i < sizeof($where_keys) - 1){
+        if ($i < sizeof($where_keys) - 1) {
             $setWhereStr .= "`$col_name` = :$col_name AND ";
-        }else{
+        } else {
             // The last one , none AND
             $setWhereStr .= "`$col_name` = :$col_name ";
         }
@@ -133,13 +130,12 @@ function perform_select_prepared_query($db, $table, $where_data, $extra){
 
     $query = "SELECT * FROM $table WHERE $setWhereStr $extra";
 
-    try{
+    try {
         $results = $db->prepare($query);
         $results->execute($all_data);
-    }catch (PDOException $ex) {
-        error_log("Unable to perform select query: " . $ex->getMessage());
+    } catch (PDOException $ex) {
+        error_log('Unable to perform select query: ' . $ex->getMessage());
         $results = $ex->getMessage();
     }
     return $results;
 }
-

@@ -2,33 +2,33 @@
 // Turn off all error reporting
 
 // connect to the datbase
-(@include_once("./set_dir_admin.php")) OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_titles.php")) OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("./ADMINconnect_pdo.php")) OR die("Cannot connect to the database using pdo<BR>");
-(@include_once("$STAFF_DIR_VAL/setup_tables.php")) OR die("Cannot setup database tables<BR>");
-(@include_once("./project_table_template.php")) OR die("Cannot include protect_table_template.php<BR>");
-(@include_once("./assess_table_template.php")) OR die("Cannot include assess_table_template.php<BR>");
-(@include_once("./assess_total_table_template.php")) OR die("Cannot include assess_total_table_template.php<BR>");
-(@include_once("./allocated_table_template.php")) OR die("Cannot include allocated_table_template.php<BR>");
-(@include_once("./allocated_staff_table_template.php")) OR die("Cannot include allocated_staff_table_template.php<BR>");
-(@include_once("./students_table_template.php")) OR die("Cannot include students_table_template.php<BR>");
-(@include_once("./template_functions_pdo.php")) OR die("Cannot include template_functions_pdo.php<BR>");
-(@include_once("$STAFF_DIR_VAL/staff_functions.php")) OR die("Cannot include staff_functions.php<BR>");
-(@include_once("$STAFF_DIR_VAL/markstore_functions.php")) OR die("Cannot include markstore_functions.php<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_titles.php")) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('./ADMINconnect_pdo.php')) or die('Cannot connect to the database using pdo<BR>');
+(@include_once("$STAFF_DIR_VAL/setup_tables.php")) or die('Cannot setup database tables<BR>');
+(@include_once('./project_table_template.php')) or die('Cannot include protect_table_template.php<BR>');
+(@include_once('./assess_table_template.php')) or die('Cannot include assess_table_template.php<BR>');
+(@include_once('./assess_total_table_template.php')) or die('Cannot include assess_total_table_template.php<BR>');
+(@include_once('./allocated_table_template.php')) or die('Cannot include allocated_table_template.php<BR>');
+(@include_once('./allocated_staff_table_template.php')) or die('Cannot include allocated_staff_table_template.php<BR>');
+(@include_once('./students_table_template.php')) or die('Cannot include students_table_template.php<BR>');
+(@include_once('./template_functions_pdo.php')) or die('Cannot include template_functions_pdo.php<BR>');
+(@include_once("$STAFF_DIR_VAL/staff_functions.php")) or die('Cannot include staff_functions.php<BR>');
+(@include_once("$STAFF_DIR_VAL/markstore_functions.php")) or die('Cannot include markstore_functions.php<BR>');
 
-$display_block="";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // if the form was submitted then enter it all into the database
 if (array_key_exists('op', $_POST)) {
-  $POST_OP = $_POST['op']  ;
-}else{
-  $POST_OP = "";
+    $POST_OP = $_POST['op']  ;
+} else {
+    $POST_OP = '';
 }
 
-if ($POST_OP == "create"){
-    $display_block .= "<h2>Creating the new entry in the projects_setup table ...</H2>";
+if ($POST_OP == 'create') {
+    $display_block .= '<h2>Creating the new entry in the projects_setup table ...</H2>';
     // Need to check that this does not already exist
     // Check Year begin and Short_code as that is what the tables are made up from so they combination must be unique
     $new_short_name = trim($_POST['new_module_short_name']);
@@ -144,19 +144,19 @@ if ($POST_OP == "create"){
     //mysql_query($action) or die(" Unable to update  project entry to the table $projects_setup. <BR>/> Query = $action");
 
     for ($part = 1; $part <= $new_num_parts; $part++) {
-        $p_desc = "p$part" . "_desc";
-        $descs_part = $_POST[$p_desc];;
-        $name = "p$part" . "_template";
+        $p_desc = "p$part" . '_desc';
+        $descs_part = $_POST[$p_desc];
+        $name = "p$part" . '_template';
         $template_tables[$part] = $_POST[$name];
-        $p_num_markers = "p$part" . "_num_markers";
+        $p_num_markers = "p$part" . '_num_markers';
         $num_markers_part = $_POST[$p_num_markers];
-        $p_percent = "p$part" . "_percent";
+        $p_percent = "p$part" . '_percent';
         $weights_part = $_POST[$p_percent];
-        $p_max = "p$part" . "_max";
+        $p_max = "p$part" . '_max';
         $max_marks_part = $_POST[$p_max];
-        $p_submit = "p$part" . "_submission_date";
+        $p_submit = "p$part" . '_submission_date';
         $submit_dates_part = $_POST[$p_submit];
-        $p_marking = "p$part" . "_marking_date";
+        $p_marking = "p$part" . '_marking_date';
         $markby_dates_part = $_POST[$p_marking];
         $p_use = "use_p$part";
 
@@ -176,10 +176,10 @@ if ($POST_OP == "create"){
     }
 
     // Plus some extra project allocation dates
-    $staff_close = date("Y-m-d", strtotime("+21 day"));//today + 3 weeks
-    $sel_open = date("Y-m-d", strtotime("+22 day"));//today + 3 weeks and a day
-    $sel_close = date("Y-m-d", strtotime("+35 day"));//today + 5 weeks
-    $alloc_date = date("Y-m-d", strtotime("+40 day"));//today + 5 weeks + 5 days
+    $staff_close = date('Y-m-d', strtotime('+21 day'));//today + 3 weeks
+    $sel_open = date('Y-m-d', strtotime('+22 day'));//today + 3 weeks and a day
+    $sel_close = date('Y-m-d', strtotime('+35 day'));//today + 5 weeks
+    $alloc_date = date('Y-m-d', strtotime('+40 day'));//today + 5 weeks + 5 days
     $action = "update  $projects_setup set staff_close='$staff_close', sel_open='$sel_open', sel_close='$sel_close', alloc_date='$alloc_date' WHERE id='$pm_id'";
     //mysql_query($action) or die(" Unable to update dates in new project entry to the table $projects_setup. <BR>/> Query = $action");
     try {
@@ -192,17 +192,17 @@ if ($POST_OP == "create"){
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
-    $display_block .= "<h2>creating the new database tables...</H2>";
+    $display_block .= '<h2>creating the new database tables...</H2>';
 
     //
     // Project proposals tables
     //
     // Master name
-    $new_table = "master_name_" . $new_short_name_lc . "_" . $new_year_begin;
+    $new_table = 'master_name_' . $new_short_name_lc . '_' . $new_year_begin;
     $display_block .= "$new_table ";
     $query = CreateProjectMasterNameTableQuery($new_table);
     // Check table exists
-    if (!DoesTableExist($db,$new_table)) {
+    if (!DoesTableExist($db, $new_table)) {
         //mysql_query($query) or die(" Unable to create the table - $new_table . <BR>Query: $query");
         try {
             $db->query($query);
@@ -213,17 +213,17 @@ if ($POST_OP == "create"){
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
-        $display_block .= " ... created ...<BR>";
+        $display_block .= ' ... created ...<BR>';
     } else {
-        $display_block .= " ... already exists ...<BR>";
+        $display_block .= ' ... already exists ...<BR>';
     }
 
     // Project details
-    $new_table = "project_details_" . $new_short_name_lc . "_" . $new_year_begin;
+    $new_table = 'project_details_' . $new_short_name_lc . '_' . $new_year_begin;
     $display_block .= "$new_table ";
     $query = CreateProjectDetailsTableQuery($new_table);
     // Check table exists
-    if (!DoesTableExist($db,$new_table)) {
+    if (!DoesTableExist($db, $new_table)) {
         //mysql_query($query) or die(" Unable to create the table - $new_table . <BR>Query: $query");
         try {
             $db->query($query);
@@ -234,9 +234,9 @@ if ($POST_OP == "create"){
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
-        $display_block .= " ... created ...<BR>";
+        $display_block .= ' ... created ...<BR>';
     } else {
-        $display_block .= " ... already exists ...<BR>";
+        $display_block .= ' ... already exists ...<BR>';
     }
 
     //
@@ -245,13 +245,13 @@ if ($POST_OP == "create"){
     for ($part = 1; $part <= 5; $part++) {
         for ($marker = 1; $marker <= 3; $marker++) {
             // assess
-            $new_table = "assess_" . $new_short_name_lc . "_" . $new_year_end . "_p$part" . "_m$marker";
+            $new_table = 'assess_' . $new_short_name_lc . '_' . $new_year_end . "_p$part" . "_m$marker";
             $display_block .= "$new_table ";
             $query = CreateAccessTableQuery($new_table);
             //$display_block .="$query<BR>";
 
             // Check table exists
-            if (!DoesTableExist($db,$new_table)) {
+            if (!DoesTableExist($db, $new_table)) {
                 //mysql_query($query) or die(" Unable to create the table - $new_table . <BR>Query: $query");
                 try {
                     $db->query($query);
@@ -262,9 +262,9 @@ if ($POST_OP == "create"){
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
                     exit();
                 }
-                $display_block .= " ... created ...<BR>";
+                $display_block .= ' ... created ...<BR>';
             } else {
-                $display_block .= " ... already exists ...<BR>";
+                $display_block .= ' ... already exists ...<BR>';
             }
         }
     }
@@ -272,14 +272,14 @@ if ($POST_OP == "create"){
     //
     // Assess total table
     //
-    $new_table = "assess_total_" . $new_short_name_lc . "_" . $new_year_end;
+    $new_table = 'assess_total_' . $new_short_name_lc . '_' . $new_year_end;
     $display_block .= "$new_table ";
     $query = CreateAccessTotalTableQuery($new_table);
     //$display_block .="$query<BR>";
 
     // Check table exists
 
-    if (!DoesTableExist($db,$new_table)) {
+    if (!DoesTableExist($db, $new_table)) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
@@ -289,22 +289,22 @@ if ($POST_OP == "create"){
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
-        $display_block .= " ... created ...<BR>";
+        $display_block .= ' ... created ...<BR>';
     } else {
-        $display_block .= " ... already exists ...<BR>";
+        $display_block .= ' ... already exists ...<BR>';
     }
     //mysql_query($query) or die(" Unable to create the table - $new_table . <BR>Query: $query");
 
     //
     // Allocated table
     //
-    $new_table = "allocated_" . $new_short_name_lc . "_" . $new_year_begin;
+    $new_table = 'allocated_' . $new_short_name_lc . '_' . $new_year_begin;
     $display_block .= "$new_table ";
     $query = CreateAllocatedTableQuery($new_table);
     //$display_block .="$query<BR>";
 
     // Check table exists
-    if (!DoesTableExist($db,$new_table)) {
+    if (!DoesTableExist($db, $new_table)) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
@@ -314,20 +314,20 @@ if ($POST_OP == "create"){
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
-        $display_block .= " ... created ...<BR>";
+        $display_block .= ' ... created ...<BR>';
     } else {
-        $display_block .= " ... already exists ...<BR>";
+        $display_block .= ' ... already exists ...<BR>';
     }
     //
     // Allocated staff table
     //
-    $new_table = "allocated_" . $new_short_name_lc . "_" . $new_year_begin . "_staff";
+    $new_table = 'allocated_' . $new_short_name_lc . '_' . $new_year_begin . '_staff';
     $display_block .= "$new_table ";
     $query = CreateAllocatedStaffTableQuery($new_table);
     //$display_block .="$query<BR>";
 
     // Check table exists
-    if (!DoesTableExist($db,$new_table)) {
+    if (!DoesTableExist($db, $new_table)) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
@@ -337,20 +337,20 @@ if ($POST_OP == "create"){
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
-        $display_block .= " ... created ...<BR>";
+        $display_block .= ' ... created ...<BR>';
     } else {
-        $display_block .= " ... already exists ...<BR>";
+        $display_block .= ' ... already exists ...<BR>';
     }
     //
     // Students table
     //
-    $new_table = "students_" . $new_short_name_lc . "_" . $new_year_begin;
+    $new_table = 'students_' . $new_short_name_lc . '_' . $new_year_begin;
     $display_block .= "$new_table ";
     $query = CreateStudentsTableQuery($new_table);
     //$display_block .="$query<BR>";
 
     // Check table exists
-    if (!DoesTableExist($db,$new_table)) {
+    if (!DoesTableExist($db, $new_table)) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
@@ -360,21 +360,21 @@ if ($POST_OP == "create"){
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
-        $display_block .= " ... created ...<BR>";
+        $display_block .= ' ... created ...<BR>';
     } else {
-        $display_block .= " ... already exists ...<BR>";
+        $display_block .= ' ... already exists ...<BR>';
     }
 
     //
     // Students project selection table
     //
-    $new_table = "select_" . $new_short_name_lc . "_" . $new_year_begin;
+    $new_table = 'select_' . $new_short_name_lc . '_' . $new_year_begin;
     $display_block .= "$new_table ";
     $query = CreateStudentsSelectionTableQuery($new_table);
     //$display_block .="$query<BR>";
 
     // Check table exists
-    if (!DoesTableExist($db,$new_table)) {
+    if (!DoesTableExist($db, $new_table)) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
@@ -391,13 +391,13 @@ if ($POST_OP == "create"){
     //
     // Students programme names table
     //
-    $new_table = "students_programmes_" . $new_short_name_lc . "_" . $new_year_begin;
+    $new_table = 'students_programmes_' . $new_short_name_lc . '_' . $new_year_begin;
     $display_block .= "$new_table ";
     $query = CreateStudentsProgrammesTableQuery($new_table);
     //$display_block .="$query<BR>";
 
     // Check table exists
-    if (!DoesTableExist($db,$new_table)) {
+    if (!DoesTableExist($db, $new_table)) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
@@ -414,13 +414,13 @@ if ($POST_OP == "create"){
     // Question Tables
     // $new_num_parts. create all tables just in case
     for ($part = 1; $part <= 5; $part++) {
-        $table = "assessqs_" . $new_short_name_lc . "_" . $new_year_end . "_p$part";
-        $p_table = "p$part" . "_template";
+        $table = 'assessqs_' . $new_short_name_lc . '_' . $new_year_end . "_p$part";
+        $p_table = "p$part" . '_template';
         $table_template = $_POST[$p_table];
-        $table_cats_template = "assessqs_cats_template_" . substr($table_template,18);
+        $table_cats_template = 'assessqs_cats_template_' . substr($table_template, 18);
         //$display_block .="$table<BR>";
         // Check table exists
-        if (!DoesTableExist($db,$table)) {
+        if (!DoesTableExist($db, $table)) {
             $query = "CREATE TABLE $table LIKE $table_template";
             try {
                 $result = $db->query($query);
@@ -450,10 +450,10 @@ if ($POST_OP == "create"){
         }
 
         // Corresponding cats tables
-        $table = "assessqs_cats_" . $new_short_name_lc . "_" . $new_year_end . "_p$part";
+        $table = 'assessqs_cats_' . $new_short_name_lc . '_' . $new_year_end . "_p$part";
         //$display_block .="$table<BR>";
         // Check table exists
-        if (!DoesTableExist($db,$table)) {
+        if (!DoesTableExist($db, $table)) {
             /*
             if (strpos($table_template, "obj") > 0) {
                 $table_cats_template = "assessqs_cats_template_obj";
@@ -501,12 +501,12 @@ if ($POST_OP == "create"){
     }
 
     // Staff table
-    $table = "staff_names_" . $new_short_name_lc . "_" . $new_year_begin;
-    $staff_table = "staff_names_s";
+    $table = 'staff_names_' . $new_short_name_lc . '_' . $new_year_begin;
+    $staff_table = 'staff_names_s';
     $table_template = $_POST[$staff_table];
     //$display_block .="$table<BR>";
     // Check table exists
-    if (!DoesTableExist($db,$table)) {
+    if (!DoesTableExist($db, $table)) {
         $query = "CREATE TABLE $table LIKE $table_template";
         //$display_block .="$query<BR>";
         try {
@@ -536,22 +536,20 @@ if ($POST_OP == "create"){
         $display_block .= "$table ... already exists ...<BR>";
     }
 
-    $display_block .= "<HR>";
-
+    $display_block .= '<HR>';
 } else {
+    // Display a list of years
+    $module_prefix_name = 'CIVE';
+    $module_postfix_name = ''; // could be "M"
+    $new_short_name = 'MENG';
+    $new_short_desc = 'Level 5 project';
 
-// Display a list of years
-    $module_prefix_name = "CIVE";
-    $module_postfix_name = ""; // could be "M"
-    $new_short_name = "MENG";
-    $new_short_desc = "Level 5 project";
-
-// Display the dropdowns to select the module and year
+    // Display the dropdowns to select the module and year
     $display_block .= "<H1>Create a new module entry ...</H1>\n";
-    $display_block .= "<P>This will create all the database tables - so get it right!</P>";
+    $display_block .= '<P>This will create all the database tables - so get it right!</P>';
     $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]'>\n";
-    $display_block .= "<H2>Module start session/year</H2>";
-    $display_block .= "<P>The <strong>year</strong> is the year of the session, that begining in Spetember.</P>";
+    $display_block .= '<H2>Module start session/year</H2>';
+    $display_block .= '<P>The <strong>year</strong> is the year of the session, that begining in Spetember.</P>';
 
     $display_block .= "<div class='row'><div class='col-4'><label for='new_year_begin' class='form-label'><h4>Year</h4></label>\n";
     $display_block .= "<select class='form-control' id='new_year_begin' name='new_year_begin' > \n";
@@ -560,70 +558,70 @@ if ($POST_OP == "create"){
     }
     $display_block .= "</select></div><P> (This <strong>CAN NOT</strong> be changed later)</P>\n";
 
-    $display_block .= "<H2>Module prefix and number</H2><P>E.g. For the module CIVE3708  the <strong>prefix</strong> will be CIVE, and the  <strong>number</strong> 3708</P>";
+    $display_block .= '<H2>Module prefix and number</H2><P>E.g. For the module CIVE3708  the <strong>prefix</strong> will be CIVE, and the  <strong>number</strong> 3708</P>';
     $display_block .= "<P><strong>Module code prefix: </strong><input type='text' name='new_module_prefix_name' value='$module_prefix_name' size=5 maxlength=4></P>";
     $display_block .= "<P><strong>Module code number: </strong><input type='text' name='new_module_number' value='1234' size=5 maxlength=4>";
     $display_block .= "<P><strong>Module code post-fix: </strong><input type='text' name='new_module_postfix_name' value='$module_postfix_name' size=1 maxlength=1></P>";
-    $display_block .= "<H2>The module short name.</H2>";
-    $display_block .= "<P> E.g. For level 3 projects you could use BENG, for level 5 project use MENG, MSc might use the programme codes (e.g. WASH, EEPM, SE, ICME).  <BR>Ad-hoc modules e.g. IDP you might use IDP. It shoud be no more that 4 letters.</P>";
+    $display_block .= '<H2>The module short name.</H2>';
+    $display_block .= '<P> E.g. For level 3 projects you could use BENG, for level 5 project use MENG, MSc might use the programme codes (e.g. WASH, EEPM, SE, ICME).  <BR>Ad-hoc modules e.g. IDP you might use IDP. It shoud be no more that 4 letters.</P>';
     $display_block .= "<P><strong>Module short name</strong> <input type='text' name='new_module_short_name' value='$new_short_name' size=5 maxlength=5> (Note that this must be UNIQUE for the session/year - and it <strong>CAN NOT</strong> be changed later.)</P>";
     $display_block .= "<P><strong>Module short description</strong> <input type='text' name='new_module_short_desc' value='$new_short_desc' size=25 maxlength=25> (Up to 25 characters, not blank)</P>";
 
-    $display_block .= "<H2>Assessment management details:</H2>";
+    $display_block .= '<H2>Assessment management details:</H2>';
 
-    $display_block .= "<p>Module leader:  </td><td>" . GetStaffSelectID($db, $staff_names2, "staff_id", GetStaffIDFromName($db, $module_leader_fullname, $staff_names2)) . "</p>\n";
+    $display_block .= '<p>Module leader:  </td><td>' . GetStaffSelectID($db, $staff_names2, 'staff_id', GetStaffIDFromName($db, $module_leader_fullname, $staff_names2)) . "</p>\n";
     $display_block .= "<p>Acceptable variation between markers : </td><td><input type='number' name='accept_var' value='$accept_var' min='0' max='100' size='3'> %</p>\n";
     $display_block .= "<p>Pass mark:  </td><td><input type='number' name='pass_mark' value='$pass_mark' min='0' max='100' size='3'> %</p>\n";
     $display_block .= "<p>Minimum number of feedback words:  </td><td><input type='number' name='min_feedback_words' value='$min_feedback_words' min='0' max='100' size='3'></p>\n";
 
-    $display_block .= "<H2>Assessment Parts:</H2>";
+    $display_block .= '<H2>Assessment Parts:</H2>';
     $display_block .= "<P><strong>Number of assessment parts: </strong><input type='number' name='new_num_parts' value='5' min='1' max='5' size=6 maxlength=5> (1 to 5 - this <strong>CAN NOT</strong> be changed later)";
 
-    $descs[1] = "Objectives";
-    $descs[2] = "Presentation";
-    $descs[3] = "Effort";
-    $descs[4] = "Report";
-    $descs[5] = "Poster";
-    $weights[1] = "10";
-    $weights[2] = "10";
-    $weights[3] = "10";
-    $weights[4] = "60";
-    $weights[5] = "10";
-    $template_tables[1] = "assessqs_template_obj";
-    $template_tables[2] = "assessqs_template_pres";
-    $template_tables[3] = "assessqs_template_effort";
-    $template_tables[4] = "assessqs_template_report";
-    $template_tables[5] = "assessqs_template_pres";
-    $template_cats_tables[1] = "assessqs_cats_template_obj";
-    $template_cats_tables[2] = "assessqs_cats_template_pres";
-    $template_cats_tables[3] = "assessqs_cats_template_effort";
-    $template_cats_tables[4] = "assessqs_cats_template_report";
-    $template_cats_tables[5] = "assessqs_cats_template_pres";;
+    $descs[1] = 'Objectives';
+    $descs[2] = 'Presentation';
+    $descs[3] = 'Effort';
+    $descs[4] = 'Report';
+    $descs[5] = 'Poster';
+    $weights[1] = '10';
+    $weights[2] = '10';
+    $weights[3] = '10';
+    $weights[4] = '60';
+    $weights[5] = '10';
+    $template_tables[1] = 'assessqs_template_obj';
+    $template_tables[2] = 'assessqs_template_pres';
+    $template_tables[3] = 'assessqs_template_effort';
+    $template_tables[4] = 'assessqs_template_report';
+    $template_tables[5] = 'assessqs_template_pres';
+    $template_cats_tables[1] = 'assessqs_cats_template_obj';
+    $template_cats_tables[2] = 'assessqs_cats_template_pres';
+    $template_cats_tables[3] = 'assessqs_cats_template_effort';
+    $template_cats_tables[4] = 'assessqs_cats_template_report';
+    $template_cats_tables[5] = 'assessqs_cats_template_pres';
 
     for ($part = 1; $part <= 5; $part++) {
         $display_block .= "<H3>Part $part:</H3>";
-        $name = "p$part" . "_desc";
+        $name = "p$part" . '_desc';
         $desc = $descs[$part];
         $display_block .= "<P>Description of assesment part $part: <input type='text' name='$name'  value='$desc' size=25 maxlength=25>";
-        $name = "p$part" . "_template";
-        $display_block .= "<P> Select a questions template for  part $part: " . GetQsTemplatesSelect($db, $name, $template_tables[$part]) . "</P>";
-        $name = "p$part" . "_num_markers";
+        $name = "p$part" . '_template';
+        $display_block .= "<P> Select a questions template for  part $part: " . GetQsTemplatesSelect($db, $name, $template_tables[$part]) . '</P>';
+        $name = "p$part" . '_num_markers';
         $display_block .= "<P>Number of markers for part $part: <input type='number' name='$name' value='1' min='1' max='3' size=6 maxlength=5>";
-        $name = "p$part" . "_percent";
+        $name = "p$part" . '_percent';
         $weight = $weights[$part];
         $display_block .= "<P>% weight of part $part: <input type='number' name='$name' value='$weight' min='0' max='100' size=6 maxlength=5>";
-        $name = "p$part" . "_max";
+        $name = "p$part" . '_max';
         $display_block .= "<P>Maximum mark for part $part: <input type='number' name='$name' value='100' min='1' max='100' size=6 maxlength=5>";
-        $name = "p$part" . "_submission_date";
-        $date = "2016-09-24";//date('Y-m-d');//"2014-09-24";
+        $name = "p$part" . '_submission_date';
+        $date = '2016-09-24';//date('Y-m-d');//"2014-09-24";
         $display_block .= "<P>Submission date for part $part: <input type='text' id='$name' name='$name'  value='$date' size=20 maxlength=15>";
-        $name = "p$part" . "_marking_date";
+        $name = "p$part" . '_marking_date';
         $display_block .= "<P>Mark-by date for part $part: <input type='text' id='$name' name='$name'  value='$date' size=20 maxlength=15>";
     }
 
-    $display_block .= "<H2>Staff names list:</H2>";
-    $name = "staff_names_s";
-    $staff_names_match = "staff_names";
+    $display_block .= '<H2>Staff names list:</H2>';
+    $name = 'staff_names_s';
+    $staff_names_match = 'staff_names';
     //$display_block .= "<P> Select a previous list of staff names to use: " . GetStaffNameTemplatesSelect($db, $name, $staff_names_match) . "</P>";
     $display_block .= "<P> All modules use the global list of staff names: <b>$staff_names</b>. </P>";
     $display_block .= "\n<input type='hidden' name='$name' value='$staff_names'>";
@@ -632,15 +630,14 @@ if ($POST_OP == "create"){
 
     $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton' name='submit' value='Setup a new set of tables for the above module'></p>";
 
-    $display_block .= "</form>";
-
+    $display_block .= '</form>';
 }// end of if ($POST_OP == "select")
 
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

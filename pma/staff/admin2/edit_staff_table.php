@@ -1,16 +1,16 @@
 <?php
-(@include_once("./set_dir_admin.php")) or die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) or die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php")) or die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("../connect_pdo.php")) or die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php")) or die("Cannot setup database tables<BR>");
-(@include_once("./utility_functions.php")) or die("Cannot read utility_functions file<BR>");
-(@include_once("../markstore_functions.php")) or die("Cannot read markstore_functions file<BR>");
-(@include_once("../staff_functions.php")) or die("Cannot read markstore_functions file<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('./utility_functions.php')) or die('Cannot read utility_functions file<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot read markstore_functions file<BR>');
+(@include_once('../staff_functions.php')) or die('Cannot read markstore_functions file<BR>');
 
-(@include_once("./admin_functions.php")) or die("Cannot include admin functions<BR>");
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
 // Check the admin level
@@ -19,13 +19,11 @@ $access = access_check_response($db, $this_staff_username, $this_staff_full_name
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access_phrase</h2>\n";
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 error_reporting(E_ALL ^ E_NOTICE);
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 
 if ($access) {
-
     if (array_key_exists('default_table', $_REQUEST) == false) {
         $_REQUEST['default_table'] = null;
     }
@@ -34,18 +32,18 @@ if ($access) {
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
     }
-// if the form was submitted then enter it all into the database
+    // if the form was submitted then enter it all into the database
     if (array_key_exists('op', $_POST)) {
         $POST_OP = $_POST['op'];
     } else {
-        $POST_OP = "";
+        $POST_OP = '';
     }
 
-// see all the POST values
-//foreach ($_POST as $key => $value){
-//}
+    // see all the POST values
+    //foreach ($_POST as $key => $value){
+    //}
 
-    $display_block .= "<h1>Edit Staff details for all modules</h1>";
+    $display_block .= '<h1>Edit Staff details for all modules</h1>';
 
     if ($default_table == 1) {
         $staff_names_table = $staff_names_default;
@@ -54,8 +52,8 @@ if ($access) {
     }
     $display_block .= "<h2>Database table $staff_names_table</h2>";
 
-    if ($POST_OP == "new") {
-        $display_block .= "<P>A New member of staff.</P>";
+    if ($POST_OP == 'new') {
+        $display_block .= '<P>A New member of staff.</P>';
 
         if ($default_table == 1) {
             $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?default_table=1\">";
@@ -67,7 +65,7 @@ if ($access) {
         $display_block .= "<TR>\n";
         $display_block .= "<TD>Title</TD>\n";
         $display_block .= "<TD><select name=\"title_select\">\n";
-        $selected = "";
+        $selected = '';
         $display_block .= "<option value=\"Prof\" $selected>Prof</option>\n";
         $display_block .= "<option value=\"Dr\" $selected>Dr</option>\n";
         $display_block .= "<option value=\"Mrs\" $selected>Mrs</option>\n";
@@ -115,7 +113,7 @@ if ($access) {
 
         $display_block .= "<TD>Admin level</TD>\n";
         $display_block .= "<TD><select name=\"admin_level_select\">\n";
-        $selected = "";
+        $selected = '';
         $display_block .= "<option value=\"0\" selected>0</option>\n";
         $display_block .= "<option value=\"1\" $selected>1</option>\n";
         $display_block .= "<option value=\"2\" $selected>2</option>\n";
@@ -127,16 +125,14 @@ if ($access) {
 
         $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_new\">";
 
-        $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Submit details of this new staff member.\"></p>";
+        $display_block .= '<p><input type="submit" id="submitbutton_new" name="submit" value="Submit details of this new staff member."></p>';
 
-        $display_block .= "</form>";
+        $display_block .= '</form>';
 
         $display_block .= "<hr>\n";
-    }
-    elseif ($POST_OP == "submit_edited") {
+    } elseif ($POST_OP == 'submit_edited') {
         $staff_count = $_POST['staff_count'];
         for ($i = 1; $i <= $staff_count; $i++) {
-
             //$display_block .= "Submitting: <BR>\n";
             $postid = "staffid$i";
             $staffid = $_POST[$postid];
@@ -191,11 +187,9 @@ if ($access) {
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
-
         }
         $display_block .= "<B>All updated</B><BR><hr>\n";
-    }
-    elseif ($POST_OP == "submit_new") {
+    } elseif ($POST_OP == 'submit_new') {
         $display_block .= "Submitting: <BR>\n";
 
         //$staffid = $_POST['staffid'];
@@ -226,8 +220,7 @@ if ($access) {
             exit();
         }
         $display_block .= "<B>Done</B><BR><hr>\n";
-    }
-    elseif ($POST_OP == "upload_csv") {
+    } elseif ($POST_OP == 'upload_csv') {
         $initials_col = 1;
         $title_col = 2;
         $first_name_col = 3;
@@ -249,7 +242,7 @@ if ($access) {
         $file_info .= "File read earror message $xlsx_file_error<BR>";
 
         if (!$xlsx_file_error) {
-            if ($xlsx_file_name != "") {
+            if ($xlsx_file_name != '') {
                 $PHP_EXCEL_filetype = IOFactory::identify($xlsx_file_tmp);
                 $file_info .= "PHPExcel file type: $PHP_EXCEL_filetype<BR>";
 
@@ -277,9 +270,9 @@ if ($access) {
                     $col = $username_col;
                     $this_username = $worksheet->getCell([$col, $row])->getValue();
 
-                    $this_fullname = $this_first_name . " " . $this_family_name;
+                    $this_fullname = $this_first_name . ' ' . $this_family_name;
 
-                    $this_room = "";
+                    $this_room = '';
                     $this_inactive = 0;
                     $this_admin_level = 0;
 
@@ -298,7 +291,7 @@ if ($access) {
                         $query .= "email='" . addslashes($this_email) . "', ";
                         $query .= "room='" . addslashes($this_room) . "', ";
                         $query .= "inactive='" . addslashes($this_inactive) . "' ";
-                        $query .= "WHERE ";
+                        $query .= 'WHERE ';
                         $query .= "username='$this_username'";
                     } else {
                         $query = "INSERT INTO $staff_names_table SET ";
@@ -324,24 +317,20 @@ if ($access) {
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
                         exit();
                     }
-
                 }
-
             } else {
                 $display_block .= "<H3 style='color: red; background-color: #f1c40f'>You need to browse and select a XLSX/CSV file to upload.</H3>";
             }
         } else {
             $display_block .= "<H3 style='color: red; background-color: #f1c40f'>You need to browse and select a XLSX/CSV file to upload.</H3>";
         }
-
-    }
-    elseif ($POST_OP == "download_csv") {
+    } elseif ($POST_OP == 'download_csv') {
         error_reporting(0);
-        $csv_filename = "staff_names_data_" . $module_prefix . $module1 . $module_postfix . "_" . $short_code . "_" . $year_begin . "-" . $year_end . ".csv";
+        $csv_filename = 'staff_names_data_' . $module_prefix . $module1 . $module_postfix . '_' . $short_code . '_' . $year_begin . '-' . $year_end . '.csv';
 
         $tmpcsvfile = @tempnam(PMA_TMP_DIR, 'x');// @tempnam(PMA_TMP_DIR, '');
         if ($tmpcsvfile === false) {
-            echo("There seem to be a problem creating the temporary file for download.");
+            echo('There seem to be a problem creating the temporary file for download.');
             exit();
         }
 
@@ -362,18 +351,18 @@ if ($access) {
 
         if ($num < 1) {
             //no records
-            $display_block .= "<p><em>Sorry, there are no  records to download!</em></p>";
+            $display_block .= '<p><em>Sorry, there are no  records to download!</em></p>';
         } else {
             //has records
             $fp = @fopen($tmpcsvfile, 'w');
 
             // Title row
-            $row[0] = "Initials";
-            $row[1] = "Title";
-            $row[2] = "First name";
-            $row[3] = "Family name";
-            $row[4] = "Email";
-            $row[5] = "username";
+            $row[0] = 'Initials';
+            $row[1] = 'Title';
+            $row[2] = 'First name';
+            $row[3] = 'Family name';
+            $row[4] = 'Email';
+            $row[5] = 'username';
 
             $ret = @fputcsv($fp, $row);
             //fclose($fp);
@@ -407,7 +396,6 @@ if ($access) {
             exit();
             $display_block = "<h2> Staff data saved as XLSX/CSV file to: $csv_filename</h2>";
         }
-
     }
 
     if ($default_table == 1) {
@@ -416,9 +404,9 @@ if ($access) {
         $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">";
     }
 
-// Get the list of staff from the staff_names2 table
+    // Get the list of staff from the staff_names2 table
     $query = "select * from $staff_names_table order by familyname";
-//$get_list_res = mysql_query($get_list) or die(" Unable to create staff name list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
+    //$get_list_res = mysql_query($get_list) or die(" Unable to create staff name list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
@@ -428,11 +416,11 @@ if ($access) {
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
-//$display_block .= "<select name=\"staffname_select\">\n";
+    //$display_block .= "<select name=\"staffname_select\">\n";
 
-//$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
+    //$display_block = "<TABLE  class=\"tableSimple\" style=\"border:1px solid black;border-collapse:collapse;\">\n";
     $display_block .= "<TABLE id=\"staffinfo\" class=\"hover compact cell-border\" cellspacing=\"0\" width=\"100%\">\n";
-    $display_block .= "
+    $display_block .= '
     <thead>
       <tr>
         <th>ID</th>
@@ -448,12 +436,11 @@ if ($access) {
         <th>Admin level</th>
         <th>Delete</th>
       </tr>
-    </thead>";
+    </thead>';
     $display_block .= "<tbody>\n";
     $staff_count = 0;
     $rows = $results->fetchAll();
     foreach ($rows as $recs) {
-
         $staffid = $recs['staffid'];
         $initials = $recs['initials'];
         $title = $recs['title'];
@@ -469,22 +456,21 @@ if ($access) {
         $display_block .= "<TR>\n";
         $display_block .= "<TD><input type=\"hidden\" name=\"staffid$staff_count\" value=\"$staffid\"> $staffid</TD>";
         $display_block .= "<TD><input type=\"text\" name=\"initials$staff_count\" value=\"$initials\"  size=5 maxlength=30></TD>";
-        $display_block .= "<TD>" . GetTitleSelect("title$staff_count", $title) . "</TD>";
+        $display_block .= '<TD>' . GetTitleSelect("title$staff_count", $title) . '</TD>';
         $display_block .= "<TD><input type=\"text\" name=\"firstname$staff_count\" value=\"$firstname\"  size=10 maxlength=30></TD>";
         $display_block .= "<TD><input type=\"text\" name=\"familyname$staff_count\" value=\"$familyname\"  size=30 maxlength=40></TD>";
         $display_block .= "<TD>$fulllname</TD>";
         $display_block .= "<TD><input type=\"text\" name=\"email$staff_count\" value=\"$email\"  size=30 maxlength=40></TD>";
         $display_block .= "<TD><input type=\"text\" name=\"username$staff_count\" value=\"$username\"  size=8 maxlength=20></TD>";
         $display_block .= "<TD><input type=\"text\" name=\"room$staff_count\" value=\"$room\"  size=5 maxlength=10></TD>";
-        $checked = "";
+        $checked = '';
         if ($inactive == 1) {
-            $checked = "checked";
+            $checked = 'checked';
         }
         $display_block .= "<TD><input type=\"checkbox\" name=\"inactive$staff_count\" value=\"1\" $checked></TD>\n";
-        $display_block .= "<TD>" . GetAdminLevelSelect("admin_level$staff_count", $mod_admin_level) . "</TD>";
+        $display_block .= '<TD>' . GetAdminLevelSelect("admin_level$staff_count", $mod_admin_level) . '</TD>';
         $display_block .= "<TD><input type=\"checkbox\" name=\"delete$staff_count\" value=\"1\"></TD>\n";
         $display_block .= "</TR>\n";
-
     }
     $display_block .= "</tbody>\n";
     $display_block .= "</TABLE>\n";
@@ -492,16 +478,16 @@ if ($access) {
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"submit_edited\">";
     $display_block .= "\n<input type=\"hidden\" name=\"staff_count\" value=\"$staff_count\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton\" name=\"submit\" value=\"Submit changes to staff details.\"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton" name="submit" value="Submit changes to staff details."></p>';
 
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>An alternative staff edit page ... </H2>\n";
-    $display_block .= "<P>When the above table gets very big it will not edit due to limits of the server. 
-                        This alternative page will allow editing of staff details</P> ";
+    $display_block .= '<P>When the above table gets very big it will not edit due to limits of the server. 
+                        This alternative page will allow editing of staff details</P> ';
     $display_block .= "<A href='edit_staff.php'>Alternative Edit staff page</A>";
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
 
     $display_block .= "<hr><h2>Upload a XLSX/CSV of staff details... </H2>\n";
     if ($default_table == 1) {
@@ -510,17 +496,17 @@ if ($access) {
         $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\" enctype=\"multipart/form-data\">";
     }
     //$display_block .= "\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\" enctype=\"multipart/form-data\">\n";
-    $display_block .= "<P> You can upload a XLSX/CSV file to update and <B>add</B> staff details (you cannot delete staff) </P>";
-    $display_block .= "<P> Create a XLSX/CSV with the headings:<B>Initials</B>, <B>Title</B>,  <B>First name</B>, <B>Family name</B>, <B>Email</B>, <B>username</B>, <B>room</B> and load here.</P>";
+    $display_block .= '<P> You can upload a XLSX/CSV file to update and <B>add</B> staff details (you cannot delete staff) </P>';
+    $display_block .= '<P> Create a XLSX/CSV with the headings:<B>Initials</B>, <B>Title</B>,  <B>First name</B>, <B>Family name</B>, <B>Email</B>, <B>username</B>, <B>room</B> and load here.</P>';
 
-    $display_block .= "<P></P><input name=\"csv\" type=\"file\" id=\"csv\" /></P>";
+    $display_block .= '<P></P><input name="csv" type="file" id="csv" /></P>';
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"upload_csv\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_csv\" name=\"submit\" value=\"Upload a XLSX/CSV of staff details\"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton_csv" name="submit" value="Upload a XLSX/CSV of staff details"></p>';
 
     $display_block .= "</form>\n";
 
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Add a new member of staff...</H2>\n";
     if ($default_table == 1) {
         $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?default_table=1\">";
@@ -530,11 +516,11 @@ if ($access) {
     //$display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id&default_table=$default_table\">\n";
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"new\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_new\" name=\"submit\" value=\"Add details of a NEW member of staff.\"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton_new" name="submit" value="Add details of a NEW member of staff."></p>';
 
-    $display_block .= "</form>";
+    $display_block .= '</form>';
 
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
     $display_block .= "<hr><h2>Download Staff data to CSV file ...</H2>\n";
     if ($default_table == 1) {
         $display_block .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?default_table=1\">";
@@ -543,19 +529,18 @@ if ($access) {
     }
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"download_csv\">";
 
-    $display_block .= "<p><input type=\"submit\" id=\"submitbutton_download\" name=\"submit\" value=\"Download Staff Data to CSV.\"></p>";
+    $display_block .= '<p><input type="submit" id="submitbutton_download" name="submit" value="Download Staff Data to CSV."></p>';
 
     $display_block .= "</form>\n";
 }
 
-function GetTitleSelect($NameKey, $MatchTitle)
-{
-    $titles[1] = "Prof";
-    $titles[2] = "Dr";
-    $titles[3] = "Mrs";
-    $titles[4] = "Ms";
-    $titles[5] = "Miss";
-    $titles[6] = "Mr";
+function GetTitleSelect($NameKey, $MatchTitle) {
+    $titles[1] = 'Prof';
+    $titles[2] = 'Dr';
+    $titles[3] = 'Mrs';
+    $titles[4] = 'Ms';
+    $titles[5] = 'Miss';
+    $titles[6] = 'Mr';
 
     $select_block = "\n<select name=\"$NameKey\">\n";
 
@@ -563,9 +548,9 @@ function GetTitleSelect($NameKey, $MatchTitle)
         $Title = $titles[$i];
 
         if ($MatchTitle == $Title) {
-            $selected = "selected";
+            $selected = 'selected';
         } else {
-            $selected = "";
+            $selected = '';
         }
 
         $select_block .= "<option value=\"$Title\" $selected>$Title</option>\n";
@@ -575,12 +560,11 @@ function GetTitleSelect($NameKey, $MatchTitle)
     return $select_block;
 }
 
-function GetAdminLevelSelect($NameKey, $MatchLevel)
-{
-    $levels[1] = "0";
-    $levels[2] = "1";
-    $levels[3] = "2";
-    $levels[4] = "3";
+function GetAdminLevelSelect($NameKey, $MatchLevel) {
+    $levels[1] = '0';
+    $levels[2] = '1';
+    $levels[3] = '2';
+    $levels[4] = '3';
 
     $select_block = "\n<select name=\"$NameKey\">\n";
 
@@ -588,9 +572,9 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
         $Level = $levels[$i];
 
         if ($MatchLevel == $Level) {
-            $selected = "selected";
+            $selected = 'selected';
         } else {
-            $selected = "";
+            $selected = '';
         }
 
         $select_block .= "<option value=\"$Level\" $selected>$Level</option>\n";
@@ -604,7 +588,7 @@ function GetAdminLevelSelect($NameKey, $MatchLevel)
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">

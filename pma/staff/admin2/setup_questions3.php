@@ -2,22 +2,24 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-(@include_once("./set_dir_admin.php"))       OR die("Cannot find this file to include: set_dir_admin.php<BR>");
-(@include_once("$STAFF_DIR_VAL/config.php")) OR die("Cannot find this file to include: config.php<BR>");
-(@include_once("../setup_titles.php"))       OR die("Cannot find this file to include: setup_titles.php<BR>");
-(@include_once("../markstore_functions.php"))OR die("Cannot find this file to include: markstore_functions.php<BR>");
-(@include_once("../connect_pdo.php"))        OR die("Cannot connect to the database<BR>");
-(@include_once("../setup_tables.php"))       OR die("Cannot setup database tables<BR>");
-(@include_once("../show_feedback_form.php")) OR die("Cannot get show_feedback_form.php<BR>");
-(@include_once("./admin_functions.php"))     OR die("Cannot include admin functions<BR>");
+(@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
+(@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
+(@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
+(@include_once('../markstore_functions.php')) or die('Cannot find this file to include: markstore_functions.php<BR>');
+(@include_once('../connect_pdo.php')) or die('Cannot connect to the database<BR>');
+(@include_once('../setup_tables.php')) or die('Cannot setup database tables<BR>');
+(@include_once('../show_feedback_form.php')) or die('Cannot get show_feedback_form.php<BR>');
+(@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-if (array_key_exists('pm_id', $_REQUEST) == false) { $_REQUEST['pm_id'] = null; }
-$pm_id      = $_REQUEST['pm_id'];
+if (array_key_exists('pm_id', $_REQUEST) == false) {
+    $_REQUEST['pm_id'] = null;
+}
+$pm_id = $_REQUEST['pm_id'];
 $assesspart = isset($_GET['part']) ? $_GET['part'] : null;
 
 $assessqs_year = $assessqs[$assesspart];
-$assess_cats   = $assessqs_cats[$assesspart];
-$is_numeric    = $p_numeric[$assesspart];
+$assess_cats = $assessqs_cats[$assesspart];
+$is_numeric = $p_numeric[$assesspart];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // AJAX HANDLER  (op=save_num_sections)
@@ -25,7 +27,7 @@ $is_numeric    = $p_numeric[$assesspart];
 // ─────────────────────────────────────────────────────────────────────────────
 if (isset($_POST['op']) && $_POST['op'] === 'save_num_sections') {
     header('Content-Type: application/json');
-    $new_count = (int)($_POST['num_sections'] ?? 0);
+    $new_count = (int) ($_POST['num_sections'] ?? 0);
     if ($new_count < 1 || $new_count > 5) {
         echo json_encode(['ok' => false, 'msg' => 'Section count must be 1–5.']);
         exit();
@@ -50,8 +52,8 @@ if (isset($_POST['op']) && $_POST['op'] === 'save_num_sections') {
 if (isset($_POST['op']) && $_POST['op'] === 'save_section') {
     header('Content-Type: application/json');
 
-    $cat         = (int)($_POST['cat'] ?? 0);
-    $new_numqs   = (int)($_POST["new_numqs$cat"] ?? 0);
+    $cat = (int) ($_POST['cat'] ?? 0);
+    $new_numqs = (int) ($_POST["new_numqs$cat"] ?? 0);
 
     if ($cat < 1 || $cat > 5) {
         echo json_encode(['ok' => false, 'msg' => 'Invalid category number.']);
@@ -59,26 +61,26 @@ if (isset($_POST['op']) && $_POST['op'] === 'save_section') {
     }
 
     // ── Collect category-level fields ────────────────────────────────────────
-    $section_title  = isset($_POST["sec$cat"])             ? $_POST["sec$cat"]             : '';
-    $weight_pc      = isset($_POST["weightpc_name$cat"])   ? (float)$_POST["weightpc_name$cat"] : 0;
-    $factor         = isset($_POST["factor_name$cat"])     ? (float)$_POST["factor_name$cat"]   : 0;
-    $show_feedback  = isset($_POST["show_cat_feedback$cat"]) ? 1 : 0;
+    $section_title = isset($_POST["sec$cat"]) ? $_POST["sec$cat"] : '';
+    $weight_pc = isset($_POST["weightpc_name$cat"]) ? (float) $_POST["weightpc_name$cat"] : 0;
+    $factor = isset($_POST["factor_name$cat"]) ? (float) $_POST["factor_name$cat"] : 0;
+    $show_feedback = isset($_POST["show_cat_feedback$cat"]) ? 1 : 0;
 
     // ── Collect question-level fields ────────────────────────────────────────
-    $questions     = [];
+    $questions = [];
     $num_responses = [];
-    $q_weights     = [];
-    $resp_texts    = [];
-    $resp_marks    = [];
+    $q_weights = [];
+    $resp_texts = [];
+    $resp_marks = [];
 
     for ($q = 1; $q <= $new_numqs; $q++) {
-        $questions[$q]     = isset($_POST["q$cat-$q"])   ? $_POST["q$cat-$q"]   : '';
-        $num_responses[$q] = isset($_POST["res$cat-$q"]) ? (int)$_POST["res$cat-$q"] : 1;
-        $q_weights[$q]     = isset($_POST["qw$cat-$q"])  ? (float)$_POST["qw$cat-$q"] : 100;
+        $questions[$q] = isset($_POST["q$cat-$q"]) ? $_POST["q$cat-$q"] : '';
+        $num_responses[$q] = isset($_POST["res$cat-$q"]) ? (int) $_POST["res$cat-$q"] : 1;
+        $q_weights[$q] = isset($_POST["qw$cat-$q"]) ? (float) $_POST["qw$cat-$q"] : 100;
 
         for ($r = 1; $r <= $num_responses[$q]; $r++) {
             $resp_texts[$q][$r] = isset($_POST["t$cat-$q-$r"]) ? $_POST["t$cat-$q-$r"] : '';
-            $resp_marks[$q][$r] = isset($_POST["m$cat-$q-$r"]) ? (float)$_POST["m$cat-$q-$r"] : 0;
+            $resp_marks[$q][$r] = isset($_POST["m$cat-$q-$r"]) ? (float) $_POST["m$cat-$q-$r"] : 0;
         }
     }
 
@@ -103,28 +105,28 @@ if (isset($_POST['op']) && $_POST['op'] === 'save_section') {
              VALUES (:cat, :desc, :wp, :factor, :fb)"
         );
         $stmt->execute([
-            ':cat'    => $cat,
-            ':desc'   => $section_title,
-            ':wp'     => $weight_pc,
+            ':cat' => $cat,
+            ':desc' => $section_title,
+            ':wp' => $weight_pc,
             ':factor' => $factor,
-            ':fb'     => $show_feedback,
+            ':fb' => $show_feedback,
         ]);
 
         // Insert question rows
         for ($q = 1; $q <= $new_numqs; $q++) {
             // Build dynamic columns for responses (text1/mark1 … text8/mark8)
-            $cols   = 'cat, qid, question, entries, weight';
-            $vals   = ':cat, :qid, :question, :entries, :weight';
+            $cols = 'cat, qid, question, entries, weight';
+            $vals = ':cat, :qid, :question, :entries, :weight';
             $params = [
-                ':cat'      => $cat,
-                ':qid'      => $q,
+                ':cat' => $cat,
+                ':qid' => $q,
                 ':question' => $questions[$q],
-                ':entries'  => $num_responses[$q],
-                ':weight'   => $q_weights[$q],
+                ':entries' => $num_responses[$q],
+                ':weight' => $q_weights[$q],
             ];
             for ($r = 1; $r <= $num_responses[$q]; $r++) {
-                $cols  .= ", text$r, mark$r";
-                $vals  .= ", :text$r, :mark$r";
+                $cols .= ", text$r, mark$r";
+                $vals .= ", :text$r, :mark$r";
                 $params[":text$r"] = $resp_texts[$q][$r];
                 $params[":mark$r"] = $resp_marks[$q][$r];
             }
@@ -139,7 +141,6 @@ if (isset($_POST['op']) && $_POST['op'] === 'save_section') {
         )->execute([':cat' => $cat, ':qid' => $new_numqs + 1]);
 
         echo json_encode(['ok' => true, 'msg' => "Section $cat saved."]);
-
     } catch (PDOException $ex) {
         error_log($ex->getMessage());
         echo json_encode(['ok' => false, 'msg' => 'Database error: ' . $ex->getMessage()]);
@@ -150,29 +151,30 @@ if (isset($_POST['op']) && $_POST['op'] === 'save_section') {
 // ─────────────────────────────────────────────────────────────────────────────
 // PAGE BUILD
 // ─────────────────────────────────────────────────────────────────────────────
-$display_block = "";
+$display_block = '';
 $display_block .= $connect_msg;
 
-$admin_access    = false;
-$admin_access    = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
+$admin_access = false;
+$admin_access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
-if ($is_module_admin) { $access_phrase = $module_level_access_phrase; }
+if ($is_module_admin) {
+    $access_phrase = $module_level_access_phrase;
+}
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
 if (!$is_module_admin && !$admin_access) {
-    $display_block .= "You do not have the appropriate admin level<BR>";
+    $display_block .= 'You do not have the appropriate admin level<BR>';
     $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 } else {
+    $assesstype_text = $p_description[$assesspart];
+    $mark_max = $p_max[$assesspart];
+    $mark_pc = $p_percent[$assesspart];
 
-    $assesstype_text      = $p_description[$assesspart];
-    $mark_max             = $p_max[$assesspart];
-    $mark_pc              = $p_percent[$assesspart];
-
-    $MAX_CATS      = 5;
+    $MAX_CATS = 5;
     $MAX_QUESTIONS = 10;
     $MAX_RESPONSES = 8;
 
-    $display_block .= "<h1>View and edit questions, marks and section weightings</h1>";
+    $display_block .= '<h1>View and edit questions, marks and section weightings</h1>';
     $display_block .= "<h2>$assesstype_text — $module_short_description $module_prefix$module1$module_postfix ($short_code) $year_begin/$year_end</h2>";
     $display_block .= "<p>Questions: <code>$assessqs_year</code> &nbsp; Categories: <code>$assess_cats</code></p>";
 
@@ -200,8 +202,10 @@ the text indicates what to look for. Change the type on the
 
     // Count how many sections currently exist in DB
     $stmt_nc = $db->query("SELECT COUNT(*) FROM $assess_cats WHERE cat IS NOT NULL");
-    $num_sections = (int)$stmt_nc->fetchColumn();
-    if ($num_sections < 1) { $num_sections = 1; }
+    $num_sections = (int) $stmt_nc->fetchColumn();
+    if ($num_sections < 1) {
+        $num_sections = 1;
+    }
 
     $display_block .= "
 <div class='mb-3 p-2 border rounded bg-light d-flex align-items-center flex-wrap gap-2'>
@@ -217,50 +221,53 @@ the text indicates what to look for. Change the type on the
 
     // ── Build section panels ─────────────────────────────────────────────────
     for ($cat = 1; $cat <= $MAX_CATS; $cat++) {
-
         // Category metadata
         $query = "SELECT * FROM $assess_cats WHERE cat = :cat";
-        $stmt  = $db->prepare($query);
+        $stmt = $db->prepare($query);
         $stmt->execute([':cat' => $cat]);
         $cat_data = $stmt->fetch();
 
-        $description   = $cat_data ? $cat_data['description']    : "Enter a new section description";
-        $weight_pc     = $cat_data ? $cat_data['weight_percent']  : "20";
-        $factor        = $cat_data ? $cat_data['factor']          : "0.1";
-        $show_feedback = ($cat_data && isset($cat_data['get_feedback'])) ? (int)$cat_data['get_feedback'] : 1;
+        $description = $cat_data ? $cat_data['description'] : 'Enter a new section description';
+        $weight_pc = $cat_data ? $cat_data['weight_percent'] : '20';
+        $factor = $cat_data ? $cat_data['factor'] : '0.1';
+        $show_feedback = ($cat_data && isset($cat_data['get_feedback'])) ? (int) $cat_data['get_feedback'] : 1;
 
         // Questions for this category
         $stmt = $db->prepare("SELECT * FROM $assessqs_year WHERE cat = :cat ORDER BY qid");
         $stmt->execute([':cat' => $cat]);
-        $all_rows     = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $all_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // Last row is the feedback placeholder (entries=0), exclude it
-        $question_rows = array_filter($all_rows, fn($r) => (int)$r['entries'] !== 0 || $r['question'] !== 'Feedback Comments:');
+        $question_rows = array_filter($all_rows, fn ($r) => (int) $r['entries'] !== 0 || $r['question'] !== 'Feedback Comments:');
         $question_rows = array_values($question_rows);
-        $num_q_in_db   = count($question_rows);
-        if ($num_q_in_db < 1) { $num_q_in_db = 1; }
+        $num_q_in_db = count($question_rows);
+        if ($num_q_in_db < 1) {
+            $num_q_in_db = 1;
+        }
 
         // Build data arrays indexed 1-based
-        $questions     = [];
+        $questions = [];
         $num_responses = [];
         $q_weights_arr = [];
-        $resp_texts    = [];
-        $resp_marks    = [];
+        $resp_texts = [];
+        $resp_marks = [];
 
         for ($q = 1; $q <= $MAX_QUESTIONS; $q++) {
             if (isset($question_rows[$q - 1])) {
-                $row            = $question_rows[$q - 1];
-                $questions[$q]  = htmlspecialchars($row['question'], ENT_QUOTES, 'UTF-8');
-                $nr             = (int)$row['entries'];
-                if ($is_numeric) { $nr = 1; }
+                $row = $question_rows[$q - 1];
+                $questions[$q] = htmlspecialchars($row['question'], ENT_QUOTES, 'UTF-8');
+                $nr = (int) $row['entries'];
+                if ($is_numeric) {
+                    $nr = 1;
+                }
                 $num_responses[$q] = $nr > 0 ? $nr : 1;
-                $qw = is_numeric($row['weight']) ? (float)$row['weight'] : 100;
+                $qw = is_numeric($row['weight']) ? (float) $row['weight'] : 100;
                 $q_weights_arr[$q] = $qw;
                 for ($r = 1; $r <= $MAX_RESPONSES; $r++) {
                     $resp_texts[$q][$r] = ($r <= $nr) ? htmlspecialchars($row["text$r"] ?? 'enter a response', ENT_QUOTES, 'UTF-8') : 'enter a response';
-                    $resp_marks[$q][$r] = ($r <= $nr) ? ($is_numeric ? 100 : (float)($row["mark$r"] ?? 0)) : (($r - 1) * 10);
+                    $resp_marks[$q][$r] = ($r <= $nr) ? ($is_numeric ? 100 : (float) ($row["mark$r"] ?? 0)) : (($r - 1) * 10);
                 }
             } else {
-                $questions[$q]     = 'Enter a new question';
+                $questions[$q] = 'Enter a new question';
                 $num_responses[$q] = 4;
                 $q_weights_arr[$q] = 100;
                 for ($r = 1; $r <= $MAX_RESPONSES; $r++) {
@@ -271,7 +278,7 @@ the text indicates what to look for. Change the type on the
         }
 
         // ── Render section panel ─────────────────────────────────────────────
-        $fb_checked    = $show_feedback ? 'checked' : '';
+        $fb_checked = $show_feedback ? 'checked' : '';
         $panel_visible = ($cat <= $num_sections) ? '' : " style='display:none'";
         $display_block .= "
 <div class='card mb-3' id='section_panel_$cat'$panel_visible>
@@ -305,10 +312,10 @@ the text indicates what to look for. Change the type on the
 
         // Questions
         for ($q = 1; $q <= $MAX_QUESTIONS; $q++) {
-            $q_visible   = ($q <= $num_q_in_db) ? '' : "style='display:none'";
-            $nr          = $num_responses[$q];
-            $qtext       = $questions[$q];
-            $qw          = $q_weights_arr[$q];
+            $q_visible = ($q <= $num_q_in_db) ? '' : "style='display:none'";
+            $nr = $num_responses[$q];
+            $qtext = $questions[$q];
+            $qw = $q_weights_arr[$q];
 
             $display_block .= "
     <div id='q_block_c{$cat}_q{$q}' class='question-block border rounded p-2 mb-2' $q_visible>
@@ -337,8 +344,8 @@ the text indicates what to look for. Change the type on the
 
             for ($r = 1; $r <= $MAX_RESPONSES; $r++) {
                 $r_style = ($r <= $nr) ? '' : " style='display:none'";
-                $rtext   = $resp_texts[$q][$r];
-                $rmark   = $resp_marks[$q][$r];
+                $rtext = $resp_texts[$q][$r];
+                $rmark = $resp_marks[$q][$r];
                 $display_block .= "
             <tr id='resp_c{$cat}_q{$q}_r{$r}'$r_style>
               <td>$r</td>
@@ -351,9 +358,9 @@ the text indicates what to look for. Change the type on the
             </tr>";
             }
 
-            $display_block .= "
+            $display_block .= '
           </tbody>
-        </table>";
+        </table>';
 
             $display_block .= "
       </div><!-- .options -->
@@ -379,7 +386,6 @@ the text indicates what to look for. Change the type on the
     </div>
   </div><!-- .card-body -->
 </div><!-- #section_panel_$cat -->";
-
     } // end for $cat
 
     $display_block .= "
@@ -392,13 +398,12 @@ the text indicates what to look for. Change the type on the
 
 <input type='hidden' id='markmax' value='$mark_max'>
 <input type='hidden' id='markpc'  value='$mark_pc'>";
-
 } // end if has access
 ?>
 <!DOCTYPE HTML>
 <html>
 <?php
-(@include_once("mobile_head_admin_bs.php")) OR die("Cannot find this file to include: mobile_head_admin_bs.php<BR>");
+(@include_once('mobile_head_admin_bs.php')) or die('Cannot find this file to include: mobile_head_admin_bs.php<BR>');
 ?>
 <style>
   .question-block { background: #f9f9f9; }
@@ -419,9 +424,9 @@ the text indicates what to look for. Change the type on the
     <div class="container">
         <span class="navbar-brand">Edit questions &amp; marks</span>
         <ul class="nav justify-content-center">
-            <li class="nav-item"><a target="_self" href="../projectmarking_select_bs.php?pm_id=<?php echo htmlspecialchars($pm_id,ENT_QUOTES,'UTF-8') ?>" class="nav-link px-2 text-white-50">Module page</a></li>
-            <li class="nav-item"><a target="_self" href="../session_modules_bs.php?year_begin=<?php echo htmlspecialchars($year_begin,ENT_QUOTES,'UTF-8') ?>" class="nav-link px-2 text-white-50">Year module list</a></li>
-            <li class="nav-item"><a target="_self" href="./edit_module_settings.php?pm_id=<?php echo htmlspecialchars($pm_id,ENT_QUOTES,'UTF-8') ?>" class="nav-link px-2 text-white-50">Module admin</a></li>
+            <li class="nav-item"><a target="_self" href="../projectmarking_select_bs.php?pm_id=<?php echo htmlspecialchars($pm_id, ENT_QUOTES, 'UTF-8') ?>" class="nav-link px-2 text-white-50">Module page</a></li>
+            <li class="nav-item"><a target="_self" href="../session_modules_bs.php?year_begin=<?php echo htmlspecialchars($year_begin, ENT_QUOTES, 'UTF-8') ?>" class="nav-link px-2 text-white-50">Year module list</a></li>
+            <li class="nav-item"><a target="_self" href="./edit_module_settings.php?pm_id=<?php echo htmlspecialchars($pm_id, ENT_QUOTES, 'UTF-8') ?>" class="nav-link px-2 text-white-50">Module admin</a></li>
             <li class="nav-item"><a target="_self" href="./index.php" class="nav-link px-2 text-white-50">Main admin</a></li>
         </ul>
     </div>
