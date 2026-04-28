@@ -5,27 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 (@include_once('./set_dir_staff.php')) or die('Cannot find this file to include: set_dir_staff.php<BR>');
 
 $num_cookie_days = 30;
-if (isset($_SERVER['REMOTE_USER'])) {
-    $user = get_server_username();
-    setcookie('USERNAME', $user, [
-        'expires' => time() + $num_cookie_days * 24 * 3600,
-        'path' => '/',
-        'secure' => true,
-        'httponly' => true,
-        'samesite' => 'Lax',
-    ]);
-    $_SESSION['USERNAME'] = $user;
-} elseif (isset($_SERVER['LOCAL_USER'])) {
-    $user = $_SERVER['LOCAL_USER'];
-    setcookie('USERNAME', $user, [
-        'expires' => time() + $num_cookie_days * 24 * 3600,
-        'path' => '/',
-        'secure' => true,
-        'httponly' => true,
-        'samesite' => 'Lax',
-    ]);
-    $_SESSION['USERNAME'] = $user;
-}
+$user = get_server_username();
 (@include_once('./config.php')) or die("Cannot find this file to include: config.php. $DEFAULT_ERR<BR>");
 (@include_once('./setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
 (@include_once('./markstore_functions.php')) or die('Cannot include markstore_functions.php<BR>');
@@ -43,14 +23,7 @@ if (DoesTableExist($db, $projects_setup)) {
     exit();
 }
 
-$staff_username = 'unknown';
-if (array_key_exists('REMOTE_USER', $_SERVER)) {
-    $staff_username = get_server_username();
-} else {
-    if (isset($_SESSION['USERNAME'])) {
-        $staff_username = $_SESSION['USERNAME'];
-    }
-}
+$staff_username = get_server_username();
 $staff_full_name = GetStaffNameFromUsername($db, $staff_username, $staff_names_default, false);
 $staff_full_name = trim($staff_full_name);
 

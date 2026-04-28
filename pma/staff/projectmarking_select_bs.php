@@ -7,14 +7,7 @@
 
 (@include_once('./admin2/adminusers.php')) or die('Cannot setup admin users');
 
-$staff_username = 'unknown';
-if (array_key_exists('REMOTE_USER', $_SERVER)) {
-    $staff_username = get_server_username();
-} else {
-    if (isset($_SESSION['USERNAME'])) {
-        $staff_username = $_SESSION['USERNAME'];
-    }
-}
+$staff_username = get_server_username();
 if (IsStaffB($db, $staff_username, $staff_names) == false) {
     echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";

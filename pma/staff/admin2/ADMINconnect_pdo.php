@@ -6,8 +6,8 @@ if (session_status() === PHP_SESSION_NONE) {
 (@include_once('./utility_functions.php')) or die('Cannot find file utility_functions.php<BR>');
 (@include_once('./adminusers.php')) or die('Cannot find this file to include: adminusers.php<BR>');
 
-if (isset($_SESSION['USERNAME'])) {
-    $this_staff_username = $_SESSION['USERNAME'];
+if (array_key_exists('REMOTE_USER', $_SERVER) || array_key_exists('LOCAL_USER', $_SERVER)){
+    $this_staff_username = get_server_username();
     $admin_level = GetSuperAdminLevel($db, $this_staff_username) ;
 
     if ($admin_level > 1) {

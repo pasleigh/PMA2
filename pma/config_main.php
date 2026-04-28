@@ -8,8 +8,6 @@ $base_dir = "/var/www/html/pma";
 $base_dir = "C:\\xampp\\htdocs\\PMA2\\pma";
 // mac
 $base_dir = "/Applications/XAMPP/xamppfiles/htdocs/PMA2/pma";
-// own server
-//$base_dir = "/var/www/vhosts/sleigh-munoz.co.uk/httpdocs/pma/ProjectMarkingApp-main/pma";
 
 $_creds_file = __DIR__ . '/../../db_credentials_pma.php';
 if (!file_exists($_creds_file)) {

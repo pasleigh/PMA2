@@ -13,14 +13,7 @@ ob_start(); // Buffer all output — required so mPDF can set Content-Type heade
 (@include_once('./markstore_functions.php')) or die('Cannot include markstore_function.php<BR>');
 (@include_once('./pdo_query_functions.php')) or die('Cannot include pdo_query_functions<BR>');
 
-$staff_username = 'unknown';
-if (array_key_exists('REMOTE_USER', $_SERVER)) {
-    $staff_username = get_server_username();
-} else {
-    if (isset($_SESSION['USERNAME'])) {
-        $staff_username = $_SESSION['USERNAME'];
-    }
-}
+$staff_username = get_server_username();
 if (IsStaffB($db, $staff_username, $staff_names) == false) {
     echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";

@@ -214,7 +214,7 @@ if ($pm_id != '') {
     $admin_users_table = 'admin_users';
     $admin_users_module_table = 'admin_users_module';
 
-    $this_staff_username = $_SESSION['USERNAME'] ?? '';
+    $this_staff_username = get_server_username();
     $this_staff_full_name = GetStaffNameFromUsername($db, $this_staff_username, $staff_names2, false);
     $this_staff_id = GetStaffIDFromUsername($db, $this_staff_username, $staff_names2);
 

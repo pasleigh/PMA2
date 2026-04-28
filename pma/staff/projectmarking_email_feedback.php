@@ -14,15 +14,8 @@
 (@include_once('./show_minor_part_feedback_form.php')) or die('Cannot include show_minor_part_feedback<BR>');
 (@include_once('./markstore_functions.php')) or die('Cannot include markstore_function.php<BR>');
 
-$debug_write = false;
-$staff_username = 'unknown';
-if (array_key_exists('REMOTE_USER', $_SERVER)) {
-    $staff_username = get_server_username();
-} else {
-    if (isset($_SESSION['USERNAME'])) {
-        $staff_username = $_SESSION['USERNAME'];
-    }
-}
+
+$staff_username = get_server_username();
 if (IsStaffB($db, $staff_username, $staff_names) == false) {
     echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";
@@ -126,14 +119,8 @@ if ($saving == 1) {
     $zip = new ZipArchive();
     // Open a zip file
     $zip_file_res = $zip->open($zip_file_name_tempnam, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-    if ($zip_file_res === true) {
-        if ($debug_write) {
-            echo 'ok created zip<BR>';
-        }
-    } else {
-        if ($debug_write) {
-            echo 'failed to create zip, code:' . $zip_file_res . '<BR>';
-        }
+    if ($zip_file_res !== true) {
+        echo 'failed to create zip, code:' . $zip_file_res . '<BR>';
     }
     //}
     if (!function_exists('shell_exec')) {
@@ -334,29 +321,11 @@ if ($num_rows < 1) {
 if ($saving == 2) {
     // make the zip and download it
     $assess_description_text = str_replace(' ', '_', $assess_description_text);
-    //$zip_command = "zip -j $save_folder/$zip_filename $save_folder/*-$assess_description_text.pdf  ";
-    //$shell_exec_return = shell_exec($zip_command);
-
-    //$zip_command = 'echo %path%';
-    //$shell_exec_return = shell_exec($zip_command);
-
-    //for ($i = 0; $i < count($files_to_zip); ++$i) {
-    //    unlink($files_to_zip[$i]);
-    //}
 
     $archiveName = "$save_folder/$zip_filename";
     if (file_exists($zip_file_name_tempnam)) {
-        if ($debug_write) {
-            echo("file: $zip_file_name_tempnam ready to download<BR>");
-        }
-        //download_zip($zip_file_name_tempnam,$zip_filename);
-        //exit();
         $link_html = download_link($zip_file_name_tempnam, $zip_filename);
         echo($link_html);
-    } else {
-        if ($debug_write) {
-            echo("file: $zip_file_name_tempnam could not be found<BR>");
-        }
     }
 }
 $end_time = microtime(true);

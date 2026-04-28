@@ -2,14 +2,7 @@
 (@include_once('./set_dir_staff.php')) or die('Cannot find this file to include: set_dir_staff.php<BR>');
 (@include_once('./connect_pdo.php')) or die('Cannot find this file to include: connect_pdo.php<BR>');
 
-$staff_username = 'unknown';
-if (array_key_exists('REMOTE_USER', $_SERVER)) {
-    $staff_username = get_server_username();
-} else {
-    if (isset($_SESSION['USERNAME'])) {
-        $staff_username = $_SESSION['USERNAME'];
-    }
-}
+$staff_username = get_server_username();
 if (IsStaffB($db, $staff_username, $staff_names) == false) {
     echo 'You do not have access to this page. If you think this is an error please contact the system administrator.<BR>';
     echo "<p><A target='self' href='..'>Return to the home page</a>.</P>";

@@ -10,14 +10,7 @@
 $display_block = "";
 $display_block .= "<div style='font-size: x-large; font-weight: bold; text-align: center'>Project Selection</div>";
 
-$student_username = "unknown";
-if(array_key_exists('REMOTE_USER',$_SERVER)){
-    $student_username = get_server_username();
-}else{
-    if(isset($_SESSION['USERNAME'])){
-        $student_username = $_SESSION['USERNAME'];
-    }
-}
+$student_username = get_server_username();
 
 $is_staff = isStaff($db, $student_username);
 
