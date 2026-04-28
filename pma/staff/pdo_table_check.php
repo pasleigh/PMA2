@@ -14,13 +14,18 @@ if (array_key_exists('table_name', $_POST) == false) {
 }
 $TABLE_NAME = $_POST['table_name'];
 
-echo("Let's see if the table: \"$TABLE_NAME\" exists<BR>");
+echo("Let's see if the table: \"" . htmlspecialchars($TABLE_NAME) . "\" exists<BR>");
 
 try {
-    if ($connection->query("DESCRIBE $TABLE_NAME")) {
-        echo "$TABLE_NAME exists in database $dbName";
+    $stmt = $connection->prepare(
+        "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?"
+    );
+    $stmt->execute([$TABLE_NAME]);
+    $exists = (bool) $stmt->fetchColumn();
+    if ($exists) {
+        echo htmlspecialchars($TABLE_NAME) . " exists in database " . htmlspecialchars($dbName);
     } else {
-        echo "$TABLE_NAME doesn't exist in database $dbName";
+        echo htmlspecialchars($TABLE_NAME) . " doesn't exist in database " . htmlspecialchars($dbName);
     }
 } catch (PDOException $ex) {
     error_log('pdo_table_check error: ' . $ex->getMessage());

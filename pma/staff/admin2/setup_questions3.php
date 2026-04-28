@@ -15,11 +15,18 @@ if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
 $pm_id = $_REQUEST['pm_id'];
-$assesspart = isset($_GET['part']) ? $_GET['part'] : null;
+$assesspart = isset($_GET['part']) ? (int) $_GET['part'] : null;
 
-$assessqs_year = $assessqs[$assesspart];
-$assess_cats = $assessqs_cats[$assesspart];
-$is_numeric = $p_numeric[$assesspart];
+$assessqs_year = $assessqs[$assesspart] ?? null;
+$assess_cats   = $assessqs_cats[$assesspart] ?? null;
+$is_numeric    = $p_numeric[$assesspart] ?? false;
+
+if ($assess_cats === null || $assessqs_year === null ||
+    !preg_match('/^[a-zA-Z0-9_]+$/', $assess_cats) ||
+    !preg_match('/^[a-zA-Z0-9_]+$/', $assessqs_year)) {
+    http_response_code(400);
+    die('Invalid assessment type parameter.');
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // AJAX HANDLER  (op=save_num_sections)
@@ -33,9 +40,9 @@ if (isset($_POST['op']) && $_POST['op'] === 'save_num_sections') {
         exit();
     }
     try {
-        $stmt = $db->prepare("DELETE FROM $assess_cats WHERE cat > :n");
+        $stmt = $db->prepare("DELETE FROM `$assess_cats` WHERE cat > :n");
         $stmt->execute([':n' => $new_count]);
-        $stmt = $db->prepare("DELETE FROM $assessqs_year WHERE cat > :n");
+        $stmt = $db->prepare("DELETE FROM `$assessqs_year` WHERE cat > :n");
         $stmt->execute([':n' => $new_count]);
         echo json_encode(['ok' => true, 'msg' => "Section count set to $new_count."]);
     } catch (PDOException $ex) {
@@ -88,19 +95,19 @@ if (isset($_POST['op']) && $_POST['op'] === 'save_section') {
     try {
         // Ensure get_feedback column exists
         if (!DoesColumnExistInTable($db, $assess_cats, 'get_feedback')) {
-            $db->query("ALTER TABLE $assess_cats ADD `get_feedback` int DEFAULT 1");
+            $db->query("ALTER TABLE `$assess_cats` ADD `get_feedback` int DEFAULT 1");
         }
 
         // Remove existing rows for this category only
-        $stmt = $db->prepare("DELETE FROM $assess_cats WHERE cat = :cat");
+        $stmt = $db->prepare("DELETE FROM `$assess_cats` WHERE cat = :cat");
         $stmt->execute([':cat' => $cat]);
 
-        $stmt = $db->prepare("DELETE FROM $assessqs_year WHERE cat = :cat");
+        $stmt = $db->prepare("DELETE FROM `$assessqs_year` WHERE cat = :cat");
         $stmt->execute([':cat' => $cat]);
 
         // Insert category row
         $stmt = $db->prepare(
-            "INSERT INTO $assess_cats
+            "INSERT INTO `$assess_cats`
                (cat, description, weight_percent, factor, get_feedback)
              VALUES (:cat, :desc, :wp, :factor, :fb)"
         );
@@ -130,13 +137,13 @@ if (isset($_POST['op']) && $_POST['op'] === 'save_section') {
                 $params[":text$r"] = $resp_texts[$q][$r];
                 $params[":mark$r"] = $resp_marks[$q][$r];
             }
-            $db->prepare("INSERT INTO $assessqs_year ($cols) VALUES ($vals)")
+            $db->prepare("INSERT INTO `$assessqs_year` ($cols) VALUES ($vals)")
                ->execute($params);
         }
 
         // Feedback placeholder row
         $db->prepare(
-            "INSERT INTO $assessqs_year (cat, qid, question, entries)
+            "INSERT INTO `$assessqs_year` (cat, qid, question, entries)
              VALUES (:cat, :qid, 'Feedback Comments:', 0)"
         )->execute([':cat' => $cat, ':qid' => $new_numqs + 1]);
 
@@ -201,7 +208,7 @@ the text indicates what to look for. Change the type on the
     $display_block .= "<div id='sticker'>Total: <span id='grand_total'>0.0</span></div>";
 
     // Count how many sections currently exist in DB
-    $stmt_nc = $db->query("SELECT COUNT(*) FROM $assess_cats WHERE cat IS NOT NULL");
+    $stmt_nc = $db->query("SELECT COUNT(*) FROM `$assess_cats` WHERE cat IS NOT NULL");
     $num_sections = (int) $stmt_nc->fetchColumn();
     if ($num_sections < 1) {
         $num_sections = 1;
@@ -222,7 +229,7 @@ the text indicates what to look for. Change the type on the
     // ── Build section panels ─────────────────────────────────────────────────
     for ($cat = 1; $cat <= $MAX_CATS; $cat++) {
         // Category metadata
-        $query = "SELECT * FROM $assess_cats WHERE cat = :cat";
+        $query = "SELECT * FROM `$assess_cats` WHERE cat = :cat";
         $stmt = $db->prepare($query);
         $stmt->execute([':cat' => $cat]);
         $cat_data = $stmt->fetch();
@@ -233,7 +240,7 @@ the text indicates what to look for. Change the type on the
         $show_feedback = ($cat_data && isset($cat_data['get_feedback'])) ? (int) $cat_data['get_feedback'] : 1;
 
         // Questions for this category
-        $stmt = $db->prepare("SELECT * FROM $assessqs_year WHERE cat = :cat ORDER BY qid");
+        $stmt = $db->prepare("SELECT * FROM `$assessqs_year` WHERE cat = :cat ORDER BY qid");
         $stmt->execute([':cat' => $cat]);
         $all_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // Last row is the feedback placeholder (entries=0), exclude it

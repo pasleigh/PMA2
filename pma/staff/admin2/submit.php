@@ -28,29 +28,30 @@ $display_block .= $connect_msg;
 $access = false;
 $access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
-
+$display_block .= "<H2>This page no longer works</H2>\n";
 if ($access) {
     if ($OP == 'submit_sql') {
         if (array_key_exists('text_input_sql', $_REQUEST) == false) {
             $_REQUEST['text_input_sql'] = null;
         }
-        $query = $_REQUEST['text_input_sql'];
+        //$query = $_REQUEST['text_input_sql'];
 
-        $display_block .= "Query: $query<BR>\n";
-        try {
-            $result = $db->query($query);
-            $msg = "Query sucessfuly performed<BR>\n";
-            $rows = $result->fetchAll();
-            foreach ($rows as $row) {
-                foreach ($row as $rec) {
-                    $display_block .= $rec . "<BR>\n";
-                }
-            }
-        } catch (PDOException $ex) {
-            $display_block .= "An Error occured running this query<BR>\n";
-            $err_msg = $ex->getMessage();
-            $msg = 'Err message: ' . $ex->getMessage() . "<BR>\n";
-        }
+//        $display_block .= "Query: $query<BR>\n";
+//        try {
+//            //$result = $db->query($query);
+//            $msg = "Query sucessfuly performed<BR>\n";
+//            $rows = $result->fetchAll();
+//            foreach ($rows as $row) {
+//                foreach ($row as $rec) {
+//                    $display_block .= $rec . "<BR>\n";
+//                }
+//            }
+//        } catch (PDOException $ex) {
+//            $display_block .= "An Error occured running this query<BR>\n";
+//            $err_msg = $ex->getMessage();
+//            $msg = 'Err message: ' . $ex->getMessage() . "<BR>\n";
+//        }
+        $msg = "<H2>This page nolonger works</H2>\n";;
         $display_block .= $msg;
     } elseif ($OP == 'submit_pwd') {
         $t_hasher = new PasswordHash(8, true);

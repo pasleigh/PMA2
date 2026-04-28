@@ -27,10 +27,10 @@ $display_block = '';
 
 // Does the definition table exist?
 $definition_table_name = 'definition';
-try {
-    $db->query("DESCRIBE $definition_table_name");
-} catch (PDOException $ex) {
-    $display_block .= "Definition table coulld not be accessed<BR>\n";
+$chk = $db->prepare("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?");
+$chk->execute([$definition_table_name]);
+if ((int) $chk->fetchColumn() === 0) {
+    $display_block .= "Definition table could not be accessed<BR>\n";
 }
 
 try {
@@ -40,7 +40,7 @@ try {
     //$count = $res->rowCount();
     //if($count == 0){
     if (!DoesColumnExistInTable($db, $definition_table_name, 'header_image_id')) {
-        $query = "ALTER TABLE $definition_table_name ADD `header_image_id` INT(11) DEFAULT 0";
+        $query = "ALTER TABLE `$definition_table_name` ADD `header_image_id` INT(11) DEFAULT 0";
         $db->query($query);
     }
 } catch (Exception $e) {
@@ -53,9 +53,10 @@ $display_block .= '<h1>Edit details for your School and select the header image 
 //$display_block = "<P>Database definitions table: $definition_table_name</P>";
 
 if ($POST_OP == '') {
-    $query = "SELECT * FROM $definition_table_name WHERE id=1";
     try {
-        $results = $db->query($query);
+        $stmt = $db->prepare("SELECT * FROM `definition` WHERE id = 1");
+        $stmt->execute();
+        $results = $stmt;
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database table $definition_table_name in function: $this_function <BR>\n";
@@ -96,7 +97,7 @@ if ($POST_OP == '') {
     $display_block .= "<TD>Select a header image:</TD>\n";
     $display_block .= "<TD>\n";
     // get the images
-    $query = "SELECT * FROM $header_images_table WHERE 1";
+    $query = "SELECT * FROM `$header_images_table` WHERE 1";
     try {
         $results = $db->query($query);
         $rows = $results->fetchAll();
@@ -145,14 +146,23 @@ if ($POST_OP == '') {
     $header_image_selected = $_POST['header_image_selected'];
     $header_image_info = explode('|', $header_image_selected);
 
-    $query = "UPDATE $definition_table_name SET school_short_name='$school_short_name', school_title='$school_title',
-                              default_module_prefix='$school_module_code',
-                              header_image_name='$header_image_info[0]', running_title='$school_running_title', header_image_id='$header_image_info[1]'
-                              WHERE id=1";
-
     //$display_block .= $query;
     try {
-        $db->query($query);
+        $stmt = $db->prepare(
+            "UPDATE `definition` SET school_short_name = :school_short_name, school_title = :school_title,
+                              default_module_prefix = :school_module_code,
+                              header_image_name = :header_image_name, running_title = :school_running_title,
+                              header_image_id = :header_image_id
+                              WHERE id = 1"
+        );
+        $stmt->execute([
+            ':school_short_name'    => $school_short_name,
+            ':school_title'         => $school_title,
+            ':school_module_code'   => $school_module_code,
+            ':header_image_name'    => $header_image_info[0],
+            ':school_running_title' => $school_running_title,
+            ':header_image_id'      => $header_image_info[1],
+        ]);
 
         $display_block .= "Submitted: <BR><BR>\n";
         $display_block .= "School short name: $school_short_name<BR>\n";

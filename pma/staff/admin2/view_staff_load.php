@@ -45,7 +45,7 @@ if ($access) {
 
     // Does $project_alllocated_staff exist?
     try {
-        $result = $db->query("SELECT 1 FROM $project_allocated_staff LIMIT 1");
+        $result = $db->query("SELECT 1 FROM `$project_allocated_staff` LIMIT 1");
     } catch (Exception $ex) {
         // We got an exception == table not found
         // create it
@@ -75,19 +75,16 @@ SQL;
 
     //################ Update the "use to plot" data #####################################
     if ($POST_OP == 'submit_edited') {
-        $staff_count = $_POST['staff_count'];
+        $staff_count = (int) $_POST['staff_count'];
+        $upd_stmt = $db->prepare("UPDATE `$project_allocated_staff` SET `use` = :use WHERE staffid = :staffid");
         for ($i = 1; $i <= $staff_count; $i++) {
             $postid = "staffid$i";
-            $staffid = $_POST[$postid];
+            $staffid = (int) $_POST[$postid];
             $postid = "use$i";
-            if (array_key_exists($postid, $_POST) == false) {
-                $_POST[$postid] = null;
-            }
-            $use_chk = $_POST[$postid];
-            $query = "update $project_allocated_staff set `use`='$use_chk' where staffid=$staffid";
+            $use_chk = array_key_exists($postid, $_POST) ? (int) $_POST[$postid] : 0;
 
             try {
-                $results = $db->query($query);
+                $upd_stmt->execute([':use' => $use_chk, ':staffid' => $staffid]);
             } catch (PDOException $ex) {
                 $this_function = __FUNCTION__;
                 echo "An Error occured accessing the database in function: $this_function <BR>\n";
@@ -112,7 +109,7 @@ SQL;
 
     if ($POST_OP == 'update_table') {
         // Clear the table
-        $query = "TRUNCATE $project_allocated_staff";
+        $query = "TRUNCATE `$project_allocated_staff`";
         //mysql_query($query) or die(" Unable to empty (truncate) $project_allocated_staff table . <BR>Error msg: " . mysql_error() . "<BR>Query: $query");
         try {
             $results = $db->query($query);
@@ -132,7 +129,7 @@ SQL;
         //        array('label' => 'Supervisor', 'type' => 'string'),
         //        array('label' => 'Number supervised', 'type' => 'number')
         //    );
-        $query = "select * from $staff_names_table order by familyname";
+        $query = "SELECT * FROM `$staff_names_table` ORDER BY familyname";
         //$get_list_res = mysql_query($get_list) or die(" Unable to create staff name list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
         try {
             $results = $db->query($query);
@@ -157,11 +154,9 @@ SQL;
             $room = stripslashes($recs['room']);
             $inactive = stripslashes($recs['inactive']);
             if ($inactive == 0) {
-                $query = "select * from $project_allocated where supervisor_id = $staffid";
-                //$query_res = mysql_query($query) or die(" Unable to interrogate staff table for supervisor. <BR>Error msg: " . mysql_error() . "<BR>Query: $query");
-                //$num_supervise = mysql_num_rows($query_res);
+                $sup_stmt = $db->prepare("SELECT 1 FROM `$project_allocated` WHERE supervisor_id = :staffid");
                 try {
-                    $results = $db->query($query);
+                    $sup_stmt->execute([':staffid' => $staffid]);
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo "An Error occured accessing the database in function: $this_function <BR>\n";
@@ -170,13 +165,11 @@ SQL;
 
                     exit();
                 }
-                $num_supervise = $results->rowCount();
+                $num_supervise = $sup_stmt->rowCount();
 
-                $query = "select * from $project_allocated where second_marker_id = $staffid";
-                //$query_res = mysql_query($query) or die(" Unable to interrogate staff table for second marker. <BR>Error msg: " . mysql_error() . "<BR>Query: $query");
-                //$num_second_mark = mysql_num_rows($query_res);
+                $sec_stmt = $db->prepare("SELECT 1 FROM `$project_allocated` WHERE second_marker_id = :staffid");
                 try {
-                    $results = $db->query($query);
+                    $sec_stmt->execute([':staffid' => $staffid]);
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo "An Error occured accessing the database in function: $this_function <BR>\n";
@@ -185,13 +178,23 @@ SQL;
 
                     exit();
                 }
-                $num_second_mark = $results->rowCount();
+                $num_second_mark = $sec_stmt->rowCount();
 
                 // Write to the $project_allocated_staff table
-                $query = "INSERT INTO $project_allocated_staff (staffid,firstname,familyname,fullname,num_supervise,num_second_mark) VALUES ('$staffid','$firstname','$familyname','$fullname','$num_supervise','$num_second_mark')  ";
-                //mysql_query($query) or die(" Unable to insert data to the table $project_allocated_staff . <BR>Error msg: " . mysql_error() . "<BR>Query: $query");
+                $ins_stmt = $db->prepare(
+                    "INSERT INTO `$project_allocated_staff`
+                     (staffid, firstname, familyname, fullname, num_supervise, num_second_mark)
+                     VALUES (:staffid, :firstname, :familyname, :fullname, :num_supervise, :num_second_mark)"
+                );
                 try {
-                    $results = $db->query($query);
+                    $ins_stmt->execute([
+                        ':staffid'        => $staffid,
+                        ':firstname'      => $firstname,
+                        ':familyname'     => $familyname,
+                        ':fullname'       => $fullname,
+                        ':num_supervise'  => $num_supervise,
+                        ':num_second_mark'=> $num_second_mark,
+                    ]);
                 } catch (PDOException $ex) {
                     $this_function = __FUNCTION__;
                     echo "An Error occured accessing the database in function: $this_function " . ' line: ' . __LINE__ . "<BR>\n";
@@ -229,7 +232,7 @@ SQL;
     $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>\n";
 
     // Get the list of staff from the staff_names2 table
-    $query = "select * from $project_allocated_staff order by familyname";
+    $query = "SELECT * FROM `$project_allocated_staff` ORDER BY familyname";
     //$get_list_res = mysql_query($get_list) or die(" Unable to create staff load list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
     try {
         $results = $db->query($query);
@@ -371,7 +374,7 @@ SQL;
         //$csv_filename = $tmpcsvfile;
         //unlink($tmpcsvfile);
 
-        $query = "select * from $project_allocated_staff order by familyname";
+        $query = "SELECT * FROM `$project_allocated_staff` ORDER BY familyname";
         //$get_list_res = mysql_query($get_list) or die(" Unable to create staff load list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
         try {
             $results = $db->query($query);

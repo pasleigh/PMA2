@@ -141,6 +141,14 @@ class DBBackup {
     }
 
     /**
+     * Validate that a table name contains only safe identifier characters.
+     * @uses Private use
+     */
+    private function isValidTableName($name) {
+        return preg_match('/^[a-zA-Z0-9_]+$/', $name) === 1;
+    }
+
+    /**
      * Connect to a database
      * @uses Private use
      */
@@ -186,6 +194,10 @@ class DBBackup {
      * @uses Private use
      */
     private function getColumns($tableName) {
+        if (!$this->isValidTableName($tableName)) {
+            $this->error[] = 'Invalid table name: ' . $tableName;
+            return false;
+        }
         try {
             $stmt = $this->handler->query('SHOW CREATE TABLE `' . $tableName . '`');
             $q = $stmt->fetchAll();
@@ -203,25 +215,21 @@ class DBBackup {
      * @uses Private use
      */
     private function getData($tableName) {
+        if (!$this->isValidTableName($tableName)) {
+            $this->error[] = 'Invalid table name: ' . $tableName;
+            return false;
+        }
         try {
             $stmt = $this->handler->query('SELECT * FROM `' . $tableName . '`');
             $q = $stmt->fetchAll(PDO::FETCH_NUM);
             $data = '';
             foreach ($q as $pieces) {
-                $i = 0;
-                /*
-                foreach($pieces as $value){
-                    // PAS 06/10/2016
-                    // I want to preserve html
-                    //$value = htmlentities(addslashes($value));
-                    $value = (addslashes($value));
-
-                }
-                */
                 for ($i = 0; $i < count($pieces); $i++) {
-                    $pieces[$i] = (addslashes($pieces[$i]));
+                    $pieces[$i] = ($pieces[$i] === null)
+                        ? 'NULL'
+                        : $this->handler->quote($pieces[$i]);
                 }
-                $data .= 'INSERT INTO ' . $tableName . ' VALUES (\'' . implode('\',\'', $pieces) . '\');' . "\n";
+                $data .= 'INSERT INTO `' . $tableName . '` VALUES (' . implode(',', $pieces) . ');' . "\n";
             }
             return $data;
         } catch (PDOException $e) {

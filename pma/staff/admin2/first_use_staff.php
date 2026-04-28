@@ -36,7 +36,7 @@ if (array_key_exists('op', $_POST)) {
 $display_block = '';
 
 // Check that the images have been loaded
-$query = "SELECT COUNT(*) FROM $header_images_table";
+$query = "SELECT COUNT(*) FROM `$header_images_table`";
 if ($debug) {
     echo("Query: $query<BR>");
 }
@@ -60,7 +60,7 @@ try {
                     $full_file_name = ".$header_images_dir$file_name";
                     $img_file = file_get_contents($full_file_name);
                     $img_file_base64 = base64_encode($img_file);
-                    $query = "INSERT INTO $header_images_table (header_image, filename) VALUES (:header_image, :filename)";
+                    $query = "INSERT INTO `$header_images_table` (header_image, filename) VALUES (:header_image, :filename)";
                     try {
                         $stmt = $db->prepare($query);
                         $stmt->execute([':header_image' => $img_file_base64, ':filename' => $file_name]);
@@ -84,9 +84,9 @@ try {
 }
 // Does the definition table exist?
 $definition_table_name = 'definition';
-try {
-    $db->query("DESCRIBE $definition_table_name");
-} catch (PDOException $ex) {
+$chk = $db->prepare("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?");
+$chk->execute([$definition_table_name]);
+if ((int) $chk->fetchColumn() === 0) {
     //
     // Create it
     $create_table_query = "
@@ -124,36 +124,26 @@ try {
         exit();
     }
 
-    // Probably the header image table does not exist
-    // Check
+    // Probably the header image table does not exist — check
     $table_name = 'header_images';
-    try {
-        $db->query("DESCRIBE $table_name");
-    } catch (PDOException $ex) {     // Does not exist
-        // Create it
+    $chk->execute([$table_name]);
+    if ((int) $chk->fetchColumn() === 0) {
         create_header_images_table_structure($db);
         $display_block .= "$table_name table created<BR>\n";
     }
 
-    // Probably the projects_setup file does not exist
-    // Check
+    // Probably the projects_setup table does not exist — check
     $table_name = 'projects_setup';
-    try {
-        $db->query("DESCRIBE $table_name");
-    } catch (PDOException $ex) {     // Does not exist
-        // Create it
+    $chk->execute([$table_name]);
+    if ((int) $chk->fetchColumn() === 0) {
         create_projects_setup_table_structure($db);
         $display_block .= "$table_name table created<BR>\n";
     }
 
-    // Probably the staff_names table does not exist
-    // Check
+    // Probably the staff_names table does not exist — check
     $table_name = 'staff_names';
-    try {
-        $db->query("DESCRIBE $table_name");
-    } catch (PDOException $ex) {     // Does not exist
-        // Does not exist
-        // Create it
+    $chk->execute([$table_name]);
+    if ((int) $chk->fetchColumn() === 0) {
         create_staff_names_table_structure($db);
         $display_block .= "$table_name table created<BR>\n";
     }
@@ -222,7 +212,7 @@ if ($POST_OP == '') {
     }
 */
     // get the images
-    $query = "SELECT * FROM $header_images_table WHERE 1";
+    $query = "SELECT * FROM `$header_images_table` WHERE 1";
     $school_header_image_id = 0;
     try {
         $results = $db->query($query);
@@ -330,7 +320,7 @@ if ($POST_OP == '') {
         $initial_data_query = "INSERT INTO `$definition_table_name` ( `school_short_name`, `school_title`, `default_module_prefix`, `header_image_name`, `running_title`) VALUES
                 ($school_short_name', '$school_title', '$school_module_code', '$header_image', '$school_running_title');";
     */
-    $initial_data_query = "UPDATE $definition_table_name SET school_short_name=:school_short_name, school_title=:school_title,
+    $initial_data_query = "UPDATE `$definition_table_name` SET school_short_name=:school_short_name, school_title=:school_title,
                               default_module_prefix=:school_module_code,
                               header_image_name=:header_image_name, running_title=:running_title, header_image_id=:header_image_id
                               WHERE id=1";
@@ -364,7 +354,7 @@ if ($POST_OP == '') {
     $room = $_POST['roomX'];
     $inactive = 0;
 
-    $query = "INSERT INTO $staff_names_table (initials,title,firstname,familyname,fullname,email,username,room,inactive,admin_level) VALUES (:initials,:title,:firstname,:familyname,:fullname,:email,:username,:room,:inactive,3)";
+    $query = "INSERT INTO `$staff_names_table` (initials,title,firstname,familyname,fullname,email,username,room,inactive,admin_level) VALUES (:initials,:title,:firstname,:familyname,:fullname,:email,:username,:room,:inactive,3)";
     //$display_block .= $query;
     try {
         $stmt = $db->prepare($query);
@@ -387,7 +377,7 @@ if ($POST_OP == '') {
     }
 
     // And make this user a super admin
-    $query = "INSERT INTO $admin_users_table (firstname,familyname,fullname,email,username,admin_level) VALUES (:firstname,:familyname,:fullname,:email,:username,'3')";
+    $query = "INSERT INTO `$admin_users_table` (firstname,familyname,fullname,email,username,admin_level) VALUES (:firstname,:familyname,:fullname,:email,:username,'3')";
     //$display_block .= $query;
     try {
         $stmt = $db->prepare($query);

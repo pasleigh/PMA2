@@ -25,10 +25,10 @@ $display_block = '';
 
 // Does the definition table exist?
 $definition_table_name = 'definition';
-try {
-    $db->query("DESCRIBE $definition_table_name");
-} catch (PDOException $ex) {
-    $display_block .= "Definition table coulld not be accessed<BR>\n";
+$chk = $db->prepare("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?");
+$chk->execute([$definition_table_name]);
+if ((int) $chk->fetchColumn() === 0) {
+    $display_block .= "Definition table could not be accessed<BR>\n";
 }
 
 $display_block .= '<h1>Edit details for your School and select the header image you would like to use</h1>';
@@ -36,9 +36,10 @@ $display_block .= '<h1>Edit details for your School and select the header image 
 //$display_block = "<P>Database definitions table: $definition_table_name</P>";
 
 if ($POST_OP == '') {
-    $query = "select * from $definition_table_name where id=1";
     try {
-        $results = $db->query($query);
+        $stmt = $db->prepare("SELECT * FROM `definition` WHERE id = 1");
+        $stmt->execute();
+        $results = $stmt;
     } catch (PDOException $ex) {
         $this_function = __FUNCTION__;
         echo "An Error occured accessing the database table $definition_table_name in function: $this_function <BR>\n";
@@ -126,14 +127,21 @@ if ($POST_OP == '') {
     $school_running_title = $_POST['school_running_title'];
     $header_image = $_POST['header_image'];
 
-    $query = "UPDATE $definition_table_name SET school_short_name='$school_short_name', school_title='$school_title',
-                              default_module_prefix='$school_module_code',
-                              header_image_name='$header_image', running_title='$school_running_title'
-                              WHERE id=1";
-
     //$display_block .= $query;
     try {
-        $db->query($query);
+        $stmt = $db->prepare(
+            "UPDATE `definition` SET school_short_name = :school_short_name, school_title = :school_title,
+                              default_module_prefix = :school_module_code,
+                              header_image_name = :header_image, running_title = :school_running_title
+                              WHERE id = 1"
+        );
+        $stmt->execute([
+            ':school_short_name'    => $school_short_name,
+            ':school_title'         => $school_title,
+            ':school_module_code'   => $school_module_code,
+            ':header_image'         => $header_image,
+            ':school_running_title' => $school_running_title,
+        ]);
 
         $display_block .= "Submitted: <BR><BR>\n";
         $display_block .= "School short name: $school_short_name<BR>\n";
