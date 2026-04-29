@@ -306,7 +306,7 @@ if ($is_module_admin || $admin_access) {
     if ($num == 0) {
         $display_block .= "<P>There are no entries in the $project_allocated table. This might indicate that the table has not yet been created. Upload a XLSX/CSV file to creat it.</P>";
     } else {
-        // Get the list of allcoations from the students table
+        // Get the list of allocations from the students table
         $query = "select * from $project_allocated order by projectid";
         try {
             $results = $db->query($query);
@@ -340,6 +340,8 @@ if ($is_module_admin || $admin_access) {
     </thead>';
         $display_block .= "<tbody>\n";
         $student_count = 0;
+        $table_rows = [];
+        $table_cells = [];
         foreach ($rows as $recs) {
             $pid = $recs['projectid'];
             $sid = $recs['sid'];
@@ -366,13 +368,23 @@ if ($is_module_admin || $admin_access) {
             }
 
             $student_count++;
-            $display_block .= "<TR>\n";
-            $display_block .= "<TD><input type='text' name='pid$student_count' value='$pid'  size=4 maxlength=9 readonly></TD>";
-            $display_block .= "<TD><input type='text' name='sid$student_count' value='$sid'  size=10 maxlength=10 readonly></TD>";
-            $display_block .= "<TD><input type='text' name='name$student_count' value='$student_name'  size=20 maxlength=20 readonly></TD>";
-            $display_block .= "<TD><input type='text' name='title$student_count' value='$title'  size=50 maxlength=100 readonly></TD>";
-            $display_block .= "<TD><input type='text' name='supervisor$student_count' value='$supervisor_name'  size=20 maxlength=30 readonly></TD>";
-            $display_block .= "<TD><input type='text' name='second_marker$student_count' value='$second_marker_name'  size=20 maxlength=30 readonly></TD>";
+
+            $row_block = "";
+            $row_block .= "<TR>\n";
+            $row_block .= "<TD><input type='text' name='pid$student_count' value='$pid'  size=4 maxlength=9 readonly></TD>";
+            $row_block .= "<TD><input type='text' name='sid$student_count' value='$sid'  size=10 maxlength=10 readonly></TD>";
+            $row_block .= "<TD><input type='text' name='name$student_count' value='$student_name'  size=20 maxlength=20 readonly></TD>";
+            $row_block .= "<TD><input type='text' name='title$student_count' value='$title'  size=50 maxlength=100 readonly></TD>";
+            $row_block .= "<TD><input type='text' name='supervisor$student_count' value='$supervisor_name'  size=20 maxlength=30 readonly></TD>";
+            $row_block .= "<TD><input type='text' name='second_marker$student_count' value='$second_marker_name'  size=20 maxlength=30 readonly></TD>";
+
+            $table_cells = [];
+            $table_cells[] = "<input type='text' name='pid$student_count' value='$pid'  size=4 maxlength=9 readonly>";
+            $table_cells[] = "<input type='text' name='sid$student_count' value='$sid'  size=10 maxlength=10 readonly>";
+            $table_cells[] = "<input type='text' name='name$student_count' value='$student_name'  size=20 maxlength=20 readonly>";
+            $table_cells[] = "<input type='text' name='title$student_count' value='$title'  size=50 maxlength=100 readonly>";
+            $table_cells[] = "<input type='text' name='supervisor$student_count' value='$supervisor_name'  size=20 maxlength=30 readonly>";
+            $table_cells[] = "<input type='text' name='second_marker$student_count' value='$second_marker_name'  size=20 maxlength=30 readonly>";
 
             for ($i = 1; $i <= 5; $i++) {
                 $m1_entry = "marker_p$i" . 'm1_id';
@@ -381,10 +393,15 @@ if ($is_module_admin || $admin_access) {
                 $marker2_id = $recs[$m2_entry];
                 $marker1_name = GetStaffNameFromID($db, $marker1_id, $staff_names2, null);
                 $marker2_name = GetStaffNameFromID($db, $marker2_id, $staff_names2, null);
-                $display_block .= "<TD style='font-size: small;'>$marker1_name</TD>";
-                $display_block .= "<TD style='font-size: small;'>$marker2_name</TD>";
+                $row_block .= "<TD style='font-size: small;'>$marker1_name</TD>";
+                $row_block .= "<TD style='font-size: small;'>$marker2_name</TD>";
+                $table_cells[] = $marker1_name;
+                $table_cells[] = $marker2_name;
             }
-            $display_block .= "</TR>\n";
+            $row_block .= "</TR>\n";
+            //$display_block .= $row_block;
+
+            $table_rows[] = $table_cells;
         }
         $display_block .= "</tbody>\n";
         $display_block .= "</TABLE>\n";
@@ -455,4 +472,15 @@ if ($is_module_admin || $admin_access) {
     </div><!-- /content -->
 </div><!-- /wrapper -->
 </body>
+<script>
+    $(document).ready(function () {
+        let mydata = <?php echo json_encode($table_rows); ?>;
+        //console.log(mydata);
+        $('#studentallocation').DataTable({
+            //data: project_marking_data.markers,
+            data: mydata,
+            "lengthMenu": [[10, 20, 30, 100, -1], [10, 20, 30, 100, "All"]]
+        })
+    });
+</script>
 </html>

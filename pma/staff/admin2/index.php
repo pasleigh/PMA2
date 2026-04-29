@@ -40,7 +40,8 @@ if ($is_module_admin_any || $admin_access) {
     $year_begin = $_REQUEST['year_begin'];
     $module_short_code = $_REQUEST['module_short_code'];
     $pm_id = (int)$_REQUEST['pm_id'];
-    if ($pm_id != '') {
+
+    if ($pm_id > 0) {
         $query = "select * from $projects_setup where id='$pm_id'";
         try {
             $results = $db->query($query);
