@@ -55,11 +55,11 @@ if (array_key_exists('o_f', $_GET) == false) {
 //$module1 = $_GET['module1'];
 //$year_begin = $_GET['year_begin'];
 $display_block = '';
-$sid = $_GET['sid'];
-$project_id = $_GET['pid'];
-$assesspart = $_GET['part'];
-$who = $_GET['who'];
-$marker_id = $_GET['marker_id'];
+$sid = (int)$_GET['sid'];
+$project_id = (int)$_GET['pid'];
+$assesspart = (int)$_GET['part'];
+$who = (int)$_GET['who'];
+$marker_id = (int)$_GET['marker_id'];
 $topdf = $_GET['topdf'];
 $force_pdf = $_GET['force_pdf'];
 $is_numeric = $_GET['isnumeric'];
@@ -396,11 +396,11 @@ if ($POST_OP == 'commit') {
         if (array_key_exists($overall_feedback_id, $_POST) and $show_overall_feedback_flag == 1) {
             $overall_feedback_text = $_POST[$overall_feedback_id];
             $overall_feedback_text = convert_smart_quotes($overall_feedback_text);
-            $overall_feedback_text = addslashes($overall_feedback_text);
             // Push it to the db
-            $query = "UPDATE $markstore SET OverallFeedback='$overall_feedback_text' WHERE SID='$sid'";
+            $query = "UPDATE $markstore SET OverallFeedback=:feedback WHERE SID=:sid";
             try {
-                $results = $db->query($query);
+                $stmt = $db->prepare($query);
+                $stmt->execute([':feedback' => $overall_feedback_text, ':sid' => $sid]);
             } catch (PDOException $ex) {
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";

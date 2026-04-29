@@ -22,8 +22,8 @@ if (array_key_exists('isnumeric', $_GET) == false) {
 //$module1 = $_GET['module1'];
 //$year_begin = $_GET['year_begin'];
 $display_block = '';
-$sid = $_GET['sid'];
-$project_id = $_GET['pid'];
+$sid = (int)$_GET['sid'];
+$project_id = (int)$_GET['pid'];
 $is_numeric = $_GET['isnumeric'];
 
 $project_marking_page = 'projectmarking_bs.php';

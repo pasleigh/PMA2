@@ -11,7 +11,7 @@
 if (!isset($_REQUEST['pm_id'])) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $assesspart = isset($_GET['part']) ? (int) $_GET['part'] : null;
 
 // Tables for the destination (current module/part)

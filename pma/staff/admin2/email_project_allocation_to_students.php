@@ -21,9 +21,9 @@ function GetAllocatedNumber($db, $sid, $selection_table, $master_id_of_allocated
     if ($sid == '') {
         return $num;
     }
-    $get_list_query = "select * from $selection_table where sid=$sid";
     try {
-        $get_list_res = $db->query($get_list_query);
+        $get_list_res = $db->prepare("SELECT * FROM $selection_table WHERE sid=:sid");
+        $get_list_res->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
         pma_log_db_error($ex, 'email_project_allocation_to_students');
 
@@ -64,7 +64,7 @@ $admin_access = access_check_response($db, $this_staff_username, $this_staff_ful
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
 if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;
@@ -122,7 +122,7 @@ if ($is_module_admin || $admin_access) {
     $messagetype = $_POST['messagetype'];
     $email_body_text = $_POST['email_body_text'];
     $subjectline = $_POST['subjectline'];
-    $pm_id = $_REQUEST['pm_id'];
+    $pm_id = (int)$_REQUEST['pm_id'];
     $POST_OP = $_REQUEST['op'];
 
     $part = $_REQUEST['part'];

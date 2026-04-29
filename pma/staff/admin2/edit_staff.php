@@ -269,7 +269,7 @@ if ($POST_OP == 'new') {
 } elseif ($POST_OP == 'submit_edited') {
     $display_block .= "Submitting: <BR>\n";
 
-    $staffid = $_POST['staffid'];
+    $staffid = (int)$_POST['staffid'];
     $title = $_POST['title_select'];
     $initials = $_POST['initials'];
     $firstname = $_POST['firstname'];
@@ -278,17 +278,15 @@ if ($POST_OP == 'new') {
     $email = $_POST['email'];
     $username = $_POST['username'];
     $room = $_POST['roomX'];
-    $inactive = $_POST['inactive_select'];
-    $mod_admin_level = $_POST['admin_level_select'];
+    $inactive = (int)$_POST['inactive_select'];
+    $mod_admin_level = (int)$_POST['admin_level_select'];
 
     $display_block .= "$staffid, $fullname, $firstname, $familyname, $initials, $title, $email, $username, $room, $inactive, $mod_admin_level .... <BR>\n";
-    $query = "update $staff_names2 set initials='$initials',title='$title',firstname='$firstname',familyname='$familyname',fullname='$fullname',email='$email',username='$username',room='$room',inactive='$inactive',admin_level='$mod_admin_level' where staffid=$staffid";
-    //$display_block .= $query;
-    //mysql_query($query) or die(" Unable to modify data to the table $staff_names2 . <BR>Query: $query");
+    $query = "UPDATE $staff_names2 SET initials=:initials, title=:title, firstname=:firstname, familyname=:familyname, fullname=:fullname, email=:email, username=:username, room=:room, inactive=:inactive, admin_level=:admin_level WHERE staffid=:staffid";
     try {
-        $results = $db->query($query);
+        $stmt = $db->prepare($query);
+        $stmt->execute([':initials' => $initials, ':title' => $title, ':firstname' => $firstname, ':familyname' => $familyname, ':fullname' => $fullname, ':email' => $email, ':username' => $username, ':room' => $room, ':inactive' => $inactive, ':admin_level' => $mod_admin_level, ':staffid' => $staffid]);
     } catch (PDOException $ex) {
-        echo("Unable to update data to the table $staff_names2<BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
@@ -310,10 +308,11 @@ if ($POST_OP == 'new') {
     $mod_admin_level = $_POST['admin_level_select'];
 
     $display_block .= "$fullname, $firstname, $familyname, $initials, $title, $email, $username, $room, $inactive, $mod_admin_level .... <BR>\n";
-    $query = "INSERT INTO $staff_names2 (initials,title,firstname,familyname,fullname,email,username,room,inactive,admin_level) VALUES ('$initials','$title','$firstname','$familyname','$fullname','$email','$username','$room','$inactive','$mod_admin_level')  ";
+    $query = "INSERT INTO $staff_names2 (initials, title, firstname, familyname, fullname, email, username, room, inactive, admin_level) VALUES (:initials, :title, :firstname, :familyname, :fullname, :email, :username, :room, :inactive, :admin_level)";
 
     try {
-        $results = $db->query($query);
+        $stmt = $db->prepare($query);
+        $stmt->execute([':initials' => $initials, ':title' => $title, ':firstname' => $firstname, ':familyname' => $familyname, ':fullname' => $fullname, ':email' => $email, ':username' => $username, ':room' => $room, ':inactive' => $inactive, ':admin_level' => $mod_admin_level]);
     } catch (PDOException $ex) {
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";

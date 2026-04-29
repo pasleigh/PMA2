@@ -26,7 +26,7 @@ $admin_access = access_check_response($db, $this_staff_username, $this_staff_ful
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
 if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
@@ -93,54 +93,36 @@ if ($is_module_admin || $admin_access) {
 
         $display_block .= "<hr>\n";
     } elseif ($POST_OP == 'submit_edited') {
-        $student_count = $_POST['student_count'];
+        $student_count = (int)$_POST['student_count'];
         for ($i = 1; $i <= $student_count; $i++) {
-            //$display_block .= "Submitting: <BR>\n";
             $postid = "sid$i";
-            $sid = addslashes($_POST[$postid]);
+            $sid = $_POST[$postid];
             $postid = "name$i";
-            $name = addslashes($_POST[$postid]);
+            $name = $_POST[$postid];
             $postid = "username$i";
-            $username = addslashes($_POST[$postid]);
+            $username = $_POST[$postid];
             $postid = "programme$i";
-            $programme = addslashes($_POST[$postid]);
-            //$inactive = $_POST['inactive_select'];
+            $programme = $_POST[$postid];
 
             $postid = "sel$i";
-            if (array_key_exists($postid, $_POST) == true) {
-                $_POST[$postid] = 1;
-            } else {
-                $_POST[$postid] = 0;
-            }
-            $sel_chk = $_POST[$postid];
+            $sel_chk = array_key_exists($postid, $_POST) ? 1 : 0;
 
             $postid = "delete$i";
-            if (array_key_exists($postid, $_POST) == true) {
-                $_POST[$postid] = 1;
-            } else {
-                $_POST[$postid] = 0;
-            }
-            $delete_chk = $_POST[$postid];
+            $delete_chk = array_key_exists($postid, $_POST) ? 1 : 0;
 
-            //$display_block .= "$sid, $name, $username, $programme, $sel.... <BR>\n";
-            if ($delete_chk == 0) {
-                $query = "update $students set name='$name',username='$username',programme='$programme',sel='$sel_chk' where sid=$sid";
-            } else {
-                // Delete entry
-                $query = "DELETE FROM $students WHERE sid=$sid";
-            }
-
-            //$display_block .= $query . "<BR>\n";
-            //mysql_query($query) or die(" Unable to update data to the table $students . <BR>Query: $query");
             try {
-                $results = $db->query($query);
+                if ($delete_chk == 0) {
+                    $stmt = $db->prepare("UPDATE $students SET name=:name, username=:username, programme=:programme, sel=:sel WHERE sid=:sid");
+                    $stmt->execute([':name' => $name, ':username' => $username, ':programme' => $programme, ':sel' => $sel_chk, ':sid' => $sid]);
+                } else {
+                    $stmt = $db->prepare("DELETE FROM $students WHERE sid=:sid");
+                    $stmt->execute([':sid' => $sid]);
+                }
             } catch (PDOException $ex) {
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                 exit();
             }
-            //$display_block .= "Updated: $i $fullname <br>\n";
         }
         $display_block .= "<B>All updated</B><BR><hr>\n";
     } elseif ($POST_OP == 'submit_new') {
@@ -163,22 +145,17 @@ if ($is_module_admin || $admin_access) {
         } else {
             $sel = 1;
         }
-        $sid = addslashes($_POST['sid']);
-        $name = addslashes($_POST['name']);
-        $username = addslashes($_POST['username']);
-        $programme = addslashes($_POST['programme']);
-        //$sel = addslashes($_POST['sel']);
+        $sid = $_POST['sid'];
+        $name = $_POST['name'];
+        $username = $_POST['username'];
+        $programme = $_POST['programme'];
 
-        $display_block .= "$sid, $name, $username, $programme, $sel.... <BR>\n";
-        $query = "REPLACE INTO $students (sid,name,username,programme,sel) VALUES ('$sid','$name','$username','$programme','$sel')  ";
-        //$display_block .= $query . "<BR>\n";
-        //mysql_query($query) or die(" Unable to insert data to the table $students . <BR>Query: $query");
         try {
-            $results = $db->query($query);
+            $stmt = $db->prepare("REPLACE INTO $students (sid,name,username,programme,sel) VALUES (:sid, :name, :username, :programme, :sel)");
+            $stmt->execute([':sid' => $sid, ':name' => $name, ':username' => $username, ':programme' => $programme, ':sel' => $sel]);
         } catch (PDOException $ex) {
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
             exit();
         }
         $display_block .= "<B>Done</B><BR><hr>\n";
@@ -234,18 +211,12 @@ if ($is_module_admin || $admin_access) {
                     $col = $prog_col;
                     $programme = $worksheet->getCell([$col, $row])->getValue();
 
-                    $query = "REPLACE INTO $students (sid,name,username,programme) VALUES (";
-                    $query .= "'" . addslashes($sid) . "', ";
-                    $query .= "'" . addslashes($student_name) . "', ";
-                    $query .= "'" . addslashes($username) . "', ";
-                    $query .= "'" . addslashes($programme) . "') ";
-
                     try {
-                        $results = $db->query($query);
+                        $stmt = $db->prepare("REPLACE INTO $students (sid,name,username,programme) VALUES (:sid, :name, :username, :programme)");
+                        $stmt->execute([':sid' => $sid, ':name' => $student_name, ':username' => $username, ':programme' => $programme]);
                     } catch (PDOException $ex) {
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                         exit();
                     }
                 }
@@ -263,7 +234,6 @@ if ($is_module_admin || $admin_access) {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            echo("Unable to update data to the table $students<BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();

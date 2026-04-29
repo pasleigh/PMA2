@@ -11,7 +11,7 @@
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $assesspart = isset($_GET['part']) ? (int) $_GET['part'] : null;
 
 $assessqs_year = $assessqs[$assesspart] ?? null;

@@ -19,7 +19,7 @@ if (IsStaff($db, $staff_username, $staff_names) == false) {
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 
 $query = "select * from $projects_setup where id=$pm_id";
 try {

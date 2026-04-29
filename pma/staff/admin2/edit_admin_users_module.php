@@ -25,7 +25,7 @@ if ($access) {
     if (array_key_exists('pm_id', $_POST) == false) {
         $_POST['pm_id'] = null;
     }
-    $pm_id = $_POST['pm_id'];
+    $pm_id = (int)$_POST['pm_id'];
 
     if (array_key_exists('pm_id_selected', $_POST) == false) {
         $_POST['pm_id_selected'] = null;

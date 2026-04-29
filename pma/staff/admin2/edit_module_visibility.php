@@ -32,12 +32,12 @@ if ($POST_OP == 'submit_edited') {
     $project_count = $_POST['project_count'];
     for ($i = 1; $i <= $project_count; $i++) {
         $postid = "p_id_$i";
-        $pm_id = $_POST[$postid];
+        $pm_id = (int)$_POST[$postid];
         $postid = "visibility_$i";
         if (array_key_exists($postid, $_POST) == false) {
             $_POST[$postid] = 0;
         }
-        $visibility = $_POST[$postid];
+        $visibility = (int)$_POST[$postid];
 
         $display_block .= "Project  $i: pid=$pm_id visibility=$visibility<BR>\n";
 

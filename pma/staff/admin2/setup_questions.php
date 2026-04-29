@@ -138,63 +138,52 @@ if ($access) {
         // Get the  data from the form
         for ($cat = 1; $cat <= $num_categories; $cat++) {
             $id = 'sec' . $cat;
-            $section_q[$cat] = addslashes($_POST[$id]);
+            $section_q[$cat] = $_POST[$id];
             $id = 'weightpc_name' . $cat;
             $section_weight[$cat] = $_POST[$id];
             $id = 'factor_name' . $cat;
             $section_factor[$cat] = $_POST[$id];
 
             $id = 'numqs' . $cat;
-            $numqs = $_POST[$id];
+            $numqs = (int)$_POST[$id];
 
             $id = "new_numqs$cat";
-            $new_numqs = $_POST[$id];
+            $new_numqs = (int)$_POST[$id];
             $new_numqs = $new_numqs + 1;
 
             for ($i = 1; $i < $numqs; $i++) {
                 $id = "q$cat-$i";
-                $question = addslashes($_POST[$id]);
-                //$id = "r$cat-$i";
-                //$rmark = $_POST[$id];
+                $question = $_POST[$id];
                 $id = "res$cat-$i";
-                $num_entries = $_POST[$id];
-                $query_entry = '';
+                $num_entries = (int)$_POST[$id];
+                $params = [':question' => $question, ':num_entries' => $num_entries, ':qid' => $i, ':cat' => $cat];
+                $entry_cols = '';
                 for ($r = 1; $r <= $num_entries; $r++) {
                     $id = "t$cat-$i$r";
-                    $text[$r] = addslashes($_POST[$id]);
+                    $text[$r] = $_POST[$id];
                     $id = "m$cat-$i$r";
                     $mark[$r] = $_POST[$id];
-                    $query_entry .= ", text$r='" . $text[$r] . "', mark$r" . "='" . $mark[$r] . "'\n";
+                    $entry_cols .= ", text$r=:text$r, mark$r=:mark$r";
+                    $params[":text$r"] = $text[$r];
+                    $params[":mark$r"] = $mark[$r];
                 }
 
-                // Input text and marks fo responses into the database
-                $query = "update $assessqs_year set
-                         question='$question', 
-                         entries='$num_entries'
-                         $query_entry
-                         where qid='$i' and cat='$cat'";
-                //mysql_query($action) or die(" Unable to add mark data to the table: $assessqs_year. <BR /> Query = $action");
+                // Input text and marks for responses into the database
                 try {
-                    $results = $db->query($query);
+                    $stmt = $db->prepare("UPDATE $assessqs_year SET question=:question, entries=:num_entries$entry_cols WHERE qid=:qid AND cat=:cat");
+                    $stmt->execute($params);
                 } catch (PDOException $ex) {
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                     exit();
                 }
                 // Input Section title and weight and factor into the database
-                $query = "update $assess_cats set
-                         description='$section_q[$cat]', 
-                         weight_percent='$section_weight[$cat]',
-                         factor='$section_factor[$cat]'
-                         where cat='$cat'";
-                //mysql_query($action) or die(" Unable to add mark data to the table: $assess_cats. <BR /> Query = $action");
                 try {
-                    $results = $db->query($query);
+                    $stmt = $db->prepare("UPDATE $assess_cats SET description=:desc, weight_percent=:weight, factor=:factor WHERE cat=:cat");
+                    $stmt->execute([':desc' => $section_q[$cat], ':weight' => $section_weight[$cat], ':factor' => $section_factor[$cat], ':cat' => $cat]);
                 } catch (PDOException $ex) {
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                     exit();
                 }
             }

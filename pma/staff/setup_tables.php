@@ -70,7 +70,7 @@ if ($num_rows == 0) {
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 
 // We need to do something should the module not be specified
 // Take the first (last?) entry in the  $project_setup table

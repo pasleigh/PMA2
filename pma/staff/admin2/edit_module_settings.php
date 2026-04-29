@@ -15,7 +15,7 @@
 if (!isset($_REQUEST['pm_id'])) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 
 $display_block = '';
 $display_block .= $connect_msg;

@@ -33,7 +33,7 @@ if($is_staff == true)
 if (!isset($_REQUEST['pm_id'])) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 
 if (!isset($_REQUEST['p_id'])) {
     $_REQUEST['p_id'] = null;

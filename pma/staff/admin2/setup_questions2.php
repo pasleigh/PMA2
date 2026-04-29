@@ -34,7 +34,7 @@ $admin_access = access_check_response($db, $this_staff_username, $this_staff_ful
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
 if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
@@ -211,36 +211,33 @@ if ($is_module_admin || $admin_access) {
 
         for ($cat = 1; $cat <= $num_categories; $cat++) {
             $id = 'sec' . $cat;
-            $a_section_q[$cat] = addslashes($_POST[$id]);
+            $a_section_q[$cat] = $_POST[$id];
             $id = 'weightpc_name' . $cat;
             $a_section_weight[$cat] = $_POST[$id];
             $id = 'factor_name' . $cat;
             $a_section_factor[$cat] = $_POST[$id];
 
             $id = 'numqs' . $cat;
-            $numqs = $_POST[$id];
+            $numqs = (int)$_POST[$id];
 
             $id = "new_numqs$cat";
-            $new_numqs = $_POST[$id];
+            $new_numqs = (int)$_POST[$id];
             $new_numqs = $new_numqs + 1;
 
             $a_num_questions[$cat] = $new_numqs - 1;
 
             for ($i = 1; $i < $new_numqs; $i++) {
                 $id = "q$cat-$i";
-                $question = addslashes($_POST[$id]);
-                $a_questions[$cat][$i] = $question;
+                $a_questions[$cat][$i] = $_POST[$id];
 
                 $id = "res$cat-$i";
-                $num_responses = $_POST[$id];
-
+                $num_responses = (int)$_POST[$id];
                 $a_num_responses[$cat][$i] = $num_responses;
 
                 $id = "qw$cat-$i";
                 $q_weight = $_POST[$id];
                 $a_q_weights[$cat][$i] = $q_weight;
 
-                $query_entry = '';
                 unset($mark);
                 $mark = [];
                 unset($text);
@@ -248,10 +245,9 @@ if ($is_module_admin || $admin_access) {
 
                 for ($r = 1; $r <= $num_responses; $r++) {
                     $id = "t$cat-$i$r";
-                    $text[$r] = addslashes($_POST[$id]);
+                    $text[$r] = $_POST[$id];
                     $id = "m$cat-$i$r";
                     $mark[$r] = $_POST[$id];
-                    $query_entry .= ", text$r='" . $text[$r] . "', mark$r" . "='" . $mark[$r] . "'\n";
                 }
                 $a_question_texts[$cat][$i] = $text;
                 $a_question_marks[$cat][$i] = $mark;
@@ -293,44 +289,30 @@ if ($is_module_admin || $admin_access) {
                 $db->query($query);
             } else {
             }
-            $query = "INSERT $assess_cats SET
-                         cat='$cat',
-                         description='$a_section_q[$cat]',
-                         weight_percent='$a_section_weight[$cat]',
-                         factor='$a_section_factor[$cat]',
-                         get_feedback='$a_section_feedback[$cat]'
-                         ;";
-
             try {
-                $results = $db->query($query);
+                $stmt = $db->prepare("INSERT INTO $assess_cats SET cat=:cat, description=:desc, weight_percent=:weight, factor=:factor, get_feedback=:feedback");
+                $stmt->execute([':cat' => $cat, ':desc' => $a_section_q[$cat], ':weight' => $a_section_weight[$cat], ':factor' => $a_section_factor[$cat], ':feedback' => $a_section_feedback[$cat]]);
             } catch (PDOException $ex) {
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                 exit();
             }
 
             // Now the questions and responses
             for ($q = 1 ; $q <= $a_num_questions[$cat] ; $q++) {
-                $query = "INSERT $assessqs_year SET";
-                $query .= "  cat='$cat'";
-                $query .= ", qid='$q'";
-                $query .= ", question='" . $a_questions[$cat][$q] . "'";
-                $query .= ", entries='" . $a_num_responses[$cat][$q] . "'";
-                $query .= ", weight='" . $a_q_weights[$cat][$q] . "'";
+                $params = [':cat' => $cat, ':qid' => $q, ':question' => $a_questions[$cat][$q], ':entries' => $a_num_responses[$cat][$q], ':weight' => $a_q_weights[$cat][$q]];
+                $response_cols = '';
                 for ($r = 1; $r <= $a_num_responses[$cat][$q]; $r++) {
-                    $question_text = $a_question_texts[$cat][$q][$r];
-                    $question_mark = $a_question_marks[$cat][$q][$r];
-                    $query .= ", text$r='$question_text', mark$r='$question_mark' ";
+                    $response_cols .= ", text$r=:text$r, mark$r=:mark$r";
+                    $params[":text$r"] = $a_question_texts[$cat][$q][$r];
+                    $params[":mark$r"] = $a_question_marks[$cat][$q][$r];
                 }
-                $query .= ';';
-
                 try {
-                    $results = $db->query($query);
+                    $stmt = $db->prepare("INSERT INTO $assessqs_year SET cat=:cat, qid=:qid, question=:question, entries=:entries, weight=:weight$response_cols");
+                    $stmt->execute($params);
                 } catch (PDOException $ex) {
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                     exit();
                 }
             }

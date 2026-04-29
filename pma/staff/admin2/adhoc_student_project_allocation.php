@@ -15,12 +15,9 @@ if (array_key_exists('op', $_REQUEST) == false) {
     $_REQUEST['op'] = null;
 }
 
-$sid = $_REQUEST['sid_s'];
+$sid = (int)$_REQUEST['sid_s'];
 $POST_OP = $_REQUEST['op'];
 
-//if ( $chkLocked_status == null ){
-//}else{
-//}
 
 $display_block = '';
 $display_block .= $connect_msg;
@@ -32,10 +29,10 @@ $admin_access = access_check_response($db, $this_staff_username, $this_staff_ful
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
 if ($is_module_admin) {
-    $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
+    $access_phrase = $module_level_access_phrase;
 }
 $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
 
@@ -54,7 +51,6 @@ if ($is_module_admin || $admin_access) {
     $sid_select = "<select name='sid_s'>\n";
 
     $query = "select * from $students order by name";
-    //$get_list_res = mysql_query($get_list) or die(" Unable to create student list from database. <BR>Query: $get_list");
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
@@ -88,8 +84,6 @@ if ($is_module_admin || $admin_access) {
     if ($POST_OP == 'selected') {
         // add the student to the $project_allocated list if not already in it
         $query = "select count(SID) from $project_allocated where SID=$sid";
-        //$get_list_allocated = mysql_query($get_allocated) or die(" Unable to create list from table $project_allocated. <BR>Query = $get_allocated");
-        //$get_allocated_res = mysql_fetch_array($get_list_allocated,MYSQL_NUM);
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
@@ -100,7 +94,6 @@ if ($is_module_admin || $admin_access) {
         $get_allocated_res = $results->fetch();
         if ($get_allocated_res[0] == 0) {
             $query = "insert $project_allocated set SID='$sid'";
-            //mysql_query($action) or die(" Unable to add  data to the table $project_allocated. <BR /> Query = $action");
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
@@ -111,8 +104,6 @@ if ($is_module_admin || $admin_access) {
         }
 
         $query = "select * from $project_allocated where SID=$sid";
-        //$get_list_allocated = mysql_query($get_allocated) or die(" Unable to create list from table $project_allocated. <BR>Query = $get_allocated");
-        //$get_allocated_res = mysql_fetch_array($get_list_allocated);
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
@@ -124,8 +115,6 @@ if ($is_module_admin || $admin_access) {
         $project_id = $get_allocated_res['projectid'];
 
         $query = "select * from $students where sid=$sid";
-        //$get_list_res = mysql_query($get_list) or die(" Unable to create student list from database. <BR>Query: $get_list");
-        //$recs = mysql_fetch_array($get_list_res);
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {

@@ -21,7 +21,7 @@ if (IsStaffB($db, $staff_username, $staff_names) == false) {
 if (array_key_exists('sid', $_REQUEST) == false) {
     $_REQUEST['sid'] = null;
 }
-$sid = $_REQUEST['sid'];
+$sid = (int)$_REQUEST['sid'];
 
 $query = "select * from $project_allocated where sid=$sid";
 try {

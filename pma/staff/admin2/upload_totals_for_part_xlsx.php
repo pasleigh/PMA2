@@ -33,7 +33,7 @@ $admin_access = access_check_response($db, $this_staff_username, $this_staff_ful
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
 if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
@@ -62,7 +62,7 @@ if ($is_module_admin || $admin_access) {
     if (array_key_exists('radio_part_number', $_POST) == false) {
         $_POST['radio_part_number'] = null;
     }
-    $radio_part_number = $_POST['radio_part_number'];
+    $radio_part_number = (int)$_POST['radio_part_number'];
 
     if ($POST_OP == 'upload_csv') {
         if (!is_null($radio_part_number)) {
@@ -115,35 +115,29 @@ if ($is_module_admin || $admin_access) {
 
                         if ($csv_part_num == $radio_part_number) {
                             // Put this in the totals marksheet
-                            $query = "select * from $markstore_totals WHERE sid=$sid";
+                            $part_header = 'retmark' . $radio_part_number;
                             try {
-                                $results = $db->query($query);
+                                $stmt = $db->prepare("SELECT * FROM $markstore_totals WHERE sid=:sid");
+                                $stmt->execute([':sid' => $sid]);
                             } catch (PDOException $ex) {
-                                error_log($ex->getMessage());
-                                echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                                pma_log_db_error($ex, __FUNCTION__);
                                 exit();
                             }
-                            $row = $results->fetch();
-                            $num = $results->rowCount();
+                            $num = $stmt->rowCount();
 
-                            $part_header = 'retmark' . $radio_part_number;
                             // REPLACE does a UPDATE or INSERT (Actually if exists it does a delete)
                             if ($num == 0) {
-                                $query = "INSERT INTO $markstore_totals (SID,$part_header) VALUES (";
-                                $query .= "'" . addslashes($sid) . "', ";
-                                $query .= "'" . addslashes($part_total) . "') ";
                                 try {
-                                    $results = $db->query($query);
+                                    $stmt = $db->prepare("INSERT INTO $markstore_totals (SID,$part_header) VALUES (:sid, :part_total)");
+                                    $stmt->execute([':sid' => $sid, ':part_total' => $part_total]);
                                 } catch (PDOException $ex) {
                                     pma_log_db_error($ex, __FUNCTION__);
                                     exit();
                                 }
                             } else {
-                                $query = "UPDATE $markstore_totals SET ";
-                                //$query .= "sid='" . addslashes($sid) . "', ";
-                                $query .= "$part_header='" . addslashes($part_total) . "' WHERE sid=$sid ";
                                 try {
-                                    $results = $db->query($query);
+                                    $stmt = $db->prepare("UPDATE $markstore_totals SET $part_header=:part_total WHERE sid=:sid");
+                                    $stmt->execute([':part_total' => $part_total, ':sid' => $sid]);
                                 } catch (PDOException $ex) {
                                     pma_log_db_error($ex, __FUNCTION__);
                                     exit();
@@ -151,38 +145,31 @@ if ($is_module_admin || $admin_access) {
                             }
 
                             // Put this in the part marksheet, under marker 1
-                            $query = "select * from $markstore_part WHERE sid=$sid";
                             try {
-                                $results = $db->query($query);
+                                $stmt = $db->prepare("SELECT * FROM $markstore_part WHERE sid=:sid");
+                                $stmt->execute([':sid' => $sid]);
                             } catch (PDOException $ex) {
-                                error_log($ex->getMessage());
-                                echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                                pma_log_db_error($ex, __FUNCTION__);
                                 exit();
                             }
-                            $row = $results->fetch();
-                            $num = $results->rowCount();
+                            $num = $stmt->rowCount();
 
                             $part_header = 'total';
                             $feedback_text = "There is no recorded feedback for this part as this was by a bulk uploaded mark list.\n";
                             $feedback_text .= 'Feedback will be provided separately.';
                             // REPLACE does a UPDATE or INSERT (Actually if exists it does a delete)
                             if ($num == 0) {
-                                $query = "INSERT INTO $markstore_part (SID,C1Feedback,$part_header) VALUES (";
-                                $query .= "'" . addslashes($sid) . "', ";
-                                $query .= "'" . addslashes($feedback_text) . "', ";
-                                $query .= "'" . addslashes($part_total) . "') ";
                                 try {
-                                    $results = $db->query($query);
+                                    $stmt = $db->prepare("INSERT INTO $markstore_part (SID,C1Feedback,$part_header) VALUES (:sid, :feedback, :part_total)");
+                                    $stmt->execute([':sid' => $sid, ':feedback' => $feedback_text, ':part_total' => $part_total]);
                                 } catch (PDOException $ex) {
                                     pma_log_db_error($ex, __FUNCTION__);
                                     exit();
                                 }
                             } else {
-                                $query = "UPDATE $markstore_part SET ";
-                                $query .= "C1Feedback='" . addslashes($feedback_text) . "', ";
-                                $query .= "$part_header='" . addslashes($part_total) . "' WHERE sid=$sid ";
                                 try {
-                                    $results = $db->query($query);
+                                    $stmt = $db->prepare("UPDATE $markstore_part SET C1Feedback=:feedback, $part_header=:part_total WHERE sid=:sid");
+                                    $stmt->execute([':feedback' => $feedback_text, ':part_total' => $part_total, ':sid' => $sid]);
                                 } catch (PDOException $ex) {
                                     pma_log_db_error($ex, __FUNCTION__);
                                     exit();
@@ -237,15 +224,14 @@ if ($is_module_admin || $admin_access) {
         $retmark4 = $recs['retmark4'];
         $retmark5 = $recs['retmark5'];
         $total_mark = $recs['total'];
-        $query = "select * from $students where sid=$sid";
         try {
-            $results = $db->query($query);
+            $stmt = $db->prepare("SELECT * FROM $students WHERE sid=:sid");
+            $stmt->execute([':sid' => $sid]);
         } catch (PDOException $ex) {
-            error_log($ex->getMessage());
-            echo "A database error occurred. Please contact the system administrator.<BR>\n";
+            pma_log_db_error($ex, __FUNCTION__);
             exit();
         }
-        $s_recs = $results->fetch();
+        $s_recs = $stmt->fetch();
         $student_name = stripslashes($s_recs['name']);
 
         $student_count++;

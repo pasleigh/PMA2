@@ -24,7 +24,7 @@ $admin_access = access_check_response($db, $this_staff_username, $this_staff_ful
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
 if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
@@ -85,19 +85,12 @@ if ($is_module_admin || $admin_access) {
                     $col = 6;
                     $f_supervisor_id = $worksheet->getCell([$col, $row])->getValue();
 
-                    $query = "INSERT INTO $master_name (date_added,date_modified,f_title,f_supervisor,f_supervisor_id) VALUES (";
-                    $query .= "'" . addslashes($date_added) . "', ";
-                    $query .= "'" . addslashes($date_modified) . "', ";
-                    $query .= "'" . addslashes($f_title) . "', ";
-                    $query .= "'" . addslashes($f_supervisor) . "', ";
-                    $query .= "'" . addslashes($f_supervisor_id) . "') ";
-
                     try {
-                        $results = $db->query($query);
+                        $stmt = $db->prepare("INSERT INTO $master_name (date_added,date_modified,f_title,f_supervisor,f_supervisor_id) VALUES (:date_added, :date_modified, :f_title, :f_supervisor, :f_supervisor_id)");
+                        $stmt->execute([':date_added' => $date_added, ':date_modified' => $date_modified, ':f_title' => $f_title, ':f_supervisor' => $f_supervisor, ':f_supervisor_id' => $f_supervisor_id]);
                     } catch (PDOException $ex) {
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                         exit();
                     }
                     // get the last record ID
@@ -110,24 +103,16 @@ if ($is_module_admin || $admin_access) {
                     $col = 9;
                     $f_outline = $worksheet->getCell([$col, $row])->getValue();
                     $col = 10;
-                    $f_supervisor_id = $worksheet->getCell([$col, $row])->getValue();
+                    $f_progs = $worksheet->getCell([$col, $row])->getValue();
                     $col = 11;
                     $f_PGprojects = $worksheet->getCell([$col, $row])->getValue();
 
-                    $query = "INSERT INTO $project_details (master_id, f_assocstaff,f_assocstaff_id,f_outline,f_progs,f_PGprojects) VALUES (";
-                    $query .= "'" . addslashes($new_pid) . "', ";
-                    $query .= "'" . addslashes($f_assocstaff) . "', ";
-                    $query .= "'" . addslashes($f_assocstaff_id) . "', ";
-                    $query .= "'" . addslashes($f_outline) . "', ";
-                    $query .= "'" . addslashes($f_supervisor_id) . "') ";
-                    $query .= "'" . addslashes($f_PGprojects) . "', ";
-                    //mysql_query($query) or die(" Unable to insert data to the table $project_details . <BR>Query: $query");
                     try {
-                        $results = $db->query($query);
+                        $stmt = $db->prepare("INSERT INTO $project_details (master_id,f_assocstaff,f_assocstaff_id,f_outline,f_progs,f_PGprojects) VALUES (:master_id, :f_assocstaff, :f_assocstaff_id, :f_outline, :f_progs, :f_PGprojects)");
+                        $stmt->execute([':master_id' => $new_pid, ':f_assocstaff' => $f_assocstaff, ':f_assocstaff_id' => $f_assocstaff_id, ':f_outline' => $f_outline, ':f_progs' => $f_progs, ':f_PGprojects' => $f_PGprojects]);
                     } catch (PDOException $ex) {
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                         exit();
                     }
                 }

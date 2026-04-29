@@ -26,7 +26,7 @@ $admin_access = access_check_response($db, $this_staff_username, $this_staff_ful
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
 if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
@@ -73,7 +73,7 @@ if ($is_module_admin || $admin_access) {
     $messagetype = $_POST['messagetype'];
     $email_body_text = $_POST['email_body_text'];
     $subjectline = $_POST['subjectline'];
-    $pm_id = $_REQUEST['pm_id'];
+    $pm_id = (int)$_REQUEST['pm_id'];
     $POST_OP = $_REQUEST['op'];
     $activestaff = $_REQUEST['activestaff'];
 

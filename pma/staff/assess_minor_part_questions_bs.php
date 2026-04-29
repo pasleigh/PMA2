@@ -49,11 +49,11 @@ if (array_key_exists('o_f', $_GET) == false) {
 }
 
 $display_block = '';
-$sid = $_GET['sid'];
-$project_id = $_GET['pid'];
-$assesspart = $_GET['part'];
-$who = $_GET['who'];
-$marker_id = $_GET['marker_id'];
+$sid = (int)$_GET['sid'];
+$project_id = (int)$_GET['pid'];
+$assesspart = (int)$_GET['part'];
+$who = (int)$_GET['who'];
+$marker_id = (int)$_GET['marker_id'];
 $topdf = $_GET['topdf'];
 $force_pdf = $_GET['force_pdf'];
 $is_numeric = $_GET['isnumeric'];

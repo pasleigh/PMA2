@@ -30,7 +30,7 @@ $admin_access = access_check_response($db, $this_staff_username, $this_staff_ful
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
 if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
@@ -74,38 +74,23 @@ if ($is_module_admin || $admin_access) {
             foreach ($CSV_DATA as $each_proposal_entry) {
                 $csv_keys = array_keys($each_proposal_entry);
 
-                $query = "INSERT INTO $master_name (date_added,date_modified,f_title,f_supervisor,f_supervisor_id) VALUES (";
-                //$query .= "'" . addslashes($each_proposal_entry[$csv_keys[0]]) . "', "; // id
-                $query .= "'" . addslashes($each_proposal_entry[$csv_keys[1]]) . "', ";
-                $query .= "'" . addslashes($each_proposal_entry[$csv_keys[2]]) . "', ";
-                $query .= "'" . addslashes($each_proposal_entry[$csv_keys[3]]) . "', ";
-                $query .= "'" . addslashes($each_proposal_entry[$csv_keys[4]]) . "', ";
-                $query .= "'" . addslashes($each_proposal_entry[$csv_keys[5]]) . "') ";
                 try {
-                    $results = $db->query($query);
+                    $stmt = $db->prepare("INSERT INTO $master_name (date_added,date_modified,f_title,f_supervisor,f_supervisor_id) VALUES (:date_added, :date_modified, :f_title, :f_supervisor, :f_supervisor_id)");
+                    $stmt->execute([':date_added' => $each_proposal_entry[$csv_keys[1]], ':date_modified' => $each_proposal_entry[$csv_keys[2]], ':f_title' => $each_proposal_entry[$csv_keys[3]], ':f_supervisor' => $each_proposal_entry[$csv_keys[4]], ':f_supervisor_id' => $each_proposal_entry[$csv_keys[5]]]);
                 } catch (PDOException $ex) {
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                     exit();
                 }
                 // get the last record ID
                 $new_pid = $db->lastInsertId();
 
-                $query = "INSERT INTO $project_details (master_id, f_assocstaff,f_assocstaff_id,f_outline,f_progs,f_PGprojects) VALUES (";
-                $query .= "'" . addslashes($new_pid) . "', ";
-                $query .= "'" . addslashes($each_proposal_entry[$csv_keys[6]]) . "', ";
-                $query .= "'" . addslashes($each_proposal_entry[$csv_keys[7]]) . "', ";
-                $query .= "'" . addslashes($each_proposal_entry[$csv_keys[8]]) . "', ";
-                $query .= "'" . addslashes($each_proposal_entry[$csv_keys[9]]) . "', ";
-                $query .= "'" . addslashes($each_proposal_entry[$csv_keys[10]]) . "') ";
-                //mysql_query($query) or die(" Unable to insert data to the table $project_details . <BR>Query: $query");
                 try {
-                    $results = $db->query($query);
+                    $stmt = $db->prepare("INSERT INTO $project_details (master_id,f_assocstaff,f_assocstaff_id,f_outline,f_progs,f_PGprojects) VALUES (:master_id, :f_assocstaff, :f_assocstaff_id, :f_outline, :f_progs, :f_PGprojects)");
+                    $stmt->execute([':master_id' => $new_pid, ':f_assocstaff' => $each_proposal_entry[$csv_keys[6]], ':f_assocstaff_id' => $each_proposal_entry[$csv_keys[7]], ':f_outline' => $each_proposal_entry[$csv_keys[8]], ':f_progs' => $each_proposal_entry[$csv_keys[9]], ':f_PGprojects' => $each_proposal_entry[$csv_keys[10]]]);
                 } catch (PDOException $ex) {
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                     exit();
                 }
                 /*while (list($key, $value) = each ($each_member)) {

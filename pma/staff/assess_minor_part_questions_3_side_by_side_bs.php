@@ -61,11 +61,11 @@ if (array_key_exists('o_f', $_GET) == false) {
 //$module1 = $_GET['module1'];
 //$year_begin = $_GET['year_begin'];
 $display_block = '';
-$sid = $_GET['sid'];
-$project_id = $_GET['pid'];
-$assesspart = $_GET['part'];
-$who = $_GET['who'];
-$marker_id = $_GET['marker_id'];
+$sid = (int)$_GET['sid'];
+$project_id = (int)$_GET['pid'];
+$assesspart = (int)$_GET['part'];
+$who = (int)$_GET['who'];
+$marker_id = (int)$_GET['marker_id'];
 $topdf = $_GET['topdf'];
 $force_pdf = $_GET['force_pdf'];
 $is_numeric = $_GET['isnumeric'];
@@ -85,7 +85,6 @@ if (array_key_exists('agreed', $_POST)) {
     $overwritten_mark = $_POST['overwritten'];
     $reason_text = $_POST['reasontext'];
     $reason_text = htmlentities($reason_text);
-    $reason_text = addslashes($reason_text);
 } else {
     $agreed_combination = '9999';
     $overwritten_mark = -1;
@@ -451,11 +450,11 @@ if ($POST_OP == 'commit') {
         if (array_key_exists($overall_feedback_id, $_POST) and $show_overall_feedback_flag == 1) {
             $overall_feedback_text = $_POST[$overall_feedback_id];
             $overall_feedback_text = convert_smart_quotes($overall_feedback_text);
-            $overall_feedback_text = addslashes($overall_feedback_text);
             // Push it to the db
-            $query = "UPDATE $markstore SET OverallFeedback='$overall_feedback_text' WHERE SID='$sid'";
+            $query = "UPDATE $markstore SET OverallFeedback=:feedback WHERE SID=:sid";
             try {
-                $results = $db->query($query);
+                $stmt = $db->prepare($query);
+                $stmt->execute([':feedback' => $overall_feedback_text, ':sid' => $sid]);
             } catch (PDOException $ex) {
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
@@ -484,42 +483,38 @@ if ($POST_OP == 'commit') {
     $mark_agreed_total_s = sprintf('%5.2f', (float) $mark_agreed_total);
 
     // Enter the marks in markstore totals
-    $query = "select locked from $markstore_totals where SID='$sid'";
-    //$list_res = mysql_query($query);
-    //$res = mysql_fetch_array($list_res);
     try {
-        $results = $db->query($query);
+        $stmt = $db->prepare("SELECT locked FROM $markstore_totals WHERE SID=:sid");
+        $stmt->execute([':sid' => $sid]);
     } catch (PDOException $ex) {
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
         exit();
     }
-    $res = $results->fetch();
-
+    $res = $stmt->fetch();
     $locked_stat = $res['locked'];
 
-    if ($results->rowCount() > 0) {
+    $col_retmark = "retmark$assesspart";
+    $col_method = "mark_method$assesspart";
+    $col_reason = "mark_reason$assesspart";
+
+    if ($stmt->rowCount() > 0) {
         // exists, so update
-        $query = "update $markstore_totals set retmark$assesspart=$mark_agreed_total,  locked=0, mark_method$assesspart='$agreed_combination', mark_reason$assesspart='$reason_text' where SID='$sid'";
-        //mysql_query($action) or die(" Unable to add mark data to the database $markstore_totals. <BR>Query: $action");
         try {
-            $results = $db->query($query);
+            $stmt = $db->prepare("UPDATE $markstore_totals SET $col_retmark=:mark_total, locked=0, $col_method=:agreed_combination, $col_reason=:reason_text WHERE SID=:sid");
+            $stmt->execute([':mark_total' => $mark_agreed_total, ':agreed_combination' => $agreed_combination, ':reason_text' => $reason_text, ':sid' => $sid]);
         } catch (PDOException $ex) {
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
             exit();
         }
     } else {
-        $query = "insert $markstore_totals set SID='$sid', retmark$assesspart=$mark_agreed_total,  locked=0, mark_method$assesspart='$agreed_combination', mark_reason$assesspart='$reason_text' ";
-        //mysql_query($action) or die(" Unable to add mark data to the database $markstore_totals. <BR>Query: $action");
         try {
-            $results = $db->query($query);
+            $stmt = $db->prepare("INSERT INTO $markstore_totals SET SID=:sid, $col_retmark=:mark_total, locked=0, $col_method=:agreed_combination, $col_reason=:reason_text");
+            $stmt->execute([':sid' => $sid, ':mark_total' => $mark_agreed_total, ':agreed_combination' => $agreed_combination, ':reason_text' => $reason_text]);
         } catch (PDOException $ex) {
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
             exit();
         }
     }

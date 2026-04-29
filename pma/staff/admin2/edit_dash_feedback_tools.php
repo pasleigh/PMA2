@@ -41,19 +41,18 @@ if ($access) {
         if (array_key_exists($postid, $_POST) == false) {
             $_POST[$postid] = 0;
         }
-        $dash_visible_staff_chk = $_POST[$postid];
+        $dash_visible_staff_chk = (int)$_POST[$postid];
 
         $postid = 'dash_visible_student';
         if (array_key_exists($postid, $_POST) == false) {
             $_POST[$postid] = 0;
         }
-        $dash_visible_student_chk = $_POST[$postid];
+        $dash_visible_student_chk = (int)$_POST[$postid];
 
         $id = 0;
-        $query = "UPDATE $dash_projects_setup SET staff='$dash_visible_staff_chk', student='$dash_visible_student_chk' WHERE id=$id";
-
         try {
-            $results = $db->query($query);
+            $stmt = $db->prepare("UPDATE $dash_projects_setup SET staff=:staff, student=:student WHERE id=:id");
+            $stmt->execute([':staff' => $dash_visible_staff_chk, ':student' => $dash_visible_student_chk, ':id' => $id]);
         } catch (PDOException $ex) {
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
@@ -65,40 +64,39 @@ if ($access) {
             //$display_block .= "Submitting: <BR>\n";
             $id = $i;
             $postid = "description$i";
-            $description = addslashes($_POST[$postid]);
+            $description = $_POST[$postid];
             $postid = "title$i";
-            $title = addslashes($_POST[$postid]);
+            $title = $_POST[$postid];
             $postid = "subtitle$i";
-            $subtitle = addslashes($_POST[$postid]);
+            $subtitle = $_POST[$postid];
 
             $postid = "visible$i";
             if (array_key_exists($postid, $_POST) == false) {
                 $_POST[$postid] = 0;
             }
-            $visible_chk = $_POST[$postid];
+            $visible_chk = (int)$_POST[$postid];
 
             $postid = "active$i";
             if (array_key_exists($postid, $_POST) == false) {
                 $_POST[$postid] = 0;
             }
-            $active_chk = $_POST[$postid];
+            $active_chk = (int)$_POST[$postid];
 
             $postid = "staff$i";
             if (array_key_exists($postid, $_POST) == false) {
                 $_POST[$postid] = 0;
             }
-            $staff_chk = $_POST[$postid];
+            $staff_chk = (int)$_POST[$postid];
 
             $postid = "student$i";
             if (array_key_exists($postid, $_POST) == false) {
                 $_POST[$postid] = 0;
             }
-            $student_chk = $_POST[$postid];
-
-            $query = "UPDATE $dash_projects_setup SET description='$description',title='$title',subtitle='$subtitle',visible='$visible_chk',active='$active_chk',staff='$staff_chk',student='$student_chk' WHERE id=$id";
+            $student_chk = (int)$_POST[$postid];
 
             try {
-                $results = $db->query($query);
+                $stmt = $db->prepare("UPDATE $dash_projects_setup SET description=:desc, title=:title, subtitle=:subtitle, visible=:visible, active=:active, staff=:staff, student=:student WHERE id=:id");
+                $stmt->execute([':desc' => $description, ':title' => $title, ':subtitle' => $subtitle, ':visible' => $visible_chk, ':active' => $active_chk, ':staff' => $staff_chk, ':student' => $student_chk, ':id' => $id]);
             } catch (PDOException $ex) {
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";

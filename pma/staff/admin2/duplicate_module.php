@@ -32,13 +32,13 @@ if (array_key_exists('op', $_POST)) {
         $pm_id_old = null;
         $post_error = true;
     } else {
-        $pm_id_old = $_POST['pm_id_old'];
+        $pm_id_old = (int)$_POST['pm_id_old'];
     }
     if (array_key_exists('new_year_begin', $_POST) == false) {
         $new_year_begin = -1;
         $post_error = true;
     } else {
-        $new_year_begin = $_POST['new_year_begin'];
+        $new_year_begin = (int)$_POST['new_year_begin'];
     }
     if (array_key_exists('new_module_short_name', $_POST) == false) {
         $new_short_name = null;

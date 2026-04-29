@@ -23,7 +23,7 @@ $admin_access = access_check_response($db, $this_staff_username, $this_staff_ful
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
 if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
@@ -78,94 +78,40 @@ if ($is_module_admin || $admin_access) {
                 $num = CountAllocationTable($db, $project_allocated);
 
                 // Does this student have an entry in the allocations table
-                $query = "select * from $project_allocated where sid='$sid'";
                 try {
-                    $results = $db->query($query);
+                    $stmt = $db->prepare("SELECT * FROM $project_allocated WHERE sid=:sid");
+                    $stmt->execute([':sid' => $sid]);
                 } catch (PDOException $ex) {
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                     exit();
                 }
-                $num = $results->rowCount();
+                $num = $stmt->rowCount();
 
                 // REPLACE does a UPDATE or INSERT (Actually if exists it does a delete)
-                if ($num == 0) {
-                    $query = "INSERT INTO $project_allocated (sid,masterid,title,supervisor_id,second_marker_id) VALUES (";
-                    $query .= "'" . addslashes($sid) . "', ";
-                    $query .= "'" . addslashes($master_id) . "', ";
-                    $query .= "'" . addslashes($title) . "', ";
-                    $query .= "'" . addslashes($supervisor_id) . "', ";
-                    $query .= "'" . addslashes($second_marker_id) . "') ";
-                    //mysql_query($query) or die(" Unable to insert data to the table $project_allocated . <BR>Query: $query");
+                try {
+                    if ($num == 0) {
+                        $stmt = $db->prepare("INSERT INTO $project_allocated (sid,masterid,title,supervisor_id,second_marker_id) VALUES (:sid, :master_id, :title, :supervisor_id, :second_marker_id)");
+                        $stmt->execute([':sid' => $sid, ':master_id' => $master_id, ':title' => $title, ':supervisor_id' => $supervisor_id, ':second_marker_id' => $second_marker_id]);
+                    } else {
+                        $stmt = $db->prepare("UPDATE $project_allocated SET masterid=:master_id, title=:title, supervisor_id=:supervisor_id, second_marker_id=:second_marker_id WHERE sid=:sid");
+                        $stmt->execute([':master_id' => $master_id, ':title' => $title, ':supervisor_id' => $supervisor_id, ':second_marker_id' => $second_marker_id, ':sid' => $sid]);
+                    }
+                } catch (PDOException $ex) {
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                    exit();
+                }
+                $marker_params = [':supervisor_id' => $supervisor_id, ':second_marker_id' => $second_marker_id, ':sid' => $sid];
+                foreach ([1, 2, 3, 4, 5] as $p) {
                     try {
-                        $results = $db->query($query);
+                        $stmt = $db->prepare("UPDATE $project_allocated SET `marker_p{$p}m1_id`=:supervisor_id, `marker_p{$p}m2_id`=:second_marker_id WHERE sid=:sid");
+                        $stmt->execute($marker_params);
                     } catch (PDOException $ex) {
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
                         exit();
                     }
-                } else {
-                    $query = "UPDATE $project_allocated SET ";
-                    //$query .= "sid='" . addslashes($sid) . "', ";
-                    $query .= "masterid='" . addslashes($master_id) . "', ";
-                    $query .= "title='" . addslashes($title) . "', ";
-                    $query .= "supervisor_id='" . addslashes($supervisor_id) . "', ";
-                    $query .= "second_marker_id='" . addslashes($second_marker_id) . "' WHERE sid=$sid ";
-                    //mysql_query($query) or die(" Unable to insert data to the table $project_allocated . <BR>Query: $query");
-                    try {
-                        $results = $db->query($query);
-                    } catch (PDOException $ex) {
-                        error_log($ex->getMessage());
-                        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-                        exit();
-                    }
-                }
-                $query = "UPDATE $project_allocated SET `marker_p1m1_id`=$supervisor_id, `marker_p1m2_id`=$second_marker_id WHERE sid=$sid";
-                //mysql_query($query) or die(" Unable to update id (p1)data to the table $project_allocated . <BR>Query: $query");
-                try {
-                    $results = $db->query($query);
-                } catch (PDOException $ex) {
-                    error_log($ex->getMessage());
-                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
-                    exit();
-                }
-
-                $query = "UPDATE $project_allocated SET `marker_p2m1_id`=$supervisor_id, `marker_p2m2_id`=$second_marker_id WHERE sid=$sid";
-                //mysql_query($query) or die(" Unable to update id (p2) data to the table $project_allocated . <BR>Query: $query");
-                try {
-                    $results = $db->query($query);
-                } catch (PDOException $ex) {
-                    error_log($ex->getMessage());
-                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
-                    exit();
-                }
-                $query = "UPDATE $project_allocated SET `marker_p3m1_id`=$supervisor_id, `marker_p3m2_id`=$second_marker_id WHERE sid=$sid";
-                //mysql_query($query) or die(" Unable to update id (p3) data to the table $project_allocated . <BR>Query: $query");
-                try {
-                    $results = $db->query($query);
-                } catch (PDOException $ex) {
-                    error_log($ex->getMessage());
-                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
-                    exit();
-                }
-                $query = "UPDATE $project_allocated SET `marker_p4m1_id`=$supervisor_id, `marker_p4m2_id`=$second_marker_id WHERE sid=$sid";
-                //mysql_query($query) or die(" Unable to update id (p4) data to the table $project_allocated . <BR>Query: $query");
-                try {
-                    $results = $db->query($query);
-                } catch (PDOException $ex) {
-                    error_log($ex->getMessage());
-                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
-                    exit();
-                }
-                $query = "UPDATE $project_allocated SET `marker_p5m1_id`=$supervisor_id, `marker_p5m2_id`=$second_marker_id WHERE sid=$sid";
-                //mysql_query($query) or die(" Unable to update id (p5) data to the table $project_allocated . <BR>Query: $query");
-                try {
-                    $results = $db->query($query);
-                } catch (PDOException $ex) {
-                    error_log($ex->getMessage());
-                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
-                    exit();
                 }
                 /*while (list($key, $value) = each ($each_member)) {
 
@@ -208,60 +154,38 @@ if ($is_module_admin || $admin_access) {
 
                 $num = CountAllocationTable($db, $project_allocated);
 
-                // Does thiss student have an entry in the allocations table
-                $query = "select * from $project_allocated where sid='$sid'";
+                // Does this student have an entry in the allocations table
                 try {
-                    $results = $db->query($query);
+                    $stmt = $db->prepare("SELECT * FROM $project_allocated WHERE sid=:sid");
+                    $stmt->execute([':sid' => $sid]);
                 } catch (PDOException $ex) {
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
                     exit();
                 }
-                $num = $results->rowCount();
+                $num = $stmt->rowCount();
 
                 // REPLACE does a UPDATE or INSERT (Actually if exists it does a delete)
-                if ($num == 0) {
-                    $query = "INSERT INTO $project_allocated (sid,masterid,title,supervisor_id,second_marker_id) VALUES (";
-                    $query .= "'" . addslashes($sid) . "', ";
-                    $query .= "'" . addslashes($master_id) . "', ";
-                    $query .= "'" . addslashes($title) . "', ";
-                    $query .= "'" . addslashes($supervisor_ida[0]) . "', ";
-                    $query .= "'" . addslashes($second_marker_ida[0]) . "') ";
-                    //mysql_query($query) or die(" Unable to insert data to the table $project_allocated . <BR>Query: $query");
-                    try {
-                        $results = $db->query($query);
-                    } catch (PDOException $ex) {
-                        error_log($ex->getMessage());
-                        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-                        exit();
+                try {
+                    if ($num == 0) {
+                        $stmt = $db->prepare("INSERT INTO $project_allocated (sid,masterid,title,supervisor_id,second_marker_id) VALUES (:sid, :master_id, :title, :supervisor_id, :second_marker_id)");
+                        $stmt->execute([':sid' => $sid, ':master_id' => $master_id, ':title' => $title, ':supervisor_id' => $supervisor_ida[0], ':second_marker_id' => $second_marker_ida[0]]);
+                    } else {
+                        $stmt = $db->prepare("UPDATE $project_allocated SET masterid=:master_id, title=:title, supervisor_id=:supervisor_id, second_marker_id=:second_marker_id WHERE sid=:sid");
+                        $stmt->execute([':master_id' => $master_id, ':title' => $title, ':supervisor_id' => $supervisor_ida[0], ':second_marker_id' => $second_marker_ida[0], ':sid' => $sid]);
                     }
-                } else {
-                    $query = "UPDATE $project_allocated SET ";
-                    //$query .= "sid='" . addslashes($sid) . "', ";
-                    $query .= "masterid='" . addslashes($master_id) . "', ";
-                    $query .= "title='" . addslashes($title) . "', ";
-                    $query .= "supervisor_id='" . addslashes($supervisor_ida[0]) . "', ";
-                    $query .= "second_marker_id='" . addslashes($second_marker_ida[0]) . "' WHERE sid=$sid ";
-                    //mysql_query($query) or die(" Unable to insert data to the table $project_allocated . <BR>Query: $query");
-                    try {
-                        $results = $db->query($query);
-                    } catch (PDOException $ex) {
-                        error_log($ex->getMessage());
-                        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-                        exit();
-                    }
+                } catch (PDOException $ex) {
+                    error_log($ex->getMessage());
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                    exit();
                 }
 
                 for ($i = 1; $i <= $num_parts; $i++) {
                     $m1_entry = "marker_p$i" . 'm1_id';
                     $m2_entry = "marker_p$i" . 'm2_id';
-                    $marker1_id = $supervisor_ida[$i];
-                    $marker2_id = $second_marker_ida[$i];
-                    $query = "UPDATE $project_allocated SET `$m1_entry`=$marker1_id, `$m2_entry`=$marker2_id WHERE sid=$sid";
-                    //mysql_query($query) or die(" Unable to update id (p1)data to the table $project_allocated . <BR>Query: $query");
                     try {
-                        $results = $db->query($query);
+                        $stmt = $db->prepare("UPDATE $project_allocated SET `$m1_entry`=:marker1_id, `$m2_entry`=:marker2_id WHERE sid=:sid");
+                        $stmt->execute([':marker1_id' => $supervisor_ida[$i], ':marker2_id' => $second_marker_ida[$i], ':sid' => $sid]);
                     } catch (PDOException $ex) {
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";

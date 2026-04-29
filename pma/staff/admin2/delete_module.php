@@ -23,7 +23,7 @@ $admin_access = access_check_response($db, $this_staff_username, $this_staff_ful
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
 if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
@@ -100,7 +100,6 @@ if ($admin_access) {
         $display_block .= "<p><input class='btn btn-danger' type='submit' id='submitbutton' name='submit' value='I confirm that I wish to delete all these tables - I KNOW THAT I CANNOT GET THEM BACK.'></p>\n";
         $display_block .= "</form>\n";
     } elseif ($POST_OP == 'delete_confirmed') {
-        //$display_block .= "Delete confirmed<BR>\n";
         $confirm_delete = false;
         if (array_key_exists('confirm_delete', $_POST) == true) {
             $confirm_delete = true;
@@ -125,7 +124,6 @@ if ($admin_access) {
                 }
             }
             // delete entry from the $projects_setup table
-            //$query = "DELETE FROM $projects_setup WHERE short_code='$short_code'";
             $query = "DELETE FROM $projects_setup WHERE id='$pm_id'";
             $display_block .= "<span style='font-size: large; color: black'>Projects setup table entry: </span>";
             try {
@@ -156,7 +154,6 @@ if ($admin_access) {
         $display_block .= "</form>\n";
     }
 } else {
-    //$display_block .= "You do not have the appropriate admin level<BR>";
     $display_block .= "<A href='../index.php'>Go back here</A><BR>";
 }
 

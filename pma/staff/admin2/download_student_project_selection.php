@@ -19,23 +19,13 @@ $display_block = '';
 $display_block .= $connect_msg;
 
 // Check the admin level
-//$access = false;
-//$access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
-//$display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_phrase</h2>\n";
-
-//----------------------------------------------------------------------------------------------------
-//$display_block .= "<h1 style='background-color: #f1c40f; text-align: center;  font-size: xx-large'>THIS PAGE IS STILL UNDER CONSTRUCTION<BR>DO NOT CLICK THE BUTTONS</h1>";
-//$access = false;
-//----------------------------------------------------------------------------------------------------
-
-// Check the admin level
 $admin_access = false;
 $admin_access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 
 if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
-$pm_id = $_REQUEST['pm_id'];
+$pm_id = (int)$_REQUEST['pm_id'];
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
 if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
@@ -51,18 +41,12 @@ if ($is_module_admin || $admin_access) {
     }
     $POST_OP = $_POST['op'];
 
-    // see all the POST values
-    //foreach ($_POST as $key => $value){
-    //}
-
     if ($POST_OP == 'download_selection_csv') {
         //--- Download the student selection table ------------------------------//
         $csv_filename = 'student_selection_' . $module_prefix . $module1 . $module_postfix . '_' . $short_code . '_' . $year_begin . '-' . $year_end . '.csv';
 
         $tmpcsvfile = tempnam(PMA_TMP_DIR, '');
         $path = dirname($tmpcsvfile);
-        //$sys_temp_dir = sys_get_temp_dir();
-        //exit();
 
         $query = "SELECT * FROM $selection WHERE 1";
         try {
@@ -71,7 +55,6 @@ if ($is_module_admin || $admin_access) {
             echo("Unable to update data to the table $master_name<BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
-            //exit();
         }
 
         $num = $results->rowCount();

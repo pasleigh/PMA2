@@ -202,13 +202,14 @@ if ($access) {
         if (isset($_POST['inactive_chk'])) {
             $inactive = 1;
         }
-        $mod_admin_level = $_POST['admin_level_select'];
+        $mod_admin_level = (int)$_POST['admin_level_select'];
 
         $display_block .= "$fullname, $firstname, $familyname, $initials, $title, $email, $username, $room, $inactive, $mod_admin_level .... <BR>\n";
-        $query = "INSERT INTO $staff_names_table (initials,title,firstname,familyname,fullname,email,username,room,inactive,admin_level) VALUES ('$initials','$title','$firstname','$familyname','$fullname','$email','$username','$room','$inactive','$mod_admin_level')  ";
+        $query = "INSERT INTO $staff_names_table (initials, title, firstname, familyname, fullname, email, username, room, inactive, admin_level) VALUES (:initials, :title, :firstname, :familyname, :fullname, :email, :username, :room, :inactive, :admin_level)";
 
         try {
-            $results = $db->query($query);
+            $stmt = $db->prepare($query);
+            $stmt->execute([':initials' => $initials, ':title' => $title, ':firstname' => $firstname, ':familyname' => $familyname, ':fullname' => $fullname, ':email' => $email, ':username' => $username, ':room' => $room, ':inactive' => $inactive, ':admin_level' => $mod_admin_level]);
         } catch (PDOException $ex) {
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
@@ -275,36 +276,14 @@ if ($access) {
                     // Must detect if the username exists (this is unique and not null) then
                     // if username exists  do an UPDATE
                     // if it does not exist do an INSERT INTO
-                    if (DoesStaffExistByUsername($db, $this_username, $staff_names_table)) {
-                        $query = "UPDATE $staff_names_table SET ";
-
-                        $query .= "initials='" . addslashes($this_initials) . "', ";
-                        $query .= "title='" . addslashes($this_title) . "', ";
-                        $query .= "firstname='" . addslashes($this_first_name) . "', ";
-                        $query .= "familyname='" . addslashes($this_family_name) . "', ";
-                        $query .= "fullname='" . addslashes($this_fullname) . "', ";
-                        $query .= "email='" . addslashes($this_email) . "', ";
-                        $query .= "room='" . addslashes($this_room) . "', ";
-                        $query .= "inactive='" . addslashes($this_inactive) . "' ";
-                        $query .= 'WHERE ';
-                        $query .= "username='$this_username'";
-                    } else {
-                        $query = "INSERT INTO $staff_names_table SET ";
-
-                        $query .= "initials='" . addslashes($this_initials) . "', ";
-                        $query .= "title='" . addslashes($this_title) . "', ";
-                        $query .= "firstname='" . addslashes($this_first_name) . "', ";
-                        $query .= "familyname='" . addslashes($this_family_name) . "', ";
-                        $query .= "fullname='" . addslashes($this_fullname) . "', ";
-                        $query .= "email='" . addslashes($this_email) . "', ";
-                        $query .= "room='" . addslashes($this_room) . "', ";
-                        $query .= "inactive='" . addslashes($this_inactive) . "', ";
-                        $query .= "admin_level='" . addslashes($this_admin_level) . "', ";
-                        $query .= "username='$this_username'";
-                    }
-
                     try {
-                        $results = $db->query($query);
+                        if (DoesStaffExistByUsername($db, $this_username, $staff_names_table)) {
+                            $stmt = $db->prepare("UPDATE $staff_names_table SET initials=:initials, title=:title, firstname=:firstname, familyname=:familyname, fullname=:fullname, email=:email, room=:room, inactive=:inactive WHERE username=:username");
+                            $stmt->execute([':initials' => $this_initials, ':title' => $this_title, ':firstname' => $this_first_name, ':familyname' => $this_family_name, ':fullname' => $this_fullname, ':email' => $this_email, ':room' => $this_room, ':inactive' => $this_inactive, ':username' => $this_username]);
+                        } else {
+                            $stmt = $db->prepare("INSERT INTO $staff_names_table (initials, title, firstname, familyname, fullname, email, room, inactive, admin_level, username) VALUES (:initials, :title, :firstname, :familyname, :fullname, :email, :room, :inactive, :admin_level, :username)");
+                            $stmt->execute([':initials' => $this_initials, ':title' => $this_title, ':firstname' => $this_first_name, ':familyname' => $this_family_name, ':fullname' => $this_fullname, ':email' => $this_email, ':room' => $this_room, ':inactive' => $this_inactive, ':admin_level' => $this_admin_level, ':username' => $this_username]);
+                        }
                     } catch (PDOException $ex) {
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
@@ -333,7 +312,6 @@ if ($access) {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            echo("Unable to update data to the table $students<BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();

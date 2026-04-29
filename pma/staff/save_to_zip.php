@@ -27,7 +27,7 @@ require_once __BASE_DIR__ . '/vendor/autoload.php';
 $files_to_zip = [];
 
 $part = $_POST['part'];
-$pm_id = $_POST['pm_id'];
+$pm_id = (int)$_POST['pm_id'];
 
 // In the absence of other setting, default to 1
 $who = 1;
