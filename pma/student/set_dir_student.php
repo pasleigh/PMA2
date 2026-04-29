@@ -1,6 +1,9 @@
 <?php
 //directory to the staff directory
-if (session_status() === PHP_SESSION_NONE) { session_start(); }
+if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.name', getenv('SESSION_NAME') ?: 'PMA');
+    session_start();
+}
 $STUDENT_DIR_VAL = __DIR__;
 $BASE_DIR_VAL    = dirname(__DIR__);
 $STAFF_DIR_VAL   = dirname(__DIR__) . '/staff';

@@ -8,8 +8,6 @@ function SetLockedStatusForMarker($db, $sid, $is_part_locked, $part_index, $mark
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -22,8 +20,6 @@ function SetLockedStatusForMarker($db, $sid, $is_part_locked, $part_index, $mark
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -54,8 +50,6 @@ function SetLockedStatusOverall($db, $sid, $is_part_locked, $markstore_totals) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -68,8 +62,6 @@ function SetLockedStatusOverall($db, $sid, $is_part_locked, $markstore_totals) {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -86,8 +78,6 @@ function SetThirdMarkerStatusForPart($db, $sid, $is_third_marker_required, $part
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -101,8 +91,6 @@ function SetThirdMarkerStatusForPart($db, $sid, $is_third_marker_required, $part
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -119,8 +107,6 @@ function GetLockedStatusForMarker($db, $sid, $part_index, $marker_index, $markst
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -143,8 +129,6 @@ function GetLockedStatusOverall($db, $sid, $markstore_totals) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 

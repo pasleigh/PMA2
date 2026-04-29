@@ -72,8 +72,6 @@ function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -103,8 +101,6 @@ function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -119,8 +115,6 @@ function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -133,8 +127,6 @@ function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -156,8 +148,6 @@ function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -185,8 +175,6 @@ function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -209,8 +197,6 @@ function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $
                 try {
                     $results = $db->query($query);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo "An Error occured accessing the database in function: $this_function <BR>\n";
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -495,8 +481,6 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -527,8 +511,6 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -542,8 +524,6 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -556,8 +536,6 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -579,8 +557,6 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -613,8 +589,6 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -637,8 +611,6 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
                 try {
                     $results = $db->query($query);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo "An Error occured accessing the database in function: $this_function <BR>\n";
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -937,8 +909,6 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -969,8 +939,6 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -985,8 +953,6 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -1001,8 +967,6 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -1015,8 +979,6 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -1037,8 +999,6 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -1071,8 +1031,6 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -1095,8 +1053,6 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
                 try {
                     $results = $db->query($query);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo "An Error occured accessing the database in function: $this_function <BR>\n";
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -1412,8 +1368,6 @@ function show_overall_feedback_form2($db, $sid, $markstore1, $markstore2, $marks
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -1430,8 +1384,6 @@ function show_overall_feedback_form2($db, $sid, $markstore1, $markstore2, $marks
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -1480,8 +1432,6 @@ function show_overall_feedback_form3($db, $sid, $markstore1, $markstore2, $marks
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -1498,8 +1448,6 @@ function show_overall_feedback_form3($db, $sid, $markstore1, $markstore2, $marks
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -1516,8 +1464,6 @@ function show_overall_feedback_form3($db, $sid, $markstore1, $markstore2, $marks
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 

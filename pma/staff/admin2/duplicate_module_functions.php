@@ -240,8 +240,7 @@ SQL;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 
     // Get the new pm_id
@@ -281,9 +280,7 @@ SQL;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        echo "An Error occured adding the new project setup proposals<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo("Error message: $err_msg<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
         exit();
     }
     return $pm_id_new;

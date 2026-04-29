@@ -78,8 +78,6 @@ if ($is_module_admin || $admin_access) {
                     $results = $db->prepare("UPDATE $projects_areas SET area=?, description=? WHERE `id`=?");
                     $results->execute([$area, $area_description, $area_id]);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo("An Error occured accessing the database in function: $this_function <BR>\n");
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
                     exit();
@@ -96,8 +94,6 @@ if ($is_module_admin || $admin_access) {
                     $results = $db->prepare("DELETE FROM $projects_areas WHERE `id`=?");
                     $results->execute([$area_index]);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo("An Error occured accessing the database in function: $this_function <BR>\n");
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
                     exit();
@@ -113,8 +109,6 @@ if ($is_module_admin || $admin_access) {
             $results = $db->prepare("INSERT INTO $projects_areas SET area=?,description=?");
             $results->execute([$area_new, $description_new]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             echo("Unable to update data to the table $projects_areas<BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
@@ -133,8 +127,6 @@ if ($is_module_admin || $admin_access) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -169,8 +161,6 @@ if ($is_module_admin || $admin_access) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();

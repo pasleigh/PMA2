@@ -58,8 +58,6 @@ if ($POST_OP == '') {
         $stmt->execute();
         $results = $stmt;
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database table $definition_table_name in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -118,8 +116,6 @@ if ($POST_OP == '') {
             $i++;
         }
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database table  $definition_table_name in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
@@ -171,8 +167,6 @@ if ($POST_OP == '') {
         $display_block .= "Default module code: $school_module_code<BR>\n";
         $display_block .= "header image file: $header_image<BR>\n";
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database table  $definition_table_name in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();

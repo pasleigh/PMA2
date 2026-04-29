@@ -114,8 +114,6 @@ if ($POST_OP == 'new') {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
@@ -290,8 +288,6 @@ if ($POST_OP == 'new') {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         echo("Unable to update data to the table $staff_names2<BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
@@ -319,8 +315,6 @@ if ($POST_OP == 'new') {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
@@ -339,8 +333,6 @@ $query = "select * from $staff_names2 order by familyname";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo("An Error occured accessing the database in function: $this_function <BR>\n");
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();

@@ -2,9 +2,6 @@
 $first_use = true;
 
 $debug = false;
-if (array_key_exists('d', $_GET) == true || array_key_exists('debug', $_GET) == true) {
-    $debug = true;
-}
 (@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
 (@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
 (@include_once("$STAFF_DIR_VAL/setup_titles.php")) or die('Cannot find this file to include: setup_titles.php<BR>');
@@ -37,9 +34,6 @@ $display_block = '';
 
 // Check that the images have been loaded
 $query = "SELECT COUNT(*) FROM `$header_images_table`";
-if ($debug) {
-    echo("Query: $query<BR>");
-}
 
 try {
     $row_count = $db->query($query)->fetchColumn();
@@ -73,13 +67,7 @@ try {
         }
     }
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    $this_file = __FILE__;
-    $this_line = __LINE__;
-    echo "An Error occured accessing the database in function: $this_function<BR>\n";
-    echo "File: $this_file  near line: $this_line<BR>\n";
-    error_log($ex->getMessage());
-    echo "A database error occurred. Please contact the system administrator.<BR>\n";
+    pma_log_db_error($ex, 'first_use_staff');
     exit();
 }
 // Does the definition table exist?
@@ -117,8 +105,6 @@ if ((int) $chk->fetchColumn() === 0) {
         $setup->execute();
         $display_block .= "$definition_table_name table created<BR>\n";
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
@@ -234,8 +220,6 @@ if ($POST_OP == '') {
             $i++;
         }
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database table  $definition_table_name in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();

@@ -20,7 +20,6 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod;'>$access
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-error_reporting(E_ALL ^ E_NOTICE);
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 
 if ($access) {
@@ -181,8 +180,6 @@ if ($access) {
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo("An Error occured accessing the database in function: $this_function <BR>\n");
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
@@ -213,8 +210,6 @@ if ($access) {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
@@ -311,8 +306,6 @@ if ($access) {
                     try {
                         $results = $db->query($query);
                     } catch (PDOException $ex) {
-                        $this_function = __FUNCTION__;
-                        echo("An Error occured accessing the database in function: $this_function <BR>\n");
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
                         exit();
@@ -340,8 +333,6 @@ if ($access) {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             echo("Unable to update data to the table $students<BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
@@ -410,8 +401,6 @@ if ($access) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();

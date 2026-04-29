@@ -23,9 +23,9 @@ try {
     $stmt->execute([$TABLE_NAME]);
     $exists = (bool) $stmt->fetchColumn();
     if ($exists) {
-        echo htmlspecialchars($TABLE_NAME) . " exists in database " . htmlspecialchars($dbName);
+        echo htmlspecialchars($TABLE_NAME) . " exists.";
     } else {
-        echo htmlspecialchars($TABLE_NAME) . " doesn't exist in database " . htmlspecialchars($dbName);
+        echo htmlspecialchars($TABLE_NAME) . " doesn't exist.";
     }
 } catch (PDOException $ex) {
     error_log('pdo_table_check error: ' . $ex->getMessage());

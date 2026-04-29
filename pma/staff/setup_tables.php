@@ -89,10 +89,7 @@ if ($pm_id == '') {
         $pm_id = $result_data['id'];
     }
     if ($pm_id == '') {
-        echo('The query for project id did not work. <BR>You probably should be running the function for first setup.<BR>');
-        echo("This is the query that did not return anything: <BR>$query.");
-        echo("<BR>The database: $dbName.");
-        echo("<BR>The username: $dbusername.");
+        pma_log_error("pm_id query returned empty. Query: $query DB: $dbName user: $dbusername", 'setup_tables');
     }
 }
 

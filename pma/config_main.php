@@ -7,9 +7,10 @@ $hostname = "localhost";
 $base_dir = "/var/www/html/pma";
 $base_dir = "C:\\xampp\\htdocs\\PMA2\\pma";
 // mac
-$base_dir = "/Applications/XAMPP/xamppfiles/htdocs/PMA2/pma";
+//$base_dir = "/Applications/XAMPP/xamppfiles/htdocs/PMA2/pma";
 
-$_creds_file = __DIR__ . '/../../db_credentials_pma.php';
+$_creds_file = __DIR__ . '/../db_credentials_pma.php';
+//$_creds_file = __DIR__ . '/../../db_credentials_pma.php';
 if (!file_exists($_creds_file)) {
   echo($_creds_file );
     die("Database credentials file not found. Copy db_credentials.example.php to db_credentials_pma.php and fill in values.");
@@ -21,51 +22,61 @@ switch ($school) {
     $dbName = $_creds['mech']['db'];
     $dbusername = $_creds['mech']['user'];
     $password   = $_creds['mech']['pass'];
+    $session_name = $_creds['mech']['sess'];
     break;
   case "chem":
     $dbName = $_creds['chem']['db'];
     $dbusername = $_creds['chem']['user'];
     $password   = $_creds['chem']['pass'];
+      $session_name = $_creds['chem']['sess'];
     break;
   case "civil":
     $dbName = $_creds['civil']['db'];
     $dbusername = $_creds['civil']['user'];
     $password   = $_creds['civil']['pass'];
+      $session_name = $_creds['civil']['sess'];
     break;
   case "elec":
     $dbName = $_creds['elec']['db'];
     $dbusername = $_creds['elec']['user'];
     $password   = $_creds['elec']['pass'];
+      $session_name = $_creds['elec']['sess'];
     break;
   case "scape":
     $dbName = $_creds['scape']['db'];
     $dbusername = $_creds['scape']['user'];
     $password   = $_creds['scape']['pass'];
+      $session_name = $_creds['scape']['sess'];
     break;
   case "swjtu_civil":
     $dbName = $_creds['swjtu_civil']['db'];
     $dbusername = $_creds['swjtu_civil']['user'];
     $password   = $_creds['swjtu_civil']['pass'];
+      $session_name = $_creds['swjtu_civil']['sess'];
     break;
   case "swjtu_mech":
     $dbName = $_creds['swjtu_mech']['db'];
     $dbusername = $_creds['swjtu_mech']['user'];
     $password   = $_creds['swjtu_mech']['pass'];
+      $session_name = $_creds['swjtu_mech']['sess'];
     break;
   case "swjtu_elec":
     $dbName = $_creds['swjtu_elec']['db'];
     $dbusername = $_creds['swjtu_elec']['user'];
     $password   = $_creds['swjtu_elec']['pass'];
+      $session_name = $_creds['swjtu_elec']['sess'];
     break;
   case "its":
     $dbName = $_creds['its']['db'];
     $dbusername = $_creds['its']['user'];
     $password   = $_creds['its']['pass'];
+      $session_name = $_creds['its']['sess'];
     break;
   case "env":
     $dbName = $_creds['env']['db'];
     $dbusername = $_creds['env']['user'];
     $password   = $_creds['env']['pass'];
+      $session_name = $_creds['env']['sess'];
     break;
   default:
     echo("The School is not defined. <BR>Go to the <A href='../index_pma.html'>index</A>");
@@ -76,6 +87,8 @@ define("DB_SCHOOL", $school);
 define("DB_NAME", $dbName);
 define("DB_ADMIN_USER", $dbusername);
 define("DB_ADMIN_PASS", $password);
+
+putenv("SESSION_NAME=$session_name");
 
 if(defined("DB_SERVER")){
    // do nothing
@@ -140,6 +153,7 @@ if($dbName){
    */
 
     if (session_status() === PHP_SESSION_NONE) {
+        //ini_set('session.name', getenv('SESSION_NAME') ?: 'PMA');
         session_start();
     }
    if (session_status() !== PHP_SESSION_NONE) {

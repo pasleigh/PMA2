@@ -70,8 +70,6 @@ for ($i = 1; $i <= $num_parts; $i++) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
@@ -137,8 +135,6 @@ $query = "select * from $project_allocated order by projectid";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo("An Error occured accessing the database in function: $this_function <BR>\n");
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();
@@ -150,8 +146,6 @@ $query = "select * from $students order by name";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo("An Error occured accessing the database in function: $this_function <BR>\n");
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();
@@ -179,8 +173,6 @@ foreach ($all_students_rows as $student_recs) {
             $exe = [$sid];
             $results->execute($exe);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();

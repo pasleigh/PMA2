@@ -467,9 +467,7 @@ if ($POST_OP == 'create') {
             try {
                 $result = $db->query($query);
             } catch (PDOException $ex) {
-                echo "An Error occured creating table<BR>\n";
-                $err_msg = $ex->getMessage();
-                echo("Error message: $err_msg<BR>\n");
+                pma_log_db_error($ex, 'first_use_create_new_module_entry');
                 exit();
             }
             $display_block .= "$table ... created<BR>\n";

@@ -132,9 +132,7 @@ function IsStaffActive($db, $this_staff_full_name, $staff_names_table = "staff_n
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        echo "An Error occured running query<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo($err_msg);
+        pma_log_db_error($ex, __FUNCTION__);
         return $active;
     }
 

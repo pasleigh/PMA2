@@ -1,8 +1,4 @@
 <?php
-// Turn off all error reporting
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
 // connect to the datbase
 (@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
 (@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
@@ -64,8 +60,6 @@ if ($POST_OP == 'commit') {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -119,8 +113,6 @@ if ($POST_OP == 'commit') {
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo "An Error occured accessing the database in function: $this_function <BR>\n";
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -136,8 +128,6 @@ if ($POST_OP == 'commit') {
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo "An Error occured accessing the database in function: $this_function <BR>\n";
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -162,8 +152,6 @@ if ($POST_OP == 'commit') {
                 try {
                     $results = $db->query($query);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo "An Error occured accessing the database in function: $this_function <BR>\n";
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -177,8 +165,6 @@ if ($POST_OP == 'commit') {
                     try {
                         $results = $db->query($query);
                     } catch (PDOException $ex) {
-                        $this_function = __FUNCTION__;
-                        echo "An Error occured accessing the database in function: $this_function <BR>\n";
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -194,8 +180,6 @@ if ($POST_OP == 'commit') {
                     try {
                         $results = $db->query($query);
                     } catch (PDOException $ex) {
-                        $this_function = __FUNCTION__;
-                        echo "An Error occured accessing the database in function: $this_function <BR>\n";
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -208,8 +192,6 @@ if ($POST_OP == 'commit') {
                 try {
                     $results = $db->query($query);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo "An Error occured accessing the database in function: $this_function <BR>\n";
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -254,8 +236,6 @@ elseif ($POST_OP == 'edit') {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -282,8 +262,6 @@ elseif ($POST_OP == 'edit') {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -300,8 +278,6 @@ elseif ($POST_OP == 'edit') {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -317,8 +293,6 @@ elseif ($POST_OP == 'edit') {
             try {
                 $results = $db->query($get_qs_query);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo "An Error occured accessing the database in function: $this_function <BR>\n";
                 echo(" Query = $get_qs_query<BR> \n");
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";

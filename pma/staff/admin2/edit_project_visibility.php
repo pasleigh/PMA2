@@ -44,8 +44,6 @@ if ($POST_OP == 'submit_edited') {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
@@ -60,8 +58,6 @@ $query = "select * from $projects_setup where 1 order by year_begin desc";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo "An Error occured accessing the database in function: $this_function <BR>\n";
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();

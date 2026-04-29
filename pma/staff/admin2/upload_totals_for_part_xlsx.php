@@ -119,8 +119,6 @@ if ($is_module_admin || $admin_access) {
                             try {
                                 $results = $db->query($query);
                             } catch (PDOException $ex) {
-                                $this_function = __FUNCTION__;
-                                echo("An Error occured accessing the database in function: $this_function <BR>\n");
                                 error_log($ex->getMessage());
                                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
                                 exit();
@@ -134,28 +132,20 @@ if ($is_module_admin || $admin_access) {
                                 $query = "INSERT INTO $markstore_totals (SID,$part_header) VALUES (";
                                 $query .= "'" . addslashes($sid) . "', ";
                                 $query .= "'" . addslashes($part_total) . "') ";
-                                echo("$query<BR>");
                                 try {
                                     $results = $db->query($query);
                                 } catch (PDOException $ex) {
-                                    $this_function = __FUNCTION__;
-                                    echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                                    error_log($ex->getMessage());
-                                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                                    pma_log_db_error($ex, __FUNCTION__);
                                     exit();
                                 }
                             } else {
                                 $query = "UPDATE $markstore_totals SET ";
                                 //$query .= "sid='" . addslashes($sid) . "', ";
                                 $query .= "$part_header='" . addslashes($part_total) . "' WHERE sid=$sid ";
-                                echo("$query<BR>");
                                 try {
                                     $results = $db->query($query);
                                 } catch (PDOException $ex) {
-                                    $this_function = __FUNCTION__;
-                                    echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                                    error_log($ex->getMessage());
-                                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                                    pma_log_db_error($ex, __FUNCTION__);
                                     exit();
                                 }
                             }
@@ -165,8 +155,6 @@ if ($is_module_admin || $admin_access) {
                             try {
                                 $results = $db->query($query);
                             } catch (PDOException $ex) {
-                                $this_function = __FUNCTION__;
-                                echo("An Error occured accessing the database in function: $this_function <BR>\n");
                                 error_log($ex->getMessage());
                                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
                                 exit();
@@ -183,28 +171,20 @@ if ($is_module_admin || $admin_access) {
                                 $query .= "'" . addslashes($sid) . "', ";
                                 $query .= "'" . addslashes($feedback_text) . "', ";
                                 $query .= "'" . addslashes($part_total) . "') ";
-                                echo("$query<BR>");
                                 try {
                                     $results = $db->query($query);
                                 } catch (PDOException $ex) {
-                                    $this_function = __FUNCTION__;
-                                    echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                                    error_log($ex->getMessage());
-                                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                                    pma_log_db_error($ex, __FUNCTION__);
                                     exit();
                                 }
                             } else {
                                 $query = "UPDATE $markstore_part SET ";
                                 $query .= "C1Feedback='" . addslashes($feedback_text) . "', ";
                                 $query .= "$part_header='" . addslashes($part_total) . "' WHERE sid=$sid ";
-                                echo("$query<BR>");
                                 try {
                                     $results = $db->query($query);
                                 } catch (PDOException $ex) {
-                                    $this_function = __FUNCTION__;
-                                    echo("An Error occured accessing the database in function: $this_function <BR>\n");
-                                    error_log($ex->getMessage());
-                                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                                    pma_log_db_error($ex, __FUNCTION__);
                                     exit();
                                 }
                             }
@@ -226,8 +206,6 @@ if ($is_module_admin || $admin_access) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
@@ -263,8 +241,6 @@ if ($is_module_admin || $admin_access) {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();

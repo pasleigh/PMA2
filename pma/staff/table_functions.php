@@ -49,8 +49,6 @@ function GetStudentListTable($db, $project_allocated, $students_table, $staff_ta
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
@@ -365,8 +363,7 @@ SQL;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 }
 
@@ -398,8 +395,7 @@ SQL;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 }
 /**
@@ -438,8 +434,7 @@ SQL;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 }
 
@@ -620,8 +615,7 @@ SQL;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 }
 
@@ -1049,8 +1043,7 @@ SQL;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 }
 
@@ -1087,8 +1080,7 @@ SQL;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 
     update_dash_projects_setup_tables($db, $dash_projects_setup);
@@ -1111,11 +1103,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
+        pma_log_db_error($ex, __FUNCTION__);
         exit();
     }
     $num_rows = $results->rowCount();
@@ -1136,8 +1124,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            $err_msg = $ex->getMessage();
-            echo($err_msg . "<BR>\n");
+            pma_log_db_error($ex, __FUNCTION__);
         }
     }
 
@@ -1148,11 +1135,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
+        pma_log_db_error($ex, __FUNCTION__);
         exit();
     }
     $num_rows = $results->rowCount();
@@ -1172,8 +1155,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            $err_msg = $ex->getMessage();
-            echo($err_msg . "<BR>\n");
+            pma_log_db_error($ex, __FUNCTION__);
         }
     }
 
@@ -1184,11 +1166,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
+        pma_log_db_error($ex, __FUNCTION__);
         exit();
     }
     $num_rows = $results->rowCount();
@@ -1208,8 +1186,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            $err_msg = $ex->getMessage();
-            echo($err_msg . "<BR>\n");
+            pma_log_db_error($ex, __FUNCTION__);
         }
     }
 
@@ -1220,11 +1197,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
+        pma_log_db_error($ex, __FUNCTION__);
         exit();
     }
     $num_rows = $results->rowCount();
@@ -1244,8 +1217,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            $err_msg = $ex->getMessage();
-            echo($err_msg . "<BR>\n");
+            pma_log_db_error($ex, __FUNCTION__);
         }
     }
 
@@ -1256,11 +1228,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
+        pma_log_db_error($ex, __FUNCTION__);
         exit();
     }
     $num_rows = $results->rowCount();
@@ -1280,8 +1248,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            $err_msg = $ex->getMessage();
-            echo($err_msg . "<BR>\n");
+            pma_log_db_error($ex, __FUNCTION__);
         }
     }
 
@@ -1292,11 +1259,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
+        pma_log_db_error($ex, __FUNCTION__);
         exit();
     }
     $num_rows = $results->rowCount();
@@ -1316,8 +1279,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            $err_msg = $ex->getMessage();
-            echo($err_msg . "<BR>\n");
+            pma_log_db_error($ex, __FUNCTION__);
         }
     }
 
@@ -1328,11 +1290,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
+        pma_log_db_error($ex, __FUNCTION__);
         exit();
     }
     $num_rows = $results->rowCount();
@@ -1352,8 +1310,7 @@ function update_dash_projects_setup_tables($db, $dash_projects_setup) {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            $err_msg = $ex->getMessage();
-            echo($err_msg . "<BR>\n");
+            pma_log_db_error($ex, __FUNCTION__);
         }
     }
 }
@@ -1397,8 +1354,7 @@ SQL;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 
     // Empty these just in case
@@ -1406,15 +1362,13 @@ SQL;
         $query = 'TRUNCATE `assessment_criteria`';
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
     try {
         $query = 'TRUNCATE `assessment_criteria_flags`';
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 
     populate_assessment_criteria_tables($db);
@@ -1438,8 +1392,7 @@ SQL1;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 
     $query = <<<SQL2
@@ -1552,8 +1505,7 @@ SQL2;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 }
 
@@ -1585,8 +1537,7 @@ SQL;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 }
 
@@ -1614,8 +1565,7 @@ SQL;
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, __FUNCTION__);
     }
 }
 

@@ -120,8 +120,6 @@ if ($access) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -179,8 +177,6 @@ if ($access) {
                 try {
                     $results = $db->query($query);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo "An Error occured accessing the database in function: $this_function <BR>\n";
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -196,8 +192,6 @@ if ($access) {
                 try {
                     $results = $db->query($query);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo "An Error occured accessing the database in function: $this_function <BR>\n";
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -222,8 +216,6 @@ if ($access) {
                     try {
                         $results = $db->query($query);
                     } catch (PDOException $ex) {
-                        $this_function = __FUNCTION__;
-                        echo "An Error occured accessing the database in function: $this_function <BR>\n";
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -237,8 +229,6 @@ if ($access) {
                         try {
                             $results = $db->query($query);
                         } catch (PDOException $ex) {
-                            $this_function = __FUNCTION__;
-                            echo "An Error occured accessing the database in function: $this_function <BR>\n";
                             error_log($ex->getMessage());
                             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -254,8 +244,6 @@ if ($access) {
                         try {
                             $results = $db->query($query);
                         } catch (PDOException $ex) {
-                            $this_function = __FUNCTION__;
-                            echo "An Error occured accessing the database in function: $this_function <BR>\n";
                             error_log($ex->getMessage());
                             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -268,8 +256,6 @@ if ($access) {
                     try {
                         $results = $db->query($query);
                     } catch (PDOException $ex) {
-                        $this_function = __FUNCTION__;
-                        echo "An Error occured accessing the database in function: $this_function <BR>\n";
                         error_log($ex->getMessage());
                         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -316,8 +302,6 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -342,8 +326,6 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -360,8 +342,6 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -377,8 +357,6 @@ the \"Weight factor\" is used achieve this while giving <em>sensible</em> number
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo "An Error occured accessing the database in function: $this_function <BR>\n";
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
 

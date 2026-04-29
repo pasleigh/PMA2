@@ -41,8 +41,6 @@ if ($access) {
             $results = $db->prepare("SELECT * FROM $staff_names WHERE staffid=?");
             $results->execute([$new_admin_staff_id]);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             echo("Unable to update data to the table $staff_names<BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
@@ -66,8 +64,6 @@ if ($access) {
                 $results_admin = $db->prepare("SELECT * FROM $admin_users_table WHERE username=?");
                 $results_admin->execute([$username]);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo "An Error occured accessing the database in function: $this_function <BR>\n";
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
@@ -77,8 +73,6 @@ if ($access) {
                     $results_admin = $db->prepare("INSERT INTO $admin_users_table SET firstname=?,familyname=?,fullname=?,email=?,username=?,admin_level=?");
                     $results_admin->execute([$firstname, $familyname, $fullname, $email, $username, $mod_admin_level]);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo("An Error occured accessing the database in function: $this_function <BR>\n");
                     echo("Unable to update data to the table $admin_users_table<BR>\n");
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
@@ -114,8 +108,6 @@ if ($access) {
                 $results = $db->prepare("UPDATE $admin_users_table SET admin_level=? WHERE username=?");
                 $results->execute([$mod_admin_level, $username]);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo("An Error occured accessing the database in function: $this_function <BR>\n");
                 echo("Unable to update data to the table $admin_users_table<BR>\n");
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
@@ -128,8 +120,6 @@ if ($access) {
                     $results = $db->prepare("DELETE FROM $admin_users_table WHERE `id`=?");
                     $results->execute([$staff_admin_index]);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo("An Error occured accessing the database in function: $this_function <BR>\n");
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
                     exit();
@@ -156,8 +146,6 @@ if ($access) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();

@@ -1,6 +1,7 @@
 <?php
 
 if (session_status() === PHP_SESSION_NONE) {
+    //ini_set('session.name', getenv('SESSION_NAME') ?: 'PMA');
     session_start();
 }
 $STAFF_DIR_VAL = __DIR__;

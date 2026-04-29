@@ -27,11 +27,7 @@ $display_block .= "<div class='text-center'><h1 style='font-size: x-large; color
 // if the form was submitted then enter it all into the database
 $post_error = false;
 if (array_key_exists('op', $_POST)) {
-    $POST_OP = $_POST['op']  ;
-    echo '<pre>';
-    print_r($_POST);
-    echo '</pre>';
-    //exit();
+    $POST_OP = $_POST['op'];
     if (array_key_exists('pm_id_old', $_POST) == false) {
         $pm_id_old = null;
         $post_error = true;

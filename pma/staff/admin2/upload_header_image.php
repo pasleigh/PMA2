@@ -1,5 +1,4 @@
 <?php
-error_reporting(E_STRICT);
 /**
  * Created by PhpStorm.
  * User: cenpas
@@ -84,8 +83,7 @@ if ($access) {
                 $result = $db->prepare('INSERT INTO header_images (header_image, filename) VALUES (?, ?)');
                 $result->execute([$img_file_base64, $safe_filename]);
             } catch (PDOException $ex) {
-                echo 'An Error occured!<BR>';
-                echo htmlspecialchars($ex->getMessage(), ENT_QUOTES, 'UTF-8');
+                pma_log_db_error($ex, 'upload_header_image');
                 exit();
             }
             $id = $db->lastInsertId();
@@ -100,7 +98,9 @@ if ($access) {
             }
             */
         } else {
-            print_r($errors);
+            foreach ($errors as $err) {
+                echo htmlspecialchars($err, ENT_QUOTES, 'UTF-8') . "<BR>\n";
+            }
         }
     }
 } else {

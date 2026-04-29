@@ -101,9 +101,7 @@ if ($POST_OP == 'create') {
     try {
         $db->query($query);
     } catch (PDOException $ex) {
-        echo "An Error occured adding the new project setup proposals<BR>\n";
-        $err_msg = $ex->getMessage();
-        echo("Error message: $err_msg<BR>\n");
+        pma_log_db_error($ex, 'create_new_module_entry');
         exit();
     }
 
@@ -378,9 +376,7 @@ if ($POST_OP == 'create') {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            echo "An Error occured creating table<BR>\n";
-            $err_msg = $ex->getMessage();
-            echo("Error message: $err_msg<BR>\n");
+            pma_log_db_error($ex, 'create_new_module_entry');
             exit();
         }
         $display_block .= " ... created ...<BR>\n";
@@ -401,9 +397,7 @@ if ($POST_OP == 'create') {
         try {
             $db->query($query);
         } catch (PDOException $ex) {
-            echo "An Error occured creating table<BR>\n";
-            $err_msg = $ex->getMessage();
-            echo("Error message: $err_msg<BR>\n");
+            pma_log_db_error($ex, 'create_new_module_entry');
             exit();
         }
         $display_block .= " ... created ...<BR>\n";

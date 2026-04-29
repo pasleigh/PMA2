@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 (@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
 (@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
 (@include_once('../setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
@@ -46,8 +43,8 @@ if (isset($_POST['op']) && $_POST['op'] === 'save_num_sections') {
         $stmt->execute([':n' => $new_count]);
         echo json_encode(['ok' => true, 'msg' => "Section count set to $new_count."]);
     } catch (PDOException $ex) {
-        error_log($ex->getMessage());
-        echo json_encode(['ok' => false, 'msg' => 'Database error: ' . $ex->getMessage()]);
+        error_log('PMA DB error [setup_questions3]: ' . $ex->getMessage());
+        echo json_encode(['ok' => false, 'msg' => 'A database error occurred. Please contact the system administrator.']);
     }
     exit();
 }
@@ -149,8 +146,8 @@ if (isset($_POST['op']) && $_POST['op'] === 'save_section') {
 
         echo json_encode(['ok' => true, 'msg' => "Section $cat saved."]);
     } catch (PDOException $ex) {
-        error_log($ex->getMessage());
-        echo json_encode(['ok' => false, 'msg' => 'Database error: ' . $ex->getMessage()]);
+        error_log('PMA DB error [setup_questions3]: ' . $ex->getMessage());
+        echo json_encode(['ok' => false, 'msg' => 'A database error occurred. Please contact the system administrator.']);
     }
     exit();
 }

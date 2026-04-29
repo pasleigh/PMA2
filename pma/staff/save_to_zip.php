@@ -23,9 +23,6 @@ if (IsStaffB($db, $staff_username, $staff_names) == false) {
 }
 
 require_once __BASE_DIR__ . '/vendor/autoload.php';
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 $files_to_zip = [];
 
@@ -65,8 +62,6 @@ $query = "select * from $project_allocated order by projectid";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo("An Error occured accessing the database in function: $this_function <BR>\n");
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
     exit();
@@ -109,8 +104,6 @@ if ($num_rows < 1) {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo("An Error occured accessing the database in function: $this_function <BR>\n");
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();

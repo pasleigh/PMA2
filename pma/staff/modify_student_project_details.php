@@ -1,6 +1,4 @@
 <?php
-// Turn on/off all error reporting
-error_reporting(E_ALL);
 (@include_once('./set_dir_staff.php')) or die('Cannot find this file to include: set_dir_staff.php<BR>');
 (@include_once('./config.php')) or die('Cannot find this file to include: config.php<BR>');
 (@include_once('./setup_titles.php')) or die('Cannot find this file to include: setup_titles.php<BR>');
@@ -29,8 +27,6 @@ $query = "select * from $project_allocated where sid=$sid";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo "An Error occured accessing the database in function: $this_function <BR>\n";
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -44,23 +40,16 @@ if ($num == 0) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo("An Error occured accessing the database in function: $this_function <BR>\n");
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
         exit();
     }
 
     $query = "select * from $project_allocated where sid=$sid";
-    echo("query = $query<BR>");
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
+        pma_log_db_error($ex, __FUNCTION__);
         exit();
     }
 }
@@ -92,8 +81,6 @@ $query = "select * from $markstore_totals where sid=$sid";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo "An Error occured accessing the database in function: $this_function <BR>\n";
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -121,8 +108,6 @@ $query = "select * from $students where sid = $sid";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo "An Error occured accessing the database in function: $this_function <BR>\n";
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -178,11 +163,7 @@ if ($new_supervisor_id != null) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
+        pma_log_db_error($ex, __FUNCTION__);
         exit();
     }
     $changed_message .= "Supervisor changed to $new_supervisor_id ($new_supervisor_name)<BR>";
@@ -197,11 +178,7 @@ if ($new_second_marker_id != null) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
-        error_log($ex->getMessage());
-        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-
+        pma_log_db_error($ex, __FUNCTION__);
         exit();
     }
     $changed_message .= "Second marker changed to $new_second_marker_id ($second_marker_name)<BR>";
@@ -226,8 +203,6 @@ $query = "update $project_allocated set inactive=$inactive where sid = $sid";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo "An Error occured accessing the database in function: $this_function <BR>\n";
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -257,8 +232,6 @@ if ($txtNewTitle != null) {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -286,8 +259,6 @@ for ($i = 1; $i <= $num_parts; $i++) {
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
-                $this_function = __FUNCTION__;
-                echo "An Error occured accessing the database in function: $this_function <BR>\n";
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -349,8 +320,6 @@ $query = "select * from $project_allocated where sid=$sid";
 try {
     $results = $db->query($query);
 } catch (PDOException $ex) {
-    $this_function = __FUNCTION__;
-    echo "An Error occured accessing the database in function: $this_function <BR>\n";
     error_log($ex->getMessage());
     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -392,8 +361,6 @@ for ($i = 1; $i <= 5; $i++) {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 

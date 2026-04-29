@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
 // connect to the datbase
 (@include_once('./set_dir_admin.php')) or die('Cannot find this file to include: set_dir_admin.php<BR>');
 (@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find this file to include: config.php<BR>');
@@ -28,9 +25,7 @@ function GetAllocatedNumber($db, $sid, $selection_table, $master_id_of_allocated
     try {
         $get_list_res = $db->query($get_list_query);
     } catch (PDOException $ex) {
-        echo("Unable to create name list from database. Query: $get_list_query <BR>\n");
-        $err_msg = $ex->getMessage();
-        echo($err_msg . "<BR>\n");
+        pma_log_db_error($ex, 'email_project_allocation_to_students');
 
         return $num;
     }
@@ -142,8 +137,6 @@ if ($is_module_admin || $admin_access) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -183,8 +176,6 @@ if ($is_module_admin || $admin_access) {
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
-        $this_function = __FUNCTION__;
-        echo "An Error occured accessing the database in function: $this_function <BR>\n";
         error_log($ex->getMessage());
         echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -261,8 +252,6 @@ if ($is_module_admin || $admin_access) {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -275,8 +264,6 @@ if ($is_module_admin || $admin_access) {
         try {
             $results = $db->query($query);
         } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
             error_log($ex->getMessage());
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
@@ -327,8 +314,6 @@ if ($is_module_admin || $admin_access) {
                 try {
                     $results = $db->query($query);
                 } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo "An Error occured accessing the database in function: $this_function <BR>\n";
                     error_log($ex->getMessage());
                     echo "A database error occurred. Please contact the system administrator.<BR>\n";
 
