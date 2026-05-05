@@ -162,6 +162,8 @@ if ($is_module_admin_any || $admin_access) {
             $display_block .= '<OL>';
             $display_block .= "<LI><A href='./create_new_module_entry.php'>Create new Module Entry</A></LI>\n";
             $display_block .= "<LI><A href='./duplicate_module.php'>Duplicate a previously used module to create <strong>new</strong> module</A></LI>\n";
+            $display_block .= "<LI><A href='./export_module.php'>Export a module to a ZIP file</A> (for transfer to another instance of this app)</LI>\n";
+            $display_block .= "<LI><A href='./import_module.php'>Import a module from a ZIP file</A> (from another instance of this app)</LI>\n";
             $display_block .= "<LI><a href='./edit_module_visibility.php'>Edit which Modules are visible to staff and students</a></LI>\n";
             $display_block .= "<LI><a href='./change_school_definition.php'>Edit the name and header image</a></LI>\n";
             $display_block .= "<LI><a href='./edit_staff_table_bs.php?default_table=1'>Edit staff table </a> (This is  a <em>global</em> list of staff. Any of which may be working on any modules or tools.)</LI>\n";
