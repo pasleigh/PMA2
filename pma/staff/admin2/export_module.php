@@ -1,6 +1,10 @@
 <?php
-// Buffer all output so the ZIP download can send headers cleanly even if includes produce notices
+// Buffer all output so the ZIP stream can send headers cleanly even if includes produce notices
 ob_start();
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use ZipStream\ZipStream;
 
 (@include_once('./set_dir_admin.php')) or die('Cannot find set_dir_admin.php<BR>');
 (@include_once("$STAFF_DIR_VAL/config.php")) or die('Cannot find config.php<BR>');
@@ -145,28 +149,15 @@ if (isset($_POST['op']) && $_POST['op'] === 'export') {
 
     $json = json_encode($export_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
-    // Pack the JSON into a ZIP
     $safe_sc      = preg_replace('/[^a-zA-Z0-9_-]/', '_', $sc);
     $zip_filename = "pma_module_{$safe_sc}_{$yb}.zip";
-    $temp_zip     = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $zip_filename;
 
-    $zip = new ZipArchive();
-    if ($zip->open($temp_zip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-        ob_end_clean();
-        die('Cannot create ZIP file — check server temp directory permissions.');
-    }
-    $zip->addFromString('module_data.json', $json);
-    $zip->close();
-
-    // Discard any buffered output and send the file
+    // Discard any buffered output from includes, then stream the ZIP directly
     ob_end_clean();
-    header('Content-Type: application/zip');
-    header('Content-Disposition: attachment; filename="' . $zip_filename . '"');
-    header('Content-Length: ' . filesize($temp_zip));
-    header('Cache-Control: no-cache, must-revalidate');
-    header('Pragma: no-cache');
-    readfile($temp_zip);
-    unlink($temp_zip);
+
+    $zip = new ZipStream(outputName: $zip_filename, sendHttpHeaders: true);
+    $zip->addFile(fileName: 'module_data.json', data: $json);
+    $zip->finish();
     exit();
 }
 
