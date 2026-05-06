@@ -71,6 +71,24 @@ $gear_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
     <link rel="stylesheet" href="<?php echo("$location") ?>/css/site-bootstrap.css">
 
     <script>
+    /* Inject school name as a decorative label at the left of every admin navbar */
+    (function () {
+        var schoolTitle = <?php echo json_encode($school_title ?? ''); ?>;
+        if (!schoolTitle) return;
+        document.addEventListener('DOMContentLoaded', function () {
+            var container = document.querySelector('nav.navbar .container, nav.navbar .container-fluid');
+            if (!container) return;
+            var lbl = document.createElement('span');
+            lbl.textContent = schoolTitle;
+            lbl.style.cssText = 'color:#d4a84b;font-style:italic;font-size:1.25rem;'
+                              + 'margin-right:1.1rem;white-space:nowrap;cursor:default;'
+                              + 'opacity:0.85;';
+            container.insertBefore(lbl, container.firstChild);
+        });
+    })();
+    </script>
+
+    <script>
     /* CSRF auto-injection */
     (function () {
         var meta = document.querySelector('meta[name="csrf-token"]');
