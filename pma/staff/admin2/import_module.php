@@ -42,8 +42,11 @@ if (isset($_POST['op']) && $_POST['op'] === 'import') {
 
     // --- Input validation ---
     $errors = [];
-    if (strlen($new_short_code) < 2 || strlen($new_short_code) > 5 || !ctype_alpha($new_short_code)) {
-        $errors[] = 'Short code must be 2–5 letters (A–Z only).';
+    //if (strlen($new_short_code) < 2 || strlen($new_short_code) > 5 || !ctype_alpha($new_short_code)) {
+    //    $errors[] = 'Short code must be 2–5 letters (A–Z only).';
+    //}
+    if (!preg_match('/^[A-Z]{2,5}\d{0,3}$/', $new_short_code) || strlen($new_short_code) > 5) {
+        $errors[] = 'Short code must be 2–5 characters, letters first, numbers only at the end.';
     }
     if ($new_year_begin < 2000 || $new_year_begin > 2100) {
         $errors[] = 'Year begin must be a valid year between 2000 and 2100.';
