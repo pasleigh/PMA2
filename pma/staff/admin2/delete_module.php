@@ -85,6 +85,11 @@ if ($admin_access) {
     $index++;
     $project_tables[$index] = $projects_areas;
 
+    $index++;
+    $project_tables[$index] = $staff_names_module;
+    $index++;
+    $project_tables[$index] = $feedback_records;
+
     $display_block .= "<h2>These are the tables in this module that will be deleted:</h2>\n";
     foreach ($project_tables as $table_name) {
         $display_block .= "$table_name <BR>\n";
