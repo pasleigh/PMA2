@@ -14,7 +14,7 @@ $_cookie_opts = [
     'path' => '/',
     'secure' => true,   // Requires HTTPS in production
     'httponly' => true,
-    'samesite' => 'Lax',
+    'samesite' => 'Strict',
 ];
 
 $setup_titles = 'setup_titles.php';
