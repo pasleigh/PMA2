@@ -35,7 +35,7 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if ($is_module_admin || $admin_access) {
     $display_block .= '<h1>Modify student details</h1>';
-    $display_block .= "<h2>Database table $students</h2>";
+    //$display_block .= "<h2>Database table $students</h2>";
 
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
@@ -55,31 +55,31 @@ if ($is_module_admin || $admin_access) {
         $display_block .= '<P>A New student.</P>';
 
         $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id'>";
-        $display_block .= "<table>\n";
+        $display_block .= "<table class='table table-bordered table-sm w-auto'>\n";
 
         $display_block .= "<TR>\n";
-        $display_block .= "<TD>SID</TD>\n";
-        $display_block .= "<TD><input type='text' name='sid'  required='required' size=10 maxlength=30></TD>\n";
+        $display_block .= "<TD class='align-middle'>SID</TD>\n";
+        $display_block .= "<TD><input type='text' name='sid' class='form-control' required='required' maxlength=30></TD>\n";
         $display_block .= "</TR>\n";
 
         $display_block .= "<TR>\n";
-        $display_block .= "<TD>name (format 'Family name, firstname')</TD>\n";
-        $display_block .= "<TD><input type='text' name='name' required='required' size=30 maxlength=30></TD>\n";
+        $display_block .= "<TD class='align-middle'>Name (format 'Family name, Firstname')</TD>\n";
+        $display_block .= "<TD><input type='text' name='name' class='form-control' required='required' maxlength=30></TD>\n";
         $display_block .= "</TR>\n";
 
         $display_block .= "<TR>\n";
-        $display_block .= "<TD>username</TD>\n";
-        $display_block .= "<TD><input type='text' name='username' required='required' size=9 maxlength=9></TD>\n";
+        $display_block .= "<TD class='align-middle'>Username</TD>\n";
+        $display_block .= "<TD><input type='text' name='username' class='form-control' required='required' maxlength=9></TD>\n";
         $display_block .= "</TR>\n";
 
         $display_block .= "<TR>\n";
-        $display_block .= "<TD>programme</TD>\n";
-        $display_block .= "<TD><input type='text' name='programme' required='required' size=30 maxlength=60></TD>\n";
+        $display_block .= "<TD class='align-middle'>Programme</TD>\n";
+        $display_block .= "<TD><input type='text' name='programme' class='form-control' required='required' maxlength=60></TD>\n";
         $display_block .= "</TR>\n";
 
         $display_block .= "<TR>\n";
-        $display_block .= "<TD>Selected</TD>\n";
-        $display_block .= "<TD><input type='checkbox' name='sel_chk' value='1' >(1 or checked = not yet selected a project)</TD>\n";
+        $display_block .= "<TD class='align-middle'>Selected</TD>\n";
+        $display_block .= "<TD class='align-middle'><input type='checkbox' name='sel_chk' value='1'> <small class='text-muted'>(checked = not yet selected a project)</small></TD>\n";
 
         $display_block .= "</TR>\n";
 
@@ -300,7 +300,7 @@ if ($is_module_admin || $admin_access) {
         exit();
     }
     //$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
-    $display_block .= "<TABLE id='studentinfo' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
+    $display_block .= "<TABLE id='studentinfo' class='table table-bordered table-striped table-hover table-sm cell-border' cellspacing='0' width='100%'>\n";
     $display_block .= '
     <thead>
       <tr>
@@ -324,10 +324,10 @@ if ($is_module_admin || $admin_access) {
         $sel = stripslashes($recs['sel']);
         $student_count++;
         $display_block .= "<TR>\n";
-        $display_block .= "<TD><input type='text' name='sid$student_count' required='required' readonly value='$sid'  size=9 maxlength=9></TD>";
-        $display_block .= "<TD><input type='text' name='name$student_count' required='required' value='$name'  size=30 maxlength=30></TD>";
-        $display_block .= "<TD><input type='text' name='username$student_count' required='required' value='$username'  size=10 maxlength=20></TD>";
-        $display_block .= "<TD><input type='text' name='programme$student_count' required='required' value='$programme'  size=50 maxlength=60></TD>";
+        $display_block .= "<TD><input type='text' name='sid$student_count' class='form-control form-control-sm' required='required' readonly value='$sid' maxlength=9></TD>";
+        $display_block .= "<TD><input type='text' name='name$student_count' class='form-control form-control-sm' required='required' value='$name' maxlength=30></TD>";
+        $display_block .= "<TD><input type='text' name='username$student_count' class='form-control form-control-sm' required='required' value='$username' maxlength=20></TD>";
+        $display_block .= "<TD><input type='text' name='programme$student_count' class='form-control form-control-sm' required='required' value='$programme' maxlength=60></TD>";
 
         $checked = '';
         if ($sel == 1) {
@@ -419,5 +419,15 @@ if ($is_module_admin || $admin_access) {
         </div>
     </div><!-- /content -->
 </div><!-- /wrapper -->
+<script>
+$(document).ready(function () {
+    $('#studentinfo').DataTable({
+        paging: true,
+        ordering: true,
+        info: true,
+        searching: true
+    });
+});
+</script>
 </body>
 </html>

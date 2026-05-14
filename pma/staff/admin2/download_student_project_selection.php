@@ -34,7 +34,7 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if ($is_module_admin || $admin_access) {
     $display_block .= "<h1>Downloading of students' selections</h1>";
-    $display_block .= "<h2>Database tables: $master_name, $project_details and $selection</h2>";
+    //$display_block .= "<h2>Database tables: $master_name, $project_details and $selection</h2>";
 
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;

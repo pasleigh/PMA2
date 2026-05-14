@@ -35,7 +35,7 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if ($is_module_admin || $admin_access) {
     $display_block .= '<h1>Upload Student Project Allocation</h1>';
-    $display_block .= "<h2>Database table to be updated '$project_allocated'</h2>";
+    //$display_block .= "<h2>Database table to be updated '$project_allocated'</h2>";
 
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
@@ -304,7 +304,7 @@ if ($is_module_admin || $admin_access) {
 
     $num = CountAllocationTable($db, $project_allocated);
     if ($num == 0) {
-        $display_block .= "<P>There are no entries in the $project_allocated table. This might indicate that the table has not yet been created. Upload a XLSX/CSV file to creat it.</P>";
+        $display_block .= "<P>There are no entries in the database table. This might indicate that the table has not yet been created. Upload a XLSX/CSV file to create it.</P>";
     } else {
         // Get the list of allocations from the students table
         $query = "select * from $project_allocated order by projectid";

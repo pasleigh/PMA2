@@ -119,7 +119,7 @@ if ($is_module_admin || $admin_access) {
     }
 
     $display_block .= '<HR>';
-    $display_block .= "<H2>Project Areas table: $projects_areas</H2>";
+    //$display_block .= "<H2>Project Areas table: $projects_areas</H2>";
     $display_block .= "<h1><span style='color: black'>The sortable list of Project Areas - as the students see it (drag to reorder)</span> </h1>";
 
     // Display the sortable

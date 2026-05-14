@@ -203,7 +203,8 @@ to the <span style='font-face: bold; text-decoration: underline ;'> real</span> 
 <body style="padding-top: 56px;">
 <nav class="navbar fixed-top navbar-dark text-white bg-secondary">
     <div class="container">
-        <span class="navbar-brand">Match programm short names with programme full (real) names:- <?php echo("$module_short_description  $module_prefix$module1$module_postfix  $year_begin/$year_end") ?></span>
+        <span class="navbar-brand">Match programme names
+            :- <?php echo("$module_short_description  $module_prefix$module1$module_postfix") ?></span>
         <ul class="nav justify-content-center">
             <li class="nav-item"><a target="_self" href="../projectmarking_select_bs.php?pm_id=<?php echo("$pm_id") ?>" class="nav-link px-2 text-white-50">Module page</a></li>
             <li class="nav-item"><a target="_self" href="../session_modules_bs.php?year_begin= <?php echo("$year_begin") ?>" class="nav-link px-2 text-white-50">This year module list</a></li>

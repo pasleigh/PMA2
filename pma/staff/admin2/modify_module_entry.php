@@ -500,7 +500,7 @@ $self_url = htmlspecialchars($_SERVER['PHP_SELF']) . '?pm_id=' . (int)$pm_id;
 
 <?php if ($is_module_admin || $admin_access): ?>
 
-<h2 style="font-size: x-large; color: darkgoldenrod;"><?php echo htmlspecialchars($access_phrase ?? ''); ?></h2>
+<h2 style="font-size: x-large; color: darkgoldenrod;"><?php echo $access_phrase  ?></h2>
 
 <!-- ===== Module and year details ===== -->
 <section class="pma-ajax-section">

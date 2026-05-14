@@ -33,7 +33,7 @@ $display_block .= "<h2 style='font-size: x-large; color: darkgoldenrod'>$access_
 
 if ($is_module_admin || $admin_access) {
     $display_block .= '<h1>Upload and Downloading of projects </h1>';
-    $display_block .= "<h2>Database tables: $master_name and $project_details</h2>";
+    //$display_block .= "<h2>Database tables: $master_name and $project_details</h2>";
 
     if (array_key_exists('op', $_POST) == false) {
         $_POST['op'] = null;
@@ -259,14 +259,14 @@ if ($is_module_admin || $admin_access) {
         exit();
     }
     //$display_block = "<TABLE  class='tableSimple' style='border:1px solid black;border-collapse:collapse;'>\n";
-    $display_block .= "<TABLE id='proposalinfo' class='hover compact cell-border' cellspacing='0' width='100%'>\n";
+    $display_block .= "<TABLE id='proposalinfo' class='table table-bordered table-striped table-hover table-sm cell-border' cellspacing='0' width='100%'>\n";
     $display_block .= '
     <thead>
       <tr>
         <th>Project id</th>
         <th>Title</th>
         <th>Supervisor</th>
-        <th>Checked=Export</th>
+        <th class="text-center">Export</th>
       </tr>
     </thead>';
     $display_block .= "<tbody>\n";
@@ -288,7 +288,7 @@ if ($is_module_admin || $admin_access) {
         if ($sel == 1) {
             $checked = 'checked';
         }
-        $display_block .= "<TD><input type='checkbox' name='export$proposal_count' value='1' $checked></TD>\n";
+        $display_block .= "<TD class='text-center'><input type='checkbox' name='export$proposal_count' value='1' $checked></TD>\n";
 
         $display_block .= "</TR>\n";
 
@@ -353,5 +353,15 @@ if ($is_module_admin || $admin_access) {
         </div>
     </div><!-- /content -->
 </div><!-- /wrapper -->
+<script>
+$(document).ready(function () {
+    $('#proposalinfo').DataTable({
+        paging: true,
+        ordering: true,
+        info: true,
+        searching: true
+    });
+});
+</script>
 </body>
 </html>
