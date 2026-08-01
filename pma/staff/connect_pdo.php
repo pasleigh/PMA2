@@ -4,8 +4,8 @@
 require_once(__DIR__ . '/logging_pdo.php');
 
 try {
-    //$db = new LoggingPDO("mysql:host=$hostname; dbname=$dbName; charset=utf8", $dbusername, $password);
-    $db = new PDO("mysql:host=$hostname; dbname=$dbName; charset=utf8", $dbusername, $password);
+    $db = new LoggingPDO("mysql:host=$hostname; dbname=$dbName; charset=utf8", $dbusername, $password);
+    //$db = new PDO("mysql:host=$hostname; dbname=$dbName; charset=utf8", $dbusername, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $ex) {
     error_log('PMA database connection error: ' . $ex->getMessage());

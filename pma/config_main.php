@@ -4,13 +4,27 @@ $dbusername = "";
 $password = "";
 
 $hostname = "localhost";
-$base_dir = "/var/www/html/pma";
+//############################################################
+// Set the root folder of the system
+//############################################################
+// windows XAMPP
 $base_dir = "C:\\xampp\\htdocs\\PMA2\\pma";
+
 // mac
 $base_dir = "/Applications/XAMPP/xamppfiles/htdocs/PMA2/pma";
 
+// linux / RHEL
+//$base_dir = "/var/www/html/pma";
+//############################################################
+
+//############################################################
+// Set the path to the db credentiuals file
+// This should be outside the web server folder
+//############################################################
 $_creds_file = __DIR__ . '/../db_credentials_pma.php';
 $_creds_file = __DIR__ . '/../../db_credentials_pma.php';
+//############################################################
+
 if (!file_exists($_creds_file)) {
   echo($_creds_file );
     die("Database credentials file not found. Copy db_credentials.example.php to db_credentials_pma.php and fill in values.");
@@ -127,30 +141,7 @@ if (!defined('PMA_TMP_DIR')) {
 
 $PMA_SCHOOL_COOKIE_NAME = 'PMA_SCHOOL';
 if($dbName){
-    // Has the school changed?
-    /*
-    if (isset($_COOKIE[$PMA_SCHOOL_COOKIE_NAME])) {
-        // Exists
-        // Is it different to the school
-        if($_COOKIE[$PMA_SCHOOL_COOKIE_NAME] !== $school){
-            // It is different, so user wants to change school, clear it
-            // Unset the cookie value in PHP
-            unset($_COOKIE[$PMA_SCHOOL_COOKIE_NAME]);
-            // Set the cookie with an expiration time in the past
-            setcookie($PMA_SCHOOL_COOKIE_NAME, '', time() - 3600, '/');
-        }
-    }
-    */
    $num_days = 30;
-   /*
-   setcookie($PMA_SCHOOL_COOKIE_NAME, $school, [
-       'expires'  => time() + (86400 * $num_days),
-       'path'     => '/',
-       'secure'   => true,
-       'httponly' => true,
-       'samesite' => 'Lax',
-   ]);
-   */
 
     if (session_status() === PHP_SESSION_NONE) {
         //ini_set('session.name', getenv('SESSION_NAME') ?: 'PMA');
