@@ -14,7 +14,7 @@ $base_dir = "C:\\xampp\\htdocs\\PMA2\\pma";
 $base_dir = "/Applications/XAMPP/xamppfiles/htdocs/PMA2/pma";
 
 // linux / RHEL
-//$base_dir = "/var/www/html/pma";
+$base_dir = "/var/www/html/pma";
 //############################################################
 
 //############################################################
