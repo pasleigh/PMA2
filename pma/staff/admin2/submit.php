@@ -34,24 +34,24 @@ if ($access) {
         if (array_key_exists('text_input_sql', $_REQUEST) == false) {
             $_REQUEST['text_input_sql'] = null;
         }
-        //$query = $_REQUEST['text_input_sql'];
+        $query = $_REQUEST['text_input_sql'];
 
-//        $display_block .= "Query: $query<BR>\n";
-//        try {
-//            //$result = $db->query($query);
-//            $msg = "Query sucessfuly performed<BR>\n";
-//            $rows = $result->fetchAll();
-//            foreach ($rows as $row) {
-//                foreach ($row as $rec) {
-//                    $display_block .= $rec . "<BR>\n";
-//                }
-//            }
-//        } catch (PDOException $ex) {
-//            $display_block .= "An Error occured running this query<BR>\n";
-//            $err_msg = $ex->getMessage();
-//            $msg = 'Err message: ' . $ex->getMessage() . "<BR>\n";
-//        }
-        $msg = "<H2>This page nolonger works</H2>\n";;
+        $display_block .= "Query: $query<BR>\n";
+        try {
+            $result = $db->query($query);
+            $msg = "Query sucessfuly performed<BR>\n";
+            $rows = $result->fetchAll();
+            foreach ($rows as $row) {
+                foreach ($row as $rec) {
+                    $display_block .= $rec . "<BR>\n";
+                }
+            }
+        } catch (PDOException $ex) {
+            $display_block .= "An Error occured running this query<BR>\n";
+            $err_msg = $ex->getMessage();
+            $msg = 'Err message: ' . $ex->getMessage() . "<BR>\n";
+        }
+        //$msg = "<H2>This page nolonger works</H2>\n";;
         $display_block .= $msg;
     } elseif ($OP == 'submit_pwd') {
         $t_hasher = new PasswordHash(8, true);
