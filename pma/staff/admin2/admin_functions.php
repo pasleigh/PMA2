@@ -235,10 +235,10 @@ function admin_functions_block($db, $pm_id, $project_allocated, $num_parts, $p_d
 function access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names_table, &$access_response_phrase) {
     $access = false;
     if (IsAdmin($db, $this_staff_username)) {
-        $access_phrase = "You, $this_staff_full_name ($this_staff_username), have <em>system level</em> admin access. Be very careful.";
+        $access_phrase = "You, $this_staff_full_name ($this_staff_username), have system level admin access. Be very careful.";
         $access = true;
     } elseif (IsProjectAdmin($db, $this_staff_username, $staff_names_table)) {
-        $access_phrase = "You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful.";
+        $access_phrase = "You, $this_staff_full_name ($this_staff_username), have module level admin access. Be careful.";
         $access = true;
     } else {
         $access_phrase = "You, $this_staff_full_name ($this_staff_username), do not have admin access rights. <BR> Please return to where you came from.";

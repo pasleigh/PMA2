@@ -109,7 +109,7 @@ function GetSuperAdminLevel_staff_student($db, $username) {
 function access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names_table, &$access_response_phrase) {
     $access = false;
     if (GetSuperAdminLevel_staff_student($db, $this_staff_username)) {
-        $access_phrase = "Hello $this_staff_full_name ($this_staff_username), you have <em>system level</em> admin access. Be very careful.";
+        $access_phrase = "Hello $this_staff_full_name ($this_staff_username), you have system level admin access. Be very careful.";
         $access = true;
     } else {
         $access_phrase = "Unfortunately you, $this_staff_full_name ($this_staff_username), do not have admin access rights. <BR> Please return to the last page you came from.";

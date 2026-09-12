@@ -14,7 +14,7 @@ $base_dir = "C:\\xampp\\htdocs\\PMA2\\pma";
 $base_dir = "/Applications/XAMPP/xamppfiles/htdocs/PMA2/pma";
 
 // linux / RHEL
-$base_dir = "/var/www/html/pma";
+//$base_dir = "/var/www/html/pma";
 //############################################################
 
 //############################################################
@@ -151,6 +151,11 @@ if($dbName){
        $_SESSION[$PMA_SCHOOL_COOKIE_NAME] = $school;
    }
 }
+
+// SQL Console — every statement run through admin_sql_console.php / run_admin_sql_console.php
+// requires this password (checked via password_verify()) in addition to admin access + CSRF.
+// To change it: php -r "echo password_hash('yourpassword', PASSWORD_DEFAULT) . PHP_EOL;" and paste the result here.
+$hash_to_test_sql_console_against = '$2y$12$l9ZaY4S4JQqEKF2LZgo74Otw/qccCUiTG3ktNmo2O7zwuWQl3G4Ai';
 
 
 
