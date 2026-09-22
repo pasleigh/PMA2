@@ -11,6 +11,76 @@
 
 (@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
+// The DB columns (per allocation row) that hold a resolved staff id.
+function allocationStaffFieldWhitelist() {
+    $fields = ['supervisor_id', 'second_marker_id'];
+    for ($p = 1; $p <= 5; $p++) {
+        $fields[] = "marker_p{$p}m1_id";
+        $fields[] = "marker_p{$p}m2_id";
+    }
+    return $fields;
+}
+
+// Records that $raw_name (from the uploaded file) did not match any staff member
+// for the given student/column, grouped by the normalised name so every row using
+// the same unmatched name can be fixed together. $groups is the per-pm_id session
+// array, passed by reference so changes are written straight back into the session.
+function recordUnmatchedStaffName(&$groups, $sid, $field, $raw_name) {
+    $raw_name = trim((string)$raw_name);
+    if ($raw_name === '') {
+        return;
+    }
+    $key = md5(strtolower($raw_name));
+    if (!isset($groups[$key])) {
+        $groups[$key] = ['raw_name' => $raw_name, 'entries' => []];
+    }
+    foreach ($groups[$key]['entries'] as $existing) {
+        if ($existing['sid'] == $sid && $existing['field'] === $field) {
+            return;
+        }
+    }
+    $groups[$key]['entries'][] = ['sid' => $sid, 'field' => $field];
+}
+
+// Returns the pending unmatched raw name for this student/column, or null if
+// that cell isn't currently flagged as unmatched.
+function findUnmatchedRawName($groups, $sid, $field) {
+    foreach ($groups as $group) {
+        foreach ($group['entries'] as $entry) {
+            if ($entry['sid'] == $sid && $entry['field'] === $field) {
+                return $group['raw_name'];
+            }
+        }
+    }
+    return null;
+}
+
+// Renders a name cell for the allocation table: the resolved staff name, or -
+// if that cell is still pending resolution - the original unmatched text from
+// the upload, highlighted so it's obvious it needs fixing.
+function allocationNameCellHtml($resolved_name, $groups, $sid, $field) {
+    $raw = findUnmatchedRawName($groups, $sid, $field);
+    if ($raw !== null) {
+        return "<span class='badge bg-warning text-dark' title='Not matched to a staff member - see Unmatched staff names above'>" . htmlspecialchars($raw) . '</span>';
+    }
+    return htmlspecialchars((string)$resolved_name);
+}
+
+function staffSelectOptionsHtml($db, $staff_names2) {
+    $html = "<option value=''>-- select staff member --</option>";
+    try {
+        $stmt = $db->query("SELECT staffid, fullname FROM $staff_names2 ORDER BY fullname");
+        foreach ($stmt->fetchAll() as $srow) {
+            $name = htmlspecialchars(stripslashes($srow['fullname']));
+            $id = htmlspecialchars((string)$srow['staffid']);
+            $html .= "<option value='$id'>$name</option>";
+        }
+    } catch (PDOException $ex) {
+        error_log($ex->getMessage());
+    }
+    return $html;
+}
+
 $display_block = '';
 $display_block .= $connect_msg;
 
@@ -24,6 +94,18 @@ if (array_key_exists('pm_id', $_REQUEST) == false) {
     $_REQUEST['pm_id'] = null;
 }
 $pm_id = (int)$_REQUEST['pm_id'];
+
+// Names from an uploaded file that didn't match a staff member are remembered
+// here (per module) until an admin resolves them, so the "unmatched" highlight
+// and fix-all-at-once option survive across page loads within this session.
+if (!isset($_SESSION['unmatched_staff_names'])) {
+    $_SESSION['unmatched_staff_names'] = [];
+}
+if (!isset($_SESSION['unmatched_staff_names'][$pm_id])) {
+    $_SESSION['unmatched_staff_names'][$pm_id] = [];
+}
+$unmatched_groups = &$_SESSION['unmatched_staff_names'][$pm_id];
+
 $is_module_admin = IsModuleAdmin2($db, $this_staff_username, $this_staff_full_name, $pm_id, null, null, $module_level_access_phrase);
 if ($is_module_admin) {
     $access_phrase = $module_level_access_phrase;//"You, $this_staff_full_name ($this_staff_username), have <em>module level</em> admin access. Be careful how you use it.";
@@ -64,6 +146,7 @@ if ($is_module_admin || $admin_access) {
         }
 
         if ($csv_file_name != '' && $is_csv) {
+            $unmatched_groups = [];
             $importer = new CSVparse();
             $CSV_DATA = $importer->parse_file($csv_file_tmp);
             foreach ($CSV_DATA as $each_alloc_entry) {
@@ -75,6 +158,20 @@ if ($is_module_admin || $admin_access) {
                 $second_marker_family_name = $each_alloc_entry[$csv_keys[4]];
                 $supervisor_id = GetStaffIDFromFamilyNameAndInitial2($db, $supervisor_family_name, $staff_names2);
                 $second_marker_id = GetStaffIDFromFamilyNameAndInitial2($db, $second_marker_family_name, $staff_names2);
+
+                if ($supervisor_id === '0') {
+                    recordUnmatchedStaffName($unmatched_groups, $sid, 'supervisor_id', $supervisor_family_name);
+                    foreach ([1, 2, 3, 4, 5] as $p) {
+                        recordUnmatchedStaffName($unmatched_groups, $sid, "marker_p{$p}m1_id", $supervisor_family_name);
+                    }
+                }
+                if ($second_marker_id === '0') {
+                    recordUnmatchedStaffName($unmatched_groups, $sid, 'second_marker_id', $second_marker_family_name);
+                    foreach ([1, 2, 3, 4, 5] as $p) {
+                        recordUnmatchedStaffName($unmatched_groups, $sid, "marker_p{$p}m2_id", $second_marker_family_name);
+                    }
+                }
+
                 $num = CountAllocationTable($db, $project_allocated);
 
                 // Does this student have an entry in the allocations table
@@ -138,6 +235,7 @@ if ($is_module_admin || $admin_access) {
         }
 
         if ($csv_file_name != '' && $is_csv) {
+            $unmatched_groups = [];
             $importer = new CSVparse();
             $CSV_DATA = $importer->parse_file($csv_file_tmp);
             foreach ($CSV_DATA as $each_alloc_entry) {
@@ -150,6 +248,15 @@ if ($is_module_admin || $admin_access) {
                     $second_marker_family_name = $each_alloc_entry[$csv_keys[4 + $i * 2]];
                     $supervisor_ida[$i] = GetStaffIDFromFamilyNameAndInitial2($db, $supervisor_family_name, $staff_names2);
                     $second_marker_ida[$i] = GetStaffIDFromFamilyNameAndInitial2($db, $second_marker_family_name, $staff_names2);
+
+                    $supervisor_field = ($i == 0) ? 'supervisor_id' : "marker_p{$i}m1_id";
+                    $second_marker_field = ($i == 0) ? 'second_marker_id' : "marker_p{$i}m2_id";
+                    if ($supervisor_ida[$i] === '0') {
+                        recordUnmatchedStaffName($unmatched_groups, $sid, $supervisor_field, $supervisor_family_name);
+                    }
+                    if ($second_marker_ida[$i] === '0') {
+                        recordUnmatchedStaffName($unmatched_groups, $sid, $second_marker_field, $second_marker_family_name);
+                    }
                 }
 
                 $num = CountAllocationTable($db, $project_allocated);
@@ -202,6 +309,52 @@ if ($is_module_admin || $admin_access) {
             $display_block .= "<H3 style='color: red; background-color: #f1c40f'>You need to browse and select a CSV file to upload.</H3>";
         }
     }// end of if ($POST_OP == "upload_detailed_csv")
+
+    if ($POST_OP == 'resolve_unmatched_staff') {
+        $group_key = (string)($_POST['group_key'] ?? '');
+        $new_staff_id = (int)($_POST['staff_id'] ?? 0);
+        $valid_fields = allocationStaffFieldWhitelist();
+
+        if ($new_staff_id <= 0) {
+            $display_block .= "<H3 style='color: red; background-color: #f1c40f'>Please select a staff member before confirming the fix.</H3>";
+        } elseif (!isset($unmatched_groups[$group_key])) {
+            $display_block .= "<H3 style='color: red; background-color: #f1c40f'>That unmatched name is no longer pending (it may already have been fixed).</H3>";
+        } else {
+            $fixed_raw_name = $unmatched_groups[$group_key]['raw_name'];
+            $fixed_count = 0;
+            foreach ($unmatched_groups[$group_key]['entries'] as $entry) {
+                if (!in_array($entry['field'], $valid_fields, true)) {
+                    continue;
+                }
+                try {
+                    $stmt = $db->prepare("UPDATE $project_allocated SET `{$entry['field']}`=:staff_id WHERE sid=:sid");
+                    $stmt->execute([':staff_id' => $new_staff_id, ':sid' => $entry['sid']]);
+                    $fixed_count++;
+                } catch (PDOException $ex) {
+                    error_log($ex->getMessage());
+                }
+            }
+            unset($unmatched_groups[$group_key]);
+            $display_block .= '<B>' . $fixed_count . ' entr' . ($fixed_count == 1 ? 'y' : 'ies') . ' matching "' . htmlspecialchars($fixed_raw_name) . '" updated.</B><BR><hr>' . "\n";
+        }
+    }// end of if ($POST_OP == "resolve_unmatched_staff")
+
+    if (!empty($unmatched_groups)) {
+        $display_block .= "<hr><h2 style='color: darkred;'>Unmatched staff names</h2>\n";
+        $display_block .= "<p>The names below from the uploaded file did not match anyone in the staff list. Pick the correct staff member for each name below &mdash; this will fix <B>every</B> row and column where that name was used.</p>\n";
+        foreach ($unmatched_groups as $group_key => $group) {
+            $count = count($group['entries']);
+            $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id' style='margin-bottom: 8px;'>\n";
+            $display_block .= "<input type='hidden' name='op' value='resolve_unmatched_staff'>";
+            $display_block .= "<input type='hidden' name='group_key' value='" . htmlspecialchars($group_key) . "'>";
+            $display_block .= "<span class='badge bg-warning text-dark' style='font-size: 1em;'>" . htmlspecialchars($group['raw_name']) . '</span> ';
+            $display_block .= '<small>(' . $count . ' occurrence' . ($count == 1 ? '' : 's') . ')</small> ';
+            $display_block .= "<select name='staff_id' class='form-control form-control-sm d-inline-block' style='width: auto;' required>" . staffSelectOptionsHtml($db, $staff_names2) . '</select> ';
+            $display_block .= "<input class='btn btn-sm btn-primary' type='submit' value='Fix all'>";
+            $display_block .= "</form>\n";
+        }
+        $display_block .= "<hr>\n";
+    }
 
     //$display_block .="\n<form method=\"post\" action=\"$_SERVER[PHP_SELF]?pm_id=$pm_id\">\n";
     $num = CountAllocationTable($db, $project_allocated);
@@ -276,8 +429,10 @@ if ($is_module_admin || $admin_access) {
             $display_block .= "<TD><input type=\"text\" name=\"sid$student_count\" value=\"$sid\"  size=10 maxlength=10 readonly></TD>";
             $display_block .= "<TD><input type=\"text\" name=\"name$student_count\" value=\"$student_name\"  size=20 maxlength=20 readonly></TD>";
             $display_block .= "<TD><input type=\"text\" name=\"title$student_count\" value=\"$title\"  size=50 maxlength=100 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"supervisor$student_count\" value=\"$supervisor_name\"  size=20 maxlength=30 readonly></TD>";
-            $display_block .= "<TD><input type=\"text\" name=\"second_marker$student_count\" value=\"$second_marker_name\"  size=20 maxlength=30 readonly></TD>";
+            $supervisor_cell = allocationNameCellHtml($supervisor_name, $unmatched_groups, $sid, 'supervisor_id');
+            $second_marker_cell = allocationNameCellHtml($second_marker_name, $unmatched_groups, $sid, 'second_marker_id');
+            $display_block .= "<TD>$supervisor_cell</TD>";
+            $display_block .= "<TD>$second_marker_cell</TD>";
 
             for ($i = 1; $i <= 5; $i++) {
                 $m1_entry = "marker_p$i" . 'm1_id';
@@ -286,8 +441,10 @@ if ($is_module_admin || $admin_access) {
                 $marker2_id = $recs[$m2_entry];
                 $marker1_name = GetStaffNameFromID($db, $marker1_id, $staff_names2, null);
                 $marker2_name = GetStaffNameFromID($db, $marker2_id, $staff_names2, null);
-                $display_block .= "<TD style='font-size: small;'>$marker1_name</TD>";
-                $display_block .= "<TD style='font-size: small;'>$marker2_name</TD>";
+                $marker1_cell = allocationNameCellHtml($marker1_name, $unmatched_groups, $sid, $m1_entry);
+                $marker2_cell = allocationNameCellHtml($marker2_name, $unmatched_groups, $sid, $m2_entry);
+                $display_block .= "<TD style='font-size: small;'>$marker1_cell</TD>";
+                $display_block .= "<TD style='font-size: small;'>$marker2_cell</TD>";
             }
             $display_block .= "</TR>\n";
         }

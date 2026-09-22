@@ -14,6 +14,58 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 
 require_once __BASE_DIR__ . '/vendor/autoload.php';
 
+// True if $value represents a whole number (accepts int/float cells from the
+// spreadsheet as well as numeric-looking strings from a CSV).
+function isIntegerSid($value)
+{
+    if (is_int($value)) {
+        return true;
+    }
+    if (is_float($value)) {
+        return fmod($value, 1.0) === 0.0;
+    }
+    $trimmed = trim((string)$value);
+    return $trimmed !== '' && ctype_digit($trimmed);
+}
+
+// Reads sid/name/username/programme rows out of an uploaded student XLSX/CSV file.
+// Shared by the preview step and the confirm step so both parse the file identically.
+function parseStudentSpreadsheetFile($filePath)
+{
+    $sid_col = 1;
+    $student_name_col = 2;
+    $username_col = 3;
+    $prog_col = 4;
+
+    $spreadsheet = IOFactory::load($filePath);
+    $worksheet = $spreadsheet->getSheet(0);
+    $highestRow = $worksheet->getHighestRow();
+
+    $rows = [];
+    for ($row = 2; $row <= $highestRow; $row++) {
+        $username = $worksheet->getCell([$username_col, $row])->getValue();
+        // If this is an email extract the username part
+        $aruba_pos = strpos((string)$username, '@');
+        if ($aruba_pos === false) {
+            continue;
+        }
+        $username = substr($username, 0, $aruba_pos);
+
+        $sid = $worksheet->getCell([$sid_col, $row])->getValue();
+        $student_name = $worksheet->getCell([$student_name_col, $row])->getValue();
+        $programme = $worksheet->getCell([$prog_col, $row])->getValue();
+
+        $rows[] = [
+            'sid' => $sid,
+            'name' => $student_name,
+            'username' => $username,
+            'programme' => $programme,
+            'sid_valid' => isIntegerSid($sid),
+        ];
+    }
+    return $rows;
+}
+
 $display_block = '';
 $display_block .= $connect_msg;
 
@@ -160,70 +212,140 @@ if ($is_module_admin || $admin_access) {
         }
         $display_block .= "<B>Done</B><BR><hr>\n";
     } elseif ($POST_OP == 'upload_csv') {
-        $sid_col = 1;
-        $student_name_col = 2;
-        $username_col = 3;
-        $prog_col = 4;
-
         $xlsx_file_name = $_FILES['csv']['name'];
-        $ext = pathinfo($xlsx_file_name, PATHINFO_EXTENSION);
-        $xlsx_file_size = $_FILES['csv']['size'];
+        $ext = strtolower(pathinfo($xlsx_file_name, PATHINFO_EXTENSION));
         $xlsx_file_tmp = $_FILES['csv']['tmp_name'];
-        $xlsx_file_type = $_FILES['csv']['type'];
         $xlsx_file_error = $_FILES['csv']['error'];
 
-        $file_info = "File name $xlsx_file_name<BR>";
-        $file_info .= "File size $xlsx_file_size<BR>";
-        $file_info .= "File name on server (tmp) $xlsx_file_tmp<BR>";
-        $file_info .= "File type $xlsx_file_type<BR>";
-        $file_info .= "File read earror message $xlsx_file_error<BR>";
+        if ($xlsx_file_error || $xlsx_file_name == '') {
+            $display_block .= "<H3 style='color: red; background-color: #f1c40f'>You need to browse and select a XLSX/CSV file to upload.</H3>";
+        } else {
+            // Move the uploaded file to a holding area so it survives until the
+            // admin confirms the preview (the original PHP upload tmp file is
+            // deleted at the end of this request).
+            $preview_token = bin2hex(random_bytes(16));
+            $preview_ext = preg_replace('/[^a-z0-9]/', '', $ext);
+            $preview_filename = "upload_{$preview_token}.{$preview_ext}";
+            $preview_path = PMA_TMP_DIR . '/' . $preview_filename;
 
-        if (!$xlsx_file_error) {
-            if ($xlsx_file_name != '') {
-                $PHP_EXCEL_filetype = IOFactory::identify($xlsx_file_tmp);
-                $file_info .= "PHPExcel file type: $PHP_EXCEL_filetype<BR>";
+            $preview_rows = null;
+            if (move_uploaded_file($xlsx_file_tmp, $preview_path)) {
+                try {
+                    $preview_rows = parseStudentSpreadsheetFile($preview_path);
+                } catch (\Exception $ex) {
+                    error_log($ex->getMessage());
+                    $preview_rows = null;
+                }
+            }
 
-                $spreadsheet = IOFactory::load($xlsx_file_tmp);
+            if ($preview_rows === null) {
+                @unlink($preview_path);
+                $display_block .= "<H3 style='color: red; background-color: #f1c40f'>Could not read that file. Please check it is a valid XLSX/CSV file.</H3>";
+            } elseif (count($preview_rows) < 1) {
+                @unlink($preview_path);
+                $display_block .= "<H3 style='color: red; background-color: #f1c40f'>No valid student rows were found in that file (check the Username/email column).</H3>";
+            } else {
+                $existing_sids = [];
+                try {
+                    $existing_stmt = $db->query("SELECT sid FROM $students");
+                    $existing_sids = $existing_stmt->fetchAll(PDO::FETCH_COLUMN);
+                } catch (PDOException $ex) {
+                    error_log($ex->getMessage());
+                }
 
-                $worksheet = $spreadsheet->getSheet(0);
-
-                $worksheet_name = $worksheet->getTitle();
-                $highestRow = $worksheet->getHighestRow();
-                $highestCol = $worksheet->getHighestColumn();
-                $highestColIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestCol);
-                $nrColumns = ord($highestCol) - 64;
-
-                for ($row = 2; $row <= $highestRow; $row++) {
-                    $col = $username_col;
-                    $username = $worksheet->getCell([$col, $row])->getValue();
-                    // If this is an email extract the username part
-                    $aruba_pos = strpos($username, '@');
-                    if ($aruba_pos === false) {
-                        continue;
-                    } else {
-                        // It's an email so take everying in front of the aruba
-                        $username = substr($username, 0, $aruba_pos);
-                    }
-                    $col = $sid_col;
-                    $sid = $worksheet->getCell([$col, $row])->getValue();
-                    $col = $student_name_col;
-                    $student_name = $worksheet->getCell([$col, $row])->getValue();
-                    $col = $prog_col;
-                    $programme = $worksheet->getCell([$col, $row])->getValue();
-
-                    try {
-                        $stmt = $db->prepare("REPLACE INTO $students (sid,name,username,programme) VALUES (:sid, :name, :username, :programme)");
-                        $stmt->execute([':sid' => $sid, ':name' => $student_name, ':username' => $username, ':programme' => $programme]);
-                    } catch (PDOException $ex) {
-                        error_log($ex->getMessage());
-                        echo "A database error occurred. Please contact the system administrator.<BR>\n";
-                        exit();
+                $invalid_count = 0;
+                foreach ($preview_rows as $prow) {
+                    if (!$prow['sid_valid']) {
+                        $invalid_count++;
                     }
                 }
-            } else {
-                $display_block .= "<H3 style='color: red; background-color: #f1c40f'>You need to browse and select a XLSX/CSV file to upload.</H3>";
+
+                $display_block .= "<hr><h2>Preview of data to be imported</h2>\n";
+                $display_block .= '<p>Please check the data below before confirming. <B>' . count($preview_rows) . '</B> student row(s) were found in <B>' . htmlspecialchars($xlsx_file_name) . "</B>.</p>\n";
+
+                if ($invalid_count > 0) {
+                    $display_block .= "<H3 style='color: red; background-color: #f1c40f'>$invalid_count row(s) failed validation: the SID (first column) must be a whole number. Fix the file and upload it again &mdash; nothing has been imported.</H3>\n";
+                }
+
+                $display_block .= "<TABLE class='table table-bordered table-striped table-sm w-auto'>\n";
+                $display_block .= "<thead><tr><th>SID</th><th>Name</th><th>Username</th><th>Programme</th><th>Status</th></tr></thead>\n<tbody>\n";
+                foreach ($preview_rows as $prow) {
+                    if (!$prow['sid_valid']) {
+                        $status = "<span class='badge bg-danger'>fail: SID must be a whole number</span>";
+                    } elseif (in_array($prow['sid'], $existing_sids)) {
+                        $status = "<span class='badge bg-info'>update</span>";
+                    } else {
+                        $status = "<span class='badge bg-success'>new</span>";
+                    }
+                    $display_block .= '<tr>';
+                    $display_block .= '<td>' . htmlspecialchars((string)$prow['sid']) . '</td>';
+                    $display_block .= '<td>' . htmlspecialchars((string)$prow['name']) . '</td>';
+                    $display_block .= '<td>' . htmlspecialchars((string)$prow['username']) . '</td>';
+                    $display_block .= '<td>' . htmlspecialchars((string)$prow['programme']) . '</td>';
+                    $display_block .= "<td>$status</td>";
+                    $display_block .= "</tr>\n";
+                }
+                $display_block .= "</tbody></TABLE>\n";
+
+                if ($invalid_count === 0) {
+                    $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id' style='display:inline-block; margin-right: 10px;'>\n";
+                    $display_block .= "<input type='hidden' name='op' value='confirm_upload_csv'>";
+                    $display_block .= "<input type='hidden' name='preview_file' value='" . htmlspecialchars($preview_filename) . "'>";
+                    $display_block .= "<input class='btn btn-success' type='submit' name='submit' value='Confirm and import this data'>";
+                    $display_block .= "</form>\n";
+                }
+
+                $display_block .= "\n<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id' style='display:inline-block;'>\n";
+                $display_block .= "<input type='hidden' name='op' value='cancel_upload_csv'>";
+                $display_block .= "<input type='hidden' name='preview_file' value='" . htmlspecialchars($preview_filename) . "'>";
+                $display_block .= "<input class='btn btn-outline-secondary' type='submit' name='submit' value='Cancel'>";
+                $display_block .= "</form>\n";
+
+                $display_block .= "<hr>\n";
             }
         }
+    } elseif ($POST_OP == 'confirm_upload_csv') {
+        $preview_filename = basename((string)($_POST['preview_file'] ?? ''));
+        $preview_path = PMA_TMP_DIR . '/' . $preview_filename;
+
+        if (!preg_match('/^upload_[a-f0-9]{32}\.[a-z0-9]*$/', $preview_filename) || !is_file($preview_path)) {
+            $display_block .= "<H3 style='color: red; background-color: #f1c40f'>That preview has expired. Please upload the file again.</H3>";
+        } else {
+            $rows_to_import = parseStudentSpreadsheetFile($preview_path);
+
+            $invalid_count = 0;
+            foreach ($rows_to_import as $prow) {
+                if (!$prow['sid_valid']) {
+                    $invalid_count++;
+                }
+            }
+
+            if ($invalid_count > 0) {
+                @unlink($preview_path);
+                $display_block .= "<H3 style='color: red; background-color: #f1c40f'>Import aborted: $invalid_count row(s) still have a non-integer SID. Fix the file and upload it again.</H3>";
+            } else {
+                try {
+                    foreach ($rows_to_import as $prow) {
+                        $stmt = $db->prepare("REPLACE INTO $students (sid,name,username,programme) VALUES (:sid, :name, :username, :programme)");
+                        $stmt->execute([':sid' => $prow['sid'], ':name' => $prow['name'], ':username' => $prow['username'], ':programme' => $prow['programme']]);
+                    }
+                } catch (PDOException $ex) {
+                    error_log($ex->getMessage());
+                    @unlink($preview_path);
+                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                    exit();
+                }
+                @unlink($preview_path);
+                $display_block .= '<B>' . count($rows_to_import) . " student row(s) imported.</B><BR><hr>\n";
+            }
+        }
+    } elseif ($POST_OP == 'cancel_upload_csv') {
+        $preview_filename = basename((string)($_POST['preview_file'] ?? ''));
+        $preview_path = PMA_TMP_DIR . '/' . $preview_filename;
+        if (preg_match('/^upload_[a-f0-9]{32}\.[a-z0-9]*$/', $preview_filename) && is_file($preview_path)) {
+            @unlink($preview_path);
+        }
+        $display_block .= "<p><em>Upload cancelled. No changes were made.</em></p><hr>\n";
     } elseif ($POST_OP == 'download_csv') {
         $csv_filename = 'student_data_' . $module_prefix . $module1 . $module_postfix . '_' . $short_code . '_' . $year_begin . '-' . $year_end . '.csv';
 
@@ -324,7 +446,7 @@ if ($is_module_admin || $admin_access) {
         $sel = stripslashes($recs['sel']);
         $student_count++;
         $display_block .= "<TR>\n";
-        $display_block .= "<TD><input type='text' name='sid$student_count' class='form-control form-control-sm' required='required' readonly value='$sid' maxlength=9></TD>";
+        $display_block .= '<TD>' . htmlspecialchars((string)$sid) . "<input type='hidden' name='sid$student_count' value='" . htmlspecialchars((string)$sid) . "'></TD>";
         $display_block .= "<TD><input type='text' name='name$student_count' class='form-control form-control-sm' required='required' value='$name' maxlength=30></TD>";
         $display_block .= "<TD><input type='text' name='username$student_count' class='form-control form-control-sm' required='required' value='$username' maxlength=20></TD>";
         $display_block .= "<TD><input type='text' name='programme$student_count' class='form-control form-control-sm' required='required' value='$programme' maxlength=60></TD>";
@@ -347,7 +469,7 @@ if ($is_module_admin || $admin_access) {
     $display_block .= "\n<input type='hidden' name='op' value='submit_edited'>";
     $display_block .= "\n<input type='hidden' name='student_count' value='$student_count'>";
 
-    $display_block .= "<p><input class='btn btn-success' type='submit' id='submitbutton' name='submit' value='Submit changes to student details.'></p>";
+    $display_block .= "<p><input class='btn btn-success' type='submit' id='submitbutton' name='submit' value='Submit changes to the student details'></p>";
 
     $display_block .= "</form>\n";
 
@@ -425,7 +547,8 @@ $(document).ready(function () {
         paging: true,
         ordering: true,
         info: true,
-        searching: true
+        searching: true,
+        lengthMenu: [[10, 20, 30, 100, -1], [10, 20, 30, 100, "All"]]
     });
 });
 </script>
