@@ -133,7 +133,8 @@ function GetStudentListTable($db, $project_allocated, $students_table, $staff_ta
             $second_marker_name = GetStaffNameFromID($db, $second_marker_id, $staff_table, null);
             $display_block .= "  <td>$second_marker_name</td>\n";
             $display_block .= "  <td style=\"text-align: center;\"><input type=\"checkbox\" name=\"check_$sid\" checked></td>\n";
-            $display_block .= "  <td>$feedback_sent</td>\n";
+            $feedback_sent_class = $feedback_sent == 'Sent' ? 'feedback-sent' : 'feedback-not-sent';
+            $display_block .= "  <td><span class=\"$feedback_sent_class\">$feedback_sent</span></td>\n";
             $display_block .= "</tr>\n";
         }
     }

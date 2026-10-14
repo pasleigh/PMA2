@@ -246,9 +246,7 @@ if ($is_module_admin || $admin_access) {
                         $email_full .= $this_staff_full_name;
                     } else {
                         $email_full = $email_fullname;
-                        $email_full .= $email_body_text;
-
-                        $email_full .= "<P>$email_full .=</P>";
+                        $email_full .= nl2br($email_body_text);
                     }
 
                     $display_block .= "$firstname $familyname$lb$lb";
@@ -266,8 +264,12 @@ if ($is_module_admin || $admin_access) {
                     if ($reallysend == null) {
                         $display_block .= "<em>NOT SENT: $subject to $to<HR><BR></em>";
                     } else {
-                        EmailBodyString($to, $from, $subject, $email_full);
-                        $display_block .= "<em>Sending: $subject to $to<BR></em>";
+                        $ok = EmailBodyStringPHPMailer($to, $from, $subject, $email_full);
+                        if ($ok) {
+                            $display_block .= "<em>Sent: $subject to $to<BR></em>";
+                        } else {
+                            $display_block .= "<em style='color: red;'>FAILED to send: $subject to $to (see the PHP error log for the reason)<BR></em>";
+                        }
                     }
                 } else {
                     // Not participating in projects this year.

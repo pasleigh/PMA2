@@ -376,7 +376,7 @@ if ($is_module_admin || $admin_access) {
                         if ($reallysend == null) {
                             $display_block .= "<em>NOT SENT: $subject to $myemail_to<HR><BR></em>";
                         } else {
-                            $ok = EmailPDFAttachment($myemail_to, $myemail_from, $fileattached_pdf, $myemail_subject, $myemail_message, $name_of_file, $do_not_attach, $cc_to);
+                            $ok = EmailPDFAttachmentPHPMailer($myemail_to, $myemail_from, $fileattached_pdf, $myemail_subject, $myemail_message, $name_of_file, $do_not_attach, $cc_to);
                             //EmailBodyString($to, $from, $subject, $email_full);
                             $display_block .= "<em>Sending: $subject to $myemail_to<BR></em>";
                             if ($ok == '1') {

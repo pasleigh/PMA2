@@ -73,6 +73,7 @@
       <path value="$PROJECT_DIR$/pma/vendor/paragonie/random_compat" />
       <path value="$PROJECT_DIR$/pma/vendor/phpoffice/phpspreadsheet" />
       <path value="$PROJECT_DIR$/vendor/maennchen/zipstream-php" />
+      <path value="$PROJECT_DIR$/pma/vendor/phpmailer/phpmailer" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
@@ -83,6 +84,7 @@
   </component>
   <component name="PhpUnit">
     <phpunit_settings>
+      <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/pma/vendor/autoload.php" />
       <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" />
     </phpunit_settings>
   </component>

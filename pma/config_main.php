@@ -29,8 +29,9 @@ if (!file_exists($_creds_file)) {
   echo($_creds_file );
     die("Database credentials file not found. Copy db_credentials.example.php to db_credentials_pma.php and fill in values.");
 }
+//echo("Include _creds file");
 $_creds = require $_creds_file;
-
+//var_dump($_creds);
 switch ($school) {
   case "mech":
     $dbName = $_creds['mech']['db'];
@@ -151,6 +152,39 @@ if($dbName){
        $_SESSION[$PMA_SCHOOL_COOKIE_NAME] = $school;
    }
 }
+
+//############################################################
+// Outgoing email settings (used by EmailPDFAttachmentPHPMailer() in staff/EmailPDFAttachment.php)
+//############################################################
+// MAIL_TRANSPORT:
+//   'smtp'     - send via an SMTP server (recommended, e.g. University relay / Office 365 / Azure Communication Services)
+//   'mail'     - use PHP's built-in mail() (needs a local MTA, usually not available on Azure)
+//   'sendmail' - use the local sendmail binary
+// MAIL_SMTP_SECURE: 'tls' (STARTTLS, usually port 587), 'ssl' (SMTPS, usually port 465) or '' (none, usually port 25)
+// MAIL_SMTP_AUTH: true if the SMTP server needs a username / password (an internal relay often does not)
+//
+// The SMTP username / password are NOT stored here. Add them to the credentials file (outside the web folder):
+//   'mail' => ['user' => 'noreply@example.ac.uk', 'pass' => 'CHANGE_ME'],
+//
+// MAIL_FROM_ADDRESS: most SMTP servers (Office 365 in particular) will only send "From" the mailbox you log in as.
+//   If set, every email is sent From this address, and the sender passed by the app (e.g. the module leader)
+//   is used as the Reply-To instead, so replies still go to the right person.
+//   Leave as '' to send From the address passed by the app (only works if the server allows it).
+// MAIL_SMTP_DEBUG: 0 = off, 2 = log the SMTP conversation to the PHP error log (useful when setting up)
+if (!defined('MAIL_TRANSPORT')) {
+    define('MAIL_TRANSPORT', 'smtp');
+    define('MAIL_SMTP_HOST', 'smtp.gmail.com');
+    define('MAIL_SMTP_PORT', 587);
+    define('MAIL_SMTP_SECURE', 'tls');
+    define('MAIL_SMTP_AUTH', true);
+    define('MAIL_SMTP_USER', $_creds['mail']['user'] ?? '');
+    define('MAIL_SMTP_PASS', $_creds['mail']['pass'] ?? '');
+    define('MAIL_SMTP_TIMEOUT', 30);
+    define('MAIL_FROM_ADDRESS', 'pma.noreply@gmail.com');
+    define('MAIL_FROM_NAME', 'Project Marking App');
+    define('MAIL_SMTP_DEBUG', 2);
+}
+//############################################################
 
 // SQL Console — every statement run through admin_sql_console.php / run_admin_sql_console.php
 // requires this password (checked via password_verify()) in addition to admin access + CSRF.

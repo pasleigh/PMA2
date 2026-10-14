@@ -403,11 +403,11 @@ if ($is_module_admin || $admin_access) {
                         if ($reallysend == null) {
                             $display_block .= "<em>NOT SENT: $subject to $myemail_to<HR><BR></em>";
                         } else {
-                            $ok = EmailPDFAttachment($myemail_to, $myemail_from, $fileattached_pdf, $myemail_subject, $myemail_message, $name_of_file, $do_not_attach, $cc_to);
+                            $ok = EmailPDFAttachmentPHPMailer($myemail_to, $myemail_from, $fileattached_pdf, $myemail_subject, $myemail_message, $name_of_file, $do_not_attach, $cc_to);
                             //EmailBodyString($to, $from, $subject, $email_full);
-                            $ok = 1;
+                            //$ok = 1;
                             $display_block .= "<em>Sending: $subject to $myemail_to<BR></em>";
-                            if ($ok == '1') {
+                            if ($ok) {
                                 echo("Success emailing $student_name ($username). Num: $student_counter<BR>\n");
                                 RecordFeedbackSent($db, $sid, $part, $feedback_records);
                             } else {
@@ -461,5 +461,118 @@ if ($is_module_admin || $admin_access) {
         </div>
     </div> <!-- content -->
 </div><!-- /wrapper -->
+<style>
+    /* Student selection table */
+    #students_select_table {
+        max-height: 70vh;
+        overflow: auto;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        margin-bottom: 1rem;
+    }
+    #student_email_list {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.9rem;
+    }
+    #student_email_list th,
+    #student_email_list td {
+        padding: 0.45rem 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+        vertical-align: middle;
+    }
+    #student_email_list thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: #6c757d;
+        color: #fff;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    #student_email_list thead th:nth-child(8),
+    #student_email_list thead th:nth-child(9) {
+        white-space: normal;
+        min-width: 7rem;
+        text-align: center;
+    }
+    #student_email_list td:nth-child(5) {
+        min-width: 12rem;
+    }
+    #student_email_list thead th:nth-child(8) div {
+        margin-top: 0.3rem;
+        padding-top: 0.3rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.4);
+        font-weight: normal;
+    }
+    #student_email_list thead th:nth-child(8) input {
+        margin-left: 0.4rem;
+        vertical-align: middle;
+    }
+    #student_email_list tbody tr:nth-child(even) {
+        background: #f8f9fa;
+    }
+    #student_email_list tbody tr:hover {
+        background: #e7f1ff;
+    }
+    #student_email_list tbody tr.not-selected td {
+        color: #adb5bd;
+    }
+    #student_email_list input[type=checkbox] {
+        width: 1.1rem;
+        height: 1.1rem;
+        cursor: pointer;
+    }
+    #student_email_list td:nth-child(8),
+    #student_email_list td:nth-child(9) {
+        text-align: center;
+    }
+    #student_email_list .feedback-sent,
+    #student_email_list .feedback-not-sent {
+        display: inline-block;
+        padding: 0.2em 0.6em;
+        border-radius: 1rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    #student_email_list .feedback-sent {
+        background: #d1e7dd;
+        color: #0f5132;
+    }
+    #student_email_list .feedback-not-sent {
+        background: #fff3cd;
+        color: #664d03;
+    }
+</style>
+<script>
+    /* Select / de-select all students, and grey out rows that will not be emailed */
+    document.addEventListener('DOMContentLoaded', function () {
+        var table = document.getElementById('student_email_list');
+        if (!table) return;
+        var selectAll = document.getElementById('select-all');
+        var boxes = table.querySelectorAll('tbody input[type=checkbox]');
+        function refresh() {
+            var ticked = 0;
+            boxes.forEach(function (box) {
+                box.closest('tr').classList.toggle('not-selected', !box.checked);
+                if (box.checked) ticked++;
+            });
+            if (selectAll) {
+                selectAll.checked = ticked === boxes.length;
+                selectAll.indeterminate = ticked > 0 && ticked < boxes.length;
+            }
+        }
+        if (selectAll) {
+            selectAll.addEventListener('change', function () {
+                boxes.forEach(function (box) { box.checked = selectAll.checked; });
+                refresh();
+            });
+        }
+        boxes.forEach(function (box) { box.addEventListener('change', refresh); });
+        refresh();
+    });
+</script>
 </body>
 </html>

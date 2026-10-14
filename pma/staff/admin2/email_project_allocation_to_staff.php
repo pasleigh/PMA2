@@ -335,8 +335,12 @@ if ($is_module_admin || $admin_access) {
                 if ($reallysend == null) {
                     $display_block .= "<em>NOT SENT: $subject to $to<HR><BR></em>";
                 } else {
-                    EmailBodyString($to, $from, $subject, $email_full);
-                    $display_block .= "<em>Sending: $subject to $to<BR></em>";
+                    $ok = EmailBodyStringPHPMailer($to, $from, $subject, $myemail_message);
+                    if ($ok) {
+                        $display_block .= "<em>Sent: $subject to $to<BR></em>";
+                    } else {
+                        $display_block .= "<em style='color: red;'>FAILED to send: $subject to $to (see the PHP error log for the reason)<BR></em>";
+                    }
                 }
 
                 flush();

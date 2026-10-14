@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../EmailPDFAttachment.php';
+
 function EmailBodyString($myemail_to, $myemail_from, $myemail_subject, $myemail_message) {
     // email stuff (change data below)
     $to = $myemail_to;
@@ -35,3 +37,11 @@ function EmailBodyString($myemail_to, $myemail_from, $myemail_subject, $myemail_
 
     return $ok;
 }// EmailBodyString
+
+
+// Same arguments and return value as EmailBodyString(), but sends via PHPMailer
+// using the MAIL_* settings in config_main.php (an HTML email with no attachment and no Cc).
+function EmailBodyStringPHPMailer($myemail_to, $myemail_from, $myemail_subject, $myemail_message) {
+    $myemail_message = nl2br($myemail_message);// preservers line brakes
+    return EmailPDFAttachmentPHPMailer($myemail_to, $myemail_from, '', $myemail_subject, $myemail_message, '', 1, '');
+}// EmailBodyStringPHPMailer

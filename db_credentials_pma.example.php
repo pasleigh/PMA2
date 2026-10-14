@@ -13,5 +13,8 @@ return [
     'swjtu_elec'  => ['db' => 'projects_swjtelec',   'user' => 'projects_swjtelec',   'pass' => 'CHANGE_ME', 'sess' => 'PMA_SWJTELEC'],
     'its'         => ['db' => 'projects_its',        'user' => 'projects_its',        'pass' => 'CHANGE_ME', 'sess' => 'PMA_ITS'],
     'env'         => ['db' => 'projects_env',        'user' => 'projects_env',        'pass' => 'CHANGE_ME', 'sess' => 'PMA_ENV'],
+
+    // SMTP login used for outgoing email (see the mail settings in pma/config_main.php)
+    'mail'        => ['user' => 'noreply@example.ac.uk', 'pass' => 'CHANGE_ME'],
 ];
 

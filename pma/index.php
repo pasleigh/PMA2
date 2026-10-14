@@ -24,6 +24,8 @@ try {
       </div>\n";
 
 } catch (PDOException $ex) {
+    error_log(var_dump($ex->getMessage()));
+    error_log(var_dump($db->errorInfo()));
     $html_block = "
       <div>
           <a class='btnr' href='./staff/admin2/first_use_staff.php'>Setup system for first use</a>
