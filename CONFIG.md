@@ -15,11 +15,11 @@ To install on a server:
 1. Copy the `pma` folder to a new folder under the webserver path.
 2. Copy the `db_credentials_pma.example.php` to `db_credentials_pma.php` a suitable location outside of the webserver path as it will contain databswe names and credentials. 
 A typical place could be one place up the webserever file stucture. So issue the command
-<small>
+
 ```
 > cp db_credentials_pma.example.php ../db_credentials_pma.php 
 ```
-</small>
+
 3. Edit the `pma/config_main.php` file to specify local directory strucutre and loaction of the `db_credentials_pma.php` file.
 4. Create the databases, one for each School. Put the names and credentials in the `db_credentials_pma.php` file
 

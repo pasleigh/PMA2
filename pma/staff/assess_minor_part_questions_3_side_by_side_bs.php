@@ -611,8 +611,8 @@ if ($POST_OP == 'commit') {
             $stylesheet = file_get_contents('./css/pagedesc.css');
             $mpdf->WriteHTML($stylesheet, 1);    // The parameter 1 tells that this is css/style only and no body/html/text
             $mpdf->WriteHTML($display_block);
-
-            $safe_filename = preg_replace('/[^A-Za-z0-9_\- ]/', '_', $student_name) . '.pdf';
+            $tmp_safe_filename = $student_name . "_p$assesspart";
+            $safe_filename = preg_replace('/[^A-Za-z0-9_\- ]/', '_', $tmp_safe_filename) . '.pdf';
             if ($topdf == 1 || $topdf == 2) {
                 $mpdf->Output($safe_filename, 'D');
                 exit();
