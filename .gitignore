@@ -1,6 +1,6 @@
 composer.phar
 /vendor/
-/pma/vendor
+#/pma/vendor
 db_credentials.php
 pma/tmp/
 
