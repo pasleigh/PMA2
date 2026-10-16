@@ -40,6 +40,8 @@ $header_images[5] = 'leeds_scape_header.png';
 $header_images[6] = 'leeds_swjtu_joint_school_header.png';
 $header_images[7] = 'leeds_transport_header.png';
 
+create_db_change_log_table($db);
+
 if (!DoesTableExist($db, $projects_setup)) {
     create_projects_setup_table_structure($db);
 }

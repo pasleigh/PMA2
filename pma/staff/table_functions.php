@@ -399,6 +399,25 @@ SQL;
         pma_log_db_error($ex, __FUNCTION__);
     }
 }
+function create_db_change_log_table($db)
+{
+    $query = <<<SQL
+    CREATE TABLE IF NOT EXISTS `db_change_log` (
+        `id`          INT          NOT NULL AUTO_INCREMENT,
+        `username`    VARCHAR(100) NOT NULL DEFAULT '',
+        `sql_command` VARCHAR(20)  NOT NULL DEFAULT '',
+        `table_name`  VARCHAR(100) NOT NULL DEFAULT '',
+        `query_text`  TEXT         NOT NULL,
+        `executed_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+SQL;
+    try {
+        $db->query($query);
+    } catch (PDOException $ex) {
+        error_log("DB error creating db_change_log: " . $ex->getMessage());
+    }
+}
 /**
  * Create the `staff_names` table if it does not exist.
  *
