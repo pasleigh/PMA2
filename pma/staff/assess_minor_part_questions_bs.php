@@ -434,7 +434,8 @@ if ($POST_OP == 'commit') {
             $mpdf->WriteHTML($display_block);
 
             if ($topdf == 1 || $topdf == 2) {
-                $safe_filename = preg_replace('/[^A-Za-z0-9_\- ]/', '_', $student_name) . '.pdf';
+                $tmp_safe_filename = $student_name . "_p$assesspart";
+                $safe_filename = preg_replace('/[^A-Za-z0-9_\- ]/', '_', $tmp_safe_filename) . '.pdf';
                 $mpdf->Output($safe_filename, 'D');
                 exit();
             } elseif ($topdf == 3) {
