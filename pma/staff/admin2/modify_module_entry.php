@@ -22,17 +22,6 @@ if ($_is_ajax) {
 
 (@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
-// Returns $value if it is a real date in YYYY-MM-DD format (as sent by an
-// <input type="date">), otherwise today's date - so empty, '0000-00-00' or
-// badly typed dates are never written to the database.
-function validDateOrToday($value)
-{
-    $value = trim((string)$value);
-    if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value, $m) && checkdate((int)$m[2], (int)$m[3], (int)$m[1])) {
-        return $value;
-    }
-    return date('Y-m-d');
-}
 
 $admin_access = false;
 $admin_access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
@@ -88,10 +77,10 @@ if ($is_module_admin || $admin_access) {
                     break;
 
                 case 'modify_dates':
-                    $staff_close = validDateOrToday($_POST['staff_close_date']               ?? '');
-                    $sel_open    = validDateOrToday($_POST['student_selection_open_date']     ?? '');
-                    $sel_close   = validDateOrToday($_POST['student_selection_close_date']    ?? '');
-                    $alloc_date  = validDateOrToday($_POST['allocation_date']                 ?? '');
+                    $staff_close = validDateOrDefault($_POST['staff_close_date']               ?? '');
+                    $sel_open    = validDateOrDefault($_POST['student_selection_open_date']     ?? '');
+                    $sel_close   = validDateOrDefault($_POST['student_selection_close_date']    ?? '');
+                    $alloc_date  = validDateOrDefault($_POST['allocation_date']                 ?? '');
                     $stmt = $db->prepare(
                         "UPDATE $projects_setup SET staff_close=?, sel_open=?, sel_close=?, alloc_date=? WHERE id=?"
                     );
@@ -121,8 +110,8 @@ if ($is_module_admin || $admin_access) {
                         $col_desc     = "p{$part}_desc";
                         $col_feedback = "p{$part}_feedback";
 
-                        $v_submit   = validDateOrToday($_POST[$col_submit]   ?? '');
-                        $v_marking  = validDateOrToday($_POST[$col_marking]  ?? '');
+                        $v_submit   = validDateOrDefault($_POST[$col_submit]   ?? '');
+                        $v_marking  = validDateOrDefault($_POST[$col_marking]  ?? '');
                         $v_percent  = (int)($_POST[$col_percent]  ?? 0);
                         $v_markers  = (int)($_POST[$col_markers]  ?? 1);
                         $v_max      = (int)($_POST[$col_max]      ?? 100);

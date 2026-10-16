@@ -823,3 +823,21 @@ function IsStaffB($db, $username, $staff_names) {
 
     return false;
 }
+
+/**
+ * Return $value if it is a real date in YYYY-MM-DD format (as sent by an
+ * <input type="date">), otherwise $default (today if not given).
+ *
+ * Stops empty, '0000-00-00' or badly typed dates being written to the database.
+ *
+ * @param mixed       $value   Date string from the form.
+ * @param string|null $default Fallback date (YYYY-MM-DD); null means today.
+ * @return string Valid YYYY-MM-DD date.
+ */
+function validDateOrDefault($value, $default = null) {
+    $value = trim((string)$value);
+    if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value, $m) && checkdate((int)$m[2], (int)$m[3], (int)$m[1])) {
+        return $value;
+    }
+    return $default ?? date('Y-m-d');
+}

@@ -175,9 +175,9 @@ if ($POST_OP == 'create') {
         $p_max = "p$part" . '_max';
         $max_marks_part = $_POST[$p_max];
         $p_submit = "p$part" . '_submission_date';
-        $submit_dates_part = $_POST[$p_submit];
+        $submit_dates_part = validDateOrDefault($_POST[$p_submit] ?? '', date('Y') . '-09-24');
         $p_marking = "p$part" . '_marking_date';
-        $markby_dates_part = $_POST[$p_marking];
+        $markby_dates_part = validDateOrDefault($_POST[$p_marking] ?? '', date('Y') . '-09-24');
         $p_use = "use_p$part";
 
         $action = "UPDATE $projects_setup SET $p_submit=:submit_date, $p_marking=:marking_date, $p_use='1', $p_percent=:percent,
@@ -591,10 +591,10 @@ if ($POST_OP == 'create') {
         $name = "p$part" . '_max';
         $display_block .= "<P>Maximum mark for part $part: <input type=\"number\" name=\"$name\" value=\"100\" min=\"1\" max=\"100\" size=6 maxlength=5>";
         $name = "p$part" . '_submission_date';
-        $date = '2022-09-24';//date('Y-m-d');//"2014-09-24";
-        $display_block .= "<P>Submission date for part $part: <input type=\"text\" id=\"$name\" name=\"$name\"  value=\"$date\" size=20 maxlength=15>";
+        $date = date('Y') . '-09-24'; // default: 24 September of the current year
+        $display_block .= "<P>Submission date for part $part: <input type=\"date\" id=\"$name\" name=\"$name\" value=\"$date\" required>";
         $name = "p$part" . '_marking_date';
-        $display_block .= "<P>Mark-by date for part $part: <input type=\"text\" id=\"$name\" name=\"$name\"  value=\"$date\" size=20 maxlength=15>";
+        $display_block .= "<P>Mark-by date for part $part: <input type=\"date\" id=\"$name\" name=\"$name\" value=\"$date\" required>";
     }
 
     $display_block .= '<H2>Staff names list:</H2>';
