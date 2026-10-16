@@ -43,7 +43,7 @@ if ($access || $is_module_admin) {
     $download_block = "<div class='btn-group-vertical w-100' role='group'>";
     for ($i = 1; $i <= $num_parts; $i++) {
         $desc = $p_description[$i];
-        $email_block .= "<A class='btn btn-secondary btn-lg' href='./admin2/email_project_feedback_to_students.php?pm_id=$pm_id&part=$i&op=select'>Email $desc feedback</A>\n";
+        $email_block .= "<A class='btn btn-secondary btn-lg' href='./admin2/email_project_feedback_to_students_2.php?pm_id=$pm_id&part=$i&op=select'>Email $desc feedback</A>\n";
         $download_block .= "<A class='btn btn-outline-secondary btn-lg' href='./projectmarking_save_part_pdf_feedback_to_zip.php?pm_id=$pm_id&part=$i&save=2'>Download $desc feedback</A>\n";
     }
     $email_block .= '</div>';
