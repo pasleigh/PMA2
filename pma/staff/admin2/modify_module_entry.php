@@ -727,7 +727,7 @@ $(function () {
                     numInput(`p${p}_percent`, pt.percent, 0, 100)],
                 [`Maximum mark for part ${p}`,
                     numInput(`p${p}_max`, pt.max, 1, 100)],
-                [`Response format for part ${p} <small class="text-muted d-block">Checked = numeric; unchecked = phrases. Must match the questions setup.</small>`,
+                [`Numerical response format for part ${p} <small class="text-muted d-block">Checked = numeric; unchecked = phrases. Must match the questions setup.</small>`,
                     chk(`p${p}_numeric`, pt.numeric === 1)],
                 [`Collect overall feedback for part ${p} <small class="text-muted d-block">Checked = show <em>overall</em> feedback text box on the marking page.</small>`,
                     chk(`p${p}_feedback`, pt.feedback === 1)],
