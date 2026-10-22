@@ -687,16 +687,12 @@ if ($num < 1) {
                         if ($n == $cat_q_count[$cat]) {
                             $label = 'C' . $cat . 'Feedback';
                         }
-                        $mark = 0.0;
+                        // Blank (not 0) when this marker has not marked the student yet
+                        $mark = '';
                         if ($marks_recs) {
                             $mark = $marks_recs[$label];
                         }
-                        $real_mark = $mark;
-                        if ($n != $cat_q_count[$cat]) {
-                            continue;
-                            // The real mark for any question is factored and weighted
-                        }
-                        $row[$count] = $real_mark;
+                        $row[$count] = $mark;
                         $count++;
                     }
                 }
