@@ -129,12 +129,6 @@ if ($is_module_admin || $admin_access) {
         $display_block .= "<TD><input type='text' name='programme' class='form-control' required='required' maxlength=60></TD>\n";
         $display_block .= "</TR>\n";
 
-        $display_block .= "<TR>\n";
-        $display_block .= "<TD class='align-middle'>Selected</TD>\n";
-        $display_block .= "<TD class='align-middle'><input type='checkbox' name='sel_chk' value='1'> <small class='text-muted'>(checked = not yet selected a project)</small></TD>\n";
-
-        $display_block .= "</TR>\n";
-
         $display_block .= "</table>\n";
 
         $display_block .= "\n<input type='hidden' name='op' value='submit_new'>";
@@ -156,16 +150,13 @@ if ($is_module_admin || $admin_access) {
             $postid = "programme$i";
             $programme = $_POST[$postid];
 
-            $postid = "sel$i";
-            $sel_chk = array_key_exists($postid, $_POST) ? 1 : 0;
-
             $postid = "delete$i";
             $delete_chk = array_key_exists($postid, $_POST) ? 1 : 0;
 
             try {
                 if ($delete_chk == 0) {
-                    $stmt = $db->prepare("UPDATE $students SET name=:name, username=:username, programme=:programme, sel=:sel WHERE sid=:sid");
-                    $stmt->execute([':name' => $name, ':username' => $username, ':programme' => $programme, ':sel' => $sel_chk, ':sid' => $sid]);
+                    $stmt = $db->prepare("UPDATE $students SET name=:name, username=:username, programme=:programme WHERE sid=:sid");
+                    $stmt->execute([':name' => $name, ':username' => $username, ':programme' => $programme, ':sid' => $sid]);
                 } else {
                     $stmt = $db->prepare("DELETE FROM $students WHERE sid=:sid");
                     $stmt->execute([':sid' => $sid]);
@@ -430,7 +421,6 @@ if ($is_module_admin || $admin_access) {
         <th>name</th>
         <th>username</th>
         <th>programme</th>
-        <th>sel</th>
         <th>delete</th>
       </tr>
     </thead>';
@@ -443,19 +433,12 @@ if ($is_module_admin || $admin_access) {
         $name = $recs['name'];
         $username = $recs['username'];
         $programme = stripslashes($recs['programme']);
-        $sel = stripslashes($recs['sel']);
         $student_count++;
         $display_block .= "<TR>\n";
         $display_block .= '<TD>' . htmlspecialchars((string)$sid) . "<input type='hidden' name='sid$student_count' value='" . htmlspecialchars((string)$sid) . "'></TD>";
-        $display_block .= "<TD><input type='text' name='name$student_count' class='form-control form-control-sm' required='required' value='$name' maxlength=30></TD>";
-        $display_block .= "<TD><input type='text' name='username$student_count' class='form-control form-control-sm' required='required' value='$username' maxlength=20></TD>";
-        $display_block .= "<TD><input type='text' name='programme$student_count' class='form-control form-control-sm' required='required' value='$programme' maxlength=60></TD>";
-
-        $checked = '';
-        if ($sel == 1) {
-            $checked = 'checked';
-        }
-        $display_block .= "<TD><input type='checkbox' name='sel$student_count' value='1' $checked></TD>\n";
+        $display_block .= "<TD><input type='text' name='name$student_count' class='form-control form-control-sm' required='required' value='" . htmlspecialchars((string)$name, ENT_QUOTES) . "' maxlength=30></TD>";
+        $display_block .= "<TD><input type='text' name='username$student_count' class='form-control form-control-sm' required='required' value='" . htmlspecialchars((string)$username, ENT_QUOTES) . "' maxlength=20></TD>";
+        $display_block .= "<TD><input type='text' name='programme$student_count' class='form-control form-control-sm' required='required' value='" . htmlspecialchars((string)$programme, ENT_QUOTES) . "' maxlength=60></TD>";
 
         $checked = '';
         $display_block .= "<TD><input type='checkbox' name='delete$student_count' value='1' $checked></TD>\n";
@@ -543,12 +526,37 @@ if ($is_module_admin || $admin_access) {
 </div><!-- /wrapper -->
 <script>
 $(document).ready(function () {
-    $('#studentinfo').DataTable({
+    const table = $('#studentinfo').DataTable({
         paging: true,
         ordering: true,
         info: true,
         searching: true,
-        lengthMenu: [[10, 20, 30, 100, -1], [10, 20, 30, 100, "All"]]
+        lengthMenu: [[10, 20, 30, 100, -1], [10, 20, 30, 100, "All"]],
+        columnDefs: [{
+            // name, username, programme are text boxes: search, sort and type-detect
+            // on the box's value (an empty cell would otherwise be detected as numeric)
+            targets: [1, 2, 3],
+            render: function (data, type) {
+                if (type !== 'display') {
+                    const input = $('<div>').html(data).find('input');
+                    return input.length ? input.val() : data;
+                }
+                return data;
+            }
+        }]
+    });
+
+    // Keep search/sort in step with edits: copy the typed value into the value
+    // attribute and have DataTables re-read the cell
+    $('#studentinfo tbody').on('input', 'input[type=text]', function () {
+        this.setAttribute('value', this.value);
+        table.cell($(this).closest('td')).invalidate('dom');
+    });
+
+    // Rows on other pages or hidden by a search are not in the page, so their
+    // inputs would not be submitted - show every row before the form submits
+    $('#studentinfo').closest('form').on('submit', function () {
+        table.search('').columns().search('').page.len(-1).draw(false);
     });
 });
 </script>
