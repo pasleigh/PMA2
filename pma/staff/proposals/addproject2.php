@@ -209,18 +209,6 @@ if ($_REQUEST['op'] != 'add') {
     </div>
     <hr>
     <script src="./validate_project_entry.js"></script>
-    <script type="text/javascript">
-        function popup(mylink, windowname) {
-            if (!window.focus) return true;
-            var href;
-            if (typeof(mylink) == 'string')
-                href = mylink;
-            else
-                href = mylink.href;
-            window.open(href, windowname, 'width=550,height=500,scrollbars=yes');
-            return false;
-        }
-    </script>
 
     <?php echo $display_block; ?>
 </div>

@@ -26,14 +26,15 @@ function DisplayProjectSelectBlockStaff($db, $proj_id, $staff_names2, $title, $f
     $project_block .= "</div></div>\n";
     $project_block .= "<h2 class='mt-3'>Suggested Second Marker (<span class='required'>required</span>)</h3>";
     $project_block .= 'This suggestion will help us.';
-    $project_block .= 'Be aware that it may change at final marking stage.';
+    $project_block .= ' Be aware that it may change at final marking stage.';
     $project_block .= '</P> ';
     $project_block .= "<div class='row'><div class='col-md-3'>";
     $project_block .= GetStaffSelectID($db, $staff_names2, 'f_assocstaff_id', $f_assocstaff_id);
     $project_block .= "</div></div>\n";
     $project_block .= "<h2 class='mt-3'>Project Outline  (<span class='required'>required</span>)</h3>\n";
 
-    $project_block .= "<A HREF='format.html' onClick='return popup(this, 'info')'>Formatting Tips</a><br>\n";
+    $project_block .= "<button type='button' class='btn btn-sm btn-outline-info' data-bs-toggle='modal' data-bs-target='#formattingTipsModal'><i class='bi bi-info-circle'></i> Formatting tips</button><br>\n";
+    $project_block .= FormattingTipsModalHtml();
     $project_block .= 'Give the students a picture of the theme and highlight possibile topics of interest within it.';
     $project_block .= "The aim here is to grab their interest.</P>\n";
     $project_block .= "<textarea class='form-control' name='f_outline'  id='f_outline' cols=75 rows=10 wrap=virtual  style='background-color: lightgrey; color: black ;'>$f_outline</textarea>\n";
@@ -265,4 +266,59 @@ function GetProgramVariantsSelectStaff($db, $projects_setup_proposals_table, $pm
     $select_block .= "</select>\n";
 
     return $select_block;
+}
+
+/**
+ * Return the Bootstrap modal listing the simple HTML staff can use to format
+ * the project outline. Opened by the "Formatting tips" button in
+ * DisplayProjectSelectBlockStaff (replaces the old format.html popup).
+ *
+ * @return string Modal HTML.
+ */
+function FormattingTipsModalHtml() {
+    // Each tip: [description, HTML to type in, how it looks]
+    $tips = [
+        ['Line break', 'Some text<br>next line', 'Some text<br>next line'],
+        ['Bold text', '<b>bold text</b>', '<b>bold text</b>'],
+        ['Italic text', '<i>italic text</i>', '<i>italic text</i>'],
+        ['Paragraphs', "<p>First paragraph</p>\n<p>Second paragraph</p>", '<p>First paragraph</p><p class="mb-0">Second paragraph</p>'],
+        ['Bulleted list', "<ul>\n  <li>Bullet item 1</li>\n  <li>Bullet item 2</li>\n  <li>Bullet item 3</li>\n</ul>", '<ul class="mb-0"><li>Bullet item 1</li><li>Bullet item 2</li><li>Bullet item 3</li></ul>'],
+        ['Numbered list', "<ol>\n  <li>Number item 1</li>\n  <li>Number item 2</li>\n  <li>Number item 3</li>\n</ol>", '<ol class="mb-0"><li>Number item 1</li><li>Number item 2</li><li>Number item 3</li></ol>'],
+        ['Hyperlink', '<a href="https://www.leeds.ac.uk">www.leeds.ac.uk</a>', '<a href="https://www.leeds.ac.uk" target="_blank" rel="noopener">www.leeds.ac.uk</a>'],
+    ];
+
+    $rows = '';
+    foreach ($tips as $tip) {
+        $rows .= '<tr><td>' . $tip[0] . '</td>';
+        $rows .= '<td><pre class="mb-0 text-info"><code>' . htmlspecialchars($tip[1]) . '</code></pre></td>';
+        $rows .= '<td>' . $tip[2] . "</td></tr>\n";
+    }
+
+    return <<<HTML
+<div class='modal fade' id='formattingTipsModal' tabindex='-1' aria-labelledby='formattingTipsModalLabel' aria-hidden='true'>
+  <div class='modal-dialog modal-lg modal-dialog-scrollable'>
+    <div class='modal-content bg-dark text-white border-secondary'>
+      <div class='modal-header border-secondary'>
+        <h5 class='modal-title' id='formattingTipsModalLabel'>Formatting tips for project forms</h5>
+        <button type='button' class='btn-close btn-close-white' data-bs-dismiss='modal' aria-label='Close'></button>
+      </div>
+      <div class='modal-body'>
+        <p>Text typed into the boxes on this form is not shown to students with the same layout you typed it in.
+        To format what students see, use the simple HTML tags below.</p>
+        <div class='table-responsive'>
+          <table class='table table-dark table-bordered align-middle mb-0'>
+            <thead class='table-secondary'><tr><th>Format</th><th>Type this</th><th>Students see</th></tr></thead>
+            <tbody>
+$rows            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class='modal-footer border-secondary'>
+        <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+HTML;
 }
