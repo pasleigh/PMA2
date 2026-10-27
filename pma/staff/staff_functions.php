@@ -293,8 +293,10 @@ function GetStaffIDFromFamilyNameAndInitial($db, $staff_family_name, $staff_tabl
 /**
  * Return the staff ID matched by family name with optional comma-separated first-name initial.
  *
- * Handles formats: "Sleigh", "Sleigh, A", "Sleigh, Andy".
+ * Handles formats: "Sleigh", "Sleigh, A", "Sleigh,A", "Sleigh, Andy".
  * Used when importing from systems that format names as "Family, First".
+ * Tries an exact family name match before a "contains" match, and returns '0'
+ * if the name matches more than one staff member.
  *
  * @param PDO    $db               Active PDO connection.
  * @param string $staff_family_name Family name, optionally followed by ", First".
@@ -305,51 +307,58 @@ function GetStaffIDFromFamilyNameAndInitial2($db, $staff_family_name, $staff_tab
     // Finds match for:
     // Sleigh
     // Sleigh, A
+    // Sleigh,A
     // Sleigh, Andy
     //
+    // An exact family name match is tried first; only if that finds nobody is a
+    // "contains" match used (e.g. for double-barrelled names). If more than one
+    // staff member matches, '0' is returned so the name is flagged as unmatched
+    // rather than silently picking the wrong person (e.g. "Bai, M" vs "Babaie").
     $staff_id = '0';
+    $staff_family_name = trim((string)$staff_family_name);
     if ($staff_family_name == '') {
         return $staff_id;
     }
 
     // Split the family name as it may contain a trailing initial
-    $staff_family_name_split = explode(', ', $staff_family_name);
-
-    $params = [':familyname' => '%' . $staff_family_name_split[0] . '%'];
-    $get_list_query = "select * from $staff_table where familyname LIKE :familyname";
-
-    if (count($staff_family_name_split) > 1) {
-        $firstname = trim($staff_family_name_split[1]);
-        $get_list_query .= ' AND firstname LIKE :firstname';
-        $params[':firstname'] = $firstname . '%';
-    }
-
-    try {
-        $get_list_res = $db->prepare($get_list_query);
-        $get_list_res->execute($params);
-    } catch (PDOException $ex) {
-        error_log('Unable to create staff name list from database. In GetStaffIDFromFamilyNameAndInitial2: ' . $ex->getMessage());
+    $staff_family_name_split = array_map('trim', explode(',', $staff_family_name, 2));
+    $familyname = $staff_family_name_split[0];
+    $firstname = $staff_family_name_split[1] ?? '';
+    if ($familyname == '') {
         return $staff_id;
     }
 
-    //$num_staff_matches = $get_list_res->rowCount();
+    foreach (['exact', 'contains'] as $match_type) {
+        if ($match_type == 'exact') {
+            $get_list_query = "select staffid from $staff_table where familyname = :familyname";
+            $params = [':familyname' => $familyname];
+        } else {
+            $get_list_query = "select staffid from $staff_table where familyname LIKE :familyname";
+            $params = [':familyname' => '%' . $familyname . '%'];
+        }
 
-    $rows = $get_list_res->fetchAll();
+        if ($firstname != '') {
+            $get_list_query .= ' AND firstname LIKE :firstname';
+            $params[':firstname'] = $firstname . '%';
+        }
 
-    foreach ($rows as $recs) {
-        $staff_id = $recs['staffid'];
-        //$initials = $recs['initials'];
-        //$fullname = stripslashes($recs['fullname']);
-        //$firstname = stripslashes($recs['firstname']);
-        //$familyname = stripslashes($recs['familyname']);
-        //$title = stripslashes($recs['title']);
-        return $staff_id;
-        //
-        //        if($familyname == $staff_family_name){
-        //            //echo("$familyname ($staff_id)<BR>");
-        //            return $staff_id;
-        //        }
-        //
+        try {
+            $get_list_res = $db->prepare($get_list_query);
+            $get_list_res->execute($params);
+        } catch (PDOException $ex) {
+            error_log('Unable to create staff name list from database. In GetStaffIDFromFamilyNameAndInitial2: ' . $ex->getMessage());
+            return $staff_id;
+        }
+
+        $rows = $get_list_res->fetchAll();
+
+        if (count($rows) == 1) {
+            return (string)$rows[0]['staffid'];
+        }
+        if (count($rows) > 1) {
+            // Ambiguous - leave it for an admin to resolve by hand
+            return $staff_id;
+        }
     }
 
     return $staff_id;
