@@ -105,6 +105,22 @@ function copy_module_project_setup_row($db, $projects_setup_table, $projects_set
     $choice_number = $rec['choice_number'];
     $use_project_area = $rec['use_project_area'];
     $use_project_selection = $rec['use_project_selection'];
+    // Empty, NULL or '0000-00-00' dates in the old row would fail the insert
+    // (or carry junk forward), so replace any invalid date with today
+    $staff_close = validDateOrDefault($staff_close);
+    $sel_open = validDateOrDefault($sel_open);
+    $sel_close = validDateOrDefault($sel_close);
+    $p1_submission_date = validDateOrDefault($p1_submission_date);
+    $p1_marking_date = validDateOrDefault($p1_marking_date);
+    $p2_submission_date = validDateOrDefault($p2_submission_date);
+    $p2_marking_date = validDateOrDefault($p2_marking_date);
+    $p3_submission_date = validDateOrDefault($p3_submission_date);
+    $p3_marking_date = validDateOrDefault($p3_marking_date);
+    $p4_submission_date = validDateOrDefault($p4_submission_date);
+    $p4_marking_date = validDateOrDefault($p4_marking_date);
+    $p5_submission_date = validDateOrDefault($p5_submission_date);
+    $p5_marking_date = validDateOrDefault($p5_marking_date);
+    $alloc_date = validDateOrDefault($alloc_date);
     // Change these
     $short_code = $short_code_new;
     $year_begin = $year_begin_new;
