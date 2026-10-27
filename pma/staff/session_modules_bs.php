@@ -42,6 +42,7 @@ $greeting_block .= "<h4>Below is a list of modules for the academic session $yea
 $display_block = $greeting_block;
 
 $display_propose_block = '';
+$propose_buttons = '';
 $visible_count = 0;
 foreach ($rows as $res) {
     $visible = $res['visible'];
@@ -72,6 +73,7 @@ foreach ($rows as $res) {
         $short_code = $res['short_code'];
         //$display_propose_block .= "<A href=\"./projectproposals_select.php?pm_id=$pm_id\" rel=\"external\" data-role=\"button\" data-theme=\"b\">$module_short_description - $module_prefix$module1 - $short_code</A>\n";
         $display_propose_block .= "<A href=\"./proposals/projects_indexm2.php?pm_id=$pm_id\" rel=\"external\" data-role=\"button\" data-theme=\"b\">$module_short_description - $module_prefix$module1$module_postfix - $short_code<BR>$close_text</A>\n";
+        $propose_buttons .= "<A href='./proposals/projects_indexm2.php?pm_id=$pm_id' class='btn btn-primary' target='_top'>$module_short_description - $module_prefix$module1$module_postfix - $short_code<BR>$close_text</A>\n";
         $visible_count++;
     }
 }
@@ -196,6 +198,14 @@ if (IsAdmin($db, $this_staff_username)) {
     <hr class="style1">
     <div class="container-fluid text-center">
         <?php echo("$greeting_block"); ?>
+        <?php if ($propose_buttons != '') { ?>
+        <div class="well wellpm text-center bg-dark text-white">
+            <H4>Select one of these modules to propose project titles / themes</H4>
+            <div class="btn-group-vertical btn-group-lg" role="group">
+                <?php echo("$propose_buttons"); ?>
+            </div>
+        </div>
+        <?php } ?>
         <div class="well wellpm text-center bg-dark text-white">
             <H4>Select one of these modules to mark</H4>
             <div class="btn-group-vertical btn-group-lg" role="group">
