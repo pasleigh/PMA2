@@ -43,13 +43,15 @@ function parseStudentSpreadsheetFile($filePath)
 
     $rows = [];
     for ($row = 2; $row <= $highestRow; $row++) {
-        $username = $worksheet->getCell([$username_col, $row])->getValue();
-        // If this is an email extract the username part
-        $aruba_pos = strpos((string)$username, '@');
-        if ($aruba_pos === false) {
+        $username = trim((string)$worksheet->getCell([$username_col, $row])->getValue());
+        // If this is an email extract the username part, otherwise use it as the username
+        $aruba_pos = strpos($username, '@');
+        if ($aruba_pos !== false) {
+            $username = trim(substr($username, 0, $aruba_pos));
+        }
+        if ($username === '') {
             continue;
         }
-        $username = substr($username, 0, $aruba_pos);
 
         $sid = $worksheet->getCell([$sid_col, $row])->getValue();
         $student_name = $worksheet->getCell([$student_name_col, $row])->getValue();
