@@ -4,6 +4,7 @@
 (@include_once("$STAFF_DIR_VAL/setup_titles.php")) or die('Cannot find setup_titles.php<BR>');
 (@include_once('./ADMINconnect_pdo.php')) or die('Cannot connect to database<BR>');
 (@include_once("$STAFF_DIR_VAL/csrf_functions.php")) or die('Cannot find csrf_functions.php<BR>');
+(@include_once("$STAFF_DIR_VAL/staff_functions.php")) or die('Cannot find staff_functions.php<BR>');
 
 $projects_setup = 'projects_setup';
 $projects_setup_proposals = 'projects_setup_proposals';
@@ -112,6 +113,16 @@ if (isset($_POST['op']) && $_POST['op'] === 'import') {
                         $setup['year_end']   = $new_year_end;
                         // Strip id if it somehow sneaked in
                         unset($setup['id']);
+                        // Empty, NULL or '0000-00-00' dates in the export would fail the insert
+                        // (or carry junk forward), so replace any invalid date with today
+                        $date_fields = ['staff_close', 'sel_open', 'sel_close', 'alloc_date'];
+                        for ($p = 1; $p <= 5; $p++) {
+                            $date_fields[] = "p{$p}_submission_date";
+                            $date_fields[] = "p{$p}_marking_date";
+                        }
+                        foreach ($date_fields as $date_field) {
+                            $setup[$date_field] = validDateOrDefault($setup[$date_field] ?? '');
+                        }
 
                         $cols_list   = implode(', ', array_map(fn($c) => "`$c`", array_keys($setup)));
                         $ph_list     = implode(', ', array_fill(0, count($setup), '?'));
