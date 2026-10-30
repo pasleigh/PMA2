@@ -159,6 +159,12 @@ if ($is_module_admin_any || $admin_access) {
             $display_block .= '<BR><BR>';
             $display_block .= "<DIV style='border-style: solid; border-width: 3px; border-color: maroon; padding: 5px; background-color: Khaki' >\n";
             $display_block .= '<h1>System Level admin functions</h1>';
+            // Shortcuts to the most used actions - the full list follows below
+            $display_block .= "<div class='border border-secondary rounded bg-white p-3 mb-3'>\n";
+            $display_block .= "<h4 class='mb-3'>Common System level actions</h4>\n";
+            $display_block .= "<a class='btn btn-primary me-2 mb-2' href='./duplicate_module.php'>Duplicate a previous module to create a new module</a>\n";
+            $display_block .= "<a class='btn btn-primary me-2 mb-2' href='./edit_admin_users_module.php'>Edit module level admin users</a>\n";
+            $display_block .= "</div>\n";
             $display_block .= '<OL>';
             $display_block .= "<LI><A href='./create_new_module_entry.php'>Create new Module Entry</A></LI>\n";
             $display_block .= "<LI><A href='./duplicate_module.php'>Duplicate a previously used module to create <strong>new</strong> module</A></LI>\n";

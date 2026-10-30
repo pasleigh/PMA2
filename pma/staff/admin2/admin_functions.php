@@ -138,6 +138,14 @@ function admin_functions_block($db, $pm_id, $project_allocated, $num_parts, $p_d
         }
     }
 
+    // Shortcuts to the most used actions - the full list follows below
+    $admin_func_block .= "<div class='border border-secondary rounded bg-white p-3 mb-3'>\n";
+    $admin_func_block .= "<h4 class='mb-3'>Common Module level actions</h4>\n";
+    $admin_func_block .= "<a class='btn btn-success me-2 mb-2' href='" . $locationdir . "admin2/modify_module_entry.php?pm_id=$pm_id'>Modify module description</a>\n";
+    $admin_func_block .= "<a class='btn btn-success me-2 mb-2' href='" . $locationdir . "admin2/modify_student_table_xlsx.php?pm_id=$pm_id'>Modify/upload students data</a>\n";
+    $admin_func_block .= "<a class='btn btn-success me-2 mb-2' href='" . $locationdir . "admin2/upload_student_project_allocation_xlsx.php?pm_id=$pm_id'>Modify/upload allocations</a>\n";
+    $admin_func_block .= "</div>\n";
+
     $admin_func_block .= "<OL>\n";
     $admin_func_block .= "<LI class='itemHeader'>Project allocation</LI>";
 
