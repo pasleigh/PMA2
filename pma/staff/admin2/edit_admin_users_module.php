@@ -138,14 +138,14 @@ if ($access) {
     // Display the dropdowns to select the module and year
     $display_block .= "<h2>Select the module/year you want to view/edit Module Level Admin Users for...</H1>\n";
 
-    $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
+    // Changing the module reloads the page with that module's admin users
+    $display_block .= "<form method='post' id='module_select_form' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
     $display_block .= csrf_token_field();
     $display_block .= '<P><strong>Project/Module descriptions in the database: </strong>';
-    $display_block .= "<select class='form-control' name='pm_id_selected' id='module_select'>\n";
+    $display_block .= "<select class='form-control' name='pm_id_selected' id='module_select' onchange='this.form.submit()'>\n";
     $display_block .= $project_list_options;
     $display_block .= "</select>\n</P>";
     $display_block .= "<input type='hidden' name='op' value='select'>";
-    $display_block .= "<p><input class='btn btn-secondary' type='submit' id='submitbutton' name='submit' value='List admin user for the selected module/year'></p>";
     $display_block .= '</form>';
 
     if ($POST_OP == 'selected_new_staff') {
@@ -159,7 +159,9 @@ if ($access) {
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
-        if ($results->rowCount() > 0) {
+        if ($results->rowCount() == 0) {
+            $display_block .= "<div class='alert alert-warning'>Please choose a staff member to add.</div>\n";
+        } else {
             $staff_recs = $results->fetch();
 
             $fullname = $staff_recs['fullname'];
@@ -332,7 +334,8 @@ if ($access) {
             $display_block .= csrf_token_field();
             $NameKey = 'new_admin_staff_id';
             $MatchID = null;
-            $display_block .= GetStaffSelectID($db, $staff_names, $NameKey, $MatchID);
+            $display_block .= "<p>Start typing a name to search.</p>\n";
+            $display_block .= "<div style='max-width: 500px;'>" . GetStaffSelectID($db, $staff_names, $NameKey, $MatchID) . '</div>';
             $display_block .= "\n<input type='hidden' name='op' value='selected_new_staff'>";
             $display_block .= "\n<input type='hidden' name='pm_id_selected' value='$pm_id_selected'>";
 
@@ -372,7 +375,20 @@ if ($access) {
     </div><!-- /content -->
 </div><!-- /wrapper -->
 </body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css"
+      integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
+        integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    $("#adminstaffinfo").dataTable();
+    // No paging, so every tick box is in the page and gets submitted
+    $("#adminstaffinfo").dataTable({paging: false});
+
+    // Searchable staff name selector: an empty value makes selectize show the placeholder
+    $("#new_admin_staff_id option[value='-1']").val("").text("");
+    $("#new_admin_staff_id").selectize({
+        placeholder: "Type to search for a staff name..."
+    });
 </script>
 </html>
