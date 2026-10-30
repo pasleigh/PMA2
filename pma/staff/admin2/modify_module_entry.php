@@ -23,6 +23,29 @@ if ($_is_ajax) {
 (@include_once('./admin_functions.php')) or die('Cannot include admin functions<BR>');
 
 
+/**
+ * Add a column to a table, temporarily allowing zero dates.
+ *
+ * ALTER TABLE rebuilds the whole table, and in strict mode MySQL refuses to
+ * copy rows holding '0000-00-00' (common in old projects_setup rows), so the
+ * column would never be added. sql_mode is restored afterwards.
+ *
+ * @param PDO    $db         Active PDO connection.
+ * @param string $table      Table name.
+ * @param string $column     Column to add.
+ * @param string $definition Column definition, e.g. 'int DEFAULT 0'.
+ */
+function AddColumnAllowingZeroDates($db, $table, $column, $definition) {
+    $old_sql_mode = $db->query('SELECT @@SESSION.sql_mode')->fetchColumn();
+    $relaxed_mode = implode(',', array_diff(explode(',', $old_sql_mode), ['NO_ZERO_DATE', 'NO_ZERO_IN_DATE', 'STRICT_TRANS_TABLES', 'STRICT_ALL_TABLES']));
+    $db->prepare('SET SESSION sql_mode = ?')->execute([$relaxed_mode]);
+    try {
+        $db->query("ALTER TABLE $table ADD `$column` $definition");
+    } finally {
+        $db->prepare('SET SESSION sql_mode = ?')->execute([$old_sql_mode]);
+    }
+}
+
 $admin_access = false;
 $admin_access = access_check_response($db, $this_staff_username, $this_staff_full_name, $staff_names, $access_phrase);
 
@@ -120,7 +143,7 @@ if ($is_module_admin || $admin_access) {
                         $v_feedback = (int)($_POST[$col_feedback] ?? 0);
 
                         if (!DoesColumnExistInTable($db, $projects_setup, $col_feedback)) {
-                            $db->query("ALTER TABLE $projects_setup ADD `$col_feedback` int DEFAULT 0");
+                            AddColumnAllowingZeroDates($db, $projects_setup, $col_feedback, 'int DEFAULT 0');
                         }
 
                         $stmt = $db->prepare(
@@ -271,7 +294,7 @@ if ($is_module_admin || $admin_access) {
             $show_part_feedback_flag = isset($_POST[$p_show_feedback_id]) ? 1 : 0;
 
             if (!DoesColumnExistInTable($db, $projects_setup, $p_show_feedback_id)) {
-                $db->query("ALTER TABLE $projects_setup ADD `$p_show_feedback_id` int DEFAULT 0");
+                AddColumnAllowingZeroDates($db, $projects_setup, $p_show_feedback_id, 'int DEFAULT 0');
             }
 
             $query = "update $projects_setup set $p_submit='$submit_dates_part', $p_marking='$markby_dates_part', $p_use='1', $p_percent='$weights_part',
