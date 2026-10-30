@@ -36,6 +36,12 @@ if ($access) {
 
     $display_block .= '<h1>Edit System Level Admin users </h1>';
 
+    // Tidy the table: each username should only appear once
+    $removed_duplicates = RemoveDuplicateAdminUsers($db, $admin_users_table);
+    if (count($removed_duplicates) > 0) {
+        $display_block .= "<div class='alert alert-info'>Removed duplicate admin user entries: " . implode(', ', $removed_duplicates) . "</div>\n";
+    }
+
     if ($POST_OP == 'selected_new_staff') {
         try {
             $results = $db->prepare("SELECT * FROM $staff_names WHERE staffid=?");
@@ -46,7 +52,9 @@ if ($access) {
             echo "A database error occurred. Please contact the system administrator.<BR>\n";
             exit();
         }
-        if ($results->rowCount() > 0) {
+        if ($results->rowCount() == 0) {
+            $display_block .= "<div class='alert alert-warning'>Please choose a staff member to add.</div>\n";
+        } else {
             $staff_recs = $results->fetch();
             $firstname = $staff_recs['firstname'];
             $familyname = $staff_recs['familyname'];
@@ -85,48 +93,49 @@ if ($access) {
             }
         }
     } elseif ($POST_OP == 'submit_modified') {
-        $display_block .= "Submitting: <BR>\n";
-
-        $admin_staff_count = $_POST['admin_staff_count'];
-        for ($i = 1; $i <= $admin_staff_count; $i++) {
-            $postid = "username$i";
-            $username = $_POST[$postid];
-
-            $postid = "admin_level$i";
-            $mod_admin_level = $_POST[$postid];
-
-            $staffid = $_POST["staffid$i"];
-
-            // Should not make yourself less than 3 - as you would be ejected from the admin section
-            if ($username == $this_staff_username) {
-                $display_block .= 'You cannont make youself a lesser level admin user<BR>';
-                if ($mod_admin_level < 3) {
-                    $mod_admin_level = 3;
-                }
-            }
+        // Remove the ticked people from the admin_users table only - their
+        // staff record is left untouched
+        $delete_ids = $_POST['delete_ids'] ?? [];
+        if (!is_array($delete_ids)) {
+            $delete_ids = [];
+        }
+        $deleted_names = [];
+        foreach ($delete_ids as $delete_id) {
+            $delete_id = (int)$delete_id;
             try {
-                $results = $db->prepare("UPDATE $admin_users_table SET admin_level=? WHERE username=?");
-                $results->execute([$mod_admin_level, $username]);
+                $results = $db->prepare("SELECT username, firstname, familyname FROM $admin_users_table WHERE `id`=?");
+                $results->execute([$delete_id]);
+                $admin_rec = $results->fetch();
             } catch (PDOException $ex) {
-                echo("Unable to update data to the table $admin_users_table<BR>\n");
                 error_log($ex->getMessage());
                 echo "A database error occurred. Please contact the system administrator.<BR>\n";
                 exit();
             }
-            // loop through all _POST find the "ai" keys
-            if (array_key_exists("ai_$staffid", $_POST)) {
-                $staff_admin_index = $staffid;
-                try {
-                    $results = $db->prepare("DELETE FROM $admin_users_table WHERE `id`=?");
-                    $results->execute([$staff_admin_index]);
-                } catch (PDOException $ex) {
-                    error_log($ex->getMessage());
-                    echo "A database error occurred. Please contact the system administrator.<BR>\n";
-                    exit();
-                }
+            if ($admin_rec === false) {
+                continue;
             }
+            $admin_name = htmlspecialchars(stripslashes($admin_rec['firstname'] . ' ' . $admin_rec['familyname']));
+
+            // Should not remove yourself - as you would be ejected from the admin section
+            if ($admin_rec['username'] == $this_staff_username) {
+                $display_block .= "<div class='alert alert-warning'>You cannot remove yourself as an admin user ($admin_name).</div>\n";
+                continue;
+            }
+            try {
+                $results = $db->prepare("DELETE FROM $admin_users_table WHERE `id`=?");
+                $results->execute([$delete_id]);
+            } catch (PDOException $ex) {
+                error_log($ex->getMessage());
+                echo "A database error occurred. Please contact the system administrator.<BR>\n";
+                exit();
+            }
+            $deleted_names[] = $admin_name;
         }
-        $display_block .= "<B>Done</B><BR>\n";
+        if (count($deleted_names) > 0) {
+            $display_block .= "<div class='alert alert-success'>Removed from the admin users table: " . implode(', ', $deleted_names) . "</div>\n";
+        } else {
+            $display_block .= "<div class='alert alert-info'>No admin users were removed.</div>\n";
+        }
     }
 
     //---------------------------------------------------------------------------------
@@ -134,15 +143,13 @@ if ($access) {
 
     $display_block .= '<HR>';
     $display_block .= '<H2>The current Admin users table</H2>';
-    $display_block .= '<p>Change the admin level as appropriate</p>';
-    $display_block .= '<p> 0,1,2 = Normal staff, 3 = Full system control : Super Admin.</p>';
+    $display_block .= '<p>Everyone in this table should be admin level 3 (full system control : Super Admin).</p>';
+    $display_block .= '<p>Tick anyone who should not be here and submit to remove them from the admin users table. Their staff record is not changed.</p>';
 
-    $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
+    $display_block .= "<form method='post' id='admin_users_form' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
     $display_block .= csrf_token_field();
 
-    // Get the list of staff from the staff_names2 table
     $query = "select * from $admin_users_table order by familyname";
-    //$get_list_res = mysql_query($get_list) or die(" Unable to create staff name list from database. <BR>Error msg: " . mysql_error() . "<BR>Query: $get_list");
     try {
         $results = $db->query($query);
     } catch (PDOException $ex) {
@@ -164,77 +171,95 @@ if ($access) {
       </tr>
     </thead>';
     $display_block .= "<tbody>\n";
-    $admin_staff_count = 0;
     $rows = $results->fetchAll();
     foreach ($rows as $recs) {
-        $staffid = $recs['id'];
-        $firstname = stripslashes($recs['firstname']);
-        $familyname = stripslashes($recs['familyname']);
-        $email = stripslashes($recs['email']);
-        $username = stripslashes($recs['username']);
-        $mod_admin_level = stripslashes($recs['admin_level']);
-        $admin_staff_count++;
+        $staffid = (int)$recs['id'];
+        $fullname = htmlspecialchars(stripslashes($recs['firstname'] . ' ' . $recs['familyname']));
+        $email = htmlspecialchars(stripslashes((string)$recs['email']));
+        $username = htmlspecialchars(stripslashes((string)$recs['username']));
+        $mod_admin_level = htmlspecialchars(stripslashes((string)$recs['admin_level']));
+        // Highlight anyone who is not level 3 as they probably should not be in this table
+        if ($mod_admin_level != '3') {
+            $mod_admin_level = "<span class='text-danger fw-bold' title='Not level 3 - probably should not be in this table'>$mod_admin_level</span>";
+        }
         $display_block .= "<TR>\n";
-        $display_block .= "<TD><input type='hidden' name='staffid$admin_staff_count' value='$staffid'> $staffid</TD>\n";
-        $display_block .= "<TD><input type='text' name='fullname$admin_staff_count' value='$firstname $familyname'  size=30 maxlength=40 readonly></TD>\n";
-        $display_block .= "<TD><input type='text' name='email$admin_staff_count' value='$email'  size=30 maxlength=40 readonly></TD>\n";
-        //$display_block .= "<TD><input type='text' name='username$admin_staff_count' value='$username'  size=8 maxlength=20 readonly></TD>\n";
-        $display_block .= "<TD><span id='username$admin_staff_count'>$username</span>";
-        $display_block .= "<input type='hidden' name='username$admin_staff_count' value='$username'></TD>";
-        $display_block .= '<TD>' . GetAdminLevelSelect("admin_level$admin_staff_count", $mod_admin_level) . "</TD>\n";
-        $name_id = "ai_$staffid";
-        $display_block .= "<TD><input type='checkbox' name='$name_id' id='$name_id' value='1'></TD>\n";
+        $display_block .= "<TD>$staffid</TD>\n";
+        $display_block .= "<TD>$fullname</TD>\n";
+        $display_block .= "<TD>$email</TD>\n";
+        $display_block .= "<TD>$username</TD>\n";
+        $display_block .= "<TD>$mod_admin_level</TD>\n";
+        $display_block .= "<TD><input type='checkbox' class='form-check-input' name='delete_ids[]' value='$staffid'></TD>\n";
         $display_block .= "</TR>\n";
     }
     $display_block .= "</tbody>\n";
     $display_block .= "</TABLE>\n";
 
     $display_block .= "\n<input type='hidden' name='op' value='submit_modified'>";
-    $display_block .= "\n<input type='hidden' name='admin_staff_count' value='$admin_staff_count'>";
 
-    $display_block .= "<p><input class='btn btn-primary' type='submit' id='submitbutton' name='submit' value='Submit changes to admin users details.'></p>";
+    $display_block .= "<p class='mt-3'><input class='btn btn-danger' type='submit' id='submitbutton' name='submit' value='Delete the ticked admin users'></p>";
 
     $display_block .= '</form>';
-
-    //$display_block .= "<hr>\n";
 
     //---------------------------------------------------------------------------------
 
     $display_block .= "<hr><h2>Add a new system-level admin person ...</H2>\n";
+    $display_block .= "<p>Start typing a name to search. New admin users are added at level 3.</p>\n";
     $display_block .= "<form method='post' action='" . htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') . "'>\n";
     $display_block .= csrf_token_field();
     $NameKey = 'new_admin_staff_id';
     $MatchID = null;
-    $display_block .= GetStaffSelectID($db, $staff_names, $NameKey, $MatchID);
+    $display_block .= "<div style='max-width: 500px;'>" . GetStaffSelectID($db, $staff_names, $NameKey, $MatchID) . '</div>';
     $display_block .= "\n<input type='hidden' name='op' value='selected_new_staff'>";
 
-    $display_block .= "<div class='m-3'><input class='btn btn-success' type='submit' id='submitbutton_new' name='submit_new' value='Add a NEW admin user to this module/year.'></div>";
+    $display_block .= "<div class='m-3'><input class='btn btn-success' type='submit' id='submitbutton_new' name='submit_new' value='Add a NEW admin user'></div>";
 
     $display_block .= '</form>';
     //---------------------------------------------------------------------------------
 }
-function GetAdminLevelSelect($NameKey, $MatchLevel) {
-    $levels[1] = '0';
-    $levels[2] = '1';
-    $levels[3] = '2';
-    $levels[4] = '3';
 
-    $select_block = "\n<select name='$NameKey'>\n";
-
-    for ($i = 1; $i <= 4; $i++) {
-        $Level = $levels[$i];
-
-        if ($MatchLevel == $Level) {
-            $selected = 'selected';
-        } else {
-            $selected = '';
-        }
-
-        $select_block .= "<option value='$Level' $selected>$Level</option>\n";
+/**
+ * Delete duplicate rows (same username) from the admin users table, keeping
+ * one row per username. A level 3 row is kept in preference, otherwise the
+ * oldest (lowest id). Rows with a blank username are left alone.
+ *
+ * @param PDO    $db                Active PDO connection.
+ * @param string $admin_users_table Admin users table name.
+ * @return string[] Descriptions of the removed rows (HTML-escaped).
+ */
+function RemoveDuplicateAdminUsers($db, $admin_users_table) {
+    $removed = [];
+    try {
+        $results = $db->query("SELECT id, username, firstname, familyname, admin_level FROM $admin_users_table ORDER BY id ASC");
+        $rows = $results->fetchAll();
+    } catch (PDOException $ex) {
+        error_log($ex->getMessage());
+        return $removed;
     }
-    $select_block .= "</select>\n";
+    // Level 3 rows first, otherwise keep id order (usort is stable)
+    usort($rows, fn($a, $b) => ((int)$b['admin_level'] == 3) <=> ((int)$a['admin_level'] == 3));
 
-    return $select_block;
+    $seen_usernames = [];
+    foreach ($rows as $recs) {
+        $username_key = strtolower(trim((string)$recs['username']));
+        if ($username_key === '') {
+            continue;
+        }
+        if (!isset($seen_usernames[$username_key])) {
+            // First (preferred) row for this username - keep it
+            $seen_usernames[$username_key] = true;
+            continue;
+        }
+        try {
+            $delete = $db->prepare("DELETE FROM $admin_users_table WHERE `id`=?");
+            $delete->execute([$recs['id']]);
+        } catch (PDOException $ex) {
+            error_log($ex->getMessage());
+            continue;
+        }
+        $removed[] = htmlspecialchars(stripslashes($recs['firstname'] . ' ' . $recs['familyname'])
+            . ' (' . $recs['username'] . ', level ' . $recs['admin_level'] . ')');
+    }
+    return $removed;
 }
 
 ?>
@@ -266,7 +291,29 @@ function GetAdminLevelSelect($NameKey, $MatchLevel) {
     </div><!-- /content -->
 </div><!-- /wrapper -->
 </body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css"
+      integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
+        integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    $("#adminstaffinfo").dataTable();
+    // No paging, so every tick box is in the page and gets submitted
+    $("#adminstaffinfo").dataTable({paging: false});
+
+    $("#admin_users_form").on("submit", function () {
+        var ticked = $(this).find("input[name='delete_ids[]']:checked").length;
+        if (ticked == 0) {
+            alert("Tick at least one admin user to delete.");
+            return false;
+        }
+        return confirm("Remove " + ticked + " admin user(s)? Their staff records will not be changed.");
+    });
+
+    // Searchable staff name selector: an empty value makes selectize show the placeholder
+    $("#new_admin_staff_id option[value='-1']").val("").text("");
+    $("#new_admin_staff_id").selectize({
+        placeholder: "Type to search for a staff name..."
+    });
 </script>
 </html>
