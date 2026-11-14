@@ -5,6 +5,8 @@
  * Date: 30/03/2016
  * Time: 21:25
  */
+require_once __DIR__ . '/../staff/text_functions.php';
+
 function DisplayProjectBlock($db, $proj_id, $staff_names2, $title, $f_supervisor_id, $f_assocstaff_id, $f_outline, $f_PGprojects, $option_value, $option_text, $option, $option_flags, $option_flags_v,$option_flags_m, $program_variants, $program_variant_flags)
 {
     $project_block = "";
@@ -16,6 +18,7 @@ function DisplayProjectBlock($db, $proj_id, $staff_names2, $title, $f_supervisor
     }
 
     $project_block .= "<h3>Project Title/Theme </h3>\n";
+    $title = FixMojibake($title);
     $project_block .= "<div class='simple' >Project No. $proj_id: <span class='simple-white'>$title</span></div>\n";
 
     $project_block .= "<h3>Principal Supervisor </h3>\n";
@@ -29,22 +32,23 @@ function DisplayProjectBlock($db, $proj_id, $staff_names2, $title, $f_supervisor
     $project_block .= "\n";
 
     $project_block .= "<h3>Project Outline  </h3>\n";
-    $f_outline = stripslashes($f_outline);
+    $f_outline = FixMojibake(stripslashes($f_outline));
     // Some tidying up of things that should not have ben put there from the project entry process
     //$f_outline = str_replace("&gt;", ">", $f_outline);
     //$f_outline = str_replace("&lt;", "<", $f_outline);
     //$f_outline = str_replace("&quot;", '"', $f_outline);
-    $f_outline = nl2br($f_outline);
+    $f_outline = LinkifyUrls(nl2br($f_outline));
     $project_block .= "<div class='simple-white' >$f_outline</div>\n";
 
     $project_block .= "<h3>Number of Projects </h3>\n";
     $project_block .= "<div class='simple' >$num_projects</div>\n";
 
     $project_block .= "<h3>Programme(s) that this project is offered for:</h3>\n";
+    $project_block .= "<div class='simple-white'>";
 
     $num_prog_variants = 0;
     if(is_array($program_variants)){
-        $num_project_variants = sizeof($program_variants);
+        $num_prog_variants = sizeof($program_variants);
     }
     if($num_prog_variants) {
         for ($i = 0; $i < $num_prog_variants; $i++) {
@@ -62,17 +66,18 @@ function DisplayProjectBlock($db, $proj_id, $staff_names2, $title, $f_supervisor
             $project_block .= "<img width='20' src=$icon border='0' alt='$remark' title='$remark'> $program_variants[$i] &nbsp;&nbsp; ";
         }
     }else{
-        $project_block .= "Not offered on other programmmes.";
+        $project_block .= "Not offered on other programmes.";
     }
+    $project_block .= "</div>\n";
 
     for ($i = 0; $i < sizeof($option); $i++) {
         if (($option_flags[$i] == 1) && ($option_flags_v[$i] == 1)) {
-            $value_text = $option_value[$i];
+            $value_text = LinkifyUrls(FixMojibake($option_value[$i]));
             if($value_text == "") {
                 $value_text = "Nothing specified";
             }else{
                 $project_block .= "<h3>$option_text[$i]</h3>\n";
-                $project_block .= "<div>$value_text</div>\n";
+                $project_block .= "<div class='simple-white'>$value_text</div>\n";
             }
         }
     }

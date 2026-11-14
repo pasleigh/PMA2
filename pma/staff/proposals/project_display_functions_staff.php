@@ -6,6 +6,8 @@
  * Date: 30/03/2016
  * Time: 21:25
  */
+require_once __DIR__ . '/../text_functions.php';
+
 function DisplayProjectSelectBlockStaff($db, $proj_id, $staff_names2, $title, $f_supervisor_id, $f_assocstaff_id, $f_outline, $f_PGprojects, $option_value, $option_text, $option, $option_flags, $option_flags_v, $option_flags_m, $program_variants, $program_variant_flags) {
     $project_block = '';
 
@@ -110,7 +112,7 @@ function DisplayProjectBlockStaff($db, $proj_id, $staff_names2, $title, $f_super
     }
 
     $project_block .= "<h2 class='mt-3'>Project Title/Theme </h2>\n";
-    $project_block .= "<div class='simple mb-3' >Project No. $proj_id: <span class='simple-white'>$title</span></div>\n";
+    $project_block .= "<div class='simple mb-3' >Project No. $proj_id: <span class='simple-white'>" . FixMojibake($title) . "</span></div>\n";
 
     $project_block .= "<h2 class='mt-3'>Principal Supervisor </h2>\n";
     $supervisor_name = GetStaffNameFromID($db, $f_supervisor_id, $staff_names2, null);
@@ -123,14 +125,15 @@ function DisplayProjectBlockStaff($db, $proj_id, $staff_names2, $title, $f_super
     $project_block .= "\n";
 
     $project_block .= "<h2 class='mt-3'>Project Outline  </h2>\n";
-    $f_outline = stripcslashes($f_outline);
-    $f_outline = nl2br($f_outline);
+    $f_outline = FixMojibake(stripcslashes($f_outline));
+    $f_outline = LinkifyUrls(nl2br($f_outline));
     $project_block .= "<div class='simple-white mb-3'' >$f_outline</div>\n";
 
     $project_block .= "<h2 class='mt-3'>Number of Projects </h2>\n";
     $project_block .= "<div class='simple mb-3' >$num_projects</div>\n";
 
     $project_block .= "<h2 class='mt-3'>Programme(s) that this project is offered for:</h2>\n";
+    $project_block .= "<div class='simple-white mb-3'>";
 
     $num_project_variants = 0;
     if (is_array($program_variants)) {
@@ -154,11 +157,12 @@ function DisplayProjectBlockStaff($db, $proj_id, $staff_names2, $title, $f_super
     } else {
         $project_block .= 'There are no program variants';
     }
+    $project_block .= "</div>\n";
 
     for ($i = 0; $i < sizeof($option); $i++) {
         if ($option_flags[$i] == 1) {
             $value_text = $option_value[$i];
-            $value_text = stripcslashes($value_text);
+            $value_text = LinkifyUrls(FixMojibake(stripcslashes($value_text)));
             $visible_text = '';
             //$vis_flag = $option_flags_v[$i];
             //$mand_flag = $option_flags_m[$i];
@@ -171,7 +175,7 @@ function DisplayProjectBlockStaff($db, $proj_id, $staff_names2, $title, $f_super
             } else {
             }
             $project_block .= "<h2 class='mt-3'>$option_text[$i] $visible_text</h2>\n";
-            $project_block .= "<div>$value_text</div>\n";
+            $project_block .= "<div class='simple-white mb-3'>$value_text</div>\n";
         }
     }
 

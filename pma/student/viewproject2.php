@@ -12,7 +12,17 @@
 
 (@include_once("$STAFF_DIR_VAL/admin2/utility_functions.php")) OR die("Cannot include utility_functions.php");
 
-$refering_page=$_SERVER['HTTP_REFERER'];
+// Back link: use the referring page only if it came from this site,
+// otherwise (direct URL, reload without referrer, external link) go to index.php
+$refering_page = 'index.php';
+if (!empty($_SERVER['HTTP_REFERER'])) {
+    $referer_host = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+    $this_host = parse_url('//' . ($_SERVER['HTTP_HOST'] ?? ''), PHP_URL_HOST);
+    if ($referer_host !== null && $referer_host === $this_host) {
+        $refering_page = $_SERVER['HTTP_REFERER'];
+    }
+}
+$refering_page = htmlspecialchars($refering_page, ENT_QUOTES, 'UTF-8');
 
 $staff_close_date = $staff_close;
 $str_staff_close_date = date("j F Y", strtotime($staff_close_date));
@@ -22,6 +32,9 @@ $now_datetime = date("Y-m-d H:i:s");
 $date_diff = day_diff($now_datetime, $staff_close_date);
 
 $display_block = "";
+
+$staff_username = get_server_username();
+$is_staff = IsStaff($db, $staff_username, $staff_names);
 
 if($is_staff == true)
 {
@@ -129,6 +142,24 @@ if($is_student_current == false and $is_staff == false){
 <!DOCTYPE HTML>
 <html>
 <?php (@include_once("./mobile_head_bs.php")) OR die("Cannot find this file to include: mobile_head_bs.php<BR>"); ?>
+<style>
+    /* Override legacy pagedesc.css (yellow/white text meant for a dark theme)
+       so project description boxes are readable on the light background */
+    div.simple,
+    div.simple-white {
+        color: #212529;
+        background-color: #ffffff;
+        border: 1px solid #ced4da;
+        border-left: 4px solid #198754;
+        border-radius: 4px;
+        padding: 0.5rem 0.75rem;
+        margin-bottom: 1rem;
+    }
+    span.simple-white {
+        color: #146c43;
+        font-weight: 600;
+    }
+</style>
 <body class="bg-light text-dark">
 
 <nav class="navbar navbar-expand-sm fixed-top navbar-dark bg-success">

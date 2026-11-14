@@ -119,7 +119,35 @@ $display_block = DisplayProjectBlockStaff($db, $master_id, $staff_names2, $f_tit
 <!DOCTYPE HTML>
 <html>
 <?php (@include_once('./mobile_head_bs.php')) or die('Cannot find this file to include: mobile_head_bs.php<BR>'); ?>
-<body class="bg-dark text-white">
+<style>
+    /* Light, readable project view - matches student/viewproject2.php.
+       Scoped here because the shared header and DisplayProjectBlockStaff()
+       are also used by the dark-themed edit pages. */
+    body { background-color: #f8f9fa; color: #212529; }
+    .project-view h2 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #333;
+    }
+    .project-view div.simple,
+    .project-view div.simple-white {
+        color: #212529;
+        background-color: #ffffff;
+        border: 1px solid #ced4da;
+        border-left: 4px solid #198754;
+        border-radius: 4px;
+        padding: 0.5rem 0.75rem;
+        margin-bottom: 1rem;
+    }
+    .project-view span.simple-white {
+        color: #146c43;
+        font-weight: 600;
+    }
+    /* "(Not visible to students)" note is inline yellow for the dark pages */
+    .project-view h2 span[style] { color: #b45309 !important; }
+    .project-view hr { border-color: #dee2e6; }
+</style>
+<body class="bg-light text-dark">
 
 <nav class="navbar navbar-expand-sm fixed-top navbar-dark text-white bg-secondary">
     <div class="container">
@@ -135,7 +163,7 @@ $display_block = DisplayProjectBlockStaff($db, $master_id, $staff_names2, $f_tit
     </div>
 </nav>
 
-<div class="container bg-dark text-white">
+<div class="container bg-light text-dark project-view">
     <div class="text-center props-logo">
         <img src="../images/<?php echo($header_image) ?>" alt="Logo" width="320" height="87"/>
     </div>

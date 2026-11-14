@@ -33,6 +33,7 @@ if (array_key_exists('sel_id', $_POST) == false) {
 $stid = $_REQUEST['stid'];
 $proj_id = $_POST['sel_id'];
 
+$display_block = "";
 //
 // Check the date for editiing has not passed
 //
