@@ -107,7 +107,7 @@ function EmailPDFAttachmentPHPMailer($myemail_to, $myemail_from, $fileattached_p
                 $mail->SMTPAutoTLS = false;
             }
             $mail->SMTPDebug = MAIL_SMTP_DEBUG;
-            $mail->Debugoutput = 'error_log';
+            $mail->Debugoutput = EmailSmtpDebugLogger($myemail_to);
         } elseif ($transport == 'sendmail') {
             $mail->isSendmail();
         } else {
@@ -151,13 +151,42 @@ function EmailPDFAttachmentPHPMailer($myemail_to, $myemail_from, $fileattached_p
 
         $mail->send();
         //echo("Sent to : $myemail_to<BR>");
+        $GLOBALS['EMAIL_LAST_ERROR'] = '';
         return true;
-    } catch (PHPMailerException $e) {
+    } catch (\Throwable $e) {
+        // \Throwable also catches PHP errors (e.g. a missing MAIL_* constant), not just PHPMailer exceptions
+        $reason = $mail->ErrorInfo !== '' ? $mail->ErrorInfo : $e->getMessage();
+        $GLOBALS['EMAIL_LAST_ERROR'] = $reason;
         $msg ='EmailPDFAttachmentPHPMailer failed sending "' . $myemail_subject . '" to ' . $myemail_to . ': ' . $mail->ErrorInfo ;
-        $msg .= " Exception: " . $e->getMessage() ;
+        $msg .= " Exception (" . get_class($e) . "): " . $e->getMessage() ;
         echo($msg);
         error_log($msg);
-        //error_log('EmailPDFAttachmentPHPMailer failed sending "' . $myemail_subject . '" to ' . $myemail_to . ': ' . $mail->ErrorInfo);
         return false;
     }
 }// EmailPDFAttachmentPHPMailer
+
+// PHPMailer debug callback that writes the SMTP conversation to the PHP error log, but leaves
+// out the message itself (the body and the base64-encoded PDF), which would otherwise flood
+// the log with thousands of lines. Each line is tagged so it can be found with grep "PMA SMTP".
+function EmailSmtpDebugLogger($recipient) {
+    $state = 0;     // 0 = commands, 1 = DATA sent, 2 = sending the message body
+    $skipped = 0;
+    return function ($str, $level) use ($recipient, &$state, &$skipped) {
+        $str = rtrim($str, "\r\n");
+        $from_server = strncmp($str, 'SERVER -> CLIENT:', 17) === 0;
+        if ($state == 2) {
+            if (!$from_server) {
+                $skipped++;
+                return;
+            }
+            error_log("PMA SMTP [$recipient]: ($skipped message lines not logged)");
+            $state = 0;
+            $skipped = 0;
+        } elseif ($state == 1 && $from_server && strpos($str, '354') !== false) {
+            $state = 2;
+        } elseif (strncmp($str, 'CLIENT -> SERVER: DATA', 22) === 0) {
+            $state = 1;
+        }
+        error_log("PMA SMTP [$recipient]: $str");
+    };
+}// EmailSmtpDebugLogger

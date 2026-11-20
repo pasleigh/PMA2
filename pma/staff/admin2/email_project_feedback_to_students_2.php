@@ -245,9 +245,13 @@ if ($POST_OP === 'stream' && $has_access) {
                   'status' => 'dryrun',
                   'detail'  => "Dry run — would send to $myemail_to"]);
         } else {
+            // The mailer echoes its error message, which would break the event stream, so
+            // capture and discard that output and report the reason in the progress line instead.
+            ob_start();
             $ok = EmailPDFAttachmentPHPMailer(
                 $myemail_to, $myemail_from, $fileattached_pdf,
                 $subject, $myemail_message, $name_of_file, $do_not_attach, $cc_to);
+            ob_end_clean();
             if ($ok) {
                 $cnt_sent++;
                 RecordFeedbackSent($db, $sid, $jPart, $feedback_records);
@@ -258,7 +262,7 @@ if ($POST_OP === 'stream' && $has_access) {
                 $cnt_errors++;
                 $sse(['type' => 'progress', 'n' => $n, 'total' => $total,
                       'student' => $student_name, 'username' => $username,
-                      'status' => 'error', 'detail' => "Failed to email $myemail_to"]);
+                      'status' => 'error', 'detail' => "Failed to email $myemail_to: " . ($GLOBALS['EMAIL_LAST_ERROR'] ?? 'unknown error')]);
             }
         }
 
