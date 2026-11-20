@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/text_functions.php";
 
 /**
  * Generate the HTML feedback report for a single student's assessed part.
@@ -436,7 +437,7 @@ function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $
     } // $cat
 
     //$display_block .= "<a href=\"javascript:window.print()\">Print this page</a>";
-    return $display_block;
+    return FixMojibake($display_block);
 }// end of show_feedback_form1()
 
 function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $markstore_totals, $assessqs, $student_name, $username, $title, $supervisor_name, $second_marker_name, $marker_name, $project_id, $assesstype, $assess_cats, $max_mark, $mark_pc, $programme, $assesspart, $assesstype_desc, $module_desc, $is_numeric) {
@@ -864,7 +865,7 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
     } // $cat
 
     //$display_block .= "<a href=\"javascript:window.print()\">Print this page</a>";
-    return $display_block;
+    return FixMojibake($display_block);
 }// end of show_feedback_form2()
 
 function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $markstore_totals, $assessqs, $student_name, $username, $title, $supervisor_name, $second_marker_name, $third_marker_name, $project_id, $assesstype, $assess_cats, $max_mark, $mark_pc, $programme, $assesspart, $assesstype_desc, $module_desc, $is_numeric) {
@@ -1343,7 +1344,7 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
     //$display_block .= "<a href=\"javascript:window.print()\">Print this page</a>";
 
     //exit;
-    return $display_block;
+    return FixMojibake($display_block);
 }// end of show_feedback_form3()
 
 function show_overall_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $title, $min_feedback_words) {
@@ -1412,7 +1413,7 @@ function show_overall_feedback_form2($db, $sid, $markstore1, $markstore2, $marks
     $display_block .= "<tr><td>$overall_feedback_text1</td>";
     $display_block .= "<td>$overall_feedback_text2</td></tr>";
     $display_block .= '</table>';
-    return $display_block;
+    return FixMojibake($display_block);
 }
 function show_overall_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $title, $min_feedback_words) {
     $overall_feedback_visibility = 'block';
@@ -1494,5 +1495,5 @@ function show_overall_feedback_form3($db, $sid, $markstore1, $markstore2, $marks
     $display_block .= "<td>$overall_feedback_text3</td>";
     $display_block .= '</tr>';
     $display_block .= '</table>';
-    return $display_block;
+    return FixMojibake($display_block);
 }

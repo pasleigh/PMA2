@@ -160,6 +160,12 @@ if ($POST_OP === 'stream' && $has_access) {
         $marker_entry  = "marker_p{$jPart}m1_id";
         $marker_id     = $recs[$marker_entry] ?? null;
         $mark_method   = GetMarkMethodString($db, $sid, $jPart, $markstore_totals);
+        // mark_methodN is NULL when the total was entered without a method (e.g. uploaded
+        // via upload_totals_for_part), and GetMarkMethodString then returns '9999'.
+        // '9999' or '0000' selects no markstore, so fall back to supervisor-only.
+        if (!preg_match('/^[01]{4}$/', (string)$mark_method) || $mark_method === '0000') {
+            $mark_method = '0001';
+        }
         $marker_names  = GetMarkerNamesArray($db, $sid, $jPart, $project_allocated, $staff_names2);
         $markstore_list = GetMarkStoreListFromMarkMethodString(
             $mark_method, $markstores[$jPart][1] ?? '', $markstores[$jPart][2] ?? '', $markstores[$jPart][3] ?? '');

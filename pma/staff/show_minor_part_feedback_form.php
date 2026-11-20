@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/text_functions.php";
 
 function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $student_name, $username, $title, $supervisor_name, $second_marker_name, $marker_name, $project_id, $assesstype, $assess_cats, $max_mark, $mark_pc, $programme, $assesspart, $assesstype_desc, $module_desc, $is_numeric) {
     //$display_block = "<h1>Part $assesspart: Assessment of $assesstype_desc by $student_name</h1>";
@@ -372,7 +373,7 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
 
     //$display_block .= "<a href=\"javascript:window.print()\">Print this page</a>";
 
-    return $display_block;
+    return FixMojibake($display_block);
 }// end of show_feedback_form()
 
 function show_minor_part_overall_feedback_form($db, $part_label, $markstore, $sid, $min_feedback_words) {
@@ -414,5 +415,5 @@ function show_minor_part_overall_feedback_form($db, $part_label, $markstore, $si
     $display_block .= "<tr><td class='tablehead_overall'>$overall_feedback_heading</td></tr>\n";
     $display_block .= "<tr><td>$overall_feedback_text</td></tr>";
     $display_block .= '</table>';
-    return $display_block;
+    return FixMojibake($display_block);
 }
