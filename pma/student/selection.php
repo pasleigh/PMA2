@@ -326,6 +326,7 @@ if($is_student_current == false and $is_staff == false){
 
     $display_block .= "<BR>\n<input type=\"button\" id=\"validate\" name=\"btn_validate\" value=\"Check all selected\" >\n";
     $display_block .= "<input type=\"hidden\" name=\"op\" value=\"submit\">";
+    $display_block .= csrf_token_field();
     $display_block .= "<input type='hidden' name='is_staff' id='is_staff' value='$is_staff_int'>\n";
     $display_block .= "<p>\n";
     if( $close_date_diff > 0.0 ){

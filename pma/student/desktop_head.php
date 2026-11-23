@@ -42,6 +42,9 @@ $staff_location = "../staff";
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title><?php echo("$school_title - $running_title") ?></title>
+    <?php if (function_exists('generate_csrf_token')): ?>
+    <meta name="csrf-token" content="<?php echo htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>">
+    <?php endif; ?>
 <!--
     <link rel="Shortcut Icon" type="image/ico" href="<?php echo("$protocol://$BASE_URL_VALUE") ?>/staff/images/favicon.ico"/>
     <link rel="icon" href="<?php echo("$protocol://$BASE_URL_VALUE") ?>/staff/images/projectsicon72.png"/>
@@ -67,5 +70,25 @@ $staff_location = "../staff";
     <script type="text/javascript" src="<?php echo($staff_location)?>/frameworks/jqueryui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript" src="<?php echo($staff_location)?>/frameworks/DataTables-1.10.16/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="<?php echo($staff_location)?>/frameworks/DataTables-1.10.16/js/dataTables.bootstrap.min.js"></script>
+
+    <script>
+    /* CSRF auto-injection: adds the token to every form and to jQuery AJAX requests */
+    (function () {
+        var meta = document.querySelector('meta[name="csrf-token"]');
+        if (!meta) return;
+        var token = meta.getAttribute('content');
+        function injectForms() {
+            document.querySelectorAll('form').forEach(function (form) {
+                if (!form.querySelector('input[name="csrf_token"]')) {
+                    var inp = document.createElement('input');
+                    inp.type = 'hidden'; inp.name = 'csrf_token'; inp.value = token;
+                    form.appendChild(inp);
+                }
+            });
+            if (typeof jQuery !== 'undefined') { jQuery.ajaxSetup({ headers: { 'X-CSRF-Token': token } }); }
+        }
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', injectForms); } else { injectForms(); }
+    })();
+    </script>
 
 </head>
