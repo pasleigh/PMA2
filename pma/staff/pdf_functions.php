@@ -65,7 +65,7 @@ if ($access || $is_module_admin) {
     $display_block .= "<div class='row text-center'>";
     $display_block .= "<div class='col-2'></div>";
     $display_block .= "<div class='col-8'>";
-    $display_block .= "<A class='btn btn-primary btn-lg w-100' href='./admin2/email_project_feedback_to_students.php?pm_id=$pm_id&part=$num_parts&op=select&list=1&summary_mark=1'>Email $desc feedback PDFs - With covering text and mark breakdown</A>\n";
+    $display_block .= "<A class='btn btn-primary btn-lg w-100' href='./admin2/email_project_feedback_to_students.php?pm_id=$pm_id&part=$num_parts&op=select&list=1&summary_mark=1'>Email overall module feedback PDFs - With covering text and mark breakdown</A>\n";
     $display_block .= '</div>';
     $display_block .= "<div class='col-2'></div>";
     $display_block .= '</div>';

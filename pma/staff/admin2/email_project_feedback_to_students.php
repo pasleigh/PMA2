@@ -125,6 +125,7 @@ if ($is_module_admin || $admin_access) {
     $summary_desc = '';
     if ($summary_mark == 1) {
         $summary_desc = '(with summary marks)';
+        $assess_part_description_text = 'Overall Module';
     }
     $query = "select * from $projects_setup where id=$pm_id";
     //$get_setup_list = mysql_query($get_setup) or die(" Unable to get database configuration.<BR>Query = $get_setup");
@@ -154,7 +155,7 @@ if ($is_module_admin || $admin_access) {
     $display_block .= '<h1>Use this for to email feedback to students on the module:</h1>';
     $display_block .= "<H2>$module_short_description ($module_short_code), $module_prefix$module1$module_postfix,  for year $year_begin</h1>";
 
-    $display_block .= "<h2>Feedback for the <span style=text-decoration:underline;>$assess_part_description_text</span> section $summary_desc</h2>";
+    $display_block .= "<h2>" . ($summary_mark == 1 ? "Overall module feedback $summary_desc" : "Feedback for the <span style=text-decoration:underline;>$assess_part_description_text</span> section $summary_desc") . "</h2>";
 
     $is_numeric = GetIsNumeric($db, $pm_id, $part, $projects_setup);
     // see all the POST values
@@ -169,7 +170,11 @@ if ($is_module_admin || $admin_access) {
     //$lb = "<BR>\n";
     $sp = ' ';
     $sp = '&nbsp;';
-    $email_body = "Attached to this email is the feedback for the $assess_part_description_text part of the $module_short_description $summary_desc.$lb$lb";
+    if ($summary_mark == 1) {
+        $email_body = "Attached to this email is your overall module feedback for $module_short_description, with a breakdown of your marks.$lb$lb";
+    } else {
+        $email_body = "Attached to this email is the feedback for the $assess_part_description_text part of the $module_short_description $summary_desc.$lb$lb";
+    }
     $email_body .= "You should read this feedback, taking in the comments made and try to use these as advice to help improve similar future work.$lb$lb";
     $email_body .= "If you have any questions about this feedback (or any other aspects of the project) please contact the supervisor, marker or module leader and they will be pleased to discuss it further.$lb";
 
@@ -189,7 +194,7 @@ if ($is_module_admin || $admin_access) {
     }
 
     if ($POST_OP == 'select') {
-        $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$part'>";
+        $display_block .= "<form method='post' action='$_SERVER[PHP_SELF]?pm_id=$pm_id&part=$part&summary_mark=$summary_mark'>";
         $display_block .= "<div class='form-group m-2'>";
         $display_block .= "<label for='email_body_text' class='fw-bold' >In the box below type the covering email text you want to send to students. Put in HTML code if necessary.</label>";
         $display_block .= "<textarea class='form-control' rows='20' cols='100' name='email_body_text' id = 'email_body_text'>$email_body</textarea>";
@@ -197,7 +202,7 @@ if ($is_module_admin || $admin_access) {
 
         $display_block .= "<div class='form-group m-2'>";
         $display_block .= "<label for='subjectline' class='fw-bold' >Email Subject line</label>";
-        $display_block .= "<input class='form-control' size='80' type='text' name='subjectline' id='subjectline' value='Feedback for $module_short_description. $assess_part_description_text part $summary_desc'></P>\n";
+        $display_block .= "<input class='form-control' size='80' type='text' name='subjectline' id='subjectline' value='" . ($summary_mark == 1 ? "Overall module feedback for $module_short_description" : "Feedback for $module_short_description. $assess_part_description_text part $summary_desc") . "'></P>\n";
         $display_block .= "</div>\n";
 
         $display_block .= "<div class='form-group'>";
