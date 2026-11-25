@@ -1,37 +1,9 @@
 <?php
 require_once __DIR__ . "/text_functions.php";
+require_once __DIR__ . "/feedback_pdf_functions.php";
 
 function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $student_name, $username, $title, $supervisor_name, $second_marker_name, $marker_name, $project_id, $assesstype, $assess_cats, $max_mark, $mark_pc, $programme, $assesspart, $assesstype_desc, $module_desc, $is_numeric) {
     //$display_block = "<h1>Part $assesspart: Assessment of $assesstype_desc by $student_name</h1>";
-    $display_block = "<h1>Assessment of $module_desc : $assesstype_desc, by $student_name</h1>";
-
-    $display_block .= "<div align=\"left\">\n";
-    $display_block .= "
-              <table class=\"tableGradeTop\" > 
-              <tr>
-              <td><b>Student:</b>&nbsp; $student_name&nbsp;&nbsp;</td>
-              </tr>
-              <tr>
-              <td><b>Supervisor:</b>&nbsp; $supervisor_name</td>
-              </tr>
-              <tr>
-              <td><b>Marker:</b>&nbsp; $marker_name
-              </td>\n
-              </tr>
-              <tr>
-              <td><b>Programme:</b>&nbsp; $programme</td>
-              </tr>
-              <tr>
-              <td><b>Title:</b>&nbsp; <i>$title</i></td>
-              </tr>
-              <tr>
-              <td><b>Project ID:</b>&nbsp; <i>$project_id</i></td>
-              </tr>
-              <tr>
-              <td><em>This assessment contributes $mark_pc% to the module mark</em></td>
-              </tr>              
-              ";
-    $display_block .= "</div><BR>\n";
     // get the returned mark
     $query = "select * from $markstore where SID=$sid";
     //$get_list_marks = mysql_query($get_marks) or die(" Unable to create list from database table $markstore. Query: $get_marks");
@@ -56,12 +28,9 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
     }
     $final_total_s = sprintf('%5.1f', $final_total * 100.0 / $max_mark);
 
-    $display_block .= "
-             <tr>
-             <td><b>$assesstype mark:</b>&nbsp;<span class=\"grade\"> $final_total_s/$max_mark </span></td>
-             </tr>
-             </table>
-             </div><BR />";
+    $display_block = FeedbackPdfHeader($module_desc, $assesstype_desc, $mark_pc, $student_name, $programme,
+        ['Supervisor' => $supervisor_name, 'Marker' => $marker_name],
+        $title, $project_id, $get_marks_res ? $rettotal : null, $max_mark);
 
     //Get the marks from the markstore
     $query = "SELECT * FROM $markstore WHERE SID='$sid'";
@@ -115,10 +84,10 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
             $show_cat_feedback = $cat_data['get_feedback'];
         }
 
-        $display_block .= "<div class=\"feedbackSection\">($cat) $description </div>";
+        $display_block .= FeedbackPdfSectionHeading("Section $cat: $description");
+        $row_n = 0;
         // Display the header
-        $display_block .= '<table width="100%" class="tableSimple" style="border:1px solid black;border-collapse:collapse;">';
-        $display_block .= "<tr></tr>\n";
+        $display_block .= '<table class="fbp-q" width="100%">';
 
         if ($is_numeric == 1) {
             $title1 = '';
@@ -127,7 +96,7 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
         } else {
             $title1 = 'Question';
             $title2 = 'Feedback from marker';
-            $display_block .= "<tr><td class=\"tablehead\" width=\"50%\">$title1</td><td class=\"tablehead\" width=\"50%\">$title2</td></tr>\n";
+            $display_block .= "<tr><td class=\"fbp-colhead\" width=\"40%\">$title1</td><td class=\"fbp-colhead\">$title2</td></tr>\n";
         }
 
         $query = "select * from $assessqs where cat=$cat";
@@ -326,45 +295,33 @@ function show_minor_part_feedback_form($db, $sid, $markstore, $assessqs, $studen
                     //$display_block .= $checked1[$i] . "<BR>";
                 }
 
-                // Display the question
-                $display_block .= '<tr>';
-
-                //$display_block .= "choice " . $choice;
-                // Supervisor
+                // Display the question. Feedback comments (entries == 0) are a full-width highlighted box.
                 if ($entries == 0) {// the feedback comments
                     if ($show_cat_feedback) {
-                        $mark1_stored = htmlentities($mark1_stored);
-                        $mark1_stored = addslashes($mark1_stored);
+                        $mark1_stored = htmlentities((string) $mark1_stored);
                         $mark1_stored = str_replace('’', "'", $mark1_stored);
                         $entry = nl2br($mark1_stored);
-
-                        //$display_block .= "<textarea class=\"feedback\" placeholder=\"Remember, this feedback is for the student's benefit!\" name=A$choice >$entry</textarea><br /><br />";
-                        $display_block .= "<td class=\"tablehead\" width=\"50%\">$question</td>";
-                        $display_block .= '<td width="50%">';
-                        $display_block .= "$entry";
-                        $display_block .= '</td>';
+                        $display_block .= "<tr><td colspan=\"2\" class=\"fbp-fb\"><div class=\"fbp-fbk\">$question</div>$entry</td></tr>\n";
                     }
+                    continue;
+                }
+                $display_block .= ($row_n++ % 2) ? '<tr class="fbp-alt">' : '<tr>';
+                if ($is_numeric == 1) {
+                    $display_block .= "<td class=\"fbp-qn\" width=\"40%\">$title2</td>";
+                    $display_block .= '<td>' . nl2br((string) $mark1_stored) . '</td>';
                 } else {
-                    if ($is_numeric == 1) {
-                        $display_block .= "<td class=\"tablehead\" width=\"50%\">$title2</td>";
-                        $display_block .= '<td width="50%">';
-                        $display_block .= nl2br($mark1_stored);
-                        $display_block .= '</td>';
-                    } else {
-                        //$display_block .= "$count: ";
-                        for ($i = 1; $i <= $entries; $i++) {
-                            if ($checked1[$i] == 'checked') {
-                                $display_block .= "<td width=\"50%\">$count) $question</td>";
-                                $display_block .= '<td width="50%">';
-                                $display_block .= "$check_texts[$i]";
-                                $display_block .= '</td>';
-                            }
+                    $shown = false;
+                    for ($i = 1; $i <= $entries; $i++) {
+                        if ($checked1[$i] == 'checked' && !$shown) {
+                            $display_block .= "<td class=\"fbp-qn\" width=\"40%\">$count) $question</td>";
+                            $display_block .= "<td>$check_texts[$i]</td>";
+                            $shown = true;
                         }
                     }
+                    if (!$shown) {
+                        $display_block .= "<td class=\"fbp-qn\" width=\"40%\">$count) $question</td><td></td>";
+                    }
                 }
-
-                //          // Second marker
-
                 $display_block .= "</tr>\n";
             }
         }
@@ -410,10 +367,9 @@ function show_minor_part_overall_feedback_form($db, $part_label, $markstore, $si
     //$display_block .= "\n<textarea name='$overall_feedback_id'>$overall_feedback_text</textarea><br /><br />";
     //$display_block .= "</div><BR>\n";
 
-    $display_block .= "<table class='tableSimple' style='width: 100%; border:1px solid black;border-collapse:collapse;'>";
-    $display_block .= "<tr></tr>\n";
-    $display_block .= "<tr><td class='tablehead_overall'>$overall_feedback_heading</td></tr>\n";
-    $display_block .= "<tr><td>$overall_feedback_text</td></tr>";
+    $display_block .= FeedbackPdfSectionHeading($overall_feedback_heading);
+    $display_block .= "<table class='fbp-q' width='100%'>";
+    $display_block .= "<tr><td class='fbp-fb'>$overall_feedback_text</td></tr>";
     $display_block .= '</table>';
     return FixMojibake($display_block);
 }

@@ -141,14 +141,10 @@ if ($num_rows < 1) {
 
             unset($mpdf);
             error_reporting(0);
-            $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
+            $mpdf = NewFeedbackMpdf($student_name, $module_short_description);
             $mpdf->useSubstitutions = true;
             //$mpdf->ignore_invalid_utf8 = true;
 
-            // Set a simple Footer including the date and page number
-            $mpdf->setFooter("$student_name Date printed: {DATE j M Y}.   page {PAGENO}");
-            $stylesheet = file_get_contents('./css/pagedesc.css');
-            $mpdf->WriteHTML($stylesheet, 1);  // The parameter 1 tells that this is css/style only and no body/html/text
             $mpdf->WriteHTML($feedback_form_html);
 
             // saving to a zip
@@ -167,6 +163,8 @@ if ($num_rows < 1) {
             $zip_info[] = "$pdf_fullpath_name";
             //$mpdf->Output("$pdf_fullpath_name", 'F');
             $mpdf->OutputFile($pdf_fullpath_name);
+            unset($mpdf);
+            gc_collect_cycles(); // mPDF objects hold circular references; without this every PDF leaks ~5MB and long runs die
 
             $files_to_zip[] = $pdf_fullpath_name;
             $files_in_zip[] = $pdf_filename;

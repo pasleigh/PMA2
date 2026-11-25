@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . "/text_functions.php";
+require_once __DIR__ . "/feedback_pdf_functions.php";
 
 /**
  * Generate the HTML feedback report for a single student's assessed part.
@@ -37,34 +38,6 @@ require_once __DIR__ . "/text_functions.php";
 function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $markstore_totals, $assessqs, $student_name, $username, $title, $supervisor_name, $second_marker_name, $marker_name, $project_id, $assesstype, $assess_cats, $max_mark, $mark_pc, $programme, $assesspart, $assesstype_desc, $module_desc, $is_numeric) {
     //function show_feedback_form($sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs,$student_name,$username,$title,$supervisor_name,$second_marker_name,$marker_name, $project_id,$assesstype, $assess_cats, $max_mark, $mark_pc,$programme, $assesspart,$assesstype_desc, $module_desc, $is_numeric)
 
-    $display_block = "<div><h1>$module_desc, $assesstype_desc Feedback </h1></div>";
-    $display_block .= "
-             <div align=\"left\">
-              <table class=\"tableGradeTop\" >
-              <tr>
-              <td><b>Student:</b>&nbsp; $student_name&nbsp;&nbsp;</td>
-              </tr>
-              <tr>
-              <td><b>Supervisor:</b>&nbsp; $supervisor_name</td>
-              </tr>
-              <tr>
-              <td><b>Marker:</b>&nbsp; $marker_name
-              </td>
-              </tr>
-              <tr>
-              <td><b>Programme:</b>&nbsp; $programme</td>
-              </tr>
-              <tr>
-              <td><b>Title:</b>&nbsp; <i>$title</i></td>
-              </tr>
-              <tr>
-              <td><b>Project ID:</b>&nbsp; <i>$project_id</i></td>
-              </tr>
-              <tr>
-              <td><em>This assessment contributes $mark_pc% to the module mark</em></td>
-              </tr>
-             ";
-
     // get the returned mark
     $markstore = $markstore_totals;
     $query = "select * from $markstore where SID=$sid";
@@ -85,12 +58,9 @@ function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $
     $rettotal = $get_marks_res["retmark$assesspart"];
     $rettotal_s = sprintf('%5.1f', $rettotal);
     $locked = $get_marks_res['locked'];
-    $display_block .= "
-             <tr>
-             <td><b>$assesstype mark:</b>&nbsp;<span class=\"grade\"> $rettotal_s/$max_mark</span></td>
-             </tr>
-             </table>
-             </div><BR />";
+    $display_block = FeedbackPdfHeader($module_desc, $assesstype_desc, $mark_pc, $student_name, $programme,
+        ['Supervisor' => $supervisor_name, 'Marker' => $marker_name],
+        $title, $project_id, $rettotal, $max_mark);
 
     //$display_block .= "<a href=\"javascript:window.print()\">Print this page</a><BR /><BR />";
 
@@ -165,10 +135,11 @@ function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $
             $show_cat_feedback = $cat_data['get_feedback'];
         }
 
-        $display_block .= "<div class=\"feedbackSection\">Section $cat: $description ($weight_pc%)</div>";
+        $display_block .= FeedbackPdfSectionHeading("Section $cat: $description", $weight_pc);
+        $row_n = 0;
         // Display the header
-        $display_block .= '<table width="100%" class="tableSimple" style="border:1px solid black;border-collapse:collapse;">';
-        $display_block .= "<tr class=\"tablehead\"><td>Question</td><td>Mark / Comment</td></tr>\n";
+        $display_block .= '<table class="fbp-q" width="100%">';
+        $display_block .= "<tr><td class=\"fbp-colhead\">Question</td><td class=\"fbp-colhead\">Mark / Comment</td></tr>\n";
 
         $query = "select * from $assessqs where cat=$cat";
         //$display_block .= "$get_qstot<BR>";
@@ -383,25 +354,22 @@ function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $
                     //$display_block .= $checked1[$i] . "<BR>";
                 }
 
-                // Display the question
-                $display_block .= '<tr>';
-                $display_block .= "<td width=\"50%\">$question</td>";
+                // Display the question. Feedback comments (entries == 0) span the full width as a highlighted box.
+                if ($entries == 0) {
+                    $display_block .= "<tr><td colspan=\"2\" class=\"fbp-fb\"><div class=\"fbp-fbk\">$question</div>$mark1_stored</td></tr>\n";
+                    continue;
+                }
+                $display_block .= ($row_n++ % 2) ? '<tr class="fbp-alt">' : '<tr>';
+                $display_block .= "<td class=\"fbp-qn\" width=\"40%\">$question</td>";
 
-                //$display_block .= "choice " . $choice;
                 // Supervisor
                 $display_block .= '<td>';
-                if ($entries == 0) {
-                    $entry = $mark1_stored;
-                    //$display_block .= "<textarea class=\"feedback\" placeholder=\"Remember, this feedback is for the student's benefit!\" name=A$choice >$entry</textarea><br /><br />";
-                    $display_block .= "$entry";
+                if ($is_numeric == 1) {
+                    $display_block .= nl2br($mark1_stored);
                 } else {
-                    if ($is_numeric == 1) {
-                        $display_block .= nl2br($mark1_stored);
-                    } else {
-                        for ($i = 1 ; $i <= $entries ; $i++) {
-                            if ($checked1[$i] == 'checked') {
-                                $display_block .= "$check_texts[$i]";
-                            }
+                    for ($i = 1 ; $i <= $entries ; $i++) {
+                        if ($checked1[$i] == 'checked') {
+                            $display_block .= "$check_texts[$i]";
                         }
                     }
                 }
@@ -442,38 +410,6 @@ function show_feedback_form1($db, $sid, $markstore1, $markstore2, $markstore3, $
 
 function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $markstore_totals, $assessqs, $student_name, $username, $title, $supervisor_name, $second_marker_name, $marker_name, $project_id, $assesstype, $assess_cats, $max_mark, $mark_pc, $programme, $assesspart, $assesstype_desc, $module_desc, $is_numeric) {
     //function show_feedback_form($sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs,$student_name,$username,$title,$supervisor_name,$second_marker_name,$marker_name, $project_id,$assesstype, $assess_cats, $max_mark, $mark_pc,$programme, $assesspart,$assesstype_desc, $module_desc, $is_numeric)
-    $display_block = "<div><h1>$module_desc, $assesstype_desc Feedback </h1></div>";
-    $display_block .= "
-             <div align=\"left\">
-              <table class=\"tableGradeTop\" > 
-              <tr>
-              <td><b>Student:</b>&nbsp; $student_name&nbsp;&nbsp;</td>
-              </tr>
-              <tr>
-              <td><b>Supervisor:</b>&nbsp; $supervisor_name</td>
-              </tr>
-              <tr>
-              <td><b>Marker:</b>&nbsp; $marker_name
-              </td>
-              </tr>
-              <tr>
-              <td><b>Second Marker:</b>&nbsp; $second_marker_name
-              </td>
-              </tr>
-              <tr>
-              <td><b>Programme:</b>&nbsp; $programme</td>
-              </tr>
-              <tr>
-              <td><b>Title:</b>&nbsp; <i>$title</i></td>
-              </tr>
-              <tr>
-              <td><b>Project ID:</b>&nbsp; <i>$project_id</i></td>
-              </tr>
-              <tr>
-              <td><em>This assessment contributes $mark_pc% to the module mark</em></td>
-              </tr>
-             ";
-
     // get the returned mark
     $markstore = $markstore_totals;
     $query = "select * from $markstore where SID=$sid";
@@ -494,12 +430,9 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
     $rettotal = $get_marks_res["retmark$assesspart"];
     $rettotal_s = sprintf('%5.1f', $rettotal);
     $locked = $get_marks_res['locked'];
-    $display_block .= "
-             <tr>
-             <td><b>$assesstype mark:</b>&nbsp;<span class=\"grade\"> $rettotal_s/$max_mark</span></td>
-             </tr>
-             </table>
-             </div><BR />";
+    $display_block = FeedbackPdfHeader($module_desc, $assesstype_desc, $mark_pc, $student_name, $programme,
+        ['Supervisor' => $supervisor_name, 'Marker' => $marker_name, 'Second marker' => $second_marker_name],
+        $title, $project_id, $rettotal, $max_mark);
 
     //$display_block .= "<a href=\"javascript:window.print()\">Print this page</a><BR /><BR />";
 
@@ -574,14 +507,15 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
             $show_cat_feedback = $cat_data['get_feedback'];
         }
 
-        $display_block .= "<div class=\"feedbackSection\">Section $cat: $description ($weight_pc%)</div>";
+        $display_block .= FeedbackPdfSectionHeading("Section $cat: $description", $weight_pc);
+        $row_n = 0;
         // Display the header
-        $display_block .= '<table width="100%" class="tableSimple" style="border:1px solid black;border-collapse:collapse;">';
+        $display_block .= '<table class="fbp-q" width="100%">';
         if ($cat <> 1) {
-            $display_block .= "<tr><td></td><td class=\"bluetablehead\">1st Marker</td><td class=\"bluetablehead\">2nd Marker</td></tr>\n";
+            $display_block .= "<tr><td class=\"fbp-colhead\" width=\"34%\"></td><td class=\"fbp-colhead\" width=\"33%\">1st Marker</td><td class=\"fbp-colhead\" width=\"33%\">2nd Marker</td></tr>\n";
         } else {
             //$display_block .= "<tr class=\"feedbackQem\"><td>Question</td><td>Supervisor</td></tr>\n";
-            $display_block .= "<tr><td></td><td class=\"bluetablehead\">1st Marker</td><td class=\"bluetablehead\">2nd Marker</td></tr>\n";
+            $display_block .= "<tr><td class=\"fbp-colhead\" width=\"34%\"></td><td class=\"fbp-colhead\" width=\"33%\">1st Marker</td><td class=\"fbp-colhead\" width=\"33%\">2nd Marker</td></tr>\n";
         }
 
         $query = "select * from $assessqs where cat=$cat";
@@ -799,20 +733,20 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
                 if (($entries == 0) and (!$show_cat_feedback)) {
                     continue;
                 } else {
-                    $display_block .= '<tr>';
+                    $display_block .= ($entries == 0) ? '<tr class="fbp-fbrow">' : (($row_n++ % 2) ? '<tr class="fbp-alt">' : '<tr>');
                     if ($is_numeric == 1) {
                         if ($entries == 0) {
-                            $display_block .= '<td class="tablehead" width="35%">Feedback comments</td>';
+                            $display_block .= '<td class="fbp-qn" width="34%">Feedback comments</td>';
                         } else {
-                            $display_block .= '<td class="tablehead" width="35%">Marks awarded</td>';
+                            $display_block .= '<td class="fbp-qn" width="34%">Marks awarded</td>';
                         }
                     } else {
-                        $display_block .= "<td width=\"35%\">$question</td>";
+                        $display_block .= "<td class=\"fbp-qn\" width=\"34%\">$question</td>";
                     }
                 }
                 //$display_block .= "choice " . $choice;
                 // Supervisor
-                $display_block .= '<td width="32%">';
+                $display_block .= '<td width="33%">';
                 if ($entries == 0) {// feedback comments
                     if ($show_cat_feedback) {
                         $entry = $mark1_stored;
@@ -833,7 +767,7 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
                 $display_block .= '</td>';
 
                 // Second marker
-                $display_block .= '<td>';
+                $display_block .= '<td width="33%">';
                 //if ( $cat <> 1 ){
                 if ($entries == 0) {// feedback comments
                     if ($show_cat_feedback) {
@@ -870,38 +804,6 @@ function show_feedback_form2($db, $sid, $markstore1, $markstore2, $markstore3, $
 
 function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $markstore_totals, $assessqs, $student_name, $username, $title, $supervisor_name, $second_marker_name, $third_marker_name, $project_id, $assesstype, $assess_cats, $max_mark, $mark_pc, $programme, $assesspart, $assesstype_desc, $module_desc, $is_numeric) {
     //function show_feedback_form($sid,$markstore1,$markstore2,$markstore3,$markstore_totals,$assessqs,$student_name,$username,$title,$supervisor_name,$second_marker_name,$marker_name, $project_id,$assesstype, $assess_cats, $max_mark, $mark_pc,$programme, $assesspart,$assesstype_desc, $module_desc, $is_numeric)
-    $display_block = "<div><h1>$module_desc, $assesstype_desc Feedback </h1></div>";
-    $display_block .= "
-             <div align=\"left\">
-              <table class=\"tableGradeTop\" >
-              <tr>
-              <td><b>Student:</b>&nbsp; $student_name&nbsp;&nbsp;</td>
-              </tr>
-              <tr>
-              <td><b>Supervisor:</b>&nbsp; $supervisor_name</td>
-              </tr>
-              <tr>
-              <td><b>Second Marker:</b>&nbsp; $second_marker_name
-              </td>
-              </tr>
-              <tr>
-              <td><b>Third Marker:</b>&nbsp; $third_marker_name
-              </td>
-              </tr>
-              <tr>
-              <td><b>Programme:</b>&nbsp; $programme</td>
-              </tr>
-              <tr>
-              <td><b>Title:</b>&nbsp; <i>$title</i></td>
-              </tr>
-              <tr>
-              <td><b>Project ID:</b>&nbsp; <i>$project_id</i></td>
-              </tr>
-              <tr>
-              <td><em>This assessment contributes $mark_pc% to the module mark</em></td>
-              </tr>
-             ";
-
     // get the returned mark
     $markstore = $markstore_totals;
     $query = "select * from $markstore where SID=$sid";
@@ -922,12 +824,9 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
     $rettotal = $get_marks_res["retmark$assesspart"];
     $rettotal_s = sprintf('%5.1f', $rettotal);
     $locked = $get_marks_res['locked'];
-    $display_block .= "
-             <tr>
-             <td><b>$assesstype mark:</b>&nbsp;<span class=\"grade\"> $rettotal_s/$max_mark</span></td>
-             </tr>
-             </table>
-             </div><BR />";
+    $display_block = FeedbackPdfHeader($module_desc, $assesstype_desc, $mark_pc, $student_name, $programme,
+        ['Supervisor' => $supervisor_name, 'Second marker' => $second_marker_name, 'Third marker' => $third_marker_name],
+        $title, $project_id, $rettotal, $max_mark);
 
     //$display_block .= "<a href=\"javascript:window.print()\">Print this page</a><BR /><BR />";
 
@@ -1016,14 +915,15 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
             $show_cat_feedback = $cat_data['get_feedback'];
         }
 
-        $display_block .= "<div class=\"feedbackSection\">Section $cat: $description ($weight_pc%)</div>";
+        $display_block .= FeedbackPdfSectionHeading("Section $cat: $description", $weight_pc);
+        $row_n = 0;
         // Display the header
-        $display_block .= '<table width="100%" class="tableSimple" style="border:1px solid black;border-collapse:collapse;">';
+        $display_block .= '<table class="fbp-q" width="100%">';
         if ($cat <> 1) {
-            $display_block .= "<tr><td></td><td class=\"bluetablehead\">1st Marker</td><td class=\"bluetablehead\">2nd Marker</td><td class=\"bluetablehead\">3rd Marker</td></tr>\n";
+            $display_block .= "<tr><td class=\"fbp-colhead\" width=\"22%\"></td><td class=\"fbp-colhead\" width=\"26%\">1st Marker</td><td class=\"fbp-colhead\" width=\"26%\">2nd Marker</td><td class=\"fbp-colhead\" width=\"26%\">3rd Marker</td></tr>\n";
         } else {
             //$display_block .= "<tr class=\"tablehead\"><td></td><td>1st Marker</td><td>2nd Marker</td><td>3rd Marker</td></tr>\n";
-            $display_block .= "<tr><td></td><td class=\"bluetablehead\">1st Marker</td><td class=\"bluetablehead\">2nd Marker</td><td class=\"bluetablehead\">3rd Marker</td></tr>\n";
+            $display_block .= "<tr><td class=\"fbp-colhead\" width=\"22%\"></td><td class=\"fbp-colhead\" width=\"26%\">1st Marker</td><td class=\"fbp-colhead\" width=\"26%\">2nd Marker</td><td class=\"fbp-colhead\" width=\"26%\">3rd Marker</td></tr>\n";
         }
 
         $query = "select * from $assessqs where cat=$cat";
@@ -1256,19 +1156,19 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
                 if ($entries == 0 && !$show_cat_feedback) {
                     continue;
                 } else {
-                    $display_block .= '<tr>';
+                    $display_block .= ($entries == 0) ? '<tr class="fbp-fbrow">' : (($row_n++ % 2) ? '<tr class="fbp-alt">' : '<tr>');
                     if ($is_numeric == 1) {
                         if ($entries == 0) {
-                            $display_block .= "<td class='tablehead'  width='30%'>Feedback comment</td>";
+                            $display_block .= "<td class='fbp-qn' width='22%'>Feedback comment</td>";
                         } else {
-                            $display_block .= "<td class='tablehead'  width='30%'>Marks awarded</td>";
+                            $display_block .= "<td class='fbp-qn' width='22%'>Marks awarded</td>";
                         }
                     } else {
-                        $display_block .= "<td width='30%'>$question</td>";
+                        $display_block .= "<td class='fbp-qn' width='22%'>$question</td>";
                     }
                 }
                 // Supervisor
-                $display_block .= "<td width='30%'>";
+                $display_block .= "<td width='26%'>";
                 if ($entries == 0) {
                     if ($show_cat_feedback) {
                         $entry = $mark1_stored;
@@ -1288,7 +1188,7 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
                 $display_block .= '</td>';
 
                 // Second marker
-                $display_block .= '<td width="24%">';
+                $display_block .= '<td width="26%">';
                 if ($entries == 0) {
                     $entry = $mark2_stored;
                     $display_block .= "$entry<br /><br />";
@@ -1313,7 +1213,7 @@ function show_feedback_form3($db, $sid, $markstore1, $markstore2, $markstore3, $
                 $display_block .= '</td>';
 
                 // Third marker
-                $display_block .= '<td>';
+                $display_block .= '<td width="26%">';
                 if ($entries == 0) {
                     $entry = $mark3_stored;
                     $display_block .= "$entry<br /><br />";
@@ -1406,10 +1306,9 @@ function show_overall_feedback_form2($db, $sid, $markstore1, $markstore2, $marks
     //$display_block .= "\n<textarea name='$overall_feedback_id'>$overall_feedback_text</textarea><br /><br />";
     //$display_block .= "</div><BR>\n";
 
-    $display_block .= "<table class='tableSimple' style='width: 100%; border:1px solid black;border-collapse:collapse;'>";
-    $display_block .= "<tr></tr>\n";
-    $display_block .= "<tr><td colspan='2' class='tablehead_overall'>$overall_feedback_heading</td></tr>";
-    $display_block .= "<tr style='background-color: lightcyan'><td style='width: 50%;'>1st Marker</td><td>2nd Marker</td></tr>\n";
+    $display_block .= FeedbackPdfSectionHeading($overall_feedback_heading);
+    $display_block .= "<table class='fbp-q' width='100%'>";
+    $display_block .= "<tr><td class='fbp-colhead' style='width: 50%;'>1st Marker</td><td class='fbp-colhead'>2nd Marker</td></tr>\n";
     $display_block .= "<tr><td>$overall_feedback_text1</td>";
     $display_block .= "<td>$overall_feedback_text2</td></tr>";
     $display_block .= '</table>';
@@ -1486,10 +1385,9 @@ function show_overall_feedback_form3($db, $sid, $markstore1, $markstore2, $marks
     //$display_block .= "\n<textarea name='$overall_feedback_id'>$overall_feedback_text</textarea><br /><br />";
     //$display_block .= "</div><BR>\n";
 
-    $display_block .= "<table class='tableSimple' style='width: 100%; border:1px solid black;border-collapse:collapse;'>";
-    $display_block .= "<tr></tr>\n";
-    $display_block .= "<tr><td colspan='3' class='tablehead_overall'>$overall_feedback_heading</td></tr>";
-    $display_block .= "<tr style='background-color: lightcyan'><td style='width: 33%;'>1st Marker</td><td style='width: 33%;'>2nd Marker</td><td style='width: 34%;'>3rd Marker</td></tr>\n";
+    $display_block .= FeedbackPdfSectionHeading($overall_feedback_heading);
+    $display_block .= "<table class='fbp-q' width='100%'>";
+    $display_block .= "<tr><td class='fbp-colhead' style='width: 33%;'>1st Marker</td><td class='fbp-colhead' style='width: 33%;'>2nd Marker</td><td class='fbp-colhead' style='width: 34%;'>3rd Marker</td></tr>\n";
     $display_block .= "<tr><td>$overall_feedback_text1</td>";
     $display_block .= "<td>$overall_feedback_text2</td>";
     $display_block .= "<td>$overall_feedback_text3</td>";

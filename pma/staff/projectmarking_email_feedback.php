@@ -227,13 +227,9 @@ if ($num_rows < 1) {
             unset($mpdf);
             error_reporting(0);
             //$mpdf = new mPDF();
-            $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
+            $mpdf = NewFeedbackMpdf($student_name, $module_short_description);
             $mpdf->useSubstitutions = true;
             //$mpdf->ignore_invalid_utf8 = true;
-            // Set a simple Footer including the date and page number
-            $mpdf->setFooter("$student_name Date printed: {DATE j M Y}.   page {PAGENO}");
-            $stylesheet = file_get_contents('./css/pagedesc.css');
-            $mpdf->WriteHTML($stylesheet, 1);  // The parameter 1 tells that this is css/style only and no body/html/text
             $mpdf->WriteHTML($feedback_form_html);
 
             // default is to email
@@ -265,6 +261,8 @@ if ($num_rows < 1) {
                 //$mpdf->OutputFile($pdf_fullpath_name);
 
                 $mpdf_output = $mpdf->OutputBinaryData();
+                unset($mpdf);
+                gc_collect_cycles(); // mPDF objects hold circular references; without this every PDF leaks ~5MB and long runs die
                 $zip->addFromString($pdf_filename, $mpdf_output);
 
                 $pdfs_count++;
@@ -277,6 +275,8 @@ if ($num_rows < 1) {
                 // Email to student
                 //$fileattached_pdf = $mpdf->Output('', 'S');
                 $fileattached_pdf = $mpdf->OutputBinaryData();
+                unset($mpdf);
+                gc_collect_cycles(); // mPDF objects hold circular references; without this every PDF leaks ~5MB and long runs die
                 $myemail_to = "$username$local_email_domain";
                 //$myemail_to = "p.a.sleigh@leeds.ac.uk"; //<< REMOVE IN THE FINAL VERSION
 

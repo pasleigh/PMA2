@@ -84,6 +84,30 @@ if (array_key_exists('part', $_GET) == false) {
 }
 $part = $_GET['part'];
 
+// Step 1: ask how the result should be shown on the PDFs, then come back here with go=1 to build the zip
+if (empty($_GET['go'])) {
+    $pm_id_h = htmlspecialchars((string) ($_GET['pm_id'] ?? $pm_id), ENT_QUOTES, 'UTF-8');
+    $part_h = htmlspecialchars((string) $part, ENT_QUOTES, 'UTF-8');
+    $save_h = htmlspecialchars((string) ($_GET['save'] ?? ''), ENT_QUOTES, 'UTF-8');
+    $part_desc_h = htmlspecialchars((string) ($p_description[$part] ?? ''), ENT_QUOTES, 'UTF-8');
+    $self_h = htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8');
+    echo "<!DOCTYPE HTML>\n<html>\n";
+    (@include_once("$mobile_head_bs")) or die("Cannot find this file to include: $mobile_head_bs<BR>");
+    echo "<body><div class='container mt-4' style='max-width: 760px;'>\n";
+    echo "<h2>Download $part_desc_h feedback PDFs</h2>\n";
+    echo "<form method='get' action='$self_h'>\n";
+    echo "<input type='hidden' name='pm_id' value='$pm_id_h'><input type='hidden' name='part' value='$part_h'>";
+    echo "<input type='hidden' name='save' value='$save_h'><input type='hidden' name='go' value='1'>\n";
+    echo FeedbackPdfOptionsFormHtml();
+    echo "<button type='submit' class='btn btn-primary'>Download zip of feedback PDFs</button>\n";
+    echo " <a class='btn btn-outline-secondary' href='./pdf_functions.php?pm_id=$pm_id_h'>Back</a>\n";
+    echo "<p class='text-muted small mt-2'>Building the zip can take a while for a large module.</p>\n";
+    echo "</form></div></body></html>\n";
+    exit();
+}
+$pdf_opts = FeedbackPdfOptionsFromRequest($_GET);
+SetFeedbackPdfOptions($pdf_opts['grade_display'], $pdf_opts['show_descriptor']);
+
 // In the absence of other setting, default to 1
 $who = 1;
 
@@ -148,6 +172,15 @@ if ($num_rows < 1) {
     // create the zip
     $rows = $results->fetchAll();
     $pdfs_count = 1;
+
+    // The zip is streamed straight to the browser, so ANY other output (PHP warnings/notices,
+    // whitespace or a BOM from an included file) would corrupt it ("Unable to expand ...").
+    // Send errors to the log only and throw away anything already buffered.
+    ini_set('display_errors', '0');
+    ini_set('log_errors', '1');
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
 
     $zip = new ZipStream\ZipStream(
         outputName: $zip_filename,
@@ -218,13 +251,9 @@ if ($num_rows < 1) {
 
             unset($mpdf);
             error_reporting(0);
-            $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
+            $mpdf = NewFeedbackMpdf($student_name, $module_short_description);
             $mpdf->useSubstitutions = true;
             //$mpdf->ignore_invalid_utf8 = true;
-            // Set a simple Footer including the date and page number
-            $mpdf->setFooter("$student_name Date printed: {DATE j M Y}.   page {PAGENO}");
-            $stylesheet = file_get_contents('./css/pagedesc.css');
-            $mpdf->WriteHTML($stylesheet, 1);  // The parameter 1 tells that this is css/style only and no body/html/text
             $mpdf->WriteHTML($feedback_form_html);
 
             // saving to a zip
@@ -238,6 +267,8 @@ if ($num_rows < 1) {
             $pdf_filename = str_replace(' ', '_', $pdf_filename);
 
             $mpdf_output = $mpdf->OutputBinaryData();
+            unset($mpdf);
+            gc_collect_cycles(); // mPDF objects hold circular references; without this every PDF leaks ~5MB and long runs die
 
             $zip->addFile(
                 fileName: $pdf_filename,

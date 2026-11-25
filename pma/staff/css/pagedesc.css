@@ -450,3 +450,39 @@ span.simple-white {
     text-align : center;
 /*font-weight: bold;*/
 }
+
+/* ===================================================================
+   Student feedback forms / PDFs - "banner and cards" style
+   (built by feedback_pdf_functions.php and show_*feedback_form.php)
+   =================================================================== */
+.fbp-wrap, .fbp-wrap td, .fbp-sec, table.fbp-q td, .fbp-descriptor {
+  font-family: dejavusans, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #1e293b;
+  font-size: 9.5pt;
+  font-weight: normal;
+}
+.fbp-banner { background: #0f3d5e; color: #ffffff; padding: 16px 20px; border-radius: 6px; }
+.fbp-banner-sub { font-size: 9pt; color: #9cc7e4; }
+.fbp-banner-title { font-size: 18pt; font-weight: bold; color: #ffffff; }
+table.fbp-sum { width: 100%; border-collapse: separate; border-spacing: 0; margin: 14px 0 6px 0; }
+td.fbp-info { background: #f1f5f9; padding: 12px 14px; border-radius: 6px; vertical-align: top; }
+table.fbp-info-in { width: 100%; border-collapse: collapse; }
+table.fbp-info-in td { vertical-align: top; padding: 0 4px 0 0; background: transparent; }
+td.fbp-gap { width: 12px; }
+td.fbp-markbox { background: #e8f5ee; padding: 12px 14px; text-align: center; width: 140px; border-radius: 6px; vertical-align: middle; }
+.fbp-k { color: #64748b; font-size: 8pt; text-transform: uppercase; }
+.fbp-v { margin-bottom: 6px; }
+.fbp-big { font-size: 28pt; font-weight: bold; color: #157347; }
+.fbp-big-text { font-size: 15pt; line-height: 1.2; }
+.fbp-descriptor { background: #f1f5f9; padding: 10px 14px; border-radius: 6px; margin: 0 0 6px 0; border-left: 4px solid #157347; }
+.fbp-sec { background: #0f3d5e; color: #ffffff; font-weight: bold; padding: 6px 10px; margin-top: 16px; font-size: 10.5pt; border-radius: 4px 4px 0 0; }
+.fbp-sec-w { color: #9cc7e4; font-weight: normal; }
+table.fbp-q { width: 100%; border-collapse: collapse; border: 1px solid #dbe3ea; margin-bottom: 6px; }
+table.fbp-q td { padding: 7px 10px; vertical-align: top; border-bottom: 1px solid #e7edf2; background: #ffffff; }
+table.fbp-q tr.fbp-alt td { background: #f8fafc; }
+table.fbp-q td.fbp-qn { font-weight: bold; color: #334155; }
+table.fbp-q td.fbp-colhead { background: #e2e8f0; font-weight: bold; color: #334155; font-size: 8.5pt; text-transform: uppercase; }
+table.fbp-q td.fbp-fb { background: #fff8e6; border-left: 4px solid #f0b429; }
+.fbp-fbk { font-size: 8pt; font-weight: bold; color: #a16207; text-transform: uppercase; }
+table.fbp-q tr.fbp-fbrow td { background: #fff8e6; }
+table.fbp-q tr.fbp-fbrow td.fbp-qn { border-left: 4px solid #f0b429; color: #a16207; }

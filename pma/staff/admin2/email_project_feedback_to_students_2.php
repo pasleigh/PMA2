@@ -110,6 +110,8 @@ if ($POST_OP === 'stream' && $has_access) {
     $email_body_text = $job['email_body_text'] ?? '';
     $reallysend   = $job['reallysend']      ?? null;
     $checked_sids = array_flip($job['checked_sids'] ?? []);  // flip for O(1) lookup
+    $pdf_opts     = $job['pdf_opts'] ?? FeedbackPdfDefaultOptions();
+    SetFeedbackPdfOptions($pdf_opts['grade_display'], $pdf_opts['show_descriptor']);
 
     // Fetch all allocated students
     $student_rows = $db->query("SELECT * FROM $project_allocated ORDER BY projectid")->fetchAll();
@@ -218,12 +220,11 @@ if ($POST_OP === 'stream' && $has_access) {
         $do_not_attach    = 1;
         if ($makepdf !== null) {
             error_reporting(0);
-            $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
-            $mpdf->setFooter("$student_name  Date printed: {DATE j M Y}.  Page {PAGENO}");
-            $stylesheet = file_get_contents('../css/pagedesc.css');
-            $mpdf->WriteHTML($stylesheet, 1);
+            $mpdf = NewFeedbackMpdf($student_name, $module_short_description);
             $mpdf->WriteHTML($feedback_form_html);
             $fileattached_pdf = $mpdf->Output('', 'S');
+            unset($mpdf);
+            gc_collect_cycles(); // mPDF objects hold circular references; without this every PDF leaks ~5MB and long runs die
             $name_of_file     = "Feedback-$module_short_description-$assesstype_text.pdf";
             $do_not_attach    = 0;
             error_reporting(-1);
@@ -293,6 +294,7 @@ if ($POST_OP === 'send' && $has_access) {
         'cc_module_leader'  => isset($_POST['cc_module_leader']),
         'summary_mark'      => $summary_mark,
         'checked_sids'      => $checked_sids,
+        'pdf_opts'          => FeedbackPdfOptionsFromRequest($_POST),
     ];
     session_write_close();
 }
@@ -583,6 +585,8 @@ $default_subject = "Feedback for $module_short_description. $assess_part_descrip
                             <input class="form-control" type="text" name="subjectline" id="subjectline"
                                    value="<?= htmlspecialchars($default_subject) ?>">
                         </div>
+
+                        <?= FeedbackPdfOptionsFormHtml() ?>
 
                         <div class="card bg-light border-warning mb-3">
                             <div class="card-body py-2">

@@ -340,15 +340,13 @@ if ($is_module_admin || $admin_access) {
                             unset($mpdf);
                             error_reporting(0);
                             //$mpdf = new mPDF();
-                            $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
-                            // Set a simple Footer including the date and page number
-                            $mpdf->setFooter("$student_name Date printed: {DATE j M Y}.   page {PAGENO}");
-                            $stylesheet = file_get_contents('../css/pagedesc.css');
-                            $mpdf->WriteHTML($stylesheet, 1);  // The parameter 1 tells that this is css/style only and not body/html/text
+                            $mpdf = NewFeedbackMpdf($student_name, $module_short_description);
                             $mpdf->WriteHTML($feedback_form_html);
 
                             // Email to student
                             $fileattached_pdf = $mpdf->Output('', 'S');
+                            unset($mpdf);
+                            gc_collect_cycles(); // mPDF objects hold circular references; without this every PDF leaks ~5MB and long runs die
                             $name_of_file = "Feedback-$module_short_description-$assess_part_description_text.pdf";
                             $do_not_attach = 0;
                             error_reporting(-1);

@@ -205,6 +205,8 @@ if ($is_module_admin || $admin_access) {
         $display_block .= "<input class='form-control' size='80' type='text' name='subjectline' id='subjectline' value='" . ($summary_mark == 1 ? "Overall module feedback for $module_short_description" : "Feedback for $module_short_description. $assess_part_description_text part $summary_desc") . "'></P>\n";
         $display_block .= "</div>\n";
 
+        $display_block .= FeedbackPdfOptionsFormHtml();
+
         $display_block .= "<div class='form-group'>";
         $display_block .= "<input type='checkbox' name='reallysend' id='reallysend' value='reallysend'>\n";
         $display_block .= "<label for='reallysend'> Tick this box to confirm you REALLY want to send the emails. </label>";
@@ -229,6 +231,8 @@ if ($is_module_admin || $admin_access) {
         $display_block .= GetStudentListTable($db, $project_allocated, $students, $staff2, $feedback_records, $part);
         $display_block .= "\n</form><BR><HR>";
     } elseif ($POST_OP == 'send') {
+        $pdf_opts = FeedbackPdfOptionsFromRequest($_POST);
+        SetFeedbackPdfOptions($pdf_opts['grade_display'], $pdf_opts['show_descriptor']);
         $display_block .= "<BR>Sending this:$lb$lb";
 
         $query = "select * from $staff_names2 order by familyname, firstname ";
@@ -372,15 +376,13 @@ if ($is_module_admin || $admin_access) {
                         } else {
                             unset($mpdf);
                             error_reporting(0);
-                            $mpdf = new \Mpdf\Mpdf(['tempDir' => PMA_TMP_DIR]);
-                            // Set a simple Footer including the date and page number
-                            $mpdf->setFooter("$student_name Date printed: {DATE j M Y}.   page {PAGENO}");
-                            $stylesheet = file_get_contents('../css/pagedesc.css');
-                            $mpdf->WriteHTML($stylesheet, 1);  // The parameter 1 tells that this is css/style only and not body/html/text
+                            $mpdf = NewFeedbackMpdf($student_name, $module_short_description);
                             $mpdf->WriteHTML($feedback_form_html);
 
                             // Email to student
                             $fileattached_pdf = $mpdf->Output('', 'S');
+                            unset($mpdf);
+                            gc_collect_cycles(); // mPDF objects hold circular references; without this every PDF leaks ~5MB and long runs die
                             $name_of_file = "Feedback-$module_short_description-$assess_part_description_text.pdf";
                             $do_not_attach = 0;
                             error_reporting(-1);
